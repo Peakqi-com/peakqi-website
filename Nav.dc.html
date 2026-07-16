@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+#pq-burger{display:none}
+@media (max-width:959px){#pq-links{display:none!important}#pq-burger{display:flex!important}}
+</style>
+</helmet>
+<header style="position:sticky;top:0;z-index:100;background:rgba(242,239,232,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(9,11,14,.12)">
+  <div style="max-width:1400px;margin:0 auto;padding:0 clamp(16px,4vw,48px);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a href="Home.dc.html" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
+      <svg width="30" height="26" viewBox="0 0 32 26" aria-hidden="true"><path d="M2 24 L11 5 L16 14 L21 3 L30 24" fill="none" stroke="#FF6B2C" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+      <span style="display:flex;flex-direction:column;gap:2px;line-height:1">
+        <span style="font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.08em">奇鋒國際</span>
+        <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.36em;color:#FF6B2C">PEAKQI</span>
+      </span>
+    </a>
+    <nav id="pq-links" style="display:flex;align-items:center;gap:clamp(12px,2.2vw,32px)">
+      <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
+        <a href="{{ l.href }}" style="{{ l.style }}" style-hover="color:#FF6B2C">{{ l.label }}</a>
+      </sc-for>
+      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#F2EFE8;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" style-hover="background:#090B0E;color:#F2EFE8">預約 15 分鐘 Demo</a>
+    </nav>
+    <button id="pq-burger" ref="{{ burgerRef }}" onClick="{{ toggle }}" aria-label="開啟選單" aria-expanded="{{ menuExpanded }}" style="flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:1px solid rgba(9,11,14,.2);border-radius:2px;cursor:pointer;padding:0 10px">
+      <span style="display:block;height:2px;background:#090B0E"></span>
+      <span style="display:block;height:2px;background:#090B0E"></span>
+      <span style="display:block;height:2px;width:60%;background:#FF6B2C"></span>
+    </button>
+  </div>
+</header>
+<sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="網站選單" onKeyDown="{{ menuKeys }}" style="position:fixed;inset:0;z-index:300;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;padding:16px clamp(20px,6vw,48px) 40px;overflow:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:60px">
+      <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.36em;color:#FF6B2C">PEAKQI — MENU</span>
+      <button ref="{{ closeRef }}" onClick="{{ close }}" aria-label="關閉選單" style="width:44px;height:44px;background:none;border:1px solid rgba(242,239,232,.3);border-radius:2px;color:#F2EFE8;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <nav style="display:flex;flex-direction:column;margin-top:24px">
+      <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
+        <a href="{{ l.href }}" style="{{ l.mobileStyle }}" style-hover="color:#FF6B2C">
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4);width:34px">{{ l.idx }}</span>
+          {{ l.label }}
+        </a>
+      </sc-for>
+    </nav>
+    <a href="Demo.dc.html" style="margin-top:32px;display:flex;align-items:center;justify-content:center;background:#FF6B2C;color:#090B0E;padding:16px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;letter-spacing:.06em;text-decoration:none">預約 15 分鐘場景 Demo</a>
+    <div style="margin-top:auto;padding-top:40px;display:flex;flex-direction:column;gap:6px;font:400 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">
+      <a href="mailto:peakqi.com@gmail.com" style="color:rgba(242,239,232,.75);text-decoration:none">peakqi.com@gmail.com</a>
+      <a href="tel:0988650951" style="color:rgba(242,239,232,.75);text-decoration:none">0988-650-951</a>
+      <span>PEAKQI.COM</span>
+    </div>
+  </div>
+</sc-if>
+<sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center">
+    <a href="Demo.dc.html" onClick="{{ ctaClick }}" data-cta style="display:flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;padding:13px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
+      <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+      用我的場景看 Demo
+      <span style="background:rgba(242,239,232,.16);border-radius:999px;padding:2px 8px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.08em">15 MIN</span>
+    </a>
+    <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動 Demo 按鈕" style="margin-left:8px;width:30px;height:30px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 12px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 220}, &quot;active&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;home&quot;, &quot;solutions&quot;, &quot;cases&quot;, &quot;pricing&quot;, &quot;about&quot;, &quot;demo&quot;], &quot;default&quot;: &quot;home&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;導覽&quot;}, &quot;sticky&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;導覽&quot;}, &quot;ctaThreshold&quot;: {&quot;editor&quot;: &quot;float&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 1, &quot;step&quot;: 0.05, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;導覽&quot;}}">
+class Component extends DCLogic {
+  state = { open: false, nav: null, ctaOk: false, dismissed: false };
+  componentDidMount() {
+    import('./content.js').then(m => this.setState({ nav: m.navigation }));
+    import('./micro-engine.js').then(m => {
+      if (window.__pqMicro) return;
+      window.__pqMicro = m.createMicro();
+      window.__pqMicro.start();
+    }).catch(() => {});
+    import('./analytics.js').then(m => { this._tk = m.track; }).catch(() => {});
+    let dismissed = false;
+    try { dismissed = sessionStorage.getItem('pqCtaDismissed') === '1'; } catch (e) {}
+    const thr = parseFloat(this.props.ctaThreshold ?? 0) || 0;
+    this._thr = thr;
+    if (dismissed) { this.setState({ dismissed: true }); return; }
+    if (thr <= 0) {
+      this.setState({ ctaOk: true });
+      if ((this.props.active ?? '') !== 'demo' && (this.props.sticky ?? true)) this._evt('sticky_demo_view');
+      return;
+    }
+    this._onScroll = () => {
+      const de = document.scrollingElement || document.documentElement;
+      const ratio = de.scrollTop / Math.max(1, de.scrollHeight - window.innerHeight);
+      if (ratio >= thr && !this.state.ctaOk) {
+        this.setState({ ctaOk: true });
+        this._evt('sticky_demo_view');
+        window.removeEventListener('scroll', this._onScroll);
+        this._onScroll = null;
+      }
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+  }
+  _evt(type) {
+    const page = this.props.active ?? '';
+    if (this._tk) { this._tk(type, { page }); return; }
+    const e = { type, ts: Date.now(), page };
+    (window.__pqEvents = window.__pqEvents || []).push(e);
+    try { window.dispatchEvent(new CustomEvent('pq:event', { detail: e })); } catch (err) {}
+  }
+  renderVals() {
+    const active = this.props.active ?? '';
+    const base = {
+      font: "500 14px 'Noto Sans TC',sans-serif", letterSpacing: '.04em', textDecoration: 'none',
+      padding: '4px 2px', transition: 'color .15s'
+    };
+    const items = this.state.nav ?? [
+      { href: 'Home.dc.html', key: 'home', label: '首頁' },
+      { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+      { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
+      { href: 'Pricing.dc.html', key: 'pricing', label: '方案價格' },
+      { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' }
+    ];
+    const links = items.map((l, i) => ({
+      ...l,
+      idx: '0' + (i + 1),
+      style: {
+        ...base,
+        color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
+        fontWeight: l.key === active ? 700 : 500,
+        borderBottom: l.key === active ? '2px solid #FF6B2C' : '2px solid transparent'
+      },
+      mobileStyle: {
+        display: 'flex', alignItems: 'baseline', gap: '12px', textDecoration: 'none',
+        padding: '18px 0', borderBottom: '1px solid rgba(242,239,232,.12)',
+        font: "700 clamp(24px,6vw,34px)/1.2 'Noto Sans TC',sans-serif",
+        color: l.key === active ? '#FF6B2C' : '#F2EFE8'
+      }
+    }));
+    const openMenu = () => {
+      this._lastFocus = document.activeElement;
+      this.setState({ open: true });
+      setTimeout(() => { if (this._closeEl) this._closeEl.focus(); }, 60);
+    };
+    const closeMenu = () => {
+      this.setState({ open: false });
+      const back = this._lastFocus || this._burgerEl;
+      if (back && back.focus) setTimeout(() => back.focus(), 40);
+    };
+    return {
+      links,
+      open: this.state.open,
+      menuExpanded: this.state.open ? 'true' : 'false',
+      burgerRef: (el) => { this._burgerEl = el; },
+      closeRef: (el) => { this._closeEl = el; },
+      menuKeys: (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); closeMenu(); return; }
+        if (e.key === 'Tab') { // 輕量 focus trap
+          const root = e.currentTarget;
+          const f = root.querySelectorAll('a[href],button');
+          if (!f.length) return;
+          const first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      },
+      toggle: () => { this.state.open ? closeMenu() : openMenu(); },
+      close: closeMenu,
+      showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
+      navDemoClick: () => this._evt('nav_demo_click'),
+      ctaClick: () => this._evt('sticky_demo_click'),
+      ctaDismiss: () => {
+        try { sessionStorage.setItem('pqCtaDismissed', '1'); } catch (e) {}
+        this._evt('cta_dismiss');
+        this.setState({ dismissed: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

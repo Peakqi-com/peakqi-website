@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>案例詳細|奇鋒國際 PeakQi</title>
+<meta name="description" content="PeakQi 案例詳細:挑戰、工作流程、系統畫面、該案例成果與相關案例。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#D14E12}
+::selection{background:#FF6B2C;color:#F2EFE8}
+@keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}}
+</style>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+</helmet>
+<a id="pq-skip" href="#c-body">跳到主要內容</a>
+<dc-import name="Nav" active="cases" hint-size="100%,68px"></dc-import>
+
+<section data-screen-label="案例開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(48px,6vw,84px) clamp(20px,5vw,48px) clamp(40px,5vw,64px)">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+    <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+      <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+      <span>/</span>
+      <a href="Cases.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">案例與作品</a>
+      <span>/</span>
+      <span style="color:#F2EFE8;font-weight:700">{{ name }}</span>
+    </nav>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <span style="border:1px solid rgba(242,239,232,.3);border-radius:999px;padding:5px 13px;font:500 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">{{ industry }}</span>
+      <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ type }}</span>
+      <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.4)">SOURCE・{{ sourcePage }}</span>
+    </div>
+    <h1 style="margin:0;font:900 clamp(1.9rem,4.2vw,3.4rem)/1.3 'Noto Sans TC',sans-serif">{{ title }}</h1>
+    <div data-cover style="border-radius:8px;overflow:hidden;border:1px solid rgba(242,239,232,.16);box-shadow:0 26px 60px rgba(0,0,0,.4);background:#14171C;min-height:220px">
+      <sc-if value="{{ hasCover }}" hint-placeholder-val="{{ false }}">
+        <div role="img" aria-label="{{ coverAlt }}" style="{{ coverStyle }}"></div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<section id="c-body" data-screen-label="挑戰與流程" style="padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px)">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,3.5vw,48px)">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(9,11,14,.45)">CHALLENGE — 原本卡在</span>
+      <p style="margin:0;font:500 16.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ stuck }}</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SYSTEM — 我們做了</span>
+      <p style="margin:0;font:500 16.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ did }}</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(9,11,14,.45)">WORKFLOW — 進到系統後</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ workflow }}" as="w" hint-placeholder-count="4">
+          <span style="display:flex;gap:10px;align-items:baseline;font:400 14.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)"><span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ w.n }}</span>{{ w.t }}</span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Gallery" style="padding:0 clamp(20px,5vw,48px) clamp(56px,7vw,96px)">
+  <div style="max-width:1200px;margin:0 auto">
+    <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(9,11,14,.45)">GALLERY — 系統畫面(該案實際截圖)</span>
+    <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px">
+      <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="3">
+        <button onClick="{{ g.zoom }}" aria-label="{{ g.zoomLabel }}" style="border:none;padding:0;cursor:zoom-in;background:#090B0E;border-radius:6px;overflow:hidden;border:1px solid rgba(9,11,14,.16)">
+          <div data-maskreveal role="img" aria-label="{{ g.alt }}" style="{{ g.boxStyle }}"></div>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="成果" style="background:#090B0E;color:#F2EFE8;padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px)">
+  <div style="max-width:1200px;margin:0 auto">
+    <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.5)">RESULTS — 該案例成果</span>
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+      <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="3">
+        <div style="background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:7px">
+          <span style="font:700 clamp(1.6rem,3vw,2.3rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.v }}</span>
+          <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">{{ m.l }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:16px 0 0;font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">※ {{ disclaimer }}</p>
+  </div>
+</section>
+
+<section data-screen-label="相關案例與 CTA" style="padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px)">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:22px">
+    <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(9,11,14,.45)">RELATED — 相關案例</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+      <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+        <a href="{{ r.href }}" style="background:#090B0E;color:#F2EFE8;border-radius:6px;overflow:hidden;text-decoration:none;border:1px solid rgba(9,11,14,.2);display:flex;flex-direction:column" style-hover="border-color:#FF6B2C">
+          <div role="img" aria-label="{{ r.alt }}" style="{{ r.imgStyle }}"></div>
+          <span style="padding:12px 14px;font:800 14px 'Noto Sans TC',sans-serif">{{ r.name }}</span>
+        </a>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;border-top:1px solid rgba(9,11,14,.14);padding-top:24px">
+      <a href="{{ demoHref }}" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#090B0E;color:#F2EFE8">把這個流程套用到我的公司 <span data-arrow>→</span></a>
+      <a href="Cases.dc.html" style="font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" style-hover="color:#FF6B2C">← 回案例列表</a>
+    </div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { d: null, media: null, slug: 'wedding' };
+  componentDidMount() {
+    const slug = new URLSearchParams(window.location.search).get('slug') || 'wedding';
+    this.setState({ slug });
+    import('./content.js').then(m => this.setState({ d: m }));
+    import('./case-media.js').then(m => {
+      this.setState({ media: m });
+      const f = (m.FEATURED_MEDIA || []).find(x => x.slug === (new URLSearchParams(window.location.search).get('slug') || 'wedding'));
+      if (f) document.title = f.name + '|案例詳細|奇鋒國際 PeakQi';
+    });
+    import('./seo.js').then(m => m.applySEO('cases')).catch(() => {});
+    Promise.all([import('./motion-kit.js')]).then(([kit]) => {
+      if (this._dead || this._motion) return;
+      this._motion = kit.createMotionContext('case-detail');
+      document.querySelectorAll('[data-maskreveal]').forEach(el => kit.MaskRevealMedia(this._motion, el));
+      const cov = document.querySelector('[data-cover]');
+      if (cov) kit.MaskRevealMedia(this._motion, cov, { dir: 'up' });
+    }).catch(() => {});
+    import('./cases-engine.js').then(m => { if (!this._dead && !this._fx) { this._fx = m.createCasesFX(); } }).catch(() => {});
+
+  }
+  componentWillUnmount() {
+    this._dead = true;
+    if (this._motion) this._motion.destroy();
+    if (this._fx) this._fx.destroy();
+  }
+  renderVals() {
+    const mm = this.state.media, d = this.state.d;
+    const slug = this.state.slug;
+    const F = mm?.FEATURED_MEDIA ?? [];
+    const f = F.find(x => x.slug === slug) || F[0] || { gallery: [], cover: {}, name: '', industry: '', type: '', sourcePage: '' };
+    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', social: 'AI 社群自動經營系統', realestate: '房仲 AI 助手' };
+    const narr = (d?.caseStudies ?? []).find(c => c.slug === narrMap[f.slug]) || {};
+    const wfMap = {
+      wedding: ['新人 LINE 詢問,AI 30 秒接住', '婚紗試穿/試妝模擬,先看成果', '需求整理成客戶卡,轉真人談細節', '成交後排跟進與社群內容'],
+      interior: ['需求進來,AI 整理空間條件', '空間渲染+風格模擬即時產出', '自動組提案簡報,當天可交', '定案後進專案排程與報價'],
+      social: ['依產業自動產出貼文草稿', '你潤飾確認,系統排程發布', '成效回寫,下週選題更準', '名單導回 CRM 繼續跟進'],
+      realestate: ['LINE 物件詢問自動回覆', 'AI 排預約帶看時段', '客況寫進名單,提醒跟進', '帶看後回報與轉化追蹤']
+    };
+    const workflow = (wfMap[f.slug] || []).map((t, i) => ({ n: '0' + (i + 1), t }));
+    const lbItems = (f.gallery || []).map(g => ({ src: g.src, fallback: g.fallback, alt: g.alt, cap: f.name + '(' + (f.sourcePage || '').toUpperCase() + ')', url: null, detail: null }));
+    const gallery = (f.gallery || []).map((g, i) => ({
+      ...g,
+      boxStyle: {
+        width: '100%', height: '210px',
+        backgroundImage: 'url("' + g.src + '"), url("' + (g.fallback || g.src) + '")',
+        backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#090B0E'
+      },
+      zoomLabel: '放大檢視「' + (g.alt || f.name) + '」',
+      zoom: (e) => {
+        const fx = this._fx || window.__pqCases;
+        if (fx && fx.lightbox) fx.lightbox(lbItems, i, e.currentTarget);
+      }
+    }));
+    const related = F.filter(x => x.slug !== f.slug).slice(0, 3).map(r => ({
+      name: r.name, href: 'Case.dc.html?slug=' + r.slug,
+      alt: r.cover.alt,
+      imgStyle: {
+        width: '100%', height: '110px',
+        backgroundImage: 'url("' + r.cover.src + '")',
+        backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#14171C'
+      }
+    }));
+    return {
+      name: f.name, title: narr.title ?? f.name,
+      industry: f.industry, type: f.type,
+      sourcePage: (f.sourcePage || '').toUpperCase(),
+      hasCover: !!(f.cover && f.cover.src),
+      coverAlt: (f.cover && f.cover.alt) || f.name,
+      coverStyle: f.cover && f.cover.src ? {
+        width: '100%', aspectRatio: f.cover.w + ' / ' + f.cover.h,
+        backgroundImage: 'url("' + f.cover.src + '"), url("' + (f.cover.fallback || f.cover.src) + '")',
+        backgroundSize: 'cover', backgroundPosition: 'top center'
+      } : {},
+      stuck: narr.stuck ?? '', did: narr.did ?? '',
+      workflow,
+      gallery,
+      metrics: narr.metrics ?? [],
+      disclaimer: (d?.caseNote ?? '') + ' 數字為該案例成果。',
+      related,
+      demoHref: 'Demo.dc.html?case=' + encodeURIComponent(narrMap[f.slug] || f.name)
+    };
+  }
+}
+</script>
+</body>
+</html>

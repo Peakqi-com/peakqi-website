@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>預約 15 分鐘場景 Demo|奇鋒國際 PeakQi</title>
+<meta name="description" content="用你的場景,15 分鐘跑一遍給你看。選流程、選產業,先看 PeakQi 怎麼接住你的客戶,再留下需求——不推銷、不綁約、30 天保證。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#D14E12}
+::selection{background:#FF6B2C;color:#F2EFE8}
+input:focus,textarea:focus,select:focus{outline:2px solid #FF6B2C;outline-offset:0}
+button:focus-visible,a:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes pqDash{to{stroke-dashoffset:-60}}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}[data-flowline]{animation:none!important}}
+@media (max-width:899px){#pq-demo-grid,#pq-scene-grid{grid-template-columns:1fr!important}}
+</style>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+</helmet>
+<a id="pq-skip" href="#scene">跳到主要內容</a>
+<dc-import name="Nav" active="demo" hint-size="100%,68px"></dc-import>
+
+<section data-screen-label="Demo 開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+    <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+      <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+      <span>/</span>
+      <span style="color:#F2EFE8;font-weight:700">預約 Demo</span>
+    </nav>
+    <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">SCENARIO BUILDER</span>
+    <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">用你的場景,<br>15 分鐘跑一遍給你看。</h1>
+    <p style="margin:0;max-width:560px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不推銷、不用先懂 AI。先把目前最卡的流程告訴我們。</p>
+    <div style="position:relative;margin-top:8px" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+        <path d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
+        <circle cx="8" cy="45" r="4" fill="#FF6B2C"></circle>
+        <circle cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
+        <path data-flowline d="M452 45 L1192 45" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" style="animation:pqDash 2.6s linear infinite"></path>
+        <circle cx="1192" cy="45" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5"></circle>
+      </svg>
+      <span style="position:absolute;left:0;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.55)">你的客人</span>
+      <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
+      <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
+    </div>
+  </div>
+</section>
+
+<section id="scene" data-screen-label="場景選擇" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">最想改善的流程(可複選)</span>
+    </div>
+    <div id="pq-scene-grid" style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,2.6vw,36px);align-items:start">
+      <div role="group" aria-label="選擇最想改善的流程" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
+        <sc-for list="{{ sceneOpts }}" as="s" hint-placeholder-count="7">
+          <button onClick="{{ s.pick }}" aria-pressed="{{ s.pressed }}" style="{{ s.style }}">{{ s.label }}</button>
+        </sc-for>
+        <p style="margin:6px 0 0;font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);width:100%">右側為介面流程預覽,非成效數字;選好的內容會自動帶進下方表單。</p>
+      </div>
+      <div aria-live="polite" style="background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
+          <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+          <span style="font:700 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.12em">你的流程預覽</span>
+          <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">PREVIEW</span>
+        </div>
+        <div style="padding:18px;display:flex;flex-direction:column;gap:10px;min-height:250px">
+          <sc-for list="{{ pipeline }}" as="p" hint-placeholder-count="4">
+            <div style="{{ p.rowStyle }}">
+              <span style="{{ p.dotStyle }}"></span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font:800 14px 'Noto Sans TC',sans-serif">{{ p.t }}</span>
+                <span style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ p.d }}</span>
+              </div>
+              <span style="{{ p.stateStyle }}">{{ p.state }}</span>
+            </div>
+          </sc-for>
+          <p style="margin:auto 0 0;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ pipelineNote }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="industry" data-screen-label="產業情境" style="padding:0 clamp(20px,5vw,48px) clamp(56px,7vw,88px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">你的產業</span>
+    </div>
+    <div style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,2.6vw,36px);align-items:start" id="pq-ind-grid2">
+      <div role="group" aria-label="選擇你的產業" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
+        <sc-for list="{{ indOpts }}" as="i" hint-placeholder-count="11">
+          <button onClick="{{ i.pick }}" aria-pressed="{{ i.pressed }}" style="{{ i.style }}">{{ i.label }}<sc-if value="{{ i.hasCase }}" hint-placeholder-val="{{ false }}"><span style="margin-left:7px;font:600 9.5px 'Space Grotesk',sans-serif;color:#1e9a72">CASE</span></sc-if></button>
+        </sc-for>
+      </div>
+      <div aria-live="polite" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.1);overflow:hidden">
+        <sc-if value="{{ indHasMedia }}" hint-placeholder-val="{{ false }}">
+          <div role="img" aria-label="{{ indAlt }}" style="{{ indImgStyle }}"></div>
+        </sc-if>
+        <sc-if value="{{ indNoMedia }}" hint-placeholder-val="{{ false }}">
+          <div aria-hidden="true" style="height:170px;background:#090B0E;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(9,11,14,.1)">
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span>
+              <span style="width:56px;height:2px;background:rgba(242,239,232,.3)"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#3E9BFF"></span>
+              <span style="width:56px;height:2px;background:rgba(242,239,232,.3)"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#65E0BC"></span>
+            </div>
+          </div>
+        </sc-if>
+        <div style="padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+          <span style="font:800 15px 'Noto Sans TC',sans-serif">{{ indPanelName }}</span>
+          <span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ indPanelD }}</span>
+          <sc-if value="{{ indHasLink }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ indHref }}" style="margin-top:4px;font:700 13px 'Noto Sans TC',sans-serif;text-decoration:none">看這個產業的案例 →</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="表單與聯絡" style="padding:0 clamp(20px,5vw,48px) clamp(80px,10vw,130px)">
+  <div id="pq-demo-grid" style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(28px,4vw,56px);align-items:start">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
+        <span style="width:36px;height:1px;background:#FF6B2C"></span>
+        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">留下需求</span>
+      </div>
+      <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:4px;padding:18px 20px;display:flex;gap:16px;align-items:baseline;background:rgba(9,11,14,.02)">
+          <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ r.n }}</span>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font:900 16px 'Noto Sans TC',sans-serif">{{ r.t }}</span>
+            <span style="font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ r.d }}</span>
+          </div>
+        </div>
+      </sc-for>
+      <div style="background:#090B0E;color:#F2EFE8;border-radius:6px;padding:22px">
+        <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">DIRECT CONTACT</span>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+          <a href="mailto:peakqi.com@gmail.com" style="color:#F2EFE8;text-decoration:none;font:500 15px 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">peakqi.com@gmail.com</a>
+          <a href="tel:0988650951" style="color:#F2EFE8;text-decoration:none;font:500 15px 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">0988-650-951</a>
+        </div>
+        <button onClick="{{ copyEmail }}" style="margin-top:14px;background:none;border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);padding:8px 14px;border-radius:2px;font:500 12.5px 'Noto Sans TC',sans-serif;cursor:pointer">{{ copyLabel }}</button>
+      </div>
+    </div>
+    <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <h2 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">留下你的場景,我們來安排</h2>
+        <p style="margin:-6px 0 0;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。上面選好的流程與產業已自動帶入。</p>
+        <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">怎麼稱呼你<span style="color:#D14E12"> *</span>
+            <input id="pq-f-name" value="{{ vName }}" onChange="{{ setName }}" onBlur="{{ blurName }}" aria-invalid="{{ nameInvalid }}" aria-describedby="pq-e-name" placeholder="例:王先生" style="{{ nameStyle }}">
+            <span id="pq-e-name" role="alert" style="{{ nameErrStyle }}">{{ nameErr }}</span>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">公司/品牌<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
+            <input value="{{ vCompany }}" onChange="{{ setCompany }}" placeholder="例:某某室內設計" style="{{ baseInput }}">
+          </label>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">產業<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
+            <select value="{{ vIndustry }}" onChange="{{ setIndustry }}" style="{{ baseInput }}">
+              <option value="">請選擇⋯</option>
+              <sc-for list="{{ industryOpts }}" as="o" hint-placeholder-count="11">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">希望聯絡時間<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
+            <select value="{{ vTime }}" onChange="{{ setTime }}" style="{{ baseInput }}">
+              <option value="">請選擇⋯</option>
+              <sc-for list="{{ timeOpts }}" as="o" hint-placeholder-count="5">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+        <fieldset style="border:1px dashed rgba(9,11,14,.25);border-radius:4px;padding:12px 16px 15px;margin:0;display:flex;flex-direction:column;gap:11px">
+          <legend style="font:700 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);padding:0 8px">聯絡方式,至少留一種<span style="color:#D14E12"> *</span></legend>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px">
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">聯絡電話
+              <input id="pq-f-phone" type="tel" inputMode="tel" value="{{ vPhone }}" onChange="{{ setPhone }}" onBlur="{{ blurContact }}" aria-invalid="{{ phoneInvalid }}" aria-describedby="pq-e-contact" placeholder="09xx-xxx-xxx" style="{{ phoneStyle }}">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">Email
+              <input id="pq-f-email" type="email" inputMode="email" value="{{ vEmail }}" onChange="{{ setEmail }}" onBlur="{{ blurContact }}" aria-invalid="{{ emailInvalid }}" aria-describedby="pq-e-contact" placeholder="you@example.com" style="{{ emailStyle }}">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">LINE ID
+              <input id="pq-f-line" value="{{ vLine }}" onChange="{{ setLine }}" onBlur="{{ blurContact }}" aria-describedby="pq-e-contact" placeholder="LINE ID" style="{{ baseInput }}">
+            </label>
+          </div>
+          <span id="pq-e-contact" role="alert" style="{{ contactErrStyle }}">{{ contactErr }}</span>
+        </fieldset>
+        <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">現在最想改善的流程<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
+          <textarea id="pq-f-need" value="{{ vNeed }}" onChange="{{ setNeed }}" rows="4" placeholder="例:半夜的 LINE 詢問常常漏接,名單散在三個地方⋯" style="{{ areaInput }}"></textarea>
+        </label>
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.03);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+          <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.5)">送出前摘要</span>
+          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">產業:<b>{{ sumIndustry }}</b></span>
+          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">想改善:<b>{{ sumScenes }}</b></span>
+          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">聯絡:<b>{{ sumContact }}</b></span>
+          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">我們將準備的 Demo 情境:<b style="color:#090B0E">{{ sumDemo }}</b></span>
+        </div>
+        <button onClick="{{ submit }}" disabled="{{ submitting }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+          <div style="position:relative;height:40px" aria-hidden="true">
+            <svg viewBox="0 0 600 40" fill="none" style="width:100%;height:100%" preserveAspectRatio="xMidYMid meet">
+              <path d="M8 20 L560 20" stroke="#65E0BC" stroke-width="2"></path>
+              <circle cx="8" cy="20" r="4" fill="#65E0BC"></circle>
+              <circle cx="300" cy="20" r="4" fill="#65E0BC"></circle>
+              <circle cx="560" cy="20" r="9" fill="rgba(101,224,188,.18)" stroke="#65E0BC" stroke-width="1.5"></circle>
+              <path d="M556 20 L559 23 L565 16" stroke="#65E0BC" stroke-width="2" fill="none"></path>
+            </svg>
+          </div>
+          <h2 style="margin:0;font:900 21px/1.5 'Noto Sans TC',sans-serif">已收到需求,我們將使用你的實際場景準備 Demo。</h2>
+          <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;background:#090B0E;color:#F2EFE8;padding:13px 20px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#FF6B2C;color:#090B0E">同步用 Email 寄出需求 →</a>
+            <a href="tel:0988650951" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 14px 'Space Grotesk',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">0988-650-951</a>
+          </div>
+        </div>
+      </sc-if>
+      <div aria-live="polite" role="status" style="{{ statusStyle }}">{{ statusMsg }}</div>
+    </div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    d: null, media: null, copied: false,
+    scenes: [], indPick: '',
+    vName: '', vCompany: '', vIndustry: '', vTime: '', vPhone: '', vEmail: '', vLine: '', vNeed: '', hp: '',
+    touched: {}, submitting: false, done: false, doneMode: '', failMsg: '', needTouched: false
+  };
+  componentDidMount() {
+    import('./case-media.js').then(m => this.setState({ media: m })).catch(() => {});
+    import('./content.js').then(m => {
+      const patch = { d: m };
+      const slug = new URLSearchParams(window.location.search).get('case');
+      if (slug) {
+        const c = (m.caseStudies || []).find(x => x.slug === slug);
+        const label = c ? c.title : slug;
+        patch.vNeed = '想把「' + label + '」的流程,套用到我們公司。';
+        patch.needTouched = true;
+        if (c) {
+          const opt = (m.demoIndustries || []).find(o => c.industry.includes(o) || o.includes(c.industry.slice(0, 2)));
+          patch.vIndustry = opt || '其他';
+          patch.indPick = patch.vIndustry;
+        }
+      }
+      this.setState(patch);
+    });
+    import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});
+    import('./analytics.js').then(m => { this._track = m.track; }).catch(() => {});
+  }
+  _errors() {
+    const s = this.state;
+    const e = {};
+    if (!s.vName.trim()) e.name = '請告訴我們怎麼稱呼你。';
+    const hasContact = s.vPhone.trim() || s.vEmail.trim() || s.vLine.trim();
+    if (!hasContact) e.contact = '電話、Email 或 LINE ID 請至少留一種,方便我們回覆你。';
+    else {
+      if (s.vEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.vEmail.trim())) e.email = 'Email 格式看起來不太對,請再確認一下。';
+      if (s.vPhone.trim() && !/^[0-9+\-() ]{8,}$/.test(s.vPhone.trim())) e.phone = '電話號碼似乎不完整,請再確認一下。';
+    }
+    return e;
+  }
+  _payload() {
+    const s = this.state;
+    return {
+      name: s.vName.trim(), company: s.vCompany.trim(), industry: s.vIndustry,
+      phone: s.vPhone.trim(), email: s.vEmail.trim(), line: s.vLine.trim(),
+      scenes: s.scenes.join('、'),
+      need: s.vNeed.trim(), time: s.vTime, source: 'peakqi-site-demo-form', ts: new Date().toISOString()
+    };
+  }
+  _mailto() {
+    const p = this._payload();
+    const subject = '預約 15 分鐘場景 Demo' + (p.company ? ' — ' + p.company : '');
+    const body = [
+      '稱呼:' + (p.name || '(未填)'),
+      '公司/品牌:' + (p.company || '(未填)'),
+      '產業:' + (p.industry || '(未填)'),
+      '想改善的流程:' + (p.scenes || '(未選)'),
+      '聯絡電話:' + (p.phone || '(未填)'),
+      'Email:' + (p.email || '(未填)'),
+      'LINE ID:' + (p.line || '(未填)'),
+      '希望聯絡時間:' + (p.time || '(未填)'),
+      '補充說明:',
+      p.need || '(未填)'
+    ].join('\n');
+    return 'mailto:peakqi.com@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+  async _send(payload) {
+    const cfg = (this.state.d && this.state.d.submitConfig) || { endpoint: null };
+    if (cfg.endpoint) {
+      const r = await fetch(cfg.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return 'api';
+    }
+    await new Promise(r => setTimeout(r, 450));
+    return 'demo';
+  }
+  _syncNeedFrom(prev, scenes, ind) {
+    if (prev.needTouched) return {};
+    const parts = [];
+    if (ind) parts.push('產業:' + ind);
+    if (scenes.length) parts.push('最想改善:' + scenes.join('、'));
+    return parts.length ? { vNeed: parts.join(';') + '。' } : { vNeed: '' };
+  }
+  renderVals() {
+    const s = this.state;
+    const d = s.d, mm = s.media;
+    const errs = this._errors();
+    const t = s.touched;
+    const showName = !!(t.name && errs.name);
+    const showContact = !!(t.contact && (errs.contact || errs.email || errs.phone));
+    const base = {
+      border: '1px solid rgba(9,11,14,.25)', borderRadius: '2px', background: '#FFFFFF',
+      padding: '12px 14px', font: "400 16px 'Noto Sans TC',sans-serif", color: '#090B0E', width: '100%', boxSizing: 'border-box'
+    };
+    const errB = { ...base, border: '1.5px solid #D14E12' };
+    const errText = (on) => ({ font: "500 12.5px/1.5 'Noto Sans TC',sans-serif", color: '#D14E12', display: on ? 'block' : 'none' });
+    const set = (k) => (e) => {
+      if (!this._started && this._track) { this._started = true; this._track('demo_form_start'); }
+      const patch = { [k]: e.target.value };
+      if (k === 'vNeed') patch.needTouched = true;
+      this.setState(patch);
+    };
+    // ---- 場景選擇(複選) ----
+    const sceneDefs = [
+      { key: 'LINE 客服回覆', steps: [{ t: 'AI 接住詢問', d: '30 秒內回應、理解需求' }, { t: '重要轉真人', d: '判斷不了直接轉給你' }] },
+      { key: '名單追蹤', steps: [{ t: 'CRM 建檔', d: '對話自動整理成客戶卡' }, { t: 'DAY 1/3/5/7 跟進', d: '系統提醒,AI 擬好訊息' }] },
+      { key: '報價與提案', steps: [{ t: '線上報價單', d: '自動算稅、PDF/Excel 匯出' }, { t: '提案簡報', d: '需求整理成提案初稿' }] },
+      { key: '行銷內容', steps: [{ t: '貼文草稿', d: '依產業每週產出' }, { t: '排程發布', d: '潤飾確認就上線' }] },
+      { key: '專案管理', steps: [{ t: '任務看板', d: '交辦、進度一眼看清' }, { t: '排程提醒', d: '該做的不會漏' }] },
+      { key: '數據報表', steps: [{ t: '營運儀表板', d: '新客、回覆、轉換集中看' }, { t: 'AI 月報', d: '月底自動生成' }] },
+      { key: '其他客製流程', steps: [{ t: '客製模組', d: 'Demo 時依你的流程規劃' }] }
+    ];
+    const toggleScene = (key) => {
+      this.setState(prev => {
+        const cur = prev.scenes.includes(key) ? prev.scenes.filter(x => x !== key) : [...prev.scenes, key];
+        return { scenes: cur, ...this._syncNeedFrom(prev, cur, prev.indPick) };
+      });
+    };
+    const sceneOpts = sceneDefs.map(sd => {
+      const on = s.scenes.includes(sd.key);
+      return {
+        label: sd.key,
+        pressed: on ? 'true' : 'false',
+        pick: () => toggleScene(sd.key),
+        style: {
+          cursor: 'pointer', borderRadius: '999px', padding: '11px 20px',
+          font: "600 14px 'Noto Sans TC',sans-serif",
+          background: on ? '#090B0E' : 'transparent',
+          color: on ? '#F2EFE8' : '#090B0E',
+          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        }
+      };
+    });
+    // ---- 流程預覽組裝 ----
+    const baseSteps = [{ t: '客人進來', d: 'LINE / 表單 / 電話詢問', fixed: true }];
+    const chosen = sceneDefs.filter(sd => s.scenes.includes(sd.key)).flatMap(sd => sd.steps);
+    const endSteps = [{ t: '同一個後台', d: '你在一個地方看全部', fixed: true }];
+    const rows = [...baseSteps, ...(chosen.length ? chosen : [{ t: '(等你選擇流程)', d: '左側選好,這裡即時組裝', empty: true }]), ...endSteps];
+    const pipeline = rows.map((r, i) => ({
+      t: r.t, d: r.d,
+      state: r.empty ? '待選' : (r.fixed ? '固定' : '已加入'),
+      rowStyle: {
+        display: 'flex', alignItems: 'center', gap: '12px',
+        border: r.empty ? '1px dashed rgba(242,239,232,.25)' : '1px solid rgba(242,239,232,.14)',
+        background: r.empty ? 'transparent' : '#14171C',
+        borderRadius: '6px', padding: '11px 14px',
+        opacity: r.empty ? 0.7 : 1,
+        transition: 'all 260ms cubic-bezier(0.16,1,0.3,1)'
+      },
+      dotStyle: { width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0, background: r.empty ? 'rgba(242,239,232,.3)' : (r.fixed ? '#3E9BFF' : '#FF6B2C') },
+      stateStyle: { marginLeft: 'auto', font: "700 10px 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: r.empty ? 'rgba(242,239,232,.4)' : (r.fixed ? '#3E9BFF' : '#65E0BC'), flexShrink: 0 }
+    }));
+    // ---- 產業情境 ----
+    const indCaseMap = { '婚禮婚慶': 'wedding', '室內設計': 'interior', '房仲不動產': 'realestate', '團購電商': 'groupbuy', '活動售票': 'labubu', 'ESG 永續': 'doiiin', '社區管理': 'community', '教育培訓': 'ouros', '品牌官網': 'rouzhi' };
+    const allMedia = mm ? [...mm.FEATURED_MEDIA, ...mm.WORKS_MEDIA] : [];
+    const findCase = (label) => allMedia.find(c => c.slug === indCaseMap[label]);
+    const indList = d?.demoIndustries ?? [];
+    const pickInd = (label) => {
+      this.setState(prev => {
+        const next = prev.indPick === label ? '' : label;
+        return { indPick: next, vIndustry: next, ...this._syncNeedFrom(prev, prev.scenes, next) };
+      });
+    };
+    const indOpts = indList.map(label => {
+      const on = s.indPick === label;
+      return {
+        label,
+        hasCase: !!findCase(label),
+        pressed: on ? 'true' : 'false',
+        pick: () => pickInd(label),
+        style: {
+          cursor: 'pointer', borderRadius: '999px', padding: '11px 20px',
+          font: "600 14px 'Noto Sans TC',sans-serif",
+          background: on ? '#FF6B2C' : 'transparent',
+          color: on ? '#090B0E' : '#090B0E',
+          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        }
+      };
+    });
+    const selCase = s.indPick ? findCase(s.indPick) : null;
+    const indHasMedia = !!selCase;
+    return {
+      flowLabel: s.scenes.length || s.indPick ? '正在組你的流程' : 'PEAKQI 接住',
+      sceneOpts, pipeline,
+      pipelineNote: '介面流程預覽,實際模組以 Demo 與方案為準;不代表成效數字。',
+      indOpts,
+      indHasMedia,
+      indNoMedia: !indHasMedia,
+      indAlt: selCase ? selCase.cover.alt : '',
+      indImgStyle: selCase ? {
+        width: '100%', height: '170px',
+        backgroundImage: 'url("' + selCase.cover.src + '")',
+        backgroundSize: 'cover', backgroundPosition: 'top center',
+        borderBottom: '1px solid rgba(9,11,14,.1)', backgroundColor: '#090B0E'
+      } : {},
+      indPanelName: selCase ? selCase.name + '(實際案例畫面)' : (s.indPick ? s.indPick + '——通用流程' : '選一個產業'),
+      indPanelD: selCase ? (selCase.industry + '・' + selCase.type + '・' + (selCase.sourcePage || '').toUpperCase()) : (s.indPick ? '這個產業目前以通用流程 UI 示意,Demo 時依你的實際場景建置,不虛構客戶案例。' : '有相符案例的產業會直接顯示該案實際截圖。'),
+      indHasLink: !!selCase,
+      indHref: selCase && ['wedding', 'interior', 'social', 'realestate'].includes(selCase.slug) ? 'Case.dc.html?slug=' + selCase.slug : 'Cases.dc.html#index',
+      risks: d?.risk ?? [],
+      industryOpts: indList,
+      timeOpts: d?.contactTimes ?? [],
+      copyLabel: s.copied ? '已複製 Email ✓' : '複製 Email',
+      copyEmail: () => {
+        try { navigator.clipboard && navigator.clipboard.writeText('peakqi.com@gmail.com'); } catch (e) {}
+        this.setState({ copied: true });
+        setTimeout(() => this.setState({ copied: false }), 2000);
+      },
+      hp: s.hp, setHp: (e) => this.setState({ hp: e.target.value }),
+      vName: s.vName, vCompany: s.vCompany, vIndustry: s.vIndustry, vTime: s.vTime,
+      vPhone: s.vPhone, vEmail: s.vEmail, vLine: s.vLine, vNeed: s.vNeed,
+      setName: set('vName'), setCompany: set('vCompany'),
+      setIndustry: (e) => this.setState({ vIndustry: e.target.value, indPick: e.target.value }),
+      setTime: (e) => this.setState({ vTime: e.target.value }),
+      setPhone: set('vPhone'), setEmail: set('vEmail'), setLine: set('vLine'), setNeed: set('vNeed'),
+      blurName: () => this.setState({ touched: { ...s.touched, name: true } }),
+      blurContact: () => this.setState({ touched: { ...s.touched, contact: true } }),
+      nameInvalid: showName ? 'true' : 'false',
+      nameErr: errs.name || '',
+      nameStyle: showName ? errB : base,
+      nameErrStyle: errText(showName),
+      phoneInvalid: (t.contact && errs.phone) ? 'true' : 'false',
+      emailInvalid: (t.contact && errs.email) ? 'true' : 'false',
+      phoneStyle: (t.contact && errs.phone) ? errB : base,
+      emailStyle: (t.contact && errs.email) ? errB : base,
+      contactErr: errs.contact || errs.email || errs.phone || '',
+      contactErrStyle: errText(showContact),
+      baseInput: base,
+      areaInput: { ...base, resize: 'vertical', lineHeight: 1.7 },
+      sumIndustry: s.vIndustry || '未選(可留白)',
+      sumScenes: s.scenes.length ? s.scenes.join('、') : '未選(可在說明補充)',
+      sumContact: [s.vPhone && '電話', s.vEmail && 'Email', s.vLine && 'LINE'].filter(Boolean).join('/') + (s.vTime ? '・' + s.vTime : '') || '尚未填',
+      sumDemo: (s.vIndustry ? s.vIndustry + ' × ' : '') + (s.scenes.length ? s.scenes.join('、') : '依你的說明準備'),
+      notDone: !s.done,
+      done: s.done,
+      doneNote: s.doneMode === 'demo'
+        ? '此為預覽環境的 demo submission——內容不會傳到伺服器。想確保我們收到,可用下方 Email 一鍵寄出(內容已整理好),或直接來電 0988-650-951。'
+        : '我們會在一個工作天內與你聯繫,安排 15 分鐘場景 Demo。',
+      mailtoHref: this._mailto(),
+      submitting: s.submitting,
+      submitLabel: s.submitting ? '送出中⋯' : '送出,預約 15 分鐘 Demo →',
+      submitStyle: {
+        background: s.submitting ? 'rgba(9,11,14,.35)' : '#FF6B2C', border: 'none', color: '#090B0E',
+        padding: '15px', borderRadius: '2px', font: "700 16px 'Noto Sans TC',sans-serif", letterSpacing: '.04em',
+        cursor: s.submitting ? 'wait' : 'pointer'
+      },
+      statusMsg: s.failMsg || (s.done ? '已收到需求,我們將使用你的實際場景準備 Demo。' : ''),
+      statusStyle: { font: "500 13.5px/1.7 'Noto Sans TC',sans-serif", color: s.failMsg ? '#D14E12' : '#1e9a72', minHeight: '1px', margin: 0 },
+      submit: async () => {
+        if (s.submitting || s.done) return;
+        if (s.hp) { this.setState({ done: true, doneMode: 'demo' }); return; }
+        const errsNow = this._errors();
+        if (Object.keys(errsNow).length) {
+          if (this._track) this._track('demo_form_error', { fields: Object.keys(errsNow).join(',') });
+          this.setState({ touched: { name: true, contact: true } });
+          const focusId = errsNow.name ? 'pq-f-name' : 'pq-f-phone';
+          setTimeout(() => { const el = document.getElementById(focusId); if (el) el.focus(); }, 60);
+          return;
+        }
+        this.setState({ submitting: true, failMsg: '' });
+        if (this._track) this._track('demo_form_submit');
+        try {
+          const mode = await this._send(this._payload());
+          if (this._track) this._track('demo_form_success', { mode });
+          this.setState({ submitting: false, done: true, doneMode: mode });
+        } catch (e) {
+          if (this._track) this._track('demo_form_error', { stage: 'send' });
+          this.setState({ submitting: false, failMsg: '目前無法送出,請稍後再試,或使用網站提供的 Email/電話與我們聯絡。' });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

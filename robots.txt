@@ -1,0 +1,5 @@
+# robots.txt — 奇鋒國際 PeakQi(部署時將網域換成正式網址)
+User-agent: *
+Allow: /
+
+Sitemap: https://peakqi.com/sitemap.xml
