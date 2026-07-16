@@ -85,19 +85,24 @@ export function createHome2() {
       });
       meters.forEach((m, i) => {
         const fill = m.firstElementChild;
-        const bad = ez(sub(p, 0.05 + i * 0.06, 0.5 + i * 0.06));
-        const level = bad * (1 - take);
+        const bad = ez(sub(p, 0.05 + i * 0.06, 0.5 + i * 0.06));   // 問題嚴重度上升
         if (fill) {
-          fill.style.width = (8 + level * 84).toFixed(1) + '%';
-          fill.style.background = take > 0.5 ? '#65E0BC' : (level > 0.55 ? '#FF6B2C' : 'rgba(242,239,232,.55)');
+          if (take > 0.5) {                                        // 接管後:填滿綠(=已處理完成)
+            fill.style.width = (60 + 40 * take).toFixed(0) + '%';
+            fill.style.background = '#65E0BC';
+          } else {                                                 // 接管前:嚴重度上升,轉橘
+            fill.style.width = (8 + bad * 84).toFixed(1) + '%';
+            fill.style.background = bad > 0.5 ? '#FF6B2C' : 'rgba(242,239,232,.55)';
+          }
         }
         const c = counts[i];
         if (c) {
           const max = parseInt(c.getAttribute('data-max') || '7', 10);
-          const v = take > 0.5 ? 0 : Math.round(max * level);
-          const s2 = take > 0.5 ? '已接管' : (v + ' ' + (c.getAttribute('data-u') || ''));
+          let s2, col;
+          if (take > 0.5) { s2 = 'AI 已接手 ✓'; col = '#65E0BC'; }
+          else { s2 = Math.max(1, Math.round(max * bad)) + ' ' + (c.getAttribute('data-u') || ''); col = bad > 0.5 ? '#FF6B2C' : 'rgba(242,239,232,.7)'; }
           if (c.textContent !== s2) c.textContent = s2;
-          c.style.color = take > 0.5 ? '#65E0BC' : (level > 0.55 ? '#FF6B2C' : 'rgba(242,239,232,.65)');
+          c.style.color = col;
         }
       });
       if (scan) { scan.style.opacity = String(0.5 * mess * (1 - take)); scan.style.transform = 'translateY(' + (p * 300).toFixed(0) + 'px)'; }

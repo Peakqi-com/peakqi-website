@@ -15,6 +15,9 @@ export function createHeroEngine({ refs, manifest }) {
   let destroyed = false, visible = true, staticOn = false, stopped = false;
   let io = null, mql = null, resizeTmr = 0, tries = 0;
   let seq = null, inflight = 0, loopN = 0, drawN = 0;
+  let textOrig = null;                 // 桌機文字原始定位(還原用)
+  const MOBILE_ANIM = 0.54;            // 手機:動畫佔下方比例,其餘給文字
+  const NAV = 68;
 
   // 設計座標 1200×760
   const DW = 1200, DH = 760;
@@ -94,6 +97,24 @@ export function createHeroEngine({ refs, manifest }) {
     ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
     ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
   }
+  // ---------- 子動畫工具(面板內部動畫;以時間 t 循環,不影響視差母動畫) ----------
+  const frac = (v) => v - Math.floor(v);
+  function clipRect(x, y, w, h, r) { ctx.save(); rr(x, y, w, h, r); ctx.clip(); }
+  function typingDots(cx, cy, col, t) {
+    const base = ctx.globalAlpha; ctx.fillStyle = col;
+    for (let i = 0; i < 3; i++) {
+      ctx.globalAlpha = base * (0.25 + 0.75 * (0.5 + 0.5 * Math.sin(t * 7 - i * 0.9)));
+      ctx.beginPath(); ctx.arc(cx + i * S(9), cy, S(2.6), 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = base;
+  }
+  function heart(cx, cy, r) {
+    ctx.beginPath(); ctx.moveTo(cx, cy + r * 0.6);
+    ctx.bezierCurveTo(cx - r, cy - r * 0.3, cx - r * 0.5, cy - r, cx, cy - r * 0.3);
+    ctx.bezierCurveTo(cx + r * 0.5, cy - r, cx + r, cy - r * 0.3, cx, cy + r * 0.6);
+    ctx.closePath(); ctx.fill();
+  }
+  function fmtNT(n) { let s = String(Math.round(n)), o = ''; for (let i = 0; i < s.length; i++) { if (i && (s.length - i) % 3 === 0) o += ','; o += s[i]; } return o; }
   function winPos(win, i, q, t) {
     if (!win.mt) { // note:無 slot
       const drift = Math.sin(t * 0.6 + i) * 5;
@@ -176,72 +197,188 @@ export function createHeroEngine({ refs, manifest }) {
   }
   function drawBody(win, q, t, x, y, w, h, dock) {
     const pad = S(12);
+    const baseA = ctx.globalAlpha;           // 面板本身透明度(子動畫在此之上疊加)
+    const docked = dock > 0.5;               // 已入座:播放內部子動畫
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
     if (win.type === 'line') {
-      ctx.fillStyle = 'rgba(242,239,232,.14)'; rr(x + pad, y + pad, w * 0.56, S(22), S(8)); ctx.fill();
-      ctx.fillStyle = 'rgba(101,224,188,' + (0.25 + dock * 0.5) + ')'; rr(x + w - pad - w * 0.5, y + pad + S(30), w * 0.5, S(22), S(8)); ctx.fill();
-      if (dock > 0.5) {
-        ctx.fillStyle = GREEN; ctx.font = F(600, px(10.5));
-        ctx.fillText('AI 已回覆・時段已保留', x + pad, y + h - S(12));
+      // 客服:訊息一來一往、輸入中動畫
+      if (docked) {
+        clipRect(x, y, w, h - S(20), S(4));
+        const reW = w * 0.52, inW = w * 0.6;
+        ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(242,239,232,.16)';
+        rr(x + pad, y + pad, inW, S(20), S(10)); ctx.fill();          // 客戶訊息(左)
+        const c1 = frac(t / 3.4), rev = ez(sub(c1, 0.34, 0.5));
+        if (c1 < 0.34) {
+          ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(101,224,188,.16)';
+          rr(x + w - pad - S(46), y + pad + S(26), S(46), S(18), S(9)); ctx.fill();
+          typingDots(x + w - pad - S(36), y + pad + S(35), GREEN, t);   // AI 輸入中
+        } else {
+          ctx.globalAlpha = baseA * rev; ctx.fillStyle = 'rgba(101,224,188,.85)';
+          rr(x + w - pad - reW, y + pad + S(26), reW, S(20), S(10)); ctx.fill(); // AI 回覆(右)
+        }
+        const c2 = ez(sub(c1, 0.6, 0.76)) * (1 - ez(sub(c1, 0.92, 1)));
+        ctx.globalAlpha = baseA * c2; ctx.fillStyle = 'rgba(242,239,232,.16)';
+        rr(x + pad, y + pad + S(52), inW * 0.78, S(18), S(10)); ctx.fill(); // 客戶再回(左)
+        ctx.restore();
+        ctx.globalAlpha = baseA; ctx.fillStyle = GREEN; ctx.font = F(600, px(10.5));
+        ctx.fillText('AI 已回覆・時段已保留', x + pad, y + h - S(10));
       } else {
+        ctx.fillStyle = 'rgba(242,239,232,.14)'; rr(x + pad, y + pad, w * 0.56, S(22), S(8)); ctx.fill();
+        ctx.fillStyle = 'rgba(101,224,188,' + (0.25 + dock * 0.5) + ')'; rr(x + w - pad - w * 0.5, y + pad + S(30), w * 0.5, S(22), S(8)); ctx.fill();
         ctx.fillStyle = 'rgba(242,239,232,.14)'; rr(x + pad, y + pad + S(60), w * 0.42, S(22), S(8)); ctx.fill();
       }
+
     } else if (win.type === 'excel') {
-      ctx.strokeStyle = 'rgba(242,239,232,.13)'; ctx.lineWidth = 1;
-      const rows = 3, cols = 4, gw = (w - pad * 2) / cols, gh = (h - pad * 2 - S(4)) / rows;
-      for (let r = 0; r <= rows; r++) { ctx.beginPath(); ctx.moveTo(x + pad, y + pad + r * gh); ctx.lineTo(x + w - pad, y + pad + r * gh); ctx.stroke(); }
-      for (let c = 0; c <= cols; c++) { ctx.beginPath(); ctx.moveTo(x + pad + c * gw, y + pad); ctx.lineTo(x + pad + c * gw, y + pad + rows * gh); ctx.stroke(); }
-      if (dock < 0.5 && q > 0.13) { // 資料缺口
-        ctx.strokeStyle = 'rgba(255,107,44,.7)'; ctx.setLineDash([3, 3]);
-        ctx.strokeRect(x + pad + gw * 2, y + pad + gh, gw, gh); ctx.setLineDash([]);
+      // CRM:三位客戶(不同顏色)依序排入、掃描高亮
+      if (docked) {
+        clipRect(x, y, w, h, S(4));
+        const people = [['王小姐', GREEN, 'DAY1 已排'], ['洪艾倫', BLUE, '跟進中'], ['吳傑奇', ORANGE, '已成交']];
+        const rh = S(30), ph2 = frac(t / 5.5), hi = Math.floor(t / 1.1) % 3;
+        people.forEach((p2, i2) => {
+          const rin = ez(sub(ph2, 0.04 + i2 * 0.12, 0.18 + i2 * 0.12)) * (1 - ez(sub(ph2, 0.9, 0.99)));
+          const ry = y + pad + i2 * (rh + S(6)), tx = (1 - rin) * S(14);
+          ctx.globalAlpha = baseA * rin;
+          ctx.fillStyle = hi === i2 ? 'rgba(242,239,232,.1)' : 'rgba(242,239,232,.05)';
+          rr(x + pad - tx, ry, w - pad * 2, rh, S(4)); ctx.fill();
+          ctx.fillStyle = p2[1]; ctx.beginPath(); ctx.arc(x + pad + S(12) - tx, ry + rh / 2, S(5), 0, 7); ctx.fill();
+          ctx.fillStyle = 'rgba(242,239,232,.85)'; ctx.font = F(600, px(11)); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+          ctx.fillText(p2[0], x + pad + S(24) - tx, ry + rh / 2 + 0.5);
+          ctx.fillStyle = p2[1]; ctx.font = F(600, px(9.5)); ctx.textAlign = 'right';
+          ctx.fillText(p2[2], x + w - pad - S(6), ry + rh / 2 + 0.5);
+          ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        });
+        ctx.restore(); ctx.globalAlpha = baseA;
+      } else {
+        ctx.strokeStyle = 'rgba(242,239,232,.13)'; ctx.lineWidth = 1;
+        const rows = 3, cols = 4, gw = (w - pad * 2) / cols, gh = (h - pad * 2 - S(4)) / rows;
+        for (let r = 0; r <= rows; r++) { ctx.beginPath(); ctx.moveTo(x + pad, y + pad + r * gh); ctx.lineTo(x + w - pad, y + pad + r * gh); ctx.stroke(); }
+        for (let c = 0; c <= cols; c++) { ctx.beginPath(); ctx.moveTo(x + pad + c * gw, y + pad); ctx.lineTo(x + pad + c * gw, y + pad + rows * gh); ctx.stroke(); }
+        if (q > 0.13) { ctx.strokeStyle = 'rgba(255,107,44,.7)'; ctx.setLineDash([3, 3]); ctx.strokeRect(x + pad + gw * 2, y + pad + gh, gw, gh); ctx.setLineDash([]); }
       }
-      if (dock > 0.5) {
-        const dots = [GREEN, BLUE, ORANGE];
-        dots.forEach((cl, i2) => { ctx.fillStyle = cl; ctx.beginPath(); ctx.arc(x + pad + S(5), y + pad + gh * i2 + gh / 2, S(3), 0, 7); ctx.fill(); });
-        ctx.fillStyle = 'rgba(242,239,232,.7)'; ctx.font = F(500, px(10.5));
-        ctx.fillText('王小姐・DAY 1 已排', x + pad + S(14), y + pad + gh / 2 + S(3));
-      }
+
     } else if (win.type === 'quote') {
-      ctx.fillStyle = 'rgba(242,239,232,.16)';
-      for (let i2 = 0; i2 < 3; i2++) rr(x + pad, y + pad + i2 * S(16), (w - pad * 2) * (0.9 - i2 * 0.18), S(7), S(3)), ctx.fill();
-      ctx.fillStyle = dock > 0.5 ? IVORY : 'rgba(242,239,232,.6)'; ctx.font = F(700, px(15));
-      ctx.fillText('NT$', x + pad, y + h - S(16));
-      if (dock > 0.5) {
-        ctx.fillStyle = GREEN; ctx.font = F(600, px(10.5)); ctx.textAlign = 'right';
-        ctx.fillText('PDF ✓ 已產出', x + w - pad, y + h - S(16)); ctx.textAlign = 'left';
+      // 報價:逐行淡入金額、總價換色並數字滾動
+      if (docked) {
+        clipRect(x, y, w, h, S(4));
+        const items = [12000, 18600, 9800, 8200], cyc = frac(t / 4.2), rowH = S(17);
+        items.forEach((val, i2) => {
+          const a = ez(sub(cyc, 0.05 + i2 * 0.08, 0.2 + i2 * 0.08)), ry = y + pad + i2 * rowH;
+          ctx.globalAlpha = baseA * a;
+          ctx.fillStyle = 'rgba(242,239,232,.16)'; rr(x + pad, ry + S(3), (w - pad * 2) * (0.42 - i2 * 0.03), S(6), S(3)); ctx.fill();
+          ctx.fillStyle = 'rgba(242,239,232,.78)'; ctx.font = F(600, px(10.5)); ctx.textAlign = 'right';
+          ctx.fillText(fmtNT(val * ez(sub(cyc, 0.05 + i2 * 0.08, 0.34 + i2 * 0.08))), x + w - pad, ry + S(10));
+          ctx.textAlign = 'left';
+        });
+        const divY = y + pad + items.length * rowH + S(4);
+        ctx.globalAlpha = baseA * ez(sub(cyc, 0.4, 0.5)); ctx.strokeStyle = 'rgba(242,239,232,.2)';
+        ctx.beginPath(); ctx.moveTo(x + pad, divY); ctx.lineTo(x + w - pad, divY); ctx.stroke();
+        const total = items.reduce((a2, b2) => a2 + b2, 0), ty2 = divY + S(20);
+        ctx.globalAlpha = baseA * ez(sub(cyc, 0.42, 0.55));
+        ctx.fillStyle = 'rgba(242,239,232,.5)'; ctx.font = F(500, px(9.5)); ctx.fillText('總價', x + pad, ty2);
+        ctx.fillStyle = ORANGE; ctx.font = F(700, px(15)); ctx.textAlign = 'right';
+        ctx.fillText('NT$ ' + fmtNT(total * ez(sub(cyc, 0.45, 0.82))), x + w - pad, ty2 + S(2));
+        ctx.textAlign = 'left'; ctx.restore(); ctx.globalAlpha = baseA;
+      } else {
+        ctx.fillStyle = 'rgba(242,239,232,.16)';
+        for (let i2 = 0; i2 < 3; i2++) { rr(x + pad, y + pad + i2 * S(16), (w - pad * 2) * (0.9 - i2 * 0.18), S(7), S(3)); ctx.fill(); }
+        ctx.fillStyle = 'rgba(242,239,232,.6)'; ctx.font = F(700, px(15)); ctx.fillText('NT$', x + pad, y + h - S(16));
       }
+
     } else if (win.type === 'social') {
-      const cols = 7, gw = (w - pad * 2) / cols, gh = S(14);
-      const fill = dock > 0.5 ? 5 : 2;
-      for (let r = 0; r < 3; r++) for (let c = 0; c < cols; c++) {
-        const on = (r * cols + c) % 4 === 1 && (r * cols + c) / 4 < fill;
-        ctx.fillStyle = on ? (dock > 0.5 ? 'rgba(255,107,44,.8)' : 'rgba(242,239,232,.3)') : 'rgba(242,239,232,.08)';
-        rr(x + pad + c * gw + 1, y + pad + r * (gh + S(4)), gw - 2, gh, S(2)); ctx.fill();
-      }
-      if (dock > 0.5) { ctx.fillStyle = 'rgba(242,239,232,.65)'; ctx.font = F(500, px(10.5)); ctx.fillText('本週貼文已排 5 篇', x + pad, y + h - S(10)); }
-    } else if (win.type === 'task') {
-      const cw = (w - pad * 2 - S(12)) / 3;
-      for (let c = 0; c < 3; c++) {
-        const cx2 = x + pad + c * (cw + S(6));
-        ctx.fillStyle = 'rgba(242,239,232,.07)'; rr(cx2, y + pad, cw, h - pad * 2 - S(4), S(4)); ctx.fill();
-        const n = [2, 2, dock > 0.5 ? 2 : 1][c];
-        for (let k = 0; k < n; k++) {
-          const hot = dock > 0.5 && c === 2 && k === 1;
-          ctx.fillStyle = hot ? 'rgba(101,224,188,.25)' : 'rgba(242,239,232,.16)';
-          rr(cx2 + S(4), y + pad + S(6) + k * S(20), cw - S(8), S(14), S(3)); ctx.fill();
-          if (hot) { ctx.strokeStyle = GREEN; rr(cx2 + S(4), y + pad + S(6) + k * S(20), cw - S(8), S(14), S(3)); ctx.stroke(); }
+      // 行銷:生成圖片(掃描填色)+ 文案逐行 + 愛心讚數(IG 介面)
+      if (docked) {
+        clipRect(x, y, w, h, S(4));
+        const cyc = frac(t / 4.6), imgW = w - pad * 2, imgH = h * 0.46, gen = ez(sub(cyc, 0.05, 0.4));
+        ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(242,239,232,.06)'; rr(x + pad, y + pad, imgW, imgH, S(4)); ctx.fill();
+        clipRect(x + pad, y + pad, imgW, imgH, S(4));
+        const g = ctx.createLinearGradient(0, y + pad, 0, y + pad + imgH);
+        g.addColorStop(0, 'rgba(255,107,44,.35)'); g.addColorStop(1, 'rgba(62,155,255,.3)');
+        ctx.globalAlpha = baseA; ctx.fillStyle = g; ctx.fillRect(x + pad, y + pad + imgH * (1 - gen), imgW, imgH * gen);
+        const sx = x + pad + frac(t / 1.3) * imgW * 1.4 - imgW * 0.2;
+        const sg = ctx.createLinearGradient(sx - S(18), 0, sx + S(18), 0);
+        sg.addColorStop(0, 'rgba(242,239,232,0)'); sg.addColorStop(0.5, 'rgba(242,239,232,.16)'); sg.addColorStop(1, 'rgba(242,239,232,0)');
+        ctx.fillStyle = sg; ctx.fillRect(x + pad, y + pad, imgW, imgH);
+        ctx.globalAlpha = baseA * gen; ctx.fillStyle = 'rgba(242,239,232,.7)';
+        ctx.beginPath(); ctx.arc(x + pad + imgW * 0.72, y + pad + imgH * 0.32, S(6), 0, 7); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x + pad + S(8), y + pad + imgH - S(5)); ctx.lineTo(x + pad + imgW * 0.42, y + pad + imgH * 0.48); ctx.lineTo(x + pad + imgW * 0.78, y + pad + imgH - S(5)); ctx.closePath(); ctx.fill();
+        ctx.restore();                                                   // 圖片 clip
+        const cap = ez(sub(cyc, 0.42, 0.78));
+        for (let i2 = 0; i2 < 2; i2++) {
+          const la = clamp((cap - i2 * 0.28) / 0.4, 0, 1);
+          ctx.globalAlpha = baseA * (la > 0.02 ? 1 : 0); ctx.fillStyle = 'rgba(242,239,232,.3)';
+          rr(x + pad, y + pad + imgH + S(10) + i2 * S(11), imgW * (i2 ? 0.55 : 0.82) * la, S(6), S(3)); ctx.fill();
+        }
+        const hp2 = ez(sub(cyc, 0.7, 0.86));
+        ctx.globalAlpha = baseA * hp2; ctx.fillStyle = ORANGE;
+        heart(x + pad + S(6), y + h - S(11), S(5) * (0.85 + 0.15 * Math.sin(t * 6)));
+        ctx.fillStyle = 'rgba(242,239,232,.6)'; ctx.font = F(600, px(9.5));
+        ctx.fillText(String(120 + Math.floor(hp2 * 48)), x + pad + S(16), y + h - S(7));
+        ctx.restore(); ctx.globalAlpha = baseA;                          // 外層 clip
+      } else {
+        const cols = 7, gw = (w - pad * 2) / cols, gh = S(14);
+        for (let r = 0; r < 3; r++) for (let c = 0; c < cols; c++) {
+          const on = (r * cols + c) % 4 === 1 && (r * cols + c) / 4 < 2;
+          ctx.fillStyle = on ? 'rgba(242,239,232,.3)' : 'rgba(242,239,232,.08)';
+          rr(x + pad + c * gw + 1, y + pad + r * (gh + S(4)), gw - 2, gh, S(2)); ctx.fill();
         }
       }
+
+    } else if (win.type === 'task') {
+      // 專案:任務卡自動落入三個欄位
+      const cw = (w - pad * 2 - S(12)) / 3, cyc = frac(t / 5);
+      const heads = ['rgba(101,224,188,.5)', 'rgba(62,155,255,.5)', 'rgba(255,107,44,.5)'];
+      for (let c = 0; c < 3; c++) {
+        const cx2 = x + pad + c * (cw + S(6));
+        ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(242,239,232,.07)'; rr(cx2, y + pad, cw, h - pad * 2 - S(4), S(4)); ctx.fill();
+        ctx.fillStyle = heads[c]; rr(cx2 + S(5), y + pad + S(5), cw * 0.5, S(3), S(2)); ctx.fill();
+        const nCards = docked ? [2, 3, 2][c] : [2, 2, 1][c];
+        for (let k = 0; k < nCards; k++) {
+          const order = c * 2.1 + k * 0.7;
+          const ap2 = docked ? ez(sub(cyc, 0.03 + order * 0.03, 0.13 + order * 0.03)) * (1 - ez(sub(cyc, 0.93, 1))) : 1;
+          const cardY = y + pad + S(14) + k * S(18) - (1 - ap2) * S(6);
+          const hot = docked && c === 2 && k === nCards - 1;
+          ctx.globalAlpha = baseA * ap2;
+          ctx.fillStyle = hot ? 'rgba(101,224,188,.25)' : 'rgba(242,239,232,.16)';
+          rr(cx2 + S(4), cardY, cw - S(8), S(13), S(3)); ctx.fill();
+          if (hot) { ctx.strokeStyle = GREEN; ctx.lineWidth = 1; rr(cx2 + S(4), cardY, cw - S(8), S(13), S(3)); ctx.stroke(); }
+        }
+      }
+      ctx.globalAlpha = baseA;
+
     } else if (win.type === 'data') {
-      const bw = (w - pad * 2) / 4;
-      const rise = dock > 0.5 ? ez(sub(q, 0.62, 0.72)) : 0.35;
-      [0.4, 0.7, 0.55, 0.9].forEach((v, i2) => {
-        const bh = (h - pad * 2 - S(16)) * v * (0.4 + 0.6 * rise);
-        ctx.fillStyle = dock > 0.5 ? [BLUE, GREEN, BLUE, ORANGE][i2] : 'rgba(242,239,232,.22)';
-        rr(x + pad + i2 * bw + S(3), y + h - pad - bh, bw - S(6), bh, S(2)); ctx.fill();
-      });
-      if (dock > 0.5) { ctx.fillStyle = 'rgba(242,239,232,.7)'; ctx.font = F(600, px(10.5)); ctx.fillText('回覆 28s・轉換 18%', x + pad, y + pad + S(6)); }
+      // 數據:動態 Infographic(走勢線 + 呼吸長條 + 跳動 KPI)
+      if (docked) {
+        clipRect(x, y, w, h, S(4));
+        ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(242,239,232,.7)'; ctx.font = F(600, px(10.5));
+        const conv = 15 + Math.round(3 + 3 * Math.sin(t * 0.8));
+        ctx.fillText('回覆 28s・轉換 ' + conv + '%', x + pad, y + pad + S(6));
+        const sx0 = x + pad, sw = w - pad * 2, syTop = y + pad + S(14), sh = S(18);
+        ctx.strokeStyle = 'rgba(101,224,188,.75)'; ctx.lineWidth = Math.max(1, S(1.4)); ctx.beginPath();
+        const N = 12; let last = null;
+        for (let i2 = 0; i2 <= N; i2++) {
+          const pxp = sx0 + sw * i2 / N, v = 0.5 + 0.42 * Math.sin(t * 1.4 + i2 * 0.7) * Math.cos(i2 * 0.35 + t * 0.2);
+          const pyp = syTop + sh * (1 - v);
+          if (i2 === 0) ctx.moveTo(pxp, pyp); else ctx.lineTo(pxp, pyp);
+          last = { x: pxp, y: pyp };
+        }
+        ctx.stroke();
+        if (last) { ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(last.x, last.y, S(2.6), 0, 7); ctx.fill(); }
+        const bw = sw / 4, byBot = y + h - pad, bMax = byBot - (syTop + sh + S(8));
+        [BLUE, GREEN, BLUE, ORANGE].forEach((cl, i2) => {
+          const bh = bMax * (0.45 + 0.5 * (0.5 + 0.5 * Math.sin(t * 1.1 + i2 * 1.3)));
+          ctx.fillStyle = cl; rr(x + pad + i2 * bw + S(3), byBot - bh, bw - S(6), bh, S(2)); ctx.fill();
+        });
+        ctx.restore(); ctx.globalAlpha = baseA;
+      } else {
+        const bw = (w - pad * 2) / 4;
+        [0.4, 0.7, 0.55, 0.9].forEach((v, i2) => {
+          const bh = (h - pad * 2 - S(16)) * v * 0.35;
+          ctx.fillStyle = 'rgba(242,239,232,.22)'; rr(x + pad + i2 * bw + S(3), y + h - pad - bh, bw - S(6), bh, S(2)); ctx.fill();
+        });
+      }
     }
+    ctx.globalAlpha = baseA;
   }
   function anchors(q, t) {
     return wins.map((w2, i) => winPos(w2, i, q, t));
@@ -313,7 +450,7 @@ export function createHeroEngine({ refs, manifest }) {
     const vA = ez(sub(q, 0.44, 0.5)) * (1 - ez(sub(q, 0.56, 0.61)));
     if (vA > 0.02) {
       ctx.save(); ctx.globalAlpha = vA; ctx.strokeStyle = 'rgba(62,155,255,.5)'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 6]); ctx.lineDashOffset = -t * 30;
-      const P = { x: isMobile ? W / 2 : W * 0.74, y: H / 2 };
+      const P = isMobile ? { x: X(CF.x + CF.w / 2), y: Y(CF.y + CF.h / 2) } : { x: W * 0.74, y: H / 2 };
       [0, 1, 2, 3, 4, 5].forEach(a => { const A = pos[a]; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(P.x, P.y); ctx.stroke(); });
       ctx.fillStyle = BLUE; ctx.beginPath(); ctx.arc(P.x, P.y, S(4), 0, 7); ctx.fill();
       ctx.restore();
@@ -384,7 +521,12 @@ export function createHeroEngine({ refs, manifest }) {
     el.style.opacity = o.toFixed(3);
     el.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
     const ty = (1 - sub(q, a, b)) * 20 - sub(q, c, d) * 16;
-    if (keepCenter !== false) el.style.transform = 'translateY(calc(-50% + ' + ty.toFixed(1) + 'px))';
+    if (keepCenter !== false) {
+      // 手機採上下分區:文字靠上錨定(無 -50%);桌機維持垂直置中
+      el.style.transform = isMobile
+        ? 'translateY(' + ty.toFixed(1) + 'px)'
+        : 'translateY(calc(-50% + ' + ty.toFixed(1) + 'px))';
+    }
     return o;
   }
   function updateText(q) {
@@ -426,11 +568,47 @@ export function createHeroEngine({ refs, manifest }) {
     DPR = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
     isMobile = W < 760;
-    const NAV = 68, avail = Math.max(200, H - NAV - 14);
-    SC = Math.max(0.4, Math.min(W / DW, avail / DH));
-    if (isMobile) SC = Math.max(0.3, Math.min(W / (DW * 0.82), avail / (DH * 1.05)));
-    OX = (W - DW * SC) * (isMobile ? 0.5 : 0.72);
-    OY = NAV + (H - NAV - DH * SC) * 0.5;
+    if (isMobile) {
+      // 手機:上下分區——文字置於上方、動畫置於下方,兩者不重疊
+      const animH = Math.max(240, (H - NAV) * MOBILE_ANIM);
+      SC = Math.max(0.3, Math.min(W / (DW * 0.94), (animH - 24) / DH));
+      OX = W / 2 - 740 * SC;           // 對齊內容中心(視窗群+控制台),而非設計幾何中心
+      OY = (H - animH) + (animH - DH * SC) * 0.5;
+    } else {
+      const avail = Math.max(200, H - NAV - 14);
+      SC = Math.max(0.4, Math.min(W / DW, avail / DH));
+      OX = (W - DW * SC) * 0.72;
+      OY = NAV + (H - NAV - DH * SC) * 0.5;
+    }
+    layoutText();
+  }
+  // 依裝置切換文字定位與遮罩方向
+  function layoutText() {
+    if (!textOrig) return;
+    const blocks = [refs.t1, refs.t2, refs.t3, refs.t4, refs.t5];
+    blocks.forEach((el, i) => {
+      if (!el) return;
+      const o = textOrig[i];
+      if (isMobile) {
+        el.style.top = (NAV + 10) + 'px';
+        el.style.left = '18px';
+        el.style.right = '18px';
+        el.style.width = 'auto';
+        el.style.maxWidth = 'none';
+      } else if (o) {
+        el.style.top = o.top;
+        el.style.left = o.left;
+        el.style.right = o.right;
+        el.style.width = o.width;
+        el.style.maxWidth = o.maxWidth;
+      }
+    });
+    const scrim = stage.querySelector('[data-scrim]');
+    if (scrim) {
+      scrim.style.background = isMobile
+        ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)'
+        : 'linear-gradient(90deg,rgba(9,11,14,.85) 0%,rgba(9,11,14,.5) 32%,rgba(9,11,14,0) 58%)';
+    }
   }
   let lastTs = 0;
   function frame(now, snap) {
@@ -524,6 +702,10 @@ export function createHeroEngine({ refs, manifest }) {
       return;
     }
     ctx = canvas.getContext('2d');
+    textOrig = [refs.t1, refs.t2, refs.t3, refs.t4, refs.t5].map(el => el ? {
+      top: el.style.top, left: el.style.left, right: el.style.right,
+      width: el.style.width, maxWidth: el.style.maxWidth
+    } : null);
     const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!ctx || reduced) { measure0(); applyStatic(); return; }
     measure();

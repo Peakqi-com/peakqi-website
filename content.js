@@ -239,11 +239,11 @@ export function faqJsonLd(list) {
 
 // 新場景資料(純流程示意,無新增成果數字)
 export const diagMetrics = [
-  { t: '未讀訊息', u: '條' },
-  { t: '未跟進名單', u: '組' },
-  { t: '資料重複', u: '筆' },
-  { t: '平均回覆延遲', u: '小時' },
-  { t: '流程斷點', u: '處' }
+  { t: '未讀訊息', u: '條', max: 24 },
+  { t: '未跟進名單', u: '組', max: 12 },
+  { t: '資料重複', u: '筆', max: 8 },
+  { t: '平均回覆延遲', u: '小時', max: 6 },
+  { t: '流程斷點', u: '處', max: 5 }
 ];
 export const relayStations = [
   { t: 'LINE 詢問', s: 'CAPTURED', d: '客人訊息進來,AI 30 秒內接住' },
