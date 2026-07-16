@@ -1,0 +1,20 @@
+{
+ "generatedAt": "2026-07-16T10:27:29.562Z",
+ "publishedCases": 29,
+ "featured": 4,
+ "works": 25,
+ "withCover": 29,
+ "withGallery": 29,
+ "missingImages": 0,
+ "brokenList": [],
+ "missingAlt": 0,
+ "lowRes": 0,
+ "lowResList": [],
+ "badRatio": 0,
+ "badRatioList": [],
+ "featuredGalleryShort": [],
+ "totalUniqueFiles": 70,
+ "excludedNoMedia": [
+  "美業 AI 體驗系統(列為可開發能力,未公開為案例卡)"
+ ]
+}

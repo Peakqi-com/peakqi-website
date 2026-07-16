@@ -35,27 +35,77 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 <a id="pq-skip" href="#scene">跳到主要內容</a>
 <dc-import name="Nav" active="demo" hint-size="100%,68px"></dc-import>
 
-<section data-screen-label="Demo 開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
-    <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
-      <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
-      <span>/</span>
-      <span style="color:#F2EFE8;font-weight:700">預約 Demo</span>
-    </nav>
-    <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">SCENARIO BUILDER</span>
-    <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">用你的場景,<br>15 分鐘跑一遍給你看。</h1>
-    <p style="margin:0;max-width:560px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不推銷、不用先懂 AI。先把目前最卡的流程告訴我們。</p>
-    <div style="position:relative;margin-top:8px" aria-hidden="true">
-      <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
-        <path d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
-        <circle cx="8" cy="45" r="4" fill="#FF6B2C"></circle>
-        <circle cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
-        <path data-flowline d="M452 45 L1192 45" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" style="animation:pqDash 2.6s linear infinite"></path>
-        <circle cx="1192" cy="45" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5"></circle>
-      </svg>
-      <span style="position:absolute;left:0;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.55)">你的客人</span>
-      <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
-      <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
+<section id="d-hero" data-hero="demo" data-screen-label="Demo 開場" style="background:#090B0E;color:#F2EFE8;position:relative">
+  <div data-hero-wrap style="position:relative">
+    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+        <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+            <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+            <span>/</span>
+            <span style="color:#F2EFE8;font-weight:700">預約 Demo</span>
+          </nav>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">SCENARIO BUILDER</span>
+          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">用你的場景,<br>15 分鐘跑一遍給你看。</h1>
+          <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不推銷、不用先懂 AI。先把目前最卡的流程告訴我們。</p>
+          <div style="position:relative;margin-top:2px" aria-hidden="true">
+            <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
+              <path data-hero-line="leave" d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
+              <circle cx="8" cy="45" r="4" fill="#FF6B2C"></circle>
+              <circle data-hero-node="leave" cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
+              <path data-flowline d="M452 45 L1192 45" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" style="animation:pqDash 2.6s linear infinite"></path>
+              <circle cx="1192" cy="45" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5"></circle>
+            </svg>
+            <span style="position:absolute;left:0;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.55)">你的客人</span>
+            <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
+            <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
+          </div>
+          <div data-hero-scenestage style="position:relative;min-height:118px">
+            <div data-hero-scene="leave" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · YOUR SCENARIO</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">留下你的場景</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">不用先懂 AI,先說目前最卡的流程。</p>
+            </div>
+            <div data-hero-scene="match" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 02 · MATCH</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">對上模組</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">我們挑對應模組,用你的產業做設定。</p>
+            </div>
+            <div data-hero-scene="run" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 03 · LIVE RUN</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">現場跑一遍</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">15 分鐘,把對話與流程實際跑給你看。</p>
+            </div>
+            <div data-hero-scene="clock" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · 48H</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">48 小時內</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">送出表單後,48 小時內收到回覆與時段。</p>
+            </div>
+            <div data-hero-scene="safe" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 05 · NO PRESSURE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">不推銷</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">看完覺得不合用,直接說沒關係。</p>
+            </div>
+            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · START</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">表單就在下面</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">往下走,兩分鐘填完。</p>
+            </div>
+          </div>
+          <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">直接填表單</a>
+            <a data-track="hero_case_click" href="#scene" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先選 Demo 場景</a>
+          </div>
+        </div>
+        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(220px,44vh,420px)" aria-hidden="true">
+          <div data-hero-m="clock..cta" style="position:absolute;right:0;bottom:6%;background:#14171C;border:1px solid rgba(101,224,188,.4);border-radius:8px;padding:14px 18px;display:flex;flex-direction:column;gap:6px">
+            <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#65E0BC">REPLY WINDOW</span>
+            <span style="font:800 15px 'Noto Sans TC',sans-serif">48 小時內回覆與時段</span>
+          </div>
+        </div>
+      </div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -277,6 +327,11 @@ class Component extends DCLogic {
     });
     import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});
     import('./analytics.js').then(m => { this._track = m.track; }).catch(() => {});
+    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo'); }).catch(() => {});
+  }
+  componentWillUnmount() {
+    this._dead = true;
+    if (this._hero) this._hero.destroy();
   }
   _errors() {
     const s = this.state;

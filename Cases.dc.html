@@ -32,37 +32,81 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 <a id="pq-skip" href="#stories">跳到主要內容</a>
 <dc-import name="Nav" active="cases" hint-size="100%,68px"></dc-import>
 
-<section id="wall" data-screen-label="開場透視牆" style="background:#090B0E;color:#F2EFE8;overflow:hidden">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <div data-whead style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-          <div>
-            <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
-              <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
-              <span>/</span>
-              <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
-            </nav>
-            <h1 style="margin:12px 0 0;font:900 clamp(2rem,4.4vw,3.8rem)/1.25 'Noto Sans TC',sans-serif">不講概念,<br>看實際做出來的東西。</h1>
-          </div>
+<section id="wall" data-hero="cases" data-screen-label="開場透視牆" style="background:#090B0E;color:#F2EFE8;position:relative">
+  <div data-hero-wrap style="position:relative">
+    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,80px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:2;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div style="position:relative;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+        <div data-hero-copy data-whead style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+            <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+            <span>/</span>
+            <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
+          </nav>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">DELIVERY ARCHIVE</span>
+          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.25 'Noto Sans TC',sans-serif">不講概念,<br>看實際做出來的東西。</h1>
           <div style="display:flex;gap:36px">
             <div style="display:flex;flex-direction:column;gap:4px">
-              <span style="font:700 clamp(2rem,3.6vw,3rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
+              <span style="font:700 clamp(1.8rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
               <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">已上線系統與網站</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:4px">
-              <span style="font:700 clamp(2rem,3.6vw,3rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">8+</span>
+              <span style="font:700 clamp(1.8rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">8+</span>
               <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">產業別實戰經驗</span>
             </div>
           </div>
+          <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
+            <path data-hero-line="wall" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
+            <circle data-hero-node="pull" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
+            <circle data-hero-node="proof" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
+          </svg>
+          <div data-hero-scenestage style="position:relative;min-height:118px">
+            <div data-hero-scene="wall" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · ARCHIVE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">檔案牆拉開</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">30+ 支系統與網站的交付紀錄,一次摊開。</p>
+            </div>
+            <div data-hero-scene="pull" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · PULL</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">抽出一格</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">每一格都是實際上線的畫面,不是概念圖。</p>
+            </div>
+            <div data-hero-scene="focus" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · FOCUS</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">對焦過程</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">從需求訪談到上線,流程固定、進度可追。</p>
+            </div>
+            <div data-hero-scene="proof" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · PROOF</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">數字蓋章</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">回覆速度、跟進率、上線週期,用數字驗收。</p>
+            </div>
+            <div data-hero-scene="map" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · INDUSTRIES</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">八個產業</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚慶、房仲、餐飲、健檢……版圖持續增加。</p>
+            </div>
+            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · YOUR TURN</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">你的產業</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">想看你產業的版本,Demo 直接跑給你看。</p>
+            </div>
+          </div>
+          <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">預約 15 分鐘 Demo</a>
+            <a data-track="hero_case_click" href="#stories" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">看精選案例</a>
+          </div>
+          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上皆為實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
         </div>
-        <div data-wgrid style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,210px),1fr));gap:10px" aria-hidden="true">
-          <sc-for list="{{ wallThumbs }}" as="w" hint-placeholder-count="12">
-            <div style="{{ w.style }}"></div>
-          </sc-for>
+        <div data-hero-media style="position:relative;z-index:1;max-height:min(60vh,560px);overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 76%,transparent);mask-image:linear-gradient(180deg,#000 76%,transparent)" aria-hidden="true">
+          <div data-wgrid style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,170px),1fr));gap:10px">
+            <sc-for list="{{ wallThumbs }}" as="w" hint-placeholder-count="12">
+              <div style="{{ w.style }}"></div>
+            </sc-for>
+          </div>
         </div>
-        <p style="margin:14px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上皆為實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
       </div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -231,12 +275,14 @@ class Component extends DCLogic {
     Promise.all([import('./motion-kit.js'), import('./motion/cases.motion.js')])
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});
+    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('cases'); }).catch(() => {});
     import('./cases-engine.js')
       .then(m => { if (this._dead || this._fx) return; this._fx = m.createCasesFX(); this._fx.start(); })
       .catch(() => {});
   }
   componentWillUnmount() {
     this._dead = true;
+    if (this._hero) this._hero.destroy();
     if (this._motion) this._motion.destroy();
     if (this._fx) this._fx.destroy();
   }
