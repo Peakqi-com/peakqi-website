@@ -144,7 +144,25 @@ export function createHome2() {
       if (modName) modName.textContent = items[idx] ? (items[idx].getAttribute('data-name') || '') : '';
       if (linkLine) linkLine.style.top = (12 + idx * (100 / panels.length) * 0.72).toFixed(1) + '%';
     };
-    if (ctx.reduced || ctx.mobile) { setActive(0, false); return; } // 模板本身也各面板可讀(行動版直排)
+    const n = panels.length;
+    const isCompact = () => ctx.reduced || ctx.mobile || (window.matchMedia && window.matchMedia('(max-width:899px)').matches);
+    const scrollToChapter = (idx) => {
+      const vh = window.innerHeight || 1;
+      const pT = 0.04 + (idx + 0.5) / n * 0.92;
+      const wrapTop = wrap.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
+      const y = wrapTop + pT * Math.max(1, wrap.offsetHeight - vh);
+      window.scrollTo({ top: Math.round(y), behavior: 'smooth' });
+    };
+    // 右側項目可點擊切換左側情境:桌機平滑捲到該章節、行動版直接切換
+    items.forEach((it, i) => {
+      it.style.cursor = 'pointer';
+      it.setAttribute('role', 'button');
+      it.setAttribute('tabindex', '0');
+      const go = () => { if (isCompact()) setActive(i, true); else scrollToChapter(i); };
+      it.addEventListener('click', go);
+      it.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+    if (ctx.reduced || ctx.mobile) { setActive(0, false); return; } // 行動版:單一情境 + 點按切換
     pin(wrap, stage, 180);
     let cur = -1;
     setActive(0, false);
