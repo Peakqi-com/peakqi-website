@@ -46,14 +46,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">預約 Demo</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">SCENARIO BUILDER</span>
-          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">用你的場景,<br>15 分鐘跑一遍給你看。</h1>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR DEMO SCENE</span>
+          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">把你現在<span style="color:#FF6B2C">最卡的流程</span>,<br>交給我們跑一次。</h1>
           <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不推銷、不用先懂 AI。先把目前最卡的流程告訴我們。</p>
           <div style="position:relative;margin-top:2px" aria-hidden="true">
             <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
-              <path data-hero-line="leave" d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
+              <path data-hero-line="wait" d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
               <circle cx="8" cy="45" r="4" fill="#FF6B2C"></circle>
-              <circle data-hero-node="leave" cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
+              <circle data-hero-node="build" cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
               <path data-flowline d="M452 45 L1192 45" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" style="animation:pqDash 2.6s linear infinite"></path>
               <circle cx="1192" cy="45" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5"></circle>
             </svg>
@@ -61,48 +61,105 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
             <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
           </div>
-          <div data-hero-scenestage style="position:relative;min-height:118px">
-            <div data-hero-scene="leave" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · YOUR SCENARIO</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">留下你的場景</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">不用先懂 AI,先說目前最卡的流程。</p>
+          <div data-hero-scenestage style="position:relative;min-height:122px">
+            <div data-hero-scene="wait" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 01 · WAITING</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">等待你的場景</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">一條未完成的資料線、一座空白控制台——等待輸入你的場景。</p>
+            </div>
+            <div data-hero-scene="ind" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · INDUSTRY</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">產業節點</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚禮、室內設計、房仲、美業、電商、活動、ESG、社區、教育、品牌、其他。</p>
+            </div>
+            <div data-hero-scene="flow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · FRICTION</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">流程問題</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">LINE 客服、名單追蹤、報價提案、行銷內容、專案管理、數據報表、客製流程。</p>
+            </div>
+            <div data-hero-scene="build" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · ASSEMBLE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">你來組裝</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">在右側控制台選一個產業、一個流程——鍵盤與觸控都可以。</p>
             </div>
             <div data-hero-scene="match" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 02 · MATCH</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">對上模組</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">我們挑對應模組,用你的產業做設定。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · SIMILAR</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">相似場景</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">有對應案例就直接看真實截圖;沒有就用通用流程 UI,不虛構客戶。</p>
             </div>
-            <div data-hero-scene="run" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 03 · LIVE RUN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">現場跑一遍</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">15 分鐘,把對話與流程實際跑給你看。</p>
+            <div data-hero-scene="sum" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · SUMMARY</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">準備摘要</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">產業、問題、可能展示的模組、希望聯絡時間——不做成果保證。</p>
             </div>
-            <div data-hero-scene="clock" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · 48H</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">48 小時內</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">送出表單後,48 小時內收到回覆與時段。</p>
-            </div>
-            <div data-hero-scene="safe" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 05 · NO PRESSURE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">不推銷</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">看完覺得不合用,直接說沒關係。</p>
-            </div>
-            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · START</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">表單就在下面</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">往下走,兩分鐘填完。</p>
+            <div data-hero-scene="go" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · TO FORM</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">導向表單</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">資料流接到表單,兩分鐘填完。選好的內容已自動帶入。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">直接填表單</a>
-            <a data-track="hero_case_click" href="#scene" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先選 Demo 場景</a>
+            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始填寫需求</a>
+            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先查看相似案例</a>
           </div>
         </div>
-        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(220px,44vh,420px)" aria-hidden="true">
-          <div data-hero-m="clock..cta" style="position:absolute;right:0;bottom:6%;background:#14171C;border:1px solid rgba(101,224,188,.4);border-radius:8px;padding:14px 18px;display:flex;flex-direction:column;gap:6px">
-            <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#65E0BC">REPLY WINDOW</span>
-            <span style="font:800 15px 'Noto Sans TC',sans-serif">48 小時內回覆與時段</span>
+        <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px)">
+          <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
+            <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+            <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">PEAKQI DEMO CONSOLE</span>
+            <span role="status" style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:13px;flex:1">
+            <div data-hero-m="ind..go" role="group" aria-label="選你的產業(單選)" style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 選你的產業</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ heroIndOpts }}" as="n" hint-placeholder-count="11">
+                  <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div data-hero-m="flow..go" role="group" aria-label="最卡的流程(單選)" style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">02 最卡的流程</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ heroFlowOpts }}" as="n" hint-placeholder-count="7">
+                  <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div data-hero-m="match..go" aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
+              <sc-if value="{{ heroHasCase }}" hint-placeholder-val="{{ false }}">
+                <div role="img" aria-label="{{ heroCaseAlt }}" style="{{ heroCaseImgStyle }}"></div>
+                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:2px">
+                  <span style="font:700 12.5px 'Noto Sans TC',sans-serif">相似場景:{{ heroCaseName }}</span>
+                  <span style="font:400 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.45)">REAL SCREENSHOT・{{ heroCasePage }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ heroNoCase }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:12px 13px;display:flex;flex-direction:column;gap:8px">
+                  <div aria-hidden="true" style="display:flex;gap:7px;align-items:center">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span><span style="flex:1;height:2px;background:rgba(242,239,232,.2)"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span><span style="flex:1;height:2px;background:rgba(242,239,232,.2)"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>
+                  </div>
+                  <span style="font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ heroNoCaseNote }}</span>
+                </div>
+              </sc-if>
+            </div>
+            <div data-hero-m="sum..go" style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
+              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">DEMO 準備摘要</span>
+              <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">產業:<b>{{ heroSumInd }}</b>・流程:<b>{{ heroSumFlow }}</b></span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span style="font:500 12.5px 'Noto Sans TC',sans-serif">可能展示:</span>
+                <sc-for list="{{ heroModChips }}" as="m" hint-placeholder-count="2">
+                  <span style="border:1px solid rgba(255,107,44,.5);border-radius:999px;padding:2px 9px;font:600 10.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ m.t }}</span>
+                </sc-for>
+                <sc-if value="{{ heroNoMods }}" hint-placeholder-val="{{ true }}"><span style="font:400 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">選流程後帶入對應模組</span></sc-if>
+              </div>
+              <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">希望聯絡時間:<b>{{ heroTime }}</b></span>
+              <span style="font:400 10.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">摘要僅描述 Demo 內容,不含成效或成果保證。</span>
+            </div>
+          </div>
+          <a data-hero-m="go" href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份場景,開始填寫需求 ↓</a>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
@@ -303,7 +360,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 class Component extends DCLogic {
   state = {
     d: null, media: null, copied: false,
-    scenes: [], indPick: '',
+    scenes: [], indPick: '', heroInd: '', heroFlow: '',
     vName: '', vCompany: '', vIndustry: '', vTime: '', vPhone: '', vEmail: '', vLine: '', vNeed: '', hp: '',
     touched: {}, submitting: false, done: false, doneMode: '', failMsg: '', needTouched: false
   };
@@ -323,6 +380,11 @@ class Component extends DCLogic {
           patch.indPick = patch.vIndustry;
         }
       }
+      const qs = new URLSearchParams(window.location.search);
+      const fm0 = { 'LINE 客服': 'LINE 客服回覆', '名單追蹤': '名單追蹤', '報價提案': '報價與提案', '行銷內容': '行銷內容', '專案管理': '專案管理', '數據報表': '數據報表', '客製流程': '其他客製流程' };
+      const qInd = qs.get('ind'), qFlow = qs.get('flow');
+      if (qInd && (m.demoIndustries || []).includes(qInd)) { patch.heroInd = qInd; patch.indPick = qInd; patch.vIndustry = qInd; }
+      if (qFlow && fm0[qFlow]) { patch.heroFlow = qFlow; patch.scenes = [fm0[qFlow]]; }
       this.setState(patch);
     });
     import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});
@@ -488,7 +550,57 @@ class Component extends DCLogic {
     });
     const selCase = s.indPick ? findCase(s.indPick) : null;
     const indHasMedia = !!selCase;
+    // ---- Hero BUILD YOUR DEMO SCENE:控制台選項 ----
+    const heroFlowMap = { 'LINE 客服': 'LINE 客服回覆', '名單追蹤': '名單追蹤', '報價提案': '報價與提案', '行銷內容': '行銷內容', '專案管理': '專案管理', '數據報表': '數據報表', '客製流程': '其他客製流程' };
+    const heroModsMap = { 'LINE 客服': ['AI 客服', '知識庫'], '名單追蹤': ['CRM', '跟進序列'], '報價提案': ['報價', '提案'], '行銷內容': ['行銷', '排程'], '專案管理': ['專案'], '數據報表': ['數據', 'AI 月報'], '客製流程': ['客製模組'] };
+    const syncURL = (ind, flow) => { try { const u = new URL(window.location.href); if (ind) u.searchParams.set('ind', ind); else u.searchParams.delete('ind'); if (flow) u.searchParams.set('flow', flow); else u.searchParams.delete('flow'); history.replaceState(null, '', u); } catch (e2) {} };
+    const heroChip = (on) => ({ cursor: 'pointer', borderRadius: '999px', padding: '8px 13px', font: "600 12.5px 'Noto Sans TC',sans-serif", background: on ? '#FF6B2C' : 'transparent', color: on ? '#090B0E' : 'rgba(242,239,232,.85)', border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(242,239,232,.3)', transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)' });
+    const heroIndOpts = indList.map(label => {
+      const on = s.heroInd === label;
+      return {
+        label, pressed: on ? 'true' : 'false',
+        pick: () => this.setState(prev => {
+          const next = prev.heroInd === label ? '' : label;
+          syncURL(next, prev.heroFlow);
+          return { heroInd: next, indPick: next, vIndustry: next, ...this._syncNeedFrom(prev, prev.scenes, next) };
+        }),
+        style: heroChip(on)
+      };
+    });
+    const heroFlowOpts = Object.keys(heroFlowMap).map(label => {
+      const on = s.heroFlow === label;
+      return {
+        label, pressed: on ? 'true' : 'false',
+        pick: () => this.setState(prev => {
+          const next = prev.heroFlow === label ? '' : label;
+          syncURL(prev.heroInd, next);
+          const key = heroFlowMap[label];
+          let sc2 = prev.scenes;
+          if (next && !sc2.includes(key)) sc2 = [...sc2, key];
+          if (!next) sc2 = sc2.filter(x => x !== key);
+          return { heroFlow: next, scenes: sc2, ...this._syncNeedFrom(prev, sc2, prev.indPick) };
+        }),
+        style: heroChip(on)
+      };
+    });
+    const heroCase = s.heroInd ? findCase(s.heroInd) : null;
+    const heroMods = s.heroFlow ? (heroModsMap[s.heroFlow] || []) : [];
     return {
+      heroIndOpts, heroFlowOpts,
+      heroConsoleStatus: (!s.heroInd && !s.heroFlow) ? 'WAITING…' : (s.heroInd && s.heroFlow ? 'READY' : 'ASSEMBLING…'),
+      heroHasCase: !!heroCase,
+      heroNoCase: !heroCase,
+      heroCaseName: heroCase ? heroCase.name : '',
+      heroCaseAlt: heroCase ? heroCase.cover.alt : '',
+      heroCasePage: heroCase ? (heroCase.sourcePage || '').toUpperCase() : '',
+      heroCaseImgStyle: heroCase ? { width: '100%', height: '120px', backgroundImage: 'url("' + heroCase.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', borderBottom: '1px solid rgba(242,239,232,.12)', backgroundColor: '#090B0E' } : {},
+      heroNoCaseNote: s.heroInd ? '「' + s.heroInd + '」以通用流程 UI 示意——Demo 用你的實際場景建置,不虛構客戶案例。' : '選一個產業;有對應案例會直接顯示真實截圖。',
+      heroCaseHref: heroCase ? (['wedding', 'interior', 'social', 'realestate'].includes(heroCase.slug) ? 'Case.dc.html?slug=' + heroCase.slug : 'Cases.dc.html#index') : 'Cases.dc.html',
+      heroModChips: heroMods.map(t2 => ({ t: t2 })),
+      heroNoMods: !heroMods.length,
+      heroSumInd: s.heroInd || '待選',
+      heroSumFlow: s.heroFlow || '待選',
+      heroTime: s.vTime || '表單再選',
       flowLabel: s.scenes.length || s.indPick ? '正在組你的流程' : 'PEAKQI 接住',
       sceneOpts, pipeline,
       pipelineNote: '介面流程預覽,實際模組以 Demo 與方案為準;不代表成效數字。',

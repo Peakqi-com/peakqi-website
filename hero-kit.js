@@ -210,6 +210,7 @@ export function HeroMediaPlane(ctx, root, model) {
       items.forEach((it) => {
         const on = gi >= it.lo && gi <= it.hi;
         it.el.style.opacity = on ? '1' : '0';
+        it.el.style.visibility = on ? 'visible' : 'hidden';
         it.el.style.transform = on ? 'translateY(0)' : 'translateY(' + (gi < it.lo ? maxDrift : -maxDrift) + 'px)';
       });
       if (!ready) {

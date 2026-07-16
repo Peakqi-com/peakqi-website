@@ -50,58 +50,63 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <p style="margin:0;max-width:520px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);text-wrap:pretty">接客、追客、養客,在同一條營運資料鏈中運作。以下每一章,都是系統實際跑的樣子;15 分鐘 Demo 可以用你的場景重跑一遍。</p>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
             <path data-hero-line="sig" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
-            <circle data-hero-node="catch" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
-            <circle data-hero-node="follow" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
+            <circle data-hero-node="cap" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
+            <circle data-hero-node="fol" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
           </svg>
-          <div data-hero-scenestage style="position:relative;min-height:118px">
+          <div data-hero-scenestage style="position:relative;min-height:122px">
             <div data-hero-scene="sig" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · INBOUND</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">訊號進來</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">LINE、FB、IG、官網的詢問,同時進到同一條資料鏈。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · SCATTERED</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">各做各的</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">散落的 LINE、Excel、表單、報價與工作視窗——接客、追客、養客,不再各做各的。</p>
             </div>
-            <div data-hero-scene="catch" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · CAPTURE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">30 秒接住</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">AI 客服 30 秒內回應、判斷意圖、寫進 CRM。</p>
+            <div data-hero-scene="layers" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 02 · THREE LAYERS</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">三個系統層</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">CAPTURE、FOLLOW、NURTURE 各自成形,但層與層之間,資料還是斷的。</p>
             </div>
-            <div data-hero-scene="follow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · FOLLOW</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">追客不漏</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">DAY 1/3/5/7 自動跟進,該提醒的一件不漏。</p>
+            <div data-hero-scene="cap" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 03 · CAPTURE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">詢問被接住</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">一則 LINE 詢問進入 CAPTURE:AI 辨識需求、服務、聯絡時間與是否需要真人,對話轉成 CRM 客戶卡。</p>
             </div>
-            <div data-hero-scene="warm" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 04 · NURTURE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">養客加溫</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">分眾內容持續加溫,把「考慮中」推向下訂。</p>
+            <div data-hero-scene="fol" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 04 · FOLLOW</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">跟進節奏</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">客戶卡進入 FOLLOW:DAY 1、3、5、7 的跟進節奏、提醒與訊息草稿。</p>
             </div>
-            <div data-hero-scene="rack" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 05 · SYSTEM</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">六模組接管</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">六個模組在同一個控制台各就各位。</p>
+            <div data-hero-scene="nur" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · NURTURE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">持續加溫</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">內容、案例與優惠進入 NURTURE,標籤分群、內容排程。</p>
             </div>
-            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · YOUR TURN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">換你的場景</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">15 分鐘,用你的產業把這條線重跑一遍。</p>
+            <div data-hero-scene="align" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · ALIGN</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">資料線接通</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">三層對齊,橘色與藍色資料線接通;客服、CRM、行銷、報價、專案、數據在後方組裝。</p>
+            </div>
+            <div data-hero-scene="console" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · CONSOLE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">營運控制台</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">完整的 PeakQi AI 營運控制台成形。換你的流程跑一次。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">預約 15 分鐘 Demo</a>
-            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">看實際案例</a>
+            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">用我的流程跑一次 Demo</a>
+            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
           </div>
         </div>
         <div data-hero-media style="position:relative;z-index:2;min-height:clamp(240px,46vh,460px)" aria-hidden="true">
-          <div data-slayer data-hero-m="catch..cta" style="position:absolute;left:0;top:2%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(255,107,44,.4);border-radius:8px;padding:16px 18px">
+          <div data-slayer data-hero-m="cap..console" style="position:absolute;left:0;top:2%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(255,107,44,.4);border-radius:8px;padding:16px 18px">
             <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">01 CAPTURE</span>
             <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">接客</p>
             <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">30 秒接住每一筆詢問</p>
           </div>
-          <div data-slayer data-hero-m="follow..cta" style="position:absolute;right:0;top:34%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(62,155,255,.4);border-radius:8px;padding:16px 18px">
+          <div data-slayer data-hero-m="fol..console" style="position:absolute;right:0;top:34%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(62,155,255,.4);border-radius:8px;padding:16px 18px">
             <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#3E9BFF">02 FOLLOW</span>
             <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">追客</p>
             <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">DAY 1/3/5/7 跟進不漏</p>
           </div>
-          <div data-slayer data-hero-m="warm..cta" style="position:absolute;left:6%;bottom:0;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(101,224,188,.4);border-radius:8px;padding:16px 18px">
+          <div data-slayer data-hero-m="nur..console" style="position:absolute;left:6%;bottom:0;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(101,224,188,.4);border-radius:8px;padding:16px 18px">
             <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#65E0BC">03 NURTURE</span>
             <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">養客</p>
             <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">把「考慮中」推向下訂</p>
@@ -303,8 +308,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
-<section id="integration" data-screen-label="整合成果" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,120px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="integration" data-screen-label="整合成果" style="background:#090B0E;color:#F2EFE8">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <div style="display:flex;align-items:center;gap:14px">
       <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">05</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
@@ -339,6 +346,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     <div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
       <a id="s-demo" href="Demo.dc.html?case=接客追客養客整合流程" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">用我的流程跑一次 Demo <span data-arrow>→</span></a>
       <a href="Pricing.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看方案價格</a>
+    </div>
+      </div>
     </div>
   </div>
 </section>

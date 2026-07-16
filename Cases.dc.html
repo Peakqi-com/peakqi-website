@@ -27,24 +27,48 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
 @media (max-width:899px){[data-story] [data-sgrid]{grid-template-columns:1fr!important}[data-story] [data-shotbox]{min-height:240px!important}}
 </style>
+<script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#stories">跳到主要內容</a>
 <dc-import name="Nav" active="cases" hint-size="100%,68px"></dc-import>
 
-<section id="wall" data-hero="cases" data-screen-label="開場透視牆" style="background:#090B0E;color:#F2EFE8;position:relative">
+<section id="wall" data-hero="cases" data-screen-label="開場 PROOF IN MOTION" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,80px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
-      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:2;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
-      <div style="position:relative;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
-        <div data-hero-copy data-whead style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,80px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
+      <div data-shotwall aria-hidden="true" style="position:absolute;inset:0;z-index:1;overflow:hidden">
+        <sc-for list="{{ wallShots }}" as="s" hint-placeholder-count="10">
+          <span data-shot="{{ s.slug }}" data-cat="{{ s.cat }}" data-feat="{{ s.feat }}" style="{{ s.style }}"></span>
+        </sc-for>
+        <sc-for list="{{ catLabels }}" as="c" hint-placeholder-count="4">
+          <span data-catlabel="{{ c.key }}" style="{{ c.style }}">{{ c.label }}</span>
+        </sc-for>
+        <sc-for list="{{ featMeta }}" as="f" hint-placeholder-count="4">
+          <div data-featchip="{{ f.slug }}" style="{{ f.chipStyle }}">
+            <span style="border:1px solid rgba(242,239,232,.4);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.8)">BEFORE</span>
+            <span style="border:1px solid #FF6B2C;background:rgba(9,11,14,.85);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#FF6B2C">SYSTEM</span>
+            <span style="border:1px solid rgba(101,224,188,.6);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#65E0BC">RESULT</span>
+          </div>
+        </sc-for>
+        <sc-for list="{{ featMeta }}" as="f2" hint-placeholder-count="4">
+          <div data-statcard="{{ f2.slug }}" style="{{ f2.statStyle }}">
+            <span style="font:700 21px 'Space Grotesk',sans-serif;color:#FF6B2C;font-variant-numeric:tabular-nums">{{ f2.v }}</span>
+            <span style="font:400 11.5px/1.5 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8);max-width:180px">{{ f2.l }}</span>
+            <span style="font:600 9px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(242,239,232,.45)">該案例成果・{{ f2.page }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:radial-gradient(130% 130% at 10% 32%,rgba(9,11,14,.95) 0%,rgba(9,11,14,.78) 32%,rgba(9,11,14,.24) 56%,rgba(9,11,14,0) 74%);pointer-events:none"></div>
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:3;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div data-hero-copy data-whead style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
+        <div style="max-width:560px;display:flex;flex-direction:column;gap:15px">
           <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">DELIVERY ARCHIVE</span>
-          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.25 'Noto Sans TC',sans-serif">不講概念,<br>看實際做出來的東西。</h1>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PROOF IN MOTION</span>
+          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.25 'Noto Sans TC',sans-serif">不是概念圖,<br>是<span style="color:#FF6B2C">已經運作過</span>的系統。</h1>
           <div style="display:flex;gap:36px">
             <div style="display:flex;flex-direction:column;gap:4px">
               <span style="font:700 clamp(1.8rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
@@ -56,57 +80,55 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             </div>
           </div>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
-            <path data-hero-line="wall" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
-            <circle data-hero-node="pull" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
-            <circle data-hero-node="proof" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
+            <path data-hero-line="detail" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
+            <circle data-hero-node="wall" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
+            <circle data-hero-node="focus" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
           </svg>
-          <div data-hero-scenestage style="position:relative;min-height:118px">
-            <div data-hero-scene="wall" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · ARCHIVE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">檔案牆拉開</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">30+ 支系統與網站的交付紀錄,一次摊開。</p>
+          <div data-hero-scenestage style="position:relative;min-height:122px">
+            <div data-hero-scene="detail" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · CLOSE-UP</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">先看細節</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">先看 3 張案例截圖的局部細節——都是實際上線的畫面。</p>
             </div>
-            <div data-hero-scene="pull" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · PULL</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">抽出一格</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">每一格都是實際上線的畫面,不是概念圖。</p>
+            <div data-hero-scene="wall" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 02 · THE WALL</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">鏡頭拉開</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">更多真實截圖以不同深度組成作品牆,全部取自實績頁(P.24–53)。</p>
+            </div>
+            <div data-hero-scene="sort" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · SORTED</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">依類別排列</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">AI 系統、客製平台、品牌網站、營運工具,各自歸位。</p>
             </div>
             <div data-hero-scene="focus" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · FOCUS</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">對焦過程</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">從需求訪談到上線,流程固定、進度可追。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · FOCUS</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">重點案例</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚禮、室內設計、社群、房仲——BEFORE / SYSTEM / RESULT。</p>
             </div>
             <div data-hero-scene="proof" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · PROOF</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">數字蓋章</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">回覆速度、跟進率、上線週期,用數字驗收。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · PROOF</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">成果配對</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">成果數字與對應截圖配對;僅列該案例實際數據。</p>
             </div>
-            <div data-hero-scene="map" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · INDUSTRIES</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">八個產業</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚慶、房仲、餐飲、健檢……版圖持續增加。</p>
+            <div data-hero-scene="index" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 06 · INDEX</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">作品索引</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">透視牆收整成清楚網格——PeakQi 作品索引。</p>
             </div>
             <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · YOUR TURN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">你的產業</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">想看你產業的版本,Demo 直接跑給你看。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · YOUR TURN</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">換你的流程</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">查看所有案例,或把這個流程套用到你的公司。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">預約 15 分鐘 Demo</a>
-            <a data-track="hero_case_click" href="#stories" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">看精選案例</a>
+            <a data-hero-primary data-track="hero_case_click" href="#index" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看所有案例</a>
+            <a data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">把這個流程套用到我的公司</a>
           </div>
-          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上皆為實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
-        </div>
-        <div data-hero-media style="position:relative;z-index:1;max-height:min(60vh,560px);overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 76%,transparent);mask-image:linear-gradient(180deg,#000 76%,transparent)" aria-hidden="true">
-          <div data-wgrid style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,170px),1fr));gap:10px">
-            <sc-for list="{{ wallThumbs }}" as="w" hint-placeholder-count="12">
-              <div style="{{ w.style }}"></div>
-            </sc-for>
-          </div>
+          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">牆上每一格都是實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
         </div>
       </div>
-      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:5;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -129,7 +151,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <div style="display:flex;flex-direction:column;gap:12px">
               <div data-shotbox style="position:relative;border-radius:8px;overflow:hidden;background:#090B0E;box-shadow:0 24px 56px rgba(9,11,14,.2);min-height:340px">
                 <sc-for list="{{ st.shots }}" as="sh" hint-placeholder-count="3">
-                  <img data-shot src="{{ sh.src }}" alt="{{ sh.alt }}" width="{{ sh.w }}" height="{{ sh.h }}" loading="lazy" onError="{{ sh.onErr }}" style="{{ sh.style }}">
+                  <span data-shot role="img" aria-label="{{ sh.alt }}" style="{{ sh.style }}"></span>
                 </sc-for>
                 <span style="position:absolute;left:12px;bottom:10px;background:rgba(9,11,14,.75);border:1px solid rgba(242,239,232,.25);color:rgba(242,239,232,.85);font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;padding:4px 10px;border-radius:2px">REAL SCREENSHOT・{{ st.sourcePage }}</span>
               </div>
@@ -197,7 +219,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <sc-for list="{{ worksAll }}" as="w" hint-placeholder-count="12">
         <div data-card="{{ w.slug }}" style="background:#171A1F;border:1px solid rgba(242,239,232,.12);border-radius:6px;overflow:hidden;display:flex;flex-direction:column" style-hover="border-color:#FF6B2C">
           <button onClick="{{ w.zoom }}" aria-label="{{ w.zoomLabel }}" style="display:block;width:100%;border:none;padding:0;cursor:zoom-in;background:#090B0E">
-            <img src="{{ w.cover.src }}" alt="{{ w.cover.alt }}" width="{{ w.cover.w }}" height="{{ w.cover.h }}" loading="lazy" onError="{{ w.onErr }}" style="width:100%;height:136px;object-fit:cover;object-position:top;display:block;border-bottom:1px solid rgba(242,239,232,.1)">
+            <span role="img" aria-label="{{ w.cover.alt }}" style="{{ w.thumbStyle }}"></span>
           </button>
           <div style="display:flex;flex-direction:column;gap:7px;padding:15px 16px;flex:1">
             <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
@@ -276,6 +298,7 @@ class Component extends DCLogic {
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});
     import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('cases'); }).catch(() => {});
+    import('./cases-hero.js').then(m => { if (!this._dead && !this._ch) this._ch = m.mountCasesHero(); }).catch(() => {});
     import('./cases-engine.js')
       .then(m => { if (this._dead || this._fx) return; this._fx = m.createCasesFX(); this._fx.start(); })
       .catch(() => {});
@@ -283,6 +306,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     this._dead = true;
     if (this._hero) this._hero.destroy();
+    if (this._ch) this._ch.destroy();
     if (this._motion) this._motion.destroy();
     if (this._fx) this._fx.destroy();
   }
@@ -297,18 +321,47 @@ class Component extends DCLogic {
     const F = mm?.FEATURED_MEDIA ?? [];
     const W = mm?.WORKS_MEDIA ?? [];
     const err = (fb) => (e) => { if (fb && e.target.src.indexOf(fb) < 0) e.target.src = fb; };
-    // 開場牆:取 12 張混合縮圖
-    const wallPick = [...F.map(f => f.cover), ...W.slice(0, 8).map(w => w.cover)].slice(0, 12);
-    const wallThumbs = wallPick.map(c => ({
-      style: {
-        height: 'clamp(80px,10vw,130px)', borderRadius: '4px', border: '1px solid rgba(242,239,232,.12)',
-        backgroundImage: 'url("' + c.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#14171C'
-      }
-    }));
     // Featured Stories:媒體 join 內容敘事
     const storyByslug = {};
     (d?.caseStudies ?? []).forEach(c => { storyByslug[c.slug] = c; });
     const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', social: 'AI 社群自動經營系統', realestate: '房仲 AI 助手' };
+    // PROOF IN MOTION 牆:16 張真實截圖(4 featured + 各類 4)+ 類別標籤 + featured 配對數據
+    const pickW = ['groupbuy', 'sparkspace', 'palace', 'rental', 'rouzhi', 'ouros', 'doiiin', 'expo', 'xintu', 'tables', 'qiancheng', 'linesummary'];
+    const wallList = [...F, ...pickW.map(s2 => W.find(w => w.slug === s2)).filter(Boolean)];
+    const IDXPOS = (i) => { const col = i % 4, row = (i - col) / 4; return { x: 42 + col * 14.4, y: 5 + row * 23.5, w: 13 }; };
+    const wallShots = wallList.map((w, i) => {
+      const p0 = IDXPOS(i);
+      return {
+        slug: w.slug, cat: w.type, feat: i < 4 ? '1' : '', fb: w.cover.fallback || '',
+        src: w.cover.src, w: w.cover.w, h: w.cover.h,
+        onErr: err(w.cover.fallback),
+        style: {
+          position: 'absolute', left: p0.x + '%', top: p0.y + '%', width: p0.w + '%',
+          aspectRatio: w.cover.w + ' / ' + w.cover.h,
+          backgroundImage: 'url("' + w.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center',
+          borderRadius: '4px', border: '1px solid rgba(242,239,232,.16)', backgroundColor: '#14171C', display: 'block',
+          transition: 'left .7s cubic-bezier(.16,1,.3,1), top .7s cubic-bezier(.16,1,.3,1), width .7s cubic-bezier(.16,1,.3,1), opacity .55s cubic-bezier(.16,1,.3,1), filter .55s'
+        }
+      };
+    });
+    const catLabels = ['AI 系統', '客製平台', '品牌網站', '營運工具'].map((label, ci) => ({
+      key: label, label,
+      style: {
+        position: 'absolute', left: (42 + ci * 14.6) + '%', top: '2%', opacity: 0,
+        font: "700 11px 'Noto Sans TC',sans-serif", letterSpacing: '.18em',
+        color: ['#FF6B2C', '#3E9BFF', '#65E0BC', 'rgba(242,239,232,.8)'][ci], transition: 'opacity .5s'
+      }
+    }));
+    const FOCPOS = [{ x: 42, y: 6 }, { x: 71, y: 6 }, { x: 42, y: 52 }, { x: 71, y: 52 }];
+    const featMeta = F.slice(0, 4).map((f, i) => {
+      const narr2 = storyByslug[narrMap[f.slug]] ?? {};
+      const m0 = (narr2.metrics || [])[0] || { v: '', l: '' };
+      return {
+        slug: f.slug, v: m0.v, l: m0.l, page: (f.sourcePage || '').toUpperCase(),
+        chipStyle: { position: 'absolute', zIndex: 7, left: 'calc(' + FOCPOS[i].x + '% + 10px)', top: 'calc(' + FOCPOS[i].y + '% + 8px)', display: 'flex', gap: '6px', opacity: 0, transition: 'opacity .5s', pointerEvents: 'none' },
+        statStyle: { position: 'absolute', zIndex: 7, left: 'calc(' + FOCPOS[i].x + '% + 10px)', top: 'calc(' + FOCPOS[i].y + '% + 108px)', display: 'flex', flexDirection: 'column', gap: '3px', background: 'rgba(9,11,14,.9)', border: '1px solid rgba(255,107,44,.5)', borderRadius: '6px', padding: '10px 14px', opacity: 0, transition: 'opacity .5s', pointerEvents: 'none' }
+      };
+    });
     const stories = F.map(f => {
       const narr = storyByslug[narrMap[f.slug]] ?? {};
       return {
@@ -318,10 +371,10 @@ class Component extends DCLogic {
         detailHref: 'Case.dc.html?slug=' + f.slug,
         demoHref: 'Demo.dc.html?case=' + encodeURIComponent(narrMap[f.slug]),
         shots: f.gallery.slice(0, 3).map((g, i) => ({
-          src: g.src, alt: g.alt, w: g.w, h: g.h,
-          onErr: err(g.fallback),
+          alt: g.alt,
           style: {
-            position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center',
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            backgroundImage: 'url("' + g.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#090B0E',
             opacity: i === 0 ? 1 : 0
           }
         }))
@@ -338,6 +391,10 @@ class Component extends DCLogic {
     }));
     const worksAll = list.map((w, i) => ({
       ...w,
+      thumbStyle: {
+        width: '100%', height: '136px', display: 'block', borderBottom: '1px solid rgba(242,239,232,.1)',
+        backgroundImage: 'url("' + w.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#090B0E'
+      },
       hasUrl: !!w.url,
       zoomLabel: '放大檢視「' + w.name + '」截圖',
       onErr: err(w.cover.fallback),
@@ -370,7 +427,7 @@ class Component extends DCLogic {
       };
     });
     return {
-      wallThumbs, stories, worksAll, tabs,
+      wallShots, catLabels, featMeta, stories, worksAll, tabs,
       idxGrid: this.ref('idxGrid'),
       caps: mm?.CAPABILITIES_NO_MEDIA ?? [],
       customs: d?.customRanges ?? [],

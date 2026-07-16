@@ -31,7 +31,7 @@ export function createSolutions() {
   }
 
   function capture() {
-    const wrap = pin('capture', 110);
+    const wrap = pin('capture', 200);
     const root = q('#capture');
     if (!root) return;
     const crm = qa('#capture [data-ccrm]');
@@ -53,7 +53,7 @@ export function createSolutions() {
   }
 
   function follow() {
-    const wrap = pin('follow', 110);
+    const wrap = pin('follow', 200);
     const card = q('#follow [data-fcard]');
     const cols = qa('#follow [data-fcol]');
     if (!wrap || !card || !cols.length) return;
@@ -78,7 +78,7 @@ export function createSolutions() {
   }
 
   function nurture() {
-    const wrap = pin('nurture', 80);
+    const wrap = pin('nurture', 190);
     const planes = qa('#nurture [data-nplane]');
     if (!wrap || !planes.length) return;
     ScrollChapter(ctx, wrap, (p) => {
@@ -93,7 +93,7 @@ export function createSolutions() {
   }
 
   function modules() {
-    const wrap = pin('modules', 170);
+    const wrap = pin('modules', 260);
     const rows = qa('#modules [data-smod]');
     const dets = qa('#modules [data-sdet]');
     const core = q('#modules [data-score]');
@@ -132,11 +132,35 @@ export function createSolutions() {
     }, { pinned: true });
   }
 
-  function integration() {
+  function integration() { // 結尾系統合併:三層 chips + 六模組收進控制台(pinned 可逆;mobile/reduced 走 IO 一次進場)
     const sec = q('#integration');
-    if (!sec || ctx.reduced) return;
+    if (!sec) return;
     const chips = qa('#integration [data-ichip]');
     const box = q('#integration [data-ibox]');
+    const cta = q('#integration [data-cta]');
+    const wrap = pin('integration', 140);
+    if (wrap) {
+      ScrollChapter(ctx, wrap, (p) => {
+        chips.forEach((c, i) => {
+          const kk = ez(sub(p, 0.03 + i * 0.04, 0.18 + i * 0.04));
+          c.style.opacity = String(0.12 + 0.88 * kk);
+          c.style.transform = 'translateY(' + ((1 - kk) * 18).toFixed(1) + 'px)';
+          c.style.background = p > 0.6 ? 'rgba(255,107,44,.1)' : 'transparent';
+        });
+        if (box) {
+          const kk = ez(sub(p, 0.3, 0.6));
+          box.style.opacity = String(0.08 + 0.92 * kk);
+          box.style.transform = 'translateY(' + ((1 - kk) * 34).toFixed(1) + 'px) scale(' + (0.965 + 0.035 * kk).toFixed(3) + ')';
+        }
+        if (cta) {
+          const kk = ez(sub(p, 0.68, 0.9));
+          cta.style.boxShadow = '0 12px 32px rgba(255,107,44,' + (kk * 0.32).toFixed(2) + ')';
+          cta.style.transform = 'translateY(' + (-2 * kk).toFixed(1) + 'px)';
+        }
+      }, { pinned: true });
+      return;
+    }
+    if (ctx.reduced) return; // 靜態即完成態
     chips.forEach(c => { c.style.opacity = '0'; c.style.transform = 'translateY(12px)'; });
     if (box) { box.style.opacity = '0'; box.style.transform = 'translateY(20px) scale(.97)'; }
     let done = false;

@@ -3,10 +3,10 @@ export default {
   key: 'solutions',
   chapters: [
     { id: 'overview', label: 'Overview' },
-    { id: 'capture', label: '接客 Capture' },
-    { id: 'follow', label: '追客 Follow' },
-    { id: 'nurture', label: '養客 Nurture' },
-    { id: 'modules', label: '六模組' },
+    { id: 'capture', label: 'Capture' },
+    { id: 'follow', label: 'Follow' },
+    { id: 'nurture', label: 'Nurture' },
+    { id: 'modules', label: 'Modules' },
     { id: 'integration', label: 'Demo' }
   ],
   intro: null, // overview 場景由 solutions-engine 負責

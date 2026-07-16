@@ -31,8 +31,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 <a id="pq-skip" href="#c-body">跳到主要內容</a>
 <dc-import name="Nav" active="cases" hint-size="100%,68px"></dc-import>
 
-<section data-screen-label="案例開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(48px,6vw,84px) clamp(20px,5vw,48px) clamp(40px,5vw,64px)">
-  <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+<section data-screen-label="案例開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(48px,6vw,84px) clamp(20px,5vw,48px) clamp(40px,5vw,64px);min-height:88vh;box-sizing:border-box;display:flex;align-items:center">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px;width:100%">
     <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
       <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
       <span>/</span>
@@ -195,7 +195,7 @@ class Component extends DCLogic {
       hasCover: !!(f.cover && f.cover.src),
       coverAlt: (f.cover && f.cover.alt) || f.name,
       coverStyle: f.cover && f.cover.src ? {
-        width: '100%', aspectRatio: f.cover.w + ' / ' + f.cover.h,
+        width: '100%', aspectRatio: f.cover.w + ' / ' + f.cover.h, maxHeight: '56vh',
         backgroundImage: 'url("' + f.cover.src + '"), url("' + (f.cover.fallback || f.cover.src) + '")',
         backgroundSize: 'cover', backgroundPosition: 'top center'
       } : {},

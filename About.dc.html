@@ -26,79 +26,83 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}#a-strip [data-strack]{flex-wrap:wrap!important;transform:none!important}}
 </style>
+<script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#a-numbers">跳到主要內容</a>
 <dc-import name="Nav" active="about" hint-size="100%,68px"></dc-import>
 
-<section id="a-hero" data-hero="about" data-screen-label="品牌開場" style="background:#090B0E;color:#F2EFE8;position:relative">
+<section id="a-hero" data-hero="about" data-screen-label="品牌開場 BUILT FROM REAL WORKFLOWS" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(56px,8vh,100px) clamp(20px,5vw,48px) clamp(64px,10vh,96px)">
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
-      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
-      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
-        <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
+      <div data-ashotwall aria-label="真實案例節點網路" style="position:absolute;inset:0;z-index:1;overflow:hidden">
+        <svg data-alines aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .5s"></svg>
+        <sc-for list="{{ aboutShots }}" as="s" hint-placeholder-count="8">
+          <a data-shot="{{ s.slug }}" data-clu="{{ s.clu }}" href="{{ s.href }}" aria-label="{{ s.aria }}" style="{{ s.style }}"></a>
+        </sc-for>
+        <span data-aclust style="position:absolute;left:43%;top:2.5%;opacity:0;transition:opacity .5s;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#FF6B2C">婚慶・活動</span>
+        <span data-aclust style="position:absolute;left:72%;top:2.5%;opacity:0;transition:opacity .5s;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#3E9BFF">空間・不動產</span>
+        <span data-aclust style="position:absolute;left:43%;top:50%;opacity:0;transition:opacity .5s;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#65E0BC">商務・電商</span>
+        <span data-aclust style="position:absolute;left:72%;top:50%;opacity:0;transition:opacity .5s;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.8)">平台・工具</span>
+        <span data-acore style="position:absolute;left:65%;top:42%;opacity:0;transition:opacity .6s;background:#090B0E;border:1.5px solid #FF6B2C;border-radius:999px;padding:10px 16px;font:800 13px 'Noto Sans TC',sans-serif;display:inline-flex;align-items:center;gap:8px;z-index:5"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>PEAKQI 營運核心</span>
+      </div>
+      <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:radial-gradient(130% 130% at 10% 32%,rgba(9,11,14,.95) 0%,rgba(9,11,14,.78) 32%,rgba(9,11,14,.24) 56%,rgba(9,11,14,0) 74%);pointer-events:none"></div>
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:3;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div data-hero-copy style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
+        <div style="max-width:580px;display:flex;flex-direction:column;gap:15px">
           <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">關於 PeakQi</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD THE OPERATING LAYER</span>
-          <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.3 'Noto Sans TC',sans-serif">我們幫台灣中小企業,<br>把<span style="color:#FF6B2C">重複的事</span>交給系統。</h1>
-          <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);text-wrap:pretty">奇鋒國際 PeakQi 專注一件事:把行銷、客服、提案、報價等日常任務整合進一套系統,讓 AI 分擔前線,你把時間留給真正該談的客戶。</p>
-          <div data-hero-scenestage style="position:relative;min-height:118px">
-            <div data-hero-scene="peaks" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · TWIN PEAKS</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">兩座峰</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">內容力 × 系統力——PeakQi 名字的由來。</p>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILT FROM REAL WORKFLOWS</span>
+          <h1 style="margin:0;font:900 clamp(1.9rem,4.2vw,3.5rem)/1.35 'Noto Sans TC',sans-serif">我們不是從 AI 名詞開始,<br>而是從企業每天<span style="color:#FF6B2C">卡住的流程</span>開始。</h1>
+          <p style="margin:0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);text-wrap:pretty">奇鋒國際 PeakQi 把行銷、客服、提案、報價整合進一套營運系統。以下每一格,都是實際交付的系統畫面。</p>
+          <div data-hero-scenestage style="position:relative;min-height:122px">
+            <div data-hero-scene="frag" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · FRAGMENTS</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">流程碎片</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">LINE、CRM、報價、專案與網站畫面的細小局部——每一片都來自實際系統。</p>
             </div>
-            <div data-hero-scene="ridge" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · THE RIDGE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">稜線成形</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">十年內容製作,長出一條通往系統的稜線。</p>
+            <div data-hero-scene="link" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · CONNECTED</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">30+ 連線</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">案例畫面沿資料線連起來:30+ 支已上線系統與網站。</p>
             </div>
-            <div data-hero-scene="mile" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · MILESTONES</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">里程碑</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">30+ 支系統上線、8+ 個產業實戰。</p>
+            <div data-hero-scene="group" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · BY INDUSTRY</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">8+ 產業</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">依產業重新分群:8+ 個產業別實戰經驗。</p>
             </div>
-            <div data-hero-scene="method" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 04 · METHOD</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">方法</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">先看你的流程,再談要不要系統。</p>
+            <div data-hero-scene="pipe" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 04 · WORKFLOW</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">導入流程</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">理解場景 → 整理資料 → 建置模組 → 測試校準 → 上線。</p>
+            </div>
+            <div data-hero-scene="days" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 05 · TEN DAYS</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">10 個工作天</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">DAY 0 到 DAY 10,節點克制地排開——最快 10 個工作天上線。</p>
             </div>
             <div data-hero-scene="net" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · NETWORK</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">營運網</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">接客、CRM、行銷、報價,接進同一張網。</p>
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 06 · THE NETWORK</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">案例網路</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">真實案例互相連成一張營運系統網;點節點可進對應案例。</p>
             </div>
-            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · YOUR TURN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">先看流程</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">認識夠了,讓我們先看你的流程。</p>
+            <div data-hero-scene="core" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · THE CORE</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">收束成核心</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">網路收束成 PeakQi 營運核心。讓我們先看你的流程。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">預約 15 分鐘 Demo</a>
-            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">看做過的東西</a>
+            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">讓我們先看你的流程</a>
+            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看案例與作品</a>
           </div>
-        </div>
-        <div data-hero-media data-hero-m="net..cta" style="position:relative;z-index:2;min-height:clamp(240px,44vh,420px)" aria-hidden="true">
-          <svg viewBox="0 0 520 300" fill="none" style="width:100%;height:100%;position:absolute;inset:0">
-            <path data-bpath d="M70 240 L200 150" stroke="rgba(255,107,44,.7)" stroke-width="1.6"></path>
-            <path data-bpath d="M200 150 L330 90" stroke="rgba(62,155,255,.7)" stroke-width="1.6"></path>
-            <path data-bpath d="M200 150 L340 220" stroke="rgba(101,224,188,.7)" stroke-width="1.6"></path>
-            <path data-bpath d="M330 90 L455 150" stroke="rgba(242,239,232,.4)" stroke-width="1.4"></path>
-            <path data-bpath d="M340 220 L455 150" stroke="rgba(242,239,232,.4)" stroke-width="1.4"></path>
-          </svg>
-          <span data-bnode style="position:absolute;left:6%;top:72%;background:#14171C;border:1px solid rgba(255,107,44,.55);border-radius:6px;padding:8px 12px;font:700 12px 'Noto Sans TC',sans-serif">接客</span>
-          <span data-bnode style="position:absolute;left:32%;top:42%;background:#14171C;border:1px solid rgba(242,239,232,.3);border-radius:6px;padding:8px 12px;font:700 12px 'Noto Sans TC',sans-serif">CRM</span>
-          <span data-bnode style="position:absolute;left:57%;top:22%;background:#14171C;border:1px solid rgba(62,155,255,.5);border-radius:6px;padding:8px 12px;font:700 12px 'Noto Sans TC',sans-serif">行銷</span>
-          <span data-bnode style="position:absolute;left:59%;top:66%;background:#14171C;border:1px solid rgba(101,224,188,.5);border-radius:6px;padding:8px 12px;font:700 12px 'Noto Sans TC',sans-serif">報價</span>
-          <span data-bnode style="position:absolute;left:80%;top:44%;background:#090B0E;border:1.5px solid #FF6B2C;border-radius:999px;padding:10px 16px;font:800 13px 'Noto Sans TC',sans-serif;display:inline-flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>PEAKQI</span>
+          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">畫面皆為實際交付系統與網站(取自 Sales Kit 實績頁);無截圖之產業僅列為可開發能力。</p>
         </div>
       </div>
-      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:5;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -152,10 +156,13 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
-<section id="a-method" data-screen-label="方法章節" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="a-method" data-screen-label="方法章節" style="background:#F2EFE8">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">METHOD</span>
-    <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">同一條工作台,五步上線</h2>
+    <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">同一條工作台,六步接手</h2>
+    <div data-mconsole role="status" style="margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;border:1px solid rgba(255,107,44,.5);border-radius:6px;padding:11px 16px;font:600 13px 'Noto Sans TC',sans-serif;max-width:100%"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;flex-shrink:0;animation:pqPulse 1.8s ease-in-out infinite"></span><span data-mconsole-text>工作台就緒——捲動看每一步在系統裡發生什麼。</span></div>
     <div style="position:relative;margin-top:clamp(28px,4vw,44px);height:3px;background:rgba(9,11,14,.1);border-radius:999px" aria-hidden="true">
       <div data-mfill style="position:absolute;inset:0;background:linear-gradient(90deg,#FF6B2C,#65E0BC);border-radius:999px;transform-origin:left center"></div>
     </div>
@@ -169,10 +176,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       </sc-for>
     </div>
     <p style="margin:16px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標準方案最快 10 個工作天;完整垂直平台約六週(依專案評估)。</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="a-strip" data-screen-label="作品帶" style="padding:clamp(56px,7vw,88px) 0;background:#090B0E;color:#F2EFE8;overflow:hidden">
+<section id="a-strip" data-screen-label="作品帶" style="background:#090B0E;color:#F2EFE8;overflow:hidden">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(56px,7vw,88px) 0;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
   <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between">
     <h2 style="margin:0;font:900 clamp(1.5rem,2.8vw,2.2rem)/1.25 'Noto Sans TC',sans-serif">做出來的東西,一路排開</h2>
     <a href="Cases.dc.html" style="font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none">看全部案例 →</a>
@@ -180,9 +191,36 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   <div style="margin-top:clamp(18px,2.5vw,28px)">
     <div data-strack style="display:flex;gap:12px;padding:0 clamp(20px,5vw,48px);width:max-content">
       <sc-for list="{{ stripThumbs }}" as="t" hint-placeholder-count="12">
-        <span role="img" aria-label="{{ t.alt }}" style="{{ t.style }}"></span>
+        <a href="{{ t.href }}" aria-label="{{ t.aria }}" style="{{ t.style }}"></a>
       </sc-for>
     </div>
+  </div>
+    </div>
+  </div>
+</section>
+
+<section id="a-spectrum" data-screen-label="能力光譜" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">CAPABILITY SPECTRUM</span>
+    <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">四種交付型態,同一套方法</h2>
+    <div style="margin-top:clamp(22px,3vw,36px);display:flex;flex-direction:column">
+      <sc-for list="{{ spectrumRows }}" as="sp" hint-placeholder-count="4">
+        <div data-spec style="border-top:1px solid rgba(9,11,14,.14);padding:clamp(18px,2.6vw,28px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;align-items:center;transition:background 260ms cubic-bezier(0.16,1,0.3,1)">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:{{ sp.color }}">{{ sp.en }}</span>
+            <span style="font:900 clamp(1.2rem,2.2vw,1.7rem) 'Noto Sans TC',sans-serif">{{ sp.type }}</span>
+            <span style="font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:420px">{{ sp.scope }}</span>
+            <a href="Cases.dc.html#index" style="font:700 13px 'Noto Sans TC',sans-serif;text-decoration:none">看這一類的實績 →</a>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+            <sc-for list="{{ sp.thumbs }}" as="t" hint-placeholder-count="2">
+              <a href="{{ t.href }}" aria-label="{{ t.aria }}" style="{{ t.style }}"></a>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:12px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">縮圖皆為該型態實際交付畫面。</p>
   </div>
 </section>
 
@@ -209,6 +247,7 @@ class Component extends DCLogic {
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});
     import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('about'); }).catch(() => {});
+    import('./about-hero.js').then(m => { if (!this._dead && !this._ah) this._ah = m.mountAboutHero(); }).catch(() => {});
     import('./pa-engine.js')
       .then(m => { if (this._dead || this._fx) return; this._fx = m.createAboutFX(); this._fx.start(); })
       .catch(() => {});
@@ -216,6 +255,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     this._dead = true;
     if (this._hero) this._hero.destroy();
+    if (this._ah) this._ah.destroy();
     if (this._motion) this._motion.destroy();
     if (this._fx) this._fx.destroy();
   }
@@ -240,7 +280,8 @@ class Component extends DCLogic {
     const bigNums = [
       { v: '30+', l: '已上線系統與網站案例', slugs: ['wedding', 'expo', 'groupbuy'] },
       { v: '8+', l: '產業別實戰經驗', slugs: ['interior', 'realestate', 'doiiin'] },
-      { v: '10 天', l: '最快上線(工作天)', slugs: ['social', 'linesummary', 'autodraft'] }
+      { v: '10 天', l: '最快上線(工作天)', slugs: ['social', 'linesummary', 'autodraft'] },
+      { v: '24h', l: '全天候接住詢問(系統服務語境,非 SLA 承諾)', slugs: ['realestate', 'hungmen', 'xintu'] }
     ].map(n => ({ ...n, thumbs: n.slugs.map(s => thumb(s, 128, 78)).filter(Boolean) }));
     // 產業地圖:有案例的節點 → 對應媒體
     const indMap = [
@@ -289,9 +330,60 @@ class Component extends DCLogic {
       { n: 'STEP 02', t: '整理資料', d: '名單、話術、報價規則收進知識庫。' },
       { n: 'STEP 03', t: '建置模組', d: '按方案組裝接客/CRM/行銷/報價。' },
       { n: 'STEP 04', t: '測試校準', d: '用你的實際情境反覆模擬對話。' },
-      { n: 'STEP 05', t: '上線優化', d: '正式上線,專人持續調整。' }
+      { n: 'STEP 05', t: '正式上線', d: '正式上線,開始接真實客人。' },
+      { n: 'STEP 06', t: '持續優化', d: '上線後專人持續調整話術與流程。' }
     ];
+    const FEAT_SLUGS = ['wedding', 'interior', 'social', 'realestate'];
+    const caseHref = (slug) => FEAT_SLUGS.includes(slug) ? 'Case.dc.html?slug=' + slug : 'Cases.dc.html#index';
+    // Hero 案例節點:12 張真實截圖(featured 4 + 各產業 8),初始=網路環佈局(no-JS/靜態即完成態)
+    const netSlugs = [
+      { slug: 'wedding', clu: 0 }, { slug: 'interior', clu: 1 }, { slug: 'social', clu: 2 }, { slug: 'realestate', clu: 1 },
+      { slug: 'expo', clu: 0 }, { slug: 'labubu', clu: 0 }, { slug: 'community', clu: 1 }, { slug: 'groupbuy', clu: 2 },
+      { slug: 'rouzhi', clu: 2 }, { slug: 'doiiin', clu: 3 }, { slug: 'ouros', clu: 3 }, { slug: 'xintu', clu: 3 }
+    ];
+    const aboutShots = netSlugs.map((n2, i) => {
+      const c = bySlug[n2.slug];
+      if (!c) return null;
+      const ang = (i / netSlugs.length) * Math.PI * 2 - Math.PI / 2;
+      const x0 = 69 + Math.cos(ang) * 24 - 5, y0 = 46 + Math.sin(ang) * 40 - 4;
+      return {
+        slug: n2.slug, clu: n2.clu, href: caseHref(n2.slug), fb: c.cover.fallback || '',
+        aria: '進入案例:' + c.name,
+        src: c.cover.src, w: c.cover.w, h: c.cover.h,
+        style: {
+          position: 'absolute', left: x0 + '%', top: y0 + '%', width: '10%',
+          aspectRatio: c.cover.w + ' / ' + c.cover.h, display: 'block',
+          backgroundImage: 'url("' + c.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center',
+          border: '1px solid rgba(242,239,232,.2)', borderRadius: '4px', backgroundColor: '#14171C',
+          boxShadow: '0 10px 28px rgba(0,0,0,.4)',
+          transition: 'left .7s cubic-bezier(.16,1,.3,1), top .7s cubic-bezier(.16,1,.3,1), width .7s cubic-bezier(.16,1,.3,1), opacity .55s cubic-bezier(.16,1,.3,1), filter .55s'
+        }
+      };
+    }).filter(Boolean);
+    const specDef = [
+      { en: 'AI SYSTEMS', color: '#FF6B2C', type: 'AI 系統', scope: '接客、對話、生成與分析——從 LINE 前線到營運後台。', slugs: ['videogod', 'shennong'] },
+      { en: 'CUSTOM PLATFORMS', color: '#3E9BFF', type: '客製平台', scope: '倉儲監控、售票、租屋、社區管理——流程級的平台開發。', slugs: ['sparkspace', 'rental'] },
+      { en: 'BRAND SITES', color: '#65E0BC', type: '品牌網站', scope: '官網、活動站、論壇——內容、形象與轉換一次到位。', slugs: ['rouzhi', 'expo'] },
+      { en: 'OPS TOOLS', color: '#090B0E', type: '數位營運工具', scope: '任務回報、群組摘要、排程——天天在用的營運小工具。', slugs: ['xintu', 'linesummary'] }
+    ];
+    const spectrumRows = specDef.map(sp => ({
+      ...sp,
+      thumbs: sp.slugs.map(s2 => {
+        const c = bySlug[s2];
+        if (!c) return null;
+        return {
+          href: caseHref(s2), aria: '看案例:' + c.name,
+          style: {
+            width: '190px', height: '108px', borderRadius: '6px', display: 'inline-block',
+            border: '1px solid rgba(9,11,14,.16)',
+            backgroundImage: 'url("' + c.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#14171C'
+          }
+        };
+      }).filter(Boolean)
+    }));
     const stripThumbs = all.slice(0, 14).map(c => ({
+      href: caseHref(c.slug),
+      aria: '看案例:' + c.name,
       alt: c.cover.alt,
       style: {
         width: '240px', height: '146px', borderRadius: '6px', flexShrink: 0,
@@ -300,6 +392,7 @@ class Component extends DCLogic {
       }
     }));
     return {
+      aboutShots, spectrumRows,
       bigNums, indNodes, method, stripThumbs,
       previewAlt: selCase ? selCase.cover.alt : '此產業案例素材整理中',
       previewName: selCase ? selCase.name : selNode.label + '(可開發能力)',

@@ -26,7 +26,7 @@ summary::-webkit-details-marker{display:none}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
-@media (max-width:899px){#p-hero-racks{display:none!important}#p-cmp-desk{display:none!important}#pq-sel-grid{grid-template-columns:1fr!important}#pq-tl2{flex-direction:column!important;min-width:0!important}#pq-tl2>[data-tstep]{border-top:none!important;border-left:2px solid rgba(9,11,14,.16);padding:0 0 28px 22px!important}#pq-tl2 [data-dot]{top:0!important;left:-6px!important}#pq-tl2 [data-tline]{left:-2px!important;top:0!important;width:2px!important;height:100%!important}}
+@media (max-width:899px){#p-faq [data-faqleft]{position:static!important}#p-hero-racks{display:none!important}#p-cmp-desk{display:none!important}#pq-sel-grid{grid-template-columns:1fr!important}#pq-tl2{flex-direction:column!important;min-width:0!important}#pq-tl2>[data-tstep]{border-top:none!important;border-left:2px solid rgba(9,11,14,.16);padding:0 0 28px 22px!important}#pq-tl2 [data-dot]{top:0!important;left:-6px!important}#pq-tl2 [data-tline]{left:-2px!important;top:0!important;width:2px!important;height:100%!important}}
 @media (min-width:900px){#p-cmp-mob{display:none!important}}
 @media (min-width:900px) and (max-height:760px){#p-hero-racks{display:none!important}}
 </style>
@@ -47,54 +47,64 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <span>/</span>
               <span style="color:#F2EFE8;font-weight:700">方案價格</span>
             </nav>
-            <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PLANS &amp; PRICING</span>
-            <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.25 'Noto Sans TC',sans-serif">價格講清楚,<br>才不會有意外帳單。</h1>
-            <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">低建置費+月費,用多少算多少;三個方案像三層系統機架,由小到大往上疊。</p>
+            <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">CONFIGURE YOUR OPERATING SYSTEM</span>
+            <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.3 'Noto Sans TC',sans-serif">不是買更多功能,<br>而是<span style="color:#FF6B2C">組出</span>適合你的營運系統。</h1>
+            <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">低建置費+月費,價格先講清楚;像組機架一樣,把需要的模組裝進你的營運系統。</p>
             <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
-              <path data-hero-line="frame" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
-              <circle data-hero-node="pb" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
+              <path data-hero-line="racks" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
+              <circle data-hero-node="cmp" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
               <circle data-hero-node="use" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
             </svg>
-            <div data-hero-scenestage style="position:relative;min-height:118px">
-              <div data-hero-scene="frame" style="position:relative;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · TRANSPARENT</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">價格先講清楚</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">低建置費+月費;三個方案像機架,由小到大往上疊。</p>
+            <div data-hero-scenestage style="position:relative;min-height:122px">
+              <div data-hero-scene="racks" style="position:relative;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 01 · EMPTY RACKS</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">三個機架進場</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">三個空的系統機架:接客、業務助理、營運平台。</p>
               </div>
-              <div data-hero-scene="pa" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · PLAN A</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">第一層:AI 接客</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">建置 39,000、月費 2,500 起——先把詢問接住。</p>
+              <div data-hero-scene="cap" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · CAPTURE UNIT</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">AI 接客組裝</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">AI 自動回覆、需求了解、預約、轉真人裝進第一座——NT$39,000,月費 2,500 起。</p>
               </div>
-              <div data-hero-scene="pb" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 03 · PLAN B</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">第二層:AI 業務助理</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">建置 78,000、月費 5,000 起——追客與提案一起上。</p>
+              <div data-hero-scene="assist" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 03 · ASSISTANT UNIT</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">業務助理擴充</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">CRM、追蹤、跟進序列與分析加入——NT$78,000,月費 5,000 起。</p>
               </div>
-              <div data-hero-scene="pc" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 04 · PLAN C</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">第三層:AI 營運平台</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">建置 128,000、月費 8,000 起——整個營運面接管。</p>
+              <div data-hero-scene="plat" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 04 · PLATFORM UNIT</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">營運平台成形</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">行銷、報價、專案、數據補齊——NT$128,000,月費 8,000 起。</p>
+              </div>
+              <div data-hero-scene="cmp" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 05 · SIDE BY SIDE</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">三方案並列</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">NT$39,000/月 2,500 起・NT$78,000/月 5,000 起・NT$128,000/月 8,000 起。</p>
               </div>
               <div data-hero-scene="use" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 05 · USAGE</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">用量儀表</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">文字 AI 不限量;圖片、影片用多少算多少。</p>
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 06 · TWO CHANNELS</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">兩條計費通道</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">文字類 AI 走 Included 不限量;圖片/影片走 Usage-based,用多少算多少。不會出現沒講過的費用。</p>
               </div>
-              <div data-hero-scene="sure" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 06 · GUARANTEE</span>
-                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">保證封條</p>
-                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">不綁約;30 天不滿意,依保證條款處理。</p>
+              <div data-hero-scene="run" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · RUNNING</span>
+                <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">系統穩定運作</p>
+                <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">選定方案,系統上線運作。用你的需求比較方案,或 15 分鐘 Demo。</p>
               </div>
             </div>
             <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-              <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">預約 15 分鐘 Demo</a>
-              <a data-track="hero_case_click" href="#p-selector" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">直接比較三方案</a>
+              <a data-hero-primary data-track="hero_case_click" href="#p-selector" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">用我的需求比較方案</a>
+              <a data-track="hero_demo_click" href="Demo.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">預約 15 分鐘 Demo</a>
+            </div>
+            <div aria-label="三方案價格速覽" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px">
+              <span style="border:1px solid rgba(242,239,232,.25);border-radius:4px;padding:6px 10px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">A 接客 <b style="color:#F2EFE8">NT$39,000</b>+<b style="color:#FF6B2C">2,500</b>/月起</span>
+              <span style="border:1px solid rgba(255,107,44,.5);border-radius:4px;padding:6px 10px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">B 業務助理 <b style="color:#F2EFE8">NT$78,000</b>+<b style="color:#FF6B2C">5,000</b>/月起</span>
+              <span style="border:1px solid rgba(242,239,232,.25);border-radius:4px;padding:6px 10px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">C 營運平台 <b style="color:#F2EFE8">NT$128,000</b>+<b style="color:#FF6B2C">8,000</b>/月起</span>
             </div>
           </div>
           <div data-hero-canvaszone style="position:relative;min-height:clamp(220px,42vh,420px)" aria-hidden="true"></div>
         </div>
-        <div id="p-hero-racks" data-hero-m="pa..sure" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:14px">
+        <div id="p-hero-racks" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:14px">
       <sc-for list="{{ racks }}" as="r" hint-placeholder-count="3">
         <div data-rack style="{{ r.style }}">
           <div style="display:flex;align-items:center;gap:10px">
@@ -144,6 +154,15 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
             </sc-for>
           </div>
+        </div>
+        <div role="group" aria-label="選擇你最需要的流程" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">你最需要的流程:</span>
+          <sc-for list="{{ needs }}" as="n" hint-placeholder-count="4">
+            <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
+          </sc-for>
+          <sc-if value="{{ hasNeedHint }}" hint-placeholder-val="{{ false }}">
+            <span role="status" style="font:700 12.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ needHint }}</span>
+          </sc-if>
         </div>
         <div id="pq-sel-grid" style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(18px,2.6vw,36px);align-items:stretch">
           <div style="background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden;display:flex;flex-direction:column">
@@ -196,8 +215,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
-<section id="p-compare" data-screen-label="功能比較" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="p-compare" data-screen-label="功能比較" style="background:rgba(9,11,14,.035)">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">COMPARE</span>
     <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">跟其他做法比一比</h2>
     <div id="p-cmp-desk" style="margin-top:clamp(24px,3.5vw,40px);border:1px solid rgba(9,11,14,.16);border-radius:6px;overflow:hidden;background:#F2EFE8">
@@ -234,11 +255,15 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         </div>
       </sc-for>
     </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="p-usage" data-screen-label="AI 使用量雙管線" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="p-usage" data-screen-label="AI 使用量雙管線" style="background:#F2EFE8">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">USAGE &amp; BILLING</span>
     <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">兩條管線,講清楚計費</h2>
     <div style="margin-top:clamp(24px,3.5vw,40px);display:flex;flex-direction:column;gap:22px">
@@ -252,10 +277,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span data-pdotm style="position:absolute;top:-5px;left:4%;width:12px;height:12px;border-radius:50%;background:#65E0BC;transition:left .1s linear"></span>
         </div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">AI 對話</span>
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">文案</span>
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">報告</span>
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">SEO 分析</span>
+          <button data-utip="客服與業務對話,不限輪次、不另計費" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">AI 對話</button>
+          <button data-utip="貼文、EDM、追客話術草稿,含在月費" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">文案</button>
+          <button data-utip="營運月報與數據摘要,含在月費" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">報告</button>
+          <button data-utip="關鍵字與內容布局建議,含在月費" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">SEO 分析</button>
         </div>
       </div>
       <div style="border:1px solid rgba(9,11,14,.14);border-radius:8px;padding:22px;background:rgba(62,155,255,.05)">
@@ -268,19 +293,23 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span data-pdotm style="position:absolute;top:-5px;left:4%;width:12px;height:12px;border-radius:50%;background:#3E9BFF;transition:left .1s linear"></span>
         </div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">AI 場景渲染</span>
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">風格模擬</span>
-          <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">短影音</span>
+          <button data-utip="圖片生成類:依方案費率,用多少算多少" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">AI 場景渲染</button>
+          <button data-utip="試妝、試衣、髮色等模擬:依方案費率計" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">風格模擬</button>
+          <button data-utip="影片生成類:依方案費率,用多少算多少" style="cursor:help;background:none;border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:5px 13px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">短影音</button>
           <span style="font:400 12px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">實際費率依方案而定,Demo 時可依你的用量情境估算。</span>
         </div>
       </div>
       <p style="margin:0;font:700 15.5px/1.7 'Noto Sans TC',sans-serif">{{ usageNote }}</p>
     </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="p-custom" data-screen-label="客製 Complexity Map" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="p-custom" data-screen-label="客製 Complexity Map" style="background:#090B0E;color:#F2EFE8">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">CUSTOM — COMPLEXITY MAP</span>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
       <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">整套客製系統,依複雜度評估</h2>
@@ -293,15 +322,29 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span style="font:800 17px 'Noto Sans TC',sans-serif">{{ c.s }}</span>
           <span style="font:700 clamp(1.4rem,2.2vw,1.8rem) 'Space Grotesk',sans-serif;color:#FF6B2C">{{ c.r }}</span>
           <span style="font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ c.d }}</span>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;border-top:1px solid rgba(242,239,232,.12);padding-top:10px">
+            <sc-for list="{{ c.meters }}" as="mr" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5);min-width:64px">{{ mr.lab }}</span>
+                <sc-for list="{{ mr.dots }}" as="dt" hint-placeholder-count="4">
+                  <span style="{{ dt.style }}"></span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
         </div>
       </sc-for>
     </div>
     <p style="margin:18px 0 0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);max-width:640px">{{ customCred }} <a href="Cases.dc.html#index">看客製實績 →</a></p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="p-timeline" data-screen-label="上線流程" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="p-timeline" data-screen-label="上線流程" style="background:#F2EFE8">
+  <div data-wrap style="position:relative">
+    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+      <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">GO-LIVE</span>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
       <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">最快 10 個工作天上線</h2>
@@ -317,6 +360,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <p style="margin:8px 0 0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);max-width:200px">{{ s.t }}</p>
           </div>
         </sc-for>
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -342,10 +387,21 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 
 <section id="p-faq" data-screen-label="FAQ" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
   <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,72px)">
-    <div>
+    <div data-faqleft style="align-self:start;position:sticky;top:86px">
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">FAQ</span>
       <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">價格相關的常見問題</h2>
       <p style="margin:18px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:380px">還有其他想確認的?15 分鐘 Demo 裡直接用你的場景回答。</p>
+      <div style="margin-top:22px;border:1.5px solid #FF6B2C;border-radius:8px;background:#090B0E;color:#F2EFE8;padding:20px;display:flex;flex-direction:column;gap:10px;max-width:380px">
+        <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">PRICE SUMMARY</span>
+        <sc-for list="{{ faqPlans }}" as="fp" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid rgba(242,239,232,.12);padding-top:9px">
+            <span style="font:600 13px 'Noto Sans TC',sans-serif">{{ fp.code }}・{{ fp.name }}</span>
+            <span style="font:700 13.5px 'Space Grotesk',sans-serif;white-space:nowrap">NT${{ fp.setup }} <span style="font:600 11px 'Noto Sans TC',sans-serif;color:#FF6B2C">+{{ fp.monthly }}/月起</span></span>
+          </div>
+        </sc-for>
+        <span style="font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ usageNote }}</span>
+        <span style="font:700 11.5px 'Noto Sans TC',sans-serif;color:#65E0BC">不綁約・30 天保證</span>
+      </div>
     </div>
     <div style="display:flex;flex-direction:column">
       <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="8">
@@ -372,7 +428,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { d: null, planSel: 1 };
+  state = { d: null, planSel: 1, needSel: null };
   componentDidMount() {
     import('./content.js').then(m => {
       this.setState({ d: m });
@@ -468,7 +524,21 @@ class Component extends DCLogic {
       valStyle: { font: "500 14px/1.6 'Noto Sans TC',sans-serif", color: c.hot ? 'rgba(242,239,232,.92)' : 'rgba(9,11,14,.78)' }
     })) : [];
     const cxDesc = ['單一流程或工具', '多模組整合', '跨部門平台/串接', '垂直平台級開發'];
+    const needsMap = [
+      { label: '把詢問接住', plan: 0 }, { label: '追蹤與跟進', plan: 1 },
+      { label: '內容與養客', plan: 1 }, { label: '報價・專案・數據', plan: 2 }
+    ];
+    const needs = needsMap.map((n, i) => {
+      const on = this.state.needSel === i;
+      return {
+        label: n.label, pressed: on ? 'true' : 'false',
+        pick: () => this.setState({ needSel: i, planSel: n.plan }),
+        style: { cursor: 'pointer', borderRadius: '999px', padding: '8px 15px', font: "600 13px 'Noto Sans TC',sans-serif", background: on ? '#FF6B2C' : 'transparent', color: on ? '#090B0E' : 'rgba(9,11,14,.65)', border: on ? '1px solid #FF6B2C' : '1px solid rgba(9,11,14,.25)', transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)' }
+      };
+    });
+    const needHint = this.state.needSel != null && cur.code ? '符合:' + cur.code + '・' + cur.name : '';
     return {
+      needs, needHint, hasNeedHint: !!needHint, faqPlans: plans,
       mb0: modBoxes[0] ?? emptyBox, mb1: modBoxes[1] ?? emptyBox, mb2: modBoxes[2] ?? emptyBox,
       mb3: modBoxes[3] ?? emptyBox, mb4: modBoxes[4] ?? emptyBox, mb5: modBoxes[5] ?? emptyBox,
       racks,
@@ -481,7 +551,13 @@ class Component extends DCLogic {
       selDemoHref: 'Demo.dc.html?case=' + encodeURIComponent('方案選擇與報價評估(' + cur.name + ')'),
       compareRows, compareCards,
       usageNote: d?.usageNote ?? '',
-      customs: (d?.customRanges ?? []).map((c, i) => ({ ...c, tag: 'LEVEL 0' + (i + 1), d: cxDesc[i] ?? '' })),
+      customs: (d?.customRanges ?? []).map((c, i) => ({
+        ...c, tag: 'LEVEL 0' + (i + 1), d: cxDesc[i] ?? '',
+        meters: ['模組數', '串接', '資料移轉', '角色/流程'].map(lab => ({
+          lab,
+          dots: [0, 1, 2, 3].map(j => ({ style: { width: '14px', height: '5px', borderRadius: '2px', background: j <= i ? '#FF6B2C' : 'rgba(242,239,232,.16)' } }))
+        }))
+      })),
       customNote: d?.customNote ?? '',
       customCred: d?.customCred ?? '',
       steps: (d?.timeline ?? []).map((s, i, arr) => ({

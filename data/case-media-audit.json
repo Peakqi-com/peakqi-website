@@ -1,20 +1,40 @@
 {
- "generatedAt": "2026-07-16T10:27:29.562Z",
+ "generatedAt": "2026-07-16T16:28:04.275Z",
+ "final": true,
  "publishedCases": 29,
  "featured": 4,
  "works": 25,
  "withCover": 29,
  "withGallery": 29,
+ "featuredGalleryComplete": 4,
+ "featuredGalleryShort": [],
  "missingImages": 0,
+ "missingList": [],
+ "broken": 0,
  "brokenList": [],
  "missingAlt": 0,
+ "missingAltList": [],
  "lowRes": 0,
  "lowResList": [],
  "badRatio": 0,
  "badRatioList": [],
- "featuredGalleryShort": [],
+ "missingFields": [],
  "totalUniqueFiles": 70,
+ "decodedOk": 70,
+ "verification": "70 個唯一圖檔已於瀏覽器逐一實載驗證(naturalWidth>40);本輪再抽驗 hero 牆 16 張 + About 節點 12 張 + Index 25 卡,0 破圖",
+ "usage": {
+  "casesHero": "16 張(PROOF IN MOTION 截圖牆)",
+  "aboutHero": "12 張(可點擊案例網路節點)",
+  "demoHero": "相似場景依產業對映(無素材時通用流程 UI,不虛構)",
+  "featuredFilms": "4 案 × 3 張 gallery",
+  "workIndex": "25 卡全真實 cover"
+ },
+ "narrativeComplete": {
+  "featured": "4/4(before/system/results/disclaimer)",
+  "works": "25 index 卡(cover/alt/尺寸/sourcePage 完整)"
+ },
  "excludedNoMedia": [
-  "美業 AI 體驗系統(列為可開發能力,未公開為案例卡)"
- ]
+  "美業 AI 體驗系統(列為可開發能力文字清單,未公開為案例卡)"
+ ],
+ "placeholderPolicy": "純色框/空白 mockup/通用科技圖 0 使用;無素材產業僅文字節點"
 }
