@@ -99,7 +99,7 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
 #pq-fscroll::-webkit-scrollbar{display:none}
-@media (max-width:899px){#pq-cap-grid,#pq-mod-grid{grid-template-columns:1fr!important}#pq-mod-grid [data-sdet]{position:relative!important;opacity:1!important;clip-path:none!important}
+@media (max-width:899px){#pq-cap-grid,#pq-mod-grid,#pq-sol-hero-grid{grid-template-columns:1fr!important}#pq-mod-grid [data-sdet]{position:relative!important;opacity:1!important;clip-path:none!important}
 /* FOLLOW pipeline 手機改直式時間軸,不再橫向捲 */
 #pq-fscroll{overflow-x:visible!important}#pq-ftrack{grid-template-columns:1fr!important;min-width:0!important;gap:10px!important}#pq-ftrack [data-fcard]{position:relative!important;top:0!important;left:0!important;width:100%!important;box-sizing:border-box}#pq-ftrack [data-fcol]{padding:16px!important}}
 </style>
@@ -113,7 +113,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(56px,8vh,96px) clamp(20px,5vw,48px) clamp(64px,10vh,96px)">
       <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
-      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,72px);align-items:center">
+      <div id="pq-sol-hero-grid" style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(24px,4vw,64px);align-items:center">
         <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
           <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
@@ -171,7 +171,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           </div>
         </div>
         <!-- 右側改由 data-hero-canvas 統一繪製情境圖(母動畫=捲動);移除原本疊在畫布上的浮動卡片 -->
-        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(240px,46vh,460px)" aria-hidden="true"></div>
+        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(400px,66vh,700px)" aria-hidden="true"></div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
