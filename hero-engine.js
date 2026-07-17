@@ -9,14 +9,14 @@ export function createHeroEngine({ refs, manifest }) {
   const F = (wt, px) => wt + ' ' + px + 'px "Space Grotesk","Noto Sans TC",sans-serif';
 
   let canvas = null, ctx = null, wrap = null, stage = null;
-  let W = 0, H = 0, DPR = 1, SC = 1, OX = 0, OY = 0, isMobile = false;
+  let W = 0, H = 0, DPR = 1, SC = 1, OX = 0, OY = 0, isMobile = false, mAnimH = 0;
   let wrapTop = 0, wrapH = 1, vh = 1;
   let p = 0, sp = 0, raf = 0, t0 = performance.now();
   let destroyed = false, visible = true, staticOn = false, stopped = false;
   let io = null, mql = null, resizeTmr = 0, tries = 0;
   let seq = null, inflight = 0, loopN = 0, drawN = 0;
   let textOrig = null;                 // 桌機文字原始定位(還原用)
-  const MOBILE_ANIM = 0.54;            // 手機:動畫佔下方比例,其餘給文字
+  const MOBILE_ANIM = 0.6;             // 手機:動畫佔下方比例,其餘給文字
   const NAV = 68;
 
   // 設計座標 1200×760
@@ -507,6 +507,11 @@ export function createHeroEngine({ refs, manifest }) {
     const cam = 1 + 0.045 * ez(sub(q, 0.42, 0.56)) * (1 - ez(sub(q, 0.76, 0.9)));
     ctx.save();
     ctx.translate(W / 2, H / 2); ctx.scale(cam, cam); ctx.translate(-W / 2, -H / 2);
+    if (isMobile && mAnimH) {
+      // 敘事後段文字淡出時,把控制台上移填掉上方空白;t5 CTA 出現時回位
+      const lift = ez(sub(q, 0.6, 0.72)) * (1 - ez(sub(q, 0.86, 0.92)));
+      ctx.translate(0, -lift * Math.max(0, (H - mAnimH - NAV) * 0.5));
+    }
     const pos = anchors(q, t);
     drawConsole(q, t);
     drawLinks(q, t, pos);
@@ -570,10 +575,10 @@ export function createHeroEngine({ refs, manifest }) {
     isMobile = W < 760;
     if (isMobile) {
       // 手機:上下分區——文字置於上方、動畫置於下方,兩者不重疊
-      const animH = Math.max(240, (H - NAV) * MOBILE_ANIM);
-      SC = Math.max(0.3, Math.min(W / (DW * 0.94), (animH - 24) / DH));
+      mAnimH = Math.max(260, (H - NAV) * MOBILE_ANIM);
+      SC = Math.max(0.32, Math.min(W / (DW * 0.82), (mAnimH - 20) / DH));  // 放大控制台,不再擠成一團
       OX = W / 2 - 740 * SC;           // 對齊內容中心(視窗群+控制台),而非設計幾何中心
-      OY = (H - animH) + (animH - DH * SC) * 0.5;
+      OY = (H - mAnimH) + (mAnimH - DH * SC) * 0.5;
     } else {
       const avail = Math.max(200, H - NAV - 14);
       SC = Math.max(0.4, Math.min(W / DW, avail / DH));

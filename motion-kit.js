@@ -213,8 +213,8 @@ export function PageProgressRail(ctx, chapters, { active = true } = {}) {
   const jumpBehavior = ctx.reduced ? 'auto' : 'smooth';
   const items = [];
   if (isMobile) {
-    // 手機:簡化為 nav 下緣細進度條(不可點,零遮擋)
-    nav.style.cssText = 'position:fixed;left:0;right:0;top:68px;height:2px;z-index:90;pointer-events:none;background:rgba(9,11,14,.08)';
+    // 手機:貼齊視窗最上緣的細進度條(在 nav 之上、零遮擋)
+    nav.style.cssText = 'position:fixed;left:0;right:0;top:0;height:3px;z-index:400;pointer-events:none;background:rgba(9,11,14,.08)';
     const fill = document.createElement('div');
     fill.style.cssText = 'height:100%;width:0%;background:' + COLORS.orange + ';transition:width .1s linear';
     nav.appendChild(fill);
