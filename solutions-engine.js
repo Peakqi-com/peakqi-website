@@ -31,24 +31,31 @@ export function createSolutions() {
   }
 
   function capture() {
-    const wrap = pin('capture', 200);
+    const wrap = pin('capture', 260);
     const root = q('#capture');
     if (!root) return;
-    const crm = qa('#capture [data-ccrm]');
+    let curTab = -1;
     const upd = (p) => {
-      const msgs = qa('#capture [data-cmsg]'); // 情境切換會換節點,每次現查
+      // 母動畫:往下捲切換情境 Tab(4 段);每段內用區域進度逐則揭露訊息(子動畫)
+      const tabs = qa('#capture [role="tab"]');   // 切換會重建節點,每幀現查
+      const n = Math.max(1, tabs.length);
+      const idx = clamp(Math.floor(p * n), 0, n - 1);
+      if (idx !== curTab) { curTab = idx; if (tabs[idx]) tabs[idx].click(); }
+      const local = clamp(p * n - idx, 0, 1);
+      const msgs = qa('#capture [data-cmsg]');
       msgs.forEach((m, i) => {
-        const k = ez(sub(p, 0.1 + i * 0.13, 0.24 + i * 0.13));
-        m.style.opacity = String(0.06 + 0.94 * k);
-        m.style.transform = 'translateY(' + ((1 - k) * 14).toFixed(1) + 'px)';
+        const k = ez(sub(local, 0.06 + i * 0.15, 0.26 + i * 0.15));
+        m.style.opacity = String(0.05 + 0.95 * k);
+        m.style.transform = 'translateY(' + ((1 - k) * 15).toFixed(1) + 'px)';
       });
+      const crm = qa('#capture [data-ccrm]');
       crm.forEach((c, i) => {
-        const k = ez(sub(p, 0.55 + i * 0.09, 0.7 + i * 0.09));
+        const k = ez(sub(local, 0.55 + i * 0.11, 0.74 + i * 0.11));
         c.style.opacity = String(0.15 + 0.85 * k);
         c.style.transform = 'translateX(' + ((1 - k) * 16).toFixed(1) + 'px)';
       });
     };
-    if (!wrap) { return; } // mobile/reduced:模板即完成態
+    if (!wrap) { return; } // mobile/reduced:Tab 可點,模板即完成態
     ScrollChapter(ctx, wrap, upd, { pinned: true });
   }
 

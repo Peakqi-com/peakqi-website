@@ -210,7 +210,18 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <sc-for list="{{ scMsgs }}" as="m" hint-placeholder-count="4">
                 <div data-cmsg style="{{ m.rowStyle }}">
                   <span style="{{ m.tagStyle }}">{{ m.tagLabel }}</span>
-                  <span style="{{ m.bubbleStyle }}">{{ m.text }}</span>
+                  <sc-if value="{{ m.isBubble }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ m.bubbleStyle }}">{{ m.text }}</span>
+                  </sc-if>
+                  <sc-if value="{{ m.isMedia }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ m.mediaWrap }}">
+                      <span style="{{ m.mediaThumb }}">
+                        <span aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(100deg,transparent 34%,rgba(255,255,255,.3) 50%,transparent 66%);animation:pqSweep2 2.2s linear infinite"></span>
+                        <span style="{{ m.playStyle }}">{{ m.playIcon }}</span>
+                      </span>
+                      <span style="{{ m.capStyle }}">{{ m.text }}</span>
+                    </span>
+                  </sc-if>
                 </div>
               </sc-for>
               <span style="align-self:flex-start;display:inline-flex;gap:5px;align-items:center;background:rgba(242,239,232,.06);border-radius:2px 12px 12px 12px;padding:11px 14px">
@@ -569,20 +580,35 @@ class Component extends DCLogic {
     };
     const scMsgs = cur.msgs.map(m => {
       const ai = m.who === 'ai', human = m.who === 'h';
-      return {
+      const left = ai || human;
+      const kind = m.kind || 'text';
+      const isMedia = kind === 'image' || kind === 'video';
+      const isSticker = kind === 'sticker';
+      const radius = left ? '2px 13px 13px 13px' : '13px 2px 13px 13px';
+      const tint = kind === 'video' ? 'rgba(62,155,255,.42)' : 'rgba(101,224,188,.42)';
+      const o = {
         text: m.text,
-        rowStyle: { display: 'flex', flexDirection: 'column', gap: '4px', alignItems: ai || human ? 'flex-start' : 'flex-end' },
+        rowStyle: { display: 'flex', flexDirection: 'column', gap: '5px', alignItems: left ? 'flex-start' : 'flex-end' },
         tagLabel: ai ? 'AI' : human ? '專員' : '客人',
-        tagStyle: { font: "600 10px 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: human ? '#FF6B2C' : ai ? '#65E0BC' : 'rgba(242,239,232,.45)' },
-        bubbleStyle: {
-          maxWidth: '84%', padding: '10px 14px',
-          borderRadius: ai || human ? '2px 10px 10px 10px' : '10px 2px 10px 10px',
-          background: human ? 'rgba(255,107,44,.14)' : ai ? '#171A1F' : '#65E0BC',
-          color: ai || human ? '#F2EFE8' : '#090B0E',
-          border: human ? '1px solid rgba(255,107,44,.5)' : ai ? '1px solid rgba(242,239,232,.16)' : 'none',
-          font: "400 13.5px/1.7 'Noto Sans TC',sans-serif"
-        }
+        tagStyle: { font: "600 10.5px 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: human ? '#FF6B2C' : ai ? '#65E0BC' : 'rgba(242,239,232,.45)' },
+        isBubble: !isMedia, isMedia,
+        playIcon: kind === 'video' ? '▶' : '',
+        // 圖片 / 影片:縮圖(掃描)+ 說明
+        mediaWrap: { maxWidth: '72%', borderRadius: radius, overflow: 'hidden', background: '#171A1F', border: '1px solid rgba(242,239,232,.16)', display: 'flex', flexDirection: 'column' },
+        mediaThumb: { position: 'relative', height: '100px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg,' + tint + ',rgba(9,11,14,.55))' },
+        playStyle: { position: 'relative', zIndex: '1', width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(9,11,14,.55)', color: '#fff', display: kind === 'video' ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center', font: '700 14px sans-serif', animation: 'pqPulse 1.8s ease-in-out infinite' },
+        capStyle: { padding: '9px 13px', font: "600 12.5px 'Noto Sans TC',sans-serif", color: 'rgba(242,239,232,.82)' }
       };
+      o.bubbleStyle = isSticker
+        ? { font: "400 44px/1 'Noto Sans TC',sans-serif", background: 'transparent', border: 'none', padding: '2px 4px' }
+        : {
+            maxWidth: '84%', padding: '11px 15px', borderRadius: radius,
+            background: human ? 'rgba(255,107,44,.14)' : ai ? '#171A1F' : '#65E0BC',
+            color: left ? '#F2EFE8' : '#090B0E',
+            border: human ? '1px solid rgba(255,107,44,.5)' : ai ? '1px solid rgba(242,239,232,.16)' : 'none',
+            font: "400 14.5px/1.7 'Noto Sans TC',sans-serif"
+          };
+      return o;
     });
     const mods = d?.features ?? [];
     const modDets = mods.map((m, i) => ({
