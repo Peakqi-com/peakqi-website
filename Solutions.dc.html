@@ -23,10 +23,85 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 ::selection{background:#FF6B2C;color:#F2EFE8}
 @keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+/* 子動畫(獨立於捲動母動畫;prefers-reduced-motion 自動關) */
+@keyframes pqSweep2{0%{transform:translateX(-140%)}100%{transform:translateX(240%)}}
+@keyframes pqGrow{0%{transform:scaleX(0)}42%{transform:scaleX(1)}90%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes pqWipe{0%{clip-path:inset(0 100% 0 0)}45%{clip-path:inset(0 0 0 0)}88%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 100% 0 0)}}
+@keyframes pqTypeDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+@keyframes pqSeqLit{0%,8%{opacity:.25}22%,100%{opacity:1}}
+@keyframes pqFloatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pqBlink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes pqSpin{to{transform:rotate(360deg)}}
+@keyframes pqAdvIcon{0%{left:16px;opacity:0}14%{opacity:1}86%{opacity:1}100%{left:calc(100% - 36px);opacity:0}}
+@keyframes pqAdvIcon2{0%{left:10%;opacity:0}16%{opacity:1}84%{opacity:1}100%{left:66%;opacity:0}}
+@keyframes pqBar{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+@keyframes pqFlowX{0%{left:6px;opacity:0}8%{opacity:1}80%{opacity:1}100%{left:calc(100% - 104px);opacity:0}}
+@keyframes pqRailSweep{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
+@keyframes pqIndDot{0%,100%{transform:scale(1);opacity:.65}50%{transform:scale(1.45);opacity:1}}
+/* 06 INDUSTRIES:產業星群(每個產業輪替品牌色 + 各自漂浮/脈衝;不需切換) */
+#pq-ind{position:relative}
+#pq-ind::before{content:'';position:absolute;inset:-40px -20px;pointer-events:none;z-index:0;background:radial-gradient(260px circle at 28% 35%,rgba(255,107,44,.12),transparent 70%),radial-gradient(260px circle at 72% 65%,rgba(62,155,255,.12),transparent 70%);animation:pqPulse 7s ease-in-out infinite}
+#pq-ind [data-ind]{position:relative;z-index:1;animation:pqFloatY 5.5s ease-in-out infinite;transition:transform .25s cubic-bezier(0.16,1,0.3,1),border-color .25s,box-shadow .25s}
+#pq-ind [data-ind]::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--a,#FF6B2C);margin-right:8px;vertical-align:middle;animation:pqIndDot 3.2s ease-in-out infinite}
+#pq-ind [data-ind]:nth-child(4n+1){--a:#FF6B2C}
+#pq-ind [data-ind]:nth-child(4n+2){--a:#3E9BFF}
+#pq-ind [data-ind]:nth-child(4n+3){--a:#65E0BC}
+#pq-ind [data-ind]:nth-child(4n+4){--a:#090B0E}
+#pq-ind [data-ind]:nth-child(1),#pq-ind [data-ind]:nth-child(1)::before{animation-delay:0s}
+#pq-ind [data-ind]:nth-child(2),#pq-ind [data-ind]:nth-child(2)::before{animation-delay:.28s}
+#pq-ind [data-ind]:nth-child(3),#pq-ind [data-ind]:nth-child(3)::before{animation-delay:.56s}
+#pq-ind [data-ind]:nth-child(4),#pq-ind [data-ind]:nth-child(4)::before{animation-delay:.84s}
+#pq-ind [data-ind]:nth-child(5),#pq-ind [data-ind]:nth-child(5)::before{animation-delay:1.12s}
+#pq-ind [data-ind]:nth-child(6),#pq-ind [data-ind]:nth-child(6)::before{animation-delay:1.4s}
+#pq-ind [data-ind]:nth-child(7),#pq-ind [data-ind]:nth-child(7)::before{animation-delay:1.68s}
+#pq-ind [data-ind]:nth-child(8),#pq-ind [data-ind]:nth-child(8)::before{animation-delay:1.96s}
+#pq-ind [data-ind]:nth-child(9),#pq-ind [data-ind]:nth-child(9)::before{animation-delay:2.24s}
+#pq-ind [data-ind]:nth-child(10),#pq-ind [data-ind]:nth-child(10)::before{animation-delay:2.52s}
+#pq-ind [data-ind]:hover{transform:translateY(-5px);border-color:var(--a);box-shadow:0 12px 26px rgba(9,11,14,.16)}
+@media (prefers-reduced-motion:reduce){#pq-ind::before,#pq-ind [data-ind],#pq-ind [data-ind]::before{animation:none!important}}
+/* 04 MODULES:六個模組各自專屬的圖示動態(子動畫) */
+[data-micon]{position:relative;overflow:hidden}
+[data-micon] i{position:absolute;display:block;border-radius:3px}
+/* 01 AI 客服:訊息一來一往 + 打字中 */
+[data-sdet="0"] [data-micon] i:nth-child(1){left:16px;top:18px;width:44%;height:15px;border-radius:8px 8px 8px 2px;background:rgba(242,239,232,.2);animation:pqSeqLit 3.2s ease-in-out infinite}
+[data-sdet="0"] [data-micon] i:nth-child(2){right:16px;top:40px;width:52%;height:15px;border-radius:8px 8px 2px 8px;background:rgba(101,224,188,.55);animation:pqSeqLit 3.2s ease-in-out infinite .7s}
+[data-sdet="0"] [data-micon] i:nth-child(3){left:16px;bottom:18px;width:32px;height:14px;border-radius:7px;background:rgba(242,239,232,.14)}
+[data-sdet="0"] [data-micon] i:nth-child(4){left:25px;bottom:23px;width:5px;height:5px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite}
+/* 02 CRM:客戶在管線上推進 */
+[data-sdet="1"] [data-micon] i:nth-child(1){left:16px;right:16px;top:47px;height:2px;background:rgba(242,239,232,.16)}
+[data-sdet="1"] [data-micon] i:nth-child(2){left:16px;top:42px;width:12px;height:12px;border-radius:50%;background:rgba(62,155,255,.65)}
+[data-sdet="1"] [data-micon] i:nth-child(3){right:16px;top:42px;width:12px;height:12px;border-radius:50%;background:rgba(101,224,188,.7)}
+[data-sdet="1"] [data-micon] i:nth-child(4){top:38px;width:20px;height:20px;border-radius:5px;background:#FF6B2C;animation:pqAdvIcon 3.4s ease-in-out infinite}
+/* 03 行銷:內容格逐格產出 */
+[data-sdet="2"] [data-micon] i{top:34px;width:20%;height:28px;background:rgba(242,239,232,.12)}
+[data-sdet="2"] [data-micon] i:nth-child(1){left:8%;animation:pqSeqLit 2.8s ease-in-out infinite}
+[data-sdet="2"] [data-micon] i:nth-child(2){left:31%;background:rgba(255,107,44,.65);animation:pqSeqLit 2.8s ease-in-out infinite .35s}
+[data-sdet="2"] [data-micon] i:nth-child(3){left:54%;animation:pqSeqLit 2.8s ease-in-out infinite .7s}
+[data-sdet="2"] [data-micon] i:nth-child(4){left:77%;background:rgba(62,155,255,.55);animation:pqSeqLit 2.8s ease-in-out infinite 1.05s}
+/* 04 報價:明細逐行 + 總價長條 */
+[data-sdet="3"] [data-micon] i:nth-child(1){left:16px;top:20px;width:70%;height:6px;background:rgba(242,239,232,.18);transform-origin:left;animation:pqGrow 3.2s ease-in-out infinite}
+[data-sdet="3"] [data-micon] i:nth-child(2){left:16px;top:34px;width:52%;height:6px;background:rgba(242,239,232,.14);transform-origin:left;animation:pqGrow 3.2s ease-in-out infinite .3s}
+[data-sdet="3"] [data-micon] i:nth-child(3){left:16px;right:16px;top:52px;height:1px;background:rgba(242,239,232,.2)}
+[data-sdet="3"] [data-micon] i:nth-child(4){left:16px;top:62px;width:46%;height:16px;border-radius:4px;background:#FF6B2C;transform-origin:left;animation:pqGrow 3.2s ease-in-out infinite .8s}
+/* 05 專案:看板卡片自動推進 */
+[data-sdet="4"] [data-micon] i:nth-child(1),[data-sdet="4"] [data-micon] i:nth-child(2),[data-sdet="4"] [data-micon] i:nth-child(3){top:16px;bottom:16px;width:26%;background:rgba(242,239,232,.07);border-radius:5px}
+[data-sdet="4"] [data-micon] i:nth-child(1){left:8%}
+[data-sdet="4"] [data-micon] i:nth-child(2){left:37%}
+[data-sdet="4"] [data-micon] i:nth-child(3){left:66%}
+[data-sdet="4"] [data-micon] i:nth-child(4){top:30px;width:22%;height:16px;border-radius:4px;background:#65E0BC;animation:pqAdvIcon2 3.6s ease-in-out infinite}
+/* 06 數據:長條呼吸 */
+[data-sdet="5"] [data-micon] i{bottom:18px;width:13%;transform-origin:bottom;border-radius:3px 3px 0 0}
+[data-sdet="5"] [data-micon] i:nth-child(1){left:12%;height:34px;background:rgba(62,155,255,.6);animation:pqBar 2.4s ease-in-out infinite}
+[data-sdet="5"] [data-micon] i:nth-child(2){left:31%;height:52px;background:rgba(101,224,188,.65);animation:pqBar 2.4s ease-in-out infinite .3s}
+[data-sdet="5"] [data-micon] i:nth-child(3){left:50%;height:42px;background:rgba(62,155,255,.5);animation:pqBar 2.4s ease-in-out infinite .6s}
+[data-sdet="5"] [data-micon] i:nth-child(4){left:69%;height:64px;background:#FF6B2C;animation:pqBar 2.4s ease-in-out infinite .9s}
+@media (prefers-reduced-motion:reduce){[style*="pqSweep2"],[style*="pqGrow"],[style*="pqWipe"],[style*="pqTypeDot"],[style*="pqSeqLit"],[style*="pqFloatY"],[style*="pqBlink"],[style*="pqSpin"]{animation:none!important}}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
 #pq-fscroll::-webkit-scrollbar{display:none}
-@media (max-width:899px){#pq-cap-grid,#pq-mod-grid{grid-template-columns:1fr!important}#pq-mod-grid [data-sdet]{position:relative!important;opacity:1!important;clip-path:none!important}#pq-ftrack{min-width:640px}}
+@media (max-width:899px){#pq-cap-grid,#pq-mod-grid{grid-template-columns:1fr!important}#pq-mod-grid [data-sdet]{position:relative!important;opacity:1!important;clip-path:none!important}
+/* FOLLOW pipeline 手機改直式時間軸,不再橫向捲 */
+#pq-fscroll{overflow-x:visible!important}#pq-ftrack{grid-template-columns:1fr!important;min-width:0!important;gap:10px!important}#pq-ftrack [data-fcard]{position:relative!important;top:0!important;left:0!important;width:100%!important;box-sizing:border-box}#pq-ftrack [data-fcol]{padding:16px!important}}
 </style>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
@@ -95,23 +170,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
           </div>
         </div>
-        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(240px,46vh,460px)" aria-hidden="true">
-          <div data-slayer data-hero-m="cap..console" style="position:absolute;left:0;top:2%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(255,107,44,.4);border-radius:8px;padding:16px 18px">
-            <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">01 CAPTURE</span>
-            <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">接客</p>
-            <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">30 秒接住每一筆詢問</p>
-          </div>
-          <div data-slayer data-hero-m="fol..console" style="position:absolute;right:0;top:34%;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(62,155,255,.4);border-radius:8px;padding:16px 18px">
-            <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#3E9BFF">02 FOLLOW</span>
-            <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">追客</p>
-            <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">DAY 1/3/5/7 跟進不漏</p>
-          </div>
-          <div data-slayer data-hero-m="nur..console" style="position:absolute;left:6%;bottom:0;width:min(270px,72%);background:rgba(23,26,31,.78);backdrop-filter:blur(3px);border:1px solid rgba(101,224,188,.4);border-radius:8px;padding:16px 18px">
-            <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#65E0BC">03 NURTURE</span>
-            <p style="margin:8px 0 0;font:800 17px 'Noto Sans TC',sans-serif">養客</p>
-            <p style="margin:5px 0 0;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">把「考慮中」推向下訂</p>
-          </div>
-        </div>
+        <!-- 右側改由 data-hero-canvas 統一繪製情境圖(母動畫=捲動);移除原本疊在畫布上的浮動卡片 -->
+        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(240px,46vh,460px)" aria-hidden="true"></div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
@@ -136,21 +196,34 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           </div>
         </div>
         <div id="pq-cap-grid" style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,2.6vw,36px);align-items:stretch">
-          <div style="background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.2);overflow:hidden;display:flex;flex-direction:column">
-            <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
-              <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-              <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.85)">LINE 對話・{{ scName }}</span>
+          <!-- 01 手法:擬真訊息 App。母=訊息逐則捲動進場;子=頭像脈衝/打字中/送出鍵 -->
+          <div style="background:#090B0E;color:#F2EFE8;border-radius:14px;box-shadow:0 22px 52px rgba(9,11,14,.2);overflow:hidden;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.1);background:rgba(101,224,188,.05)">
+              <span style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#65E0BC,#3E9BFF);display:flex;align-items:center;justify-content:center;font:800 13px 'Noto Sans TC',sans-serif;color:#090B0E">客</span>
+              <div style="display:flex;flex-direction:column">
+                <span style="font:700 12.5px 'Noto Sans TC',sans-serif;color:#F2EFE8">LINE 對話・{{ scName }}</span>
+                <span style="font:500 10px 'Noto Sans TC',sans-serif;color:#65E0BC"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.6s ease-in-out infinite;vertical-align:middle;margin-right:4px"></span>AI 對話中</span>
+              </div>
               <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">SIMULATION</span>
             </div>
-            <div style="display:flex;flex-direction:column;gap:12px;padding:18px;min-height:300px">
+            <div style="flex:1;display:flex;flex-direction:column;gap:12px;padding:18px;min-height:280px">
               <sc-for list="{{ scMsgs }}" as="m" hint-placeholder-count="4">
                 <div data-cmsg style="{{ m.rowStyle }}">
                   <span style="{{ m.tagStyle }}">{{ m.tagLabel }}</span>
                   <span style="{{ m.bubbleStyle }}">{{ m.text }}</span>
                 </div>
               </sc-for>
+              <span style="align-self:flex-start;display:inline-flex;gap:5px;align-items:center;background:rgba(242,239,232,.06);border-radius:2px 12px 12px 12px;padding:11px 14px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite"></span>
+                <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite .2s"></span>
+                <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite .4s"></span>
+              </span>
             </div>
-            <p style="margin:0;padding:0 18px 16px;font:400 12px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">對話為產品介面模擬。AI 辨識服務、需求、聯絡時間,判斷不了就轉真人。</p>
+            <div style="display:flex;align-items:center;gap:10px;margin:0 14px 10px;background:rgba(242,239,232,.06);border:1px solid rgba(242,239,232,.1);border-radius:999px;padding:9px 14px">
+              <span style="flex:1;font:400 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">輸入訊息…</span>
+              <span style="width:26px;height:26px;border-radius:50%;background:#65E0BC;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;color:#090B0E;animation:pqPulse 2.2s ease-in-out infinite">➤</span>
+            </div>
+            <p style="margin:0;padding:0 18px 14px;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">對話為產品介面模擬。AI 辨識服務、需求、聯絡時間,判斷不了就轉真人。</p>
           </div>
           <div style="display:flex;flex-direction:column;gap:14px">
             <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:rgba(9,11,14,.02);padding:20px;display:flex;flex-direction:column;gap:11px;flex:1">
@@ -196,6 +269,12 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <div data-fcol style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:52px 16px 16px;display:flex;flex-direction:column;gap:8px;background:#14171C;border-color:rgba(242,239,232,.14)">
                 <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#3E9BFF">{{ s.d }}</span>
                 <p style="margin:0;font:500 13.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)">{{ s.t }}</p>
+                <!-- 02 手法子動畫:AI 擬稿中(草稿逐行生成,獨立於捲動) -->
+                <div style="margin-top:auto;background:rgba(62,155,255,.07);border:1px solid rgba(62,155,255,.22);border-radius:6px;padding:9px 10px;display:flex;flex-direction:column;gap:5px">
+                  <span style="display:flex;align-items:center;gap:6px;font:600 9.5px 'Noto Sans TC',sans-serif;color:#3E9BFF"><span style="width:5px;height:5px;border-radius:50%;background:#3E9BFF;animation:pqPulse 1.5s ease-in-out infinite"></span>AI 擬稿中</span>
+                  <span style="height:4px;width:92%;background:rgba(242,239,232,.22);border-radius:2px;transform-origin:left;animation:pqGrow 3.2s ease-in-out infinite"></span>
+                  <span style="height:4px;width:66%;background:rgba(242,239,232,.16);border-radius:2px;transform-origin:left;animation:pqGrow 3.2s ease-in-out infinite .5s"></span>
+                </div>
               </div>
             </sc-for>
           </div>
@@ -227,6 +306,22 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">SOCIAL</span>
             <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">社群貼文</h3>
             <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">依你的產業,每週自動產出貼文草稿,你潤飾就能發。</p>
+            <!-- 03-A 子動畫:貼文生成(圖片掃描 + 文案逐行) -->
+            <div style="margin-top:6px;border:1px solid rgba(9,11,14,.12);border-radius:6px;overflow:hidden;background:#fff">
+              <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;border-bottom:1px solid rgba(9,11,14,.08)">
+                <span style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#FF6B2C,#65E0BC)"></span>
+                <span style="font:700 9px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">peakqi.studio</span>
+                <span style="margin-left:auto;font:700 10px sans-serif;color:rgba(9,11,14,.4)">···</span>
+              </div>
+              <div style="position:relative;height:56px;overflow:hidden;background:linear-gradient(135deg,rgba(255,107,44,.35),rgba(62,155,255,.3))">
+                <span style="position:absolute;inset:0;background:linear-gradient(100deg,transparent 32%,rgba(255,255,255,.6) 50%,transparent 68%);animation:pqSweep2 2s linear infinite"></span>
+              </div>
+              <div style="padding:7px 9px;display:flex;flex-direction:column;gap:4px">
+                <span style="height:4px;width:88%;background:rgba(9,11,14,.18);border-radius:2px;transform-origin:left;animation:pqGrow 3.4s ease-in-out infinite"></span>
+                <span style="height:4px;width:60%;background:rgba(9,11,14,.12);border-radius:2px;transform-origin:left;animation:pqGrow 3.4s ease-in-out infinite .45s"></span>
+                <span style="font:600 9px 'Noto Sans TC',sans-serif;color:#FF6B2C;animation:pqBlink 1.6s ease-in-out infinite">♥ 貼文草稿生成中…</span>
+              </div>
+            </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
               <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">標籤分群</span>
               <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">內容排程</span>
@@ -236,6 +331,21 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">ASSETS</span>
             <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">案例・優惠</h3>
             <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">Banner、EDM、案例內容快速生成,把「考慮中」的客人往前推。</p>
+            <!-- 03-B 子動畫:Banner / EDM 區塊逐塊組版 -->
+            <div style="margin-top:6px;border:1px solid rgba(9,11,14,.12);border-radius:6px;background:#fff;padding:9px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;gap:6px;align-items:center">
+                <span style="flex:1;height:24px;border-radius:3px;background:linear-gradient(90deg,#FF6B2C,rgba(255,107,44,.5));display:flex;align-items:center;justify-content:center;font:800 9px 'Noto Sans TC',sans-serif;color:#fff;animation:pqSeqLit 3s ease-in-out infinite">限時優惠 −20%</span>
+                <span style="width:28%;height:24px;border-radius:3px;background:rgba(62,155,255,.28);animation:pqSeqLit 3s ease-in-out infinite .4s"></span>
+              </div>
+              <div style="display:flex;gap:6px">
+                <span style="width:34%;height:30px;border-radius:3px;background:rgba(9,11,14,.1);animation:pqSeqLit 3s ease-in-out infinite .8s"></span>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center">
+                  <span style="height:4px;width:92%;background:rgba(9,11,14,.16);border-radius:2px;animation:pqSeqLit 3s ease-in-out infinite 1.1s"></span>
+                  <span style="height:4px;width:66%;background:rgba(9,11,14,.12);border-radius:2px;animation:pqSeqLit 3s ease-in-out infinite 1.35s"></span>
+                </div>
+              </div>
+              <span style="display:flex;align-items:center;gap:5px;font:600 9px 'Noto Sans TC',sans-serif;color:#3E9BFF"><span style="width:5px;height:5px;border-radius:50%;background:#3E9BFF;animation:pqPulse 1.5s ease-in-out infinite"></span>EDM / Banner 自動排版中</span>
+            </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
               <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">再行銷</span>
               <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">限時優惠</span>
@@ -245,6 +355,23 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">RENDER</span>
             <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">AI 場景渲染</h3>
             <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">場景渲染與風格模擬,讓客人消費前先看效果——婚紗、髮色、空間都能先試。</p>
+            <!-- 03-C 子動畫:AI 場景渲染(before → after 擦除 + 運算中) -->
+            <div style="margin-top:6px;border:1px solid rgba(9,11,14,.12);border-radius:6px;overflow:hidden;background:#fff">
+              <div style="position:relative;height:78px;background:repeating-linear-gradient(45deg,rgba(9,11,14,.07) 0 6px,rgba(9,11,14,.02) 6px 12px)">
+                <span style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(101,224,188,.6),rgba(62,155,255,.55));animation:pqWipe 3.6s ease-in-out infinite"></span>
+                <span style="position:absolute;right:8px;top:8px;width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.9);border-top-color:transparent;animation:pqSpin 1s linear infinite"></span>
+                <span style="position:absolute;left:8px;bottom:6px;font:700 8.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:rgba(9,11,14,.5)">BEFORE</span>
+                <span style="position:absolute;right:8px;bottom:6px;font:700 8.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:#fff">AFTER</span>
+              </div>
+              <div style="padding:7px 9px;display:flex;align-items:center;gap:6px">
+                <span style="width:5px;height:5px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.5s ease-in-out infinite"></span>
+                <span style="font:600 9px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">場景渲染中・婚紗 / 髮色 / 空間</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+              <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">風格模擬</span>
+              <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:3px 10px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">消費前預覽</span>
+            </div>
           </div>
         </div>
         <div style="position:relative;margin-top:22px;height:2px;background:rgba(9,11,14,.1)" aria-hidden="true">
@@ -294,6 +421,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                 <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">MODULE {{ m.n }}</span>
                 <h3 style="margin:10px 0 0;font:900 22px 'Noto Sans TC',sans-serif">{{ m.name }}</h3>
                 <p style="margin:8px 0 0;font:700 14.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.85)">{{ m.tag }}</p>
+                <!-- 04 手法:每個模組專屬的動態圖示(子動畫,樣式依 data-sdet 索引分流) -->
+                <div data-micon aria-hidden="true" style="margin-top:14px;height:100px;border:1px solid rgba(242,239,232,.12);border-radius:8px;background:rgba(242,239,232,.03)">
+                  <i></i><i></i><i></i><i></i>
+                </div>
                 <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;border-top:1px solid rgba(242,239,232,.14);padding-top:14px">
                   <sc-for list="{{ m.items }}" as="it" hint-placeholder-count="3">
                     <span style="display:flex;gap:10px;align-items:baseline;font:400 14px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)"><span style="width:5px;height:5px;background:#FF6B2C;flex-shrink:0"></span>{{ it }}</span>
@@ -326,18 +457,33 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         <span data-ichip style="border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);font:600 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">{{ m.name }}</span>
       </sc-for>
     </div>
-    <div data-ibox style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
-      <div style="background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+    <!-- 05 手法子動畫:九個來源匯流成一條資料流,收進單一控制台(獨立於捲動母動畫) -->
+    <div aria-hidden="true" style="margin-top:16px;position:relative;height:48px;border-radius:8px;background:rgba(242,239,232,.03);border:1px solid rgba(242,239,232,.1);overflow:hidden">
+      <span style="position:absolute;left:10px;right:96px;top:50%;height:1px;background:linear-gradient(90deg,rgba(255,107,44,.55),rgba(62,155,255,.55),rgba(101,224,188,.55))"></span>
+      <span style="position:absolute;top:calc(50% - 3px);width:6px;height:6px;border-radius:50%;background:#FF6B2C;box-shadow:0 0 8px rgba(255,107,44,.8);animation:pqFlowX 2.6s linear infinite"></span>
+      <span style="position:absolute;top:calc(50% - 3px);width:6px;height:6px;border-radius:50%;background:#3E9BFF;box-shadow:0 0 8px rgba(62,155,255,.8);animation:pqFlowX 2.6s linear infinite .85s"></span>
+      <span style="position:absolute;top:calc(50% - 3px);width:6px;height:6px;border-radius:50%;background:#65E0BC;box-shadow:0 0 8px rgba(101,224,188,.8);animation:pqFlowX 2.6s linear infinite 1.7s"></span>
+      <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font:600 9px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(242,239,232,.35)">SOURCES</span>
+      <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;background:#090B0E;padding:5px 11px;border:1px solid rgba(255,107,44,.55);border-radius:999px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.5s ease-in-out infinite"></span>
+        <span style="font:700 10px 'Noto Sans TC',sans-serif;color:#F2EFE8">控制台</span>
+      </span>
+    </div>
+    <div data-ibox style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+      <div style="position:relative;overflow:hidden;background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+        <span aria-hidden="true" style="position:absolute;left:0;top:0;width:34%;height:2px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqRailSweep 3.2s linear infinite"></span>
         <span style="font:700 20px 'Space Grotesk',sans-serif;color:#3E9BFF">01</span>
         <h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">營運儀表板</h3>
         <p style="margin:0;font:400 13.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">今日新客、回覆速度、轉換率,一眼掌握,不用到處撈資料。</p>
       </div>
-      <div style="background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;overflow:hidden;background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+        <span aria-hidden="true" style="position:absolute;left:0;top:0;width:34%;height:2px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqRailSweep 3.2s linear infinite"></span>
         <span style="font:700 20px 'Space Grotesk',sans-serif;color:#3E9BFF">02</span>
         <h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">線上報價單</h3>
         <p style="margin:0;font:400 13.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">自動算稅,Excel / PDF 一鍵匯出,報價不再開三個檔案對來對去。</p>
       </div>
-      <div style="background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;overflow:hidden;background:#171A1F;border:1px solid rgba(242,239,232,.14);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:9px">
+        <span aria-hidden="true" style="position:absolute;left:0;top:0;width:34%;height:2px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqRailSweep 3.2s linear infinite"></span>
         <span style="font:700 20px 'Space Grotesk',sans-serif;color:#3E9BFF">03</span>
         <h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">數據報表・AI 月報</h3>
         <p style="margin:0;font:400 13.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">來源分析、業績追蹤,AI 月報自動生成,月底不用再手動整理。</p>
@@ -363,9 +509,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">我們服務過的產業</h2>
       <p style="margin:20px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);max-width:400px">{{ indNote }}你的產業不在列表上?Demo 時直接帶你的場景來測。</p>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <!-- 06 手法:產業星群。每個產業各自的品牌色重點、脈衝與漂浮(子動畫,不需切換) -->
+    <div id="pq-ind" style="display:flex;flex-wrap:wrap;gap:10px">
       <sc-for list="{{ inds }}" as="i" hint-placeholder-count="10">
-        <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:10px 20px;font:500 14.5px 'Noto Sans TC',sans-serif;background:#F2EFE8">{{ i }}</span>
+        <span data-ind style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:10px 20px;font:500 14.5px 'Noto Sans TC',sans-serif;background:#F2EFE8">{{ i }}</span>
       </sc-for>
       <span style="padding:10px 6px;font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">還有更多⋯</span>
     </div>
