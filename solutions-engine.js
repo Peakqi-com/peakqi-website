@@ -34,29 +34,46 @@ export function createSolutions() {
     const wrap = pin('capture', 260);
     const root = q('#capture');
     if (!root) return;
+    // 母動畫:往下捲切換情境 Tab(僅負責切 Tab,不碰訊息)
     let curTab = -1;
-    const upd = (p) => {
-      // 母動畫:往下捲切換情境 Tab(4 段);每段內用區域進度逐則揭露訊息(子動畫)
+    const switchByScroll = (p) => {
       const tabs = qa('#capture [role="tab"]');   // 切換會重建節點,每幀現查
       const n = Math.max(1, tabs.length);
       const idx = clamp(Math.floor(p * n), 0, n - 1);
       if (idx !== curTab) { curTab = idx; if (tabs[idx]) tabs[idx].click(); }
-      const local = clamp(p * n - idx, 0, 1);
+    };
+    // 子動畫:對話自動播放並循環(以時間驅動,永遠可見;切 Tab 時從頭播)
+    let playT0 = -1, lastActive = -2;
+    const autoplay = (now) => {
+      const tabs = qa('#capture [role="tab"]');
+      const active = tabs.findIndex(b => b.getAttribute('aria-selected') === 'true');
+      if (active !== lastActive || playT0 < 0) { lastActive = active; playT0 = now; }
       const msgs = qa('#capture [data-cmsg]');
-      msgs.forEach((m, i) => {
-        const k = ez(sub(local, 0.06 + i * 0.15, 0.26 + i * 0.15));
-        m.style.opacity = String(0.05 + 0.95 * k);
-        m.style.transform = 'translateY(' + ((1 - k) * 15).toFixed(1) + 'px)';
-      });
       const crm = qa('#capture [data-ccrm]');
+      if (!msgs.length) return;
+      const step = 0.85, hold = 2.8, fade = 0.55;
+      const total = msgs.length * step + hold + fade;
+      const tt = ((now - playT0) / 1000) % total;
+      const outK = ez(clamp((tt - (total - fade)) / fade, 0, 1));  // 週期末一起淡出 → 重播
+      msgs.forEach((m, i) => {
+        const inK = ez(clamp((tt - i * step) / 0.42, 0, 1));
+        const vis = inK * (1 - outK);
+        m.style.opacity = (0.04 + 0.96 * vis).toFixed(3);
+        m.style.transform = 'translateY(' + ((1 - inK) * 14).toFixed(1) + 'px)';
+      });
       crm.forEach((c, i) => {
-        const k = ez(sub(local, 0.55 + i * 0.11, 0.74 + i * 0.11));
-        c.style.opacity = String(0.15 + 0.85 * k);
-        c.style.transform = 'translateX(' + ((1 - k) * 16).toFixed(1) + 'px)';
+        const inK = ez(clamp((tt - (msgs.length * step * 0.45 + i * 0.4)) / 0.5, 0, 1));
+        c.style.opacity = (0.14 + 0.86 * inK * (1 - outK)).toFixed(3);
+        c.style.transform = 'translateX(' + ((1 - inK) * 16).toFixed(1) + 'px)';
       });
     };
-    if (!wrap) { return; } // mobile/reduced:Tab 可點,模板即完成態
-    ScrollChapter(ctx, wrap, upd, { pinned: true });
+    if (ctx.reduced) { // 減量動態:全部直接顯示,不播放
+      qa('#capture [data-cmsg]').forEach(m => { m.style.opacity = '1'; m.style.transform = 'none'; });
+      qa('#capture [data-ccrm]').forEach(c => { c.style.opacity = '1'; c.style.transform = 'none'; });
+      return;
+    }
+    if (wrap) ScrollChapter(ctx, wrap, switchByScroll, { pinned: true }); // 手機無 pin:Tab 用點擊
+    ctx.onFrame(autoplay);
   }
 
   function follow() {
