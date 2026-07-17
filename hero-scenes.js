@@ -140,7 +140,7 @@ export function makeDraw(g) {
 function paintSolutions(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
-  const s = clamp(Math.min(z.w / 720, z.h / 520), .5, 1.15);
+  const s = clamp(Math.min(z.w / 640, z.h / 470), .5, mobile ? 1.2 : 1.5);
   const kS = k('sig'), kL = k('layers'), kC = k('cap'), kF = k('fol'), kN = k('nur'), kA = k('align'), kO = k('console');
   const colW = mobile ? z.w * .92 : z.w * .56;
   const colX = z.x + (mobile ? z.w * .04 : 4);
