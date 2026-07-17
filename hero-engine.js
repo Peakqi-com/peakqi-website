@@ -9,7 +9,7 @@ export function createHeroEngine({ refs, manifest }) {
   const F = (wt, px) => wt + ' ' + px + 'px "Space Grotesk","Noto Sans TC",sans-serif';
 
   let canvas = null, ctx = null, wrap = null, stage = null;
-  let W = 0, H = 0, DPR = 1, SC = 1, OX = 0, OY = 0, isMobile = false, mAnimH = 0;
+  let W = 0, H = 0, DPR = 1, SC = 1, OX = 0, OY = 0, isMobile = false, mAnimH = 0, mScW = 0, mScD = 0;
   let wrapTop = 0, wrapH = 1, vh = 1;
   let p = 0, sp = 0, raf = 0, t0 = performance.now();
   let destroyed = false, visible = true, staticOn = false, stopped = false;
@@ -21,11 +21,13 @@ export function createHeroEngine({ refs, manifest }) {
 
   // 設計座標 1200×760
   const DW = 1200, DH = 760;
-  const CF = { x: 340, y: 120, w: 800, h: 560, head: 46, pad: 14, gap: 12 };
-  const SW = (CF.w - CF.pad * 2 - CF.gap * 2) / 3;
-  const SH = (CF.h - CF.head - CF.pad * 2 - CF.gap) / 2;
+  const CF_D = { x: 340, y: 120, w: 800, h: 560, head: 46, pad: 14, gap: 12 };  // 桌機:橫式 3×2
+  const CF_M = { x: 455, y: 30, w: 520, h: 700, head: 40, pad: 12, gap: 10 };   // 手機:直式 2×3
+  let CF = CF_D, COLS = 3, ROWS = 2;
   const slot = (i) => {
-    const c = i % 3, r = Math.floor(i / 3);
+    const SW = (CF.w - CF.pad * 2 - CF.gap * (COLS - 1)) / COLS;
+    const SH = (CF.h - CF.head - CF.pad * 2 - CF.gap * (ROWS - 1)) / ROWS;
+    const c = i % COLS, r = Math.floor(i / COLS);
     return { x: CF.x + CF.pad + c * (SW + CF.gap) + SW / 2, y: CF.y + CF.head + CF.pad + r * (SH + CF.gap) + SH / 2, w: SW, h: SH };
   };
   const wins = [
@@ -473,7 +475,7 @@ export function createHeroEngine({ refs, manifest }) {
     ctx.fillStyle = IVORY; ctx.font = F(700, px(13));
     ctx.fillText('PEAKQI 營運控制台', x + S(32), y + th / 2 + 0.5);
     const kA = ez(sub(q, 0.8, 0.87));
-    if (kA > 0) {
+    if (kA > 0 && !isMobile) {   // 手機直式太窄,隱藏這條統計避免重疊
       ctx.globalAlpha = a * kA;
       ctx.fillStyle = 'rgba(242,239,232,.6)'; ctx.font = F(500, px(11)); ctx.textAlign = 'right';
       ctx.fillText('今日新客 12・平均回覆 28s・本週轉換 18%', x + w - S(64), y + th / 2 + 0.5);
@@ -503,15 +505,18 @@ export function createHeroEngine({ refs, manifest }) {
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.clearRect(0, 0, W, H);
     if (drawSeq(q)) return;
+    if (isMobile && mScW) {
+      // 手機動態鏡頭:混亂遠景 → 入座近景(直式控制台放大填滿)
+      const k = ez(sub(q, 0.46, 0.72));
+      SC = lerp(mScW, mScD, k);
+      const fx = lerp(740, CF.x + CF.w / 2, k), fy = lerp(400, CF.y + CF.h / 2, k);
+      OX = W / 2 - fx * SC;
+      OY = NAV + mAnimH * lerp(0.6, 0.5, k) - fy * SC;
+    }
     watermark(q);
     const cam = 1 + 0.045 * ez(sub(q, 0.42, 0.56)) * (1 - ez(sub(q, 0.76, 0.9)));
     ctx.save();
     ctx.translate(W / 2, H / 2); ctx.scale(cam, cam); ctx.translate(-W / 2, -H / 2);
-    if (isMobile && mAnimH) {
-      // 敘事後段文字淡出時,把控制台上移填掉上方空白;t5 CTA 出現時回位
-      const lift = ez(sub(q, 0.6, 0.72)) * (1 - ez(sub(q, 0.86, 0.92)));
-      ctx.translate(0, -lift * Math.max(0, (H - mAnimH - NAV) * 0.5));
-    }
     const pos = anchors(q, t);
     drawConsole(q, t);
     drawLinks(q, t, pos);
@@ -574,12 +579,14 @@ export function createHeroEngine({ refs, manifest }) {
     canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
     isMobile = W < 760;
     if (isMobile) {
-      // 手機:上下分區——文字置於上方、動畫置於下方,兩者不重疊
-      mAnimH = Math.max(260, (H - NAV) * MOBILE_ANIM);
-      SC = Math.max(0.32, Math.min(W / (DW * 0.82), (mAnimH - 20) / DH));  // 放大控制台,不再擠成一團
-      OX = W / 2 - 740 * SC;           // 對齊內容中心(視窗群+控制台),而非設計幾何中心
-      OY = (H - mAnimH) + (mAnimH - DH * SC) * 0.5;
+      CF = CF_M; COLS = 2; ROWS = 3;   // 手機:直式 2×3 控制台
+      mAnimH = Math.max(300, H - NAV - 16);
+      // 遠景(混亂):看得見散落視窗;近景(入座):放大直式控制台填滿
+      mScW = Math.max(0.28, Math.min(W / (DW * 0.9), mAnimH / DH));
+      mScD = Math.min(W / (CF.w + 48), mAnimH / (CF.h + 10));
+      SC = mScW; OX = W / 2 - 740 * SC; OY = NAV + mAnimH * 0.6 - 400 * SC;
     } else {
+      CF = CF_D; COLS = 3; ROWS = 2;
       const avail = Math.max(200, H - NAV - 14);
       SC = Math.max(0.4, Math.min(W / DW, avail / DH));
       OX = (W - DW * SC) * 0.72;

@@ -265,7 +265,29 @@ export function createSectionsEngine({ refs }) {
       if (pain && vis.pain) { nPain++; painUpdate(traverseP(pain.root)); }
       if (loss && vis.loss) { nLoss++; lossUpdate(loss.pinned ? pinP(loss.wrap) : traverseP(loss.wrap)); }
       if (flow && vis.flow) { nFlow++; flowUpdate(flow.pinned ? pinP(flow.wrap) : traverseP(flow.wrap)); }
+      if (mpar) mparUpdate();
     } catch (e) { lastErr = String(e && e.message || e); }
+  }
+  // 手機輕量視差:功能總覽卡片 + 把三件事做順卡層,依捲動位置微幅分層位移(安全、不 pin)
+  let mpar = null;
+  function setupMobileParallax() {
+    if (reduced || !mobile) return;
+    const els = [];
+    document.querySelectorAll('#pq-orbitrow [data-orbcard], #flow [data-layer]').forEach((el, i) => {
+      el.style.willChange = 'transform';
+      el.style.transition = 'transform .12s linear';
+      els.push({ el, f: 0.05 + (i % 3) * 0.035 });
+    });
+    if (els.length) mpar = { els };
+  }
+  function mparUpdate() {
+    const vc = vh * 0.5;
+    for (let i = 0; i < mpar.els.length; i++) {
+      const it = mpar.els[i], r = it.el.getBoundingClientRect();
+      if (r.bottom < -60 || r.top > vh + 60) continue;
+      const off = (r.top + r.height / 2) - vc;
+      it.el.style.transform = 'translateY(' + (-off * it.f).toFixed(1) + 'px)';
+    }
   }
   let lastTick = 0;
   function loop() {
@@ -298,7 +320,7 @@ export function createSectionsEngine({ refs }) {
     const boot = () => {
       if (destroyed) return;
       if (!refs.pain && !refs.lossWrap && !refs.flowWrap && tries++ < 90) { raf = requestAnimationFrame(boot); return; }
-      setupPain(); setupLoss(); setupFlow(); setupOrbit();
+      setupPain(); setupLoss(); setupFlow(); setupOrbit(); setupMobileParallax();
       [['pain', refs.pain], ['loss', refs.lossWrap], ['flow', refs.flowWrap]].forEach(([k, el]) => {
         if (!el || !('IntersectionObserver' in window)) return;
         const io = new IntersectionObserver(es => { vis[k] = es[0] ? es[0].isIntersecting : true; }, { rootMargin: '160px' });

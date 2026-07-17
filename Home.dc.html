@@ -797,15 +797,15 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         <a href="Solutions.dc.html" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">看功能怎麼搭配 →</a>
       </div>
     </div>
-    <div id="pq-orbitrow" style="margin-top:24px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:10px">
-      <div style="display:flex;gap:12px;min-width:min-content;align-items:stretch">
-        <div style="scroll-snap-align:start;min-width:170px;max-width:170px;border-radius:8px;background:#090B0E;color:#F2EFE8;border:1.5px solid #FF6B2C;padding:20px 18px;display:flex;flex-direction:column;gap:8px;justify-content:center;text-align:center">
+    <div id="pq-orbitrow" style="margin-top:24px">
+      <div data-orbrow style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+        <div style="border-radius:8px;background:#090B0E;color:#F2EFE8;border:1.5px solid #FF6B2C;padding:20px;display:flex;flex-direction:column;gap:6px;text-align:center">
           <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">PEAKQI</span>
-          <span style="font:800 17px 'Noto Sans TC',sans-serif">AI 營運核心</span>
+          <span style="font:800 18px 'Noto Sans TC',sans-serif">AI 營運核心</span>
           <span style="font:500 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">六個模組,同一個後台</span>
         </div>
         <sc-for list="{{ mods }}" as="m" hint-placeholder-count="6">
-          <div style="scroll-snap-align:start;min-width:236px;max-width:236px;background:#F2EFE8;border:1px solid rgba(9,11,14,.16);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:9px">
+          <div data-orbcard style="background:#F2EFE8;border:1px solid rgba(9,11,14,.16);border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:9px">
             <span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.n }}</span>
             <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">{{ m.name }}</h3>
             <span style="font:600 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ m.tag }}</span>
