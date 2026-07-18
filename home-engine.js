@@ -279,6 +279,9 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
+    // U3 翻面:螢幕正對觀眾的目標 yaw(依模型正負校正)
+    const EMPTY = new Set();
+    const FLIP_YAW = -Math.PI * 0.62;
     const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
     function mkMat(hex, emissive) { return new THREE.MeshStandardMaterial({ color: hex, metalness: 0.62, roughness: 0.27, emissive: emissive == null ? hex : emissive, emissiveIntensity: 0.3 }); }
     function createInternals(asset) {
@@ -453,15 +456,18 @@ export function createHomeEngine() {
       smoothP += (scrollP - smoothP) * 0.06;
       const p = smoothP;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
-      setBeat(beat);
-      setPhase(p < 0.10 ? 0 : p < 0.34 ? 1 : p < 0.62 ? 2 : p < 0.82 ? 3 : 4);
-      // 母:representation 轉場
-      const disasK = ez(sub(p, 0.10, 0.44));        // 拆解(適度、在框內)
-      const wireK = ez(sub(p, 0.34, 0.56));         // 光澤PBR → 發光彩色線稿
-      const paperK = ez(sub(p, 0.62, 0.80));        // 彩色線稿 → 黑白宣紙藍圖
+      const review = p > 0.60;                      // 藍圖後:組回/翻面,不顯示故事卡
+      setBeat(review ? -1 : beat);
+      setPhase(p < 0.10 ? 0 : p < 0.30 ? 1 : p < 0.54 ? 2 : p < 0.72 ? 3 : p < 0.86 ? 4 : 5);
+      // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)
+      const R = ez(sub(p, 0.72, 0.86));             // U3a 組回實體
+      const flipK = ez(sub(p, 0.86, 0.96));         // U3b 翻面迴轉(螢幕正對觀眾)
+      const disasK = ez(sub(p, 0.10, 0.40)) * (1 - R);
+      const wireK = ez(sub(p, 0.30, 0.50)) * (1 - R);
+      const paperK = ez(sub(p, 0.54, 0.64)) * (1 - R);
       const dark = 1 - paperK;
-      const solid = 1 - wireK;                       // 材質(光澤)存在度
-      const focusSet = cardFocus[beat] || new Set();
+      const solid = 1 - wireK;
+      const focusSet = review ? EMPTY : (cardFocus[beat] || EMPTY);
       // 子:快門捕捉閃光(暗場循環)
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
@@ -470,27 +476,29 @@ export function createHomeEngine() {
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
       hero.classList.toggle('pq-cine-paper-on', paperK > 0.55);
-      // 母:旋轉(有界擺動)→ 藍圖俯視
+      // 母:旋轉(有界擺動 → 藍圖俯視 → 翻面螢幕正對)
       const spinY = -0.5 + Math.sin(p * Math.PI * 3.0) * 0.5 + pointer.x * 0.06;
       const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
-      rig.rotation.y += ((spinY * dark + (-0.5) * paperK) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((tiltX * dark + (-0.95) * paperK) - rig.rotation.x) * 0.05;
-      rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark;
+      const yawNormal = spinY * dark + (-0.5) * paperK;
+      const xNormal = tiltX * dark + (-0.95) * paperK;
+      rig.rotation.y += ((yawNormal * (1 - flipK) + FLIP_YAW * flipK) - rig.rotation.y) * 0.05;
+      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * 0.05;
+      rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
-      const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark;
+      const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
       rig.position.x += (targetX - rig.position.x) * 0.04;
-      rig.position.y += (((isMobile ? 0.8 : 0) * dark) - rig.position.y) * 0.04;
-      // 開場放大(第一顆鏡頭最大);之後隨旋轉/拆解縮小以容納散開的零件
-      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)));
+      rig.position.y += (((isMobile ? 0.8 : 0) * dark * (1 - flipK)) - rig.position.y) * 0.04;
+      // 開場放大;拆解縮小;翻面看螢幕再放大
+      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.45 : 0.32)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
-      const framingK = ez(sub(p, 0.16, 0.24)) * (1 - ez(sub(p, 0.44, 0.52)));
+      const framingK = ez(sub(p, 0.16, 0.24)) * (1 - ez(sub(p, 0.42, 0.50)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
       if (framingK > 0.01) {
         const fp = parts.find(pp => focusSet.has(pp.groupId));
         if (fp) { fp.node.getWorldPosition(_tmp2); aimX = _tmp2.x * framingK; aimY = 0.1 * (1 - framingK) + _tmp2.y * framingK; aimZ = _tmp2.z * framingK; }
       }
       camAim.lerp(_tmp2.set(aimX, aimY, aimZ), 0.1);
-      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 2.2 : 3.4);
+      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 2.2 : 3.4) - flipK * (isMobile ? 0.6 : 1.0);
       camera.lookAt(camAim);
 
       for (let i = 0; i < parts.length; i++) {
