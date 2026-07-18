@@ -36,22 +36,82 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 @keyframes pqCount{0%,100%{color:#090B0E}50%{color:#FF6B2C}}
 @keyframes pqSweep{0%{transform:translateX(-120%)}100%{transform:translateX(240%)}}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+@keyframes pqSpin{to{transform:rotate(360deg)}}
 body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
-@media (max-width:820px){#pq-hero-grid{grid-template-columns:1fr!important;gap:32px!important}}
-@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
+@keyframes pqBlink{50%{opacity:.25}}
+@keyframes pqDrop{50%{transform:translateY(6px)}}
+/* ============ 幕1 Hero:爆炸攝影機捲動分鏡 ============ */
+/* 母動畫=捲動(相機組裝→爆炸、切章);子動畫=時間(邊線閃爍、微塵、光脈衝) */
+#hero{position:relative;background:#090B0E;color:#F2EFE8}
+.pq-cine-stage{position:relative;min-height:100vh;overflow:hidden}
+#pq-hero-gl{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:0;pointer-events:none;transition:opacity .8s ease}
+#pq-hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 120% at 68% 48%,transparent 0 16%,rgba(9,11,14,.14) 44%,rgba(9,11,14,.82) 100%)}
+.pq-cine-noise{position:absolute;inset:0;z-index:1;opacity:.16;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:3px 3px,52px 52px}
+/* 基礎狀態(降級/引擎未接管):可讀的堆疊版 */
+.pq-cine-intro,.pq-cine-card{position:relative;z-index:3;max-width:640px;margin:0 auto 30px}
+.pq-cine-intro{display:flex;flex-direction:column;gap:20px}
+.pq-cine-scrollcue{display:inline-flex;align-items:center;gap:14px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.75);text-decoration:none;width:fit-content}
+.pq-cine-scrollcue i{width:40px;height:40px;border:1px solid rgba(242,239,232,.28);display:grid;place-items:center;color:#FF6B2C;font-style:normal;animation:pqDrop 2s ease-in-out infinite}
+.pq-cine-card{border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.62);backdrop-filter:blur(14px);padding:26px 26px 28px}
+.pq-cine-card .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
+.pq-cine-card .top b{color:#FF6B2C;font:700 15px 'Space Grotesk',sans-serif}
+.pq-cine-card h2{margin:22px 0 16px;font:900 clamp(1.7rem,2.8vw,2.7rem)/1.08 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pq-cine-card h2 span{display:block}
+.pq-cine-card h2 em{font-style:normal;color:#FF6B2C}
+.pq-cine-card>p{margin:0;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pq-cine-card ul{margin:22px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.pq-cine-card li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 11px 'Noto Sans TC',sans-serif;letter-spacing:.03em}
+.pq-cine-rail,.pq-cine-label{display:none}
+#pq-hero-svg{position:relative;z-index:3;max-width:520px;margin:8px auto 0}
+/* 進階狀態:引擎接管後 pin+分鏡 */
+#hero.pq-cine-on .pq-cine-stage{height:100vh}
+#hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card{position:absolute;top:50%;margin:0;opacity:0;transform:translateY(calc(-50% + 26px));transition:opacity .55s cubic-bezier(0.16,1,0.3,1),transform .55s cubic-bezier(0.16,1,0.3,1);pointer-events:none}
+#hero.pq-cine-on .pq-cine-intro{width:min(620px,46vw);left:clamp(20px,6vw,72px)}
+#hero.pq-cine-on .pq-cine-card{width:min(430px,40vw)}
+#hero.pq-cine-on .pq-cine-card[data-align="left"]{left:clamp(20px,6vw,72px)}
+#hero.pq-cine-on .pq-cine-card[data-align="right"]{right:clamp(20px,6vw,72px)}
+#hero.pq-cine-on .is-active{opacity:1;transform:translateY(-50%);pointer-events:auto}
+#hero.pq-cine-on #pq-hero-svg{display:none}
+#hero.pq-cine-on .pq-cine-rail{display:flex;position:absolute;right:clamp(12px,2.2vw,26px);top:50%;transform:translateY(-50%);z-index:5;flex-direction:column;gap:13px}
+#hero.pq-cine-on .pq-cine-rail button{background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:flex-end;gap:9px;color:rgba(242,239,232,.42);font:700 9px 'Space Grotesk',sans-serif;letter-spacing:.1em;transition:color .3s}
+#hero.pq-cine-on .pq-cine-rail button::after{content:"";width:12px;height:1px;background:currentColor;transition:width .3s,box-shadow .3s}
+#hero.pq-cine-on .pq-cine-rail button.active{color:#FF6B2C}
+#hero.pq-cine-on .pq-cine-rail button.active::after{width:34px;box-shadow:0 0 8px #FF6B2C}
+#hero.pq-cine-on .pq-cine-label{display:flex;position:absolute;left:clamp(16px,3vw,40px);bottom:26px;z-index:5;flex-direction:column;gap:5px;color:rgba(242,239,232,.42);font:700 9px 'Space Grotesk',sans-serif;letter-spacing:.16em;pointer-events:none}
+#hero.pq-cine-on .pq-cine-label b{color:rgba(242,239,232,.72);font-weight:700}
+/* 幕4 跨產業:節點網路 canvas(子=漂浮、母=收束) */
+#cases{position:relative;overflow:hidden}
+[data-cases-net]{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#cases>.pq-wrap{position:relative;z-index:1}
+/* 幕6 聯絡:引擎回聲(子) */
+.pq-echo{position:absolute;right:5%;top:50%;width:min(360px,46vw);aspect-ratio:1;transform:translateY(-50%);border-radius:50%;z-index:0;pointer-events:none;background:radial-gradient(circle,rgba(255,107,44,.2),rgba(255,107,44,0) 62%);animation:pqBreathe 5.5s ease-in-out infinite}
+@media (max-width:820px){
+  #hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card{width:auto;left:16px!important;right:16px!important}
+  #hero.pq-cine-on .pq-cine-intro{top:auto;bottom:34px;transform:none}
+  #hero.pq-cine-on .pq-cine-card{top:auto;bottom:34px;transform:translateY(24px)}
+  #hero.pq-cine-on .is-active{transform:none}
+  #hero.pq-cine-on .pq-cine-card h2{font-size:1.65rem}
+  .pq-echo{display:none}
+}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}#pq-hero-gl,[data-cases-net]{display:none!important}.pq-cine-scrollcue i,.pq-echo{animation:none!important}}
 </style>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)e.preventDefault();if(r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#brands">跳到主要內容</a>
 <dc-import name="Nav" active="home" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
 
-<!-- ============ HERO：品牌屋引擎 ============ -->
-<section id="hero" data-screen-label="Hero" style="background:#090B0E;color:#F2EFE8;overflow:hidden">
-  <div class="pq-wrap pq-sec" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,4vw,64px);align-items:center" id="pq-hero-grid">
-    <div style="display:flex;flex-direction:column;gap:20px">
+<!-- ============ HERO：爆炸攝影機捲動分鏡(母=捲動組裝/爆炸/切章,子=時間邊線閃爍/微塵/光脈衝) ============ -->
+<section id="hero" data-screen-label="Hero">
+  <div class="pq-cine-stage" data-cine-stage>
+    <canvas id="pq-hero-gl" aria-hidden="true"></canvas>
+    <div id="pq-hero-scrim" aria-hidden="true"></div>
+    <div class="pq-cine-noise" aria-hidden="true"></div>
+
+    <!-- Beat 0:開場 -->
+    <div class="pq-cine-intro" data-cine-card="0" data-eyebrow="ENGINE · ONLINE">
       <span class="pq-eyebrow">PEAKQI · AI OPERATING PLATFORM</span>
-      <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.28 'Noto Sans TC',sans-serif">台灣中小企業的<br><span style="color:#FF6B2C">AI 營運基礎設施</span></h1>
-      <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">一套自研的 47 模組 AI 業務引擎,孵化多個垂直產業品牌作為場景驗證,同時對外提供通用型 AI 業務工具。<b style="color:#F2EFE8;font-weight:700">一套引擎、多個品牌、雙軌驗證。</b></p>
+      <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.24 'Noto Sans TC',sans-serif">台灣中小企業的<br><span style="color:#FF6B2C">AI 營運基礎設施</span></h1>
+      <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">以「一台攝影機」為入口,拆解奇鋒如何把散落的營運日常,收進同一套 47 模組 AI 業務引擎。<b style="color:#F2EFE8;font-weight:700">一套引擎、多個品牌、雙軌驗證。</b></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px">
         <a href="PeakOps.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">看 Peak Ops 產品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
         <a href="mailto:peakqi.com@gmail.com?subject=合作邀請" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">投資・合作邀請</a>
@@ -61,9 +121,50 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
         <span><b style="color:#F2EFE8;font:700 16px 'Space Grotesk',sans-serif">30+</b> 已上線系統</span>
         <span><b style="color:#F2EFE8;font:700 16px 'Space Grotesk',sans-serif">8+</b> 產業別</span>
       </div>
+      <a class="pq-cine-scrollcue" href="#brands"><span>向下捲動 · 拆解引擎</span><i>↓</i></a>
     </div>
-    <!-- 品牌屋引擎 SVG:引擎核心 → 分岔 → 四個品牌(母=載入組裝、子=脈衝/資料流/呼吸) -->
-    <div aria-hidden="true" style="position:relative">
+
+    <!-- Beat 1 -->
+    <article class="pq-cine-card" data-cine-card="1" data-align="left" data-eyebrow="CORE ENGINE">
+      <div class="top"><b>01</b><span>CORE ENGINE</span></div>
+      <h2><span>一套引擎,</span><span><em>驅動 47 個</em> AI 模組</span></h2>
+      <p>接客、CRM、行銷、報價、專案、數據,收進同一套營運底層——中小企業不再切換五六個工具。</p>
+      <ul><li>47 模組引擎</li><li>共用資料核心</li><li>24h 自動運轉</li></ul>
+    </article>
+    <!-- Beat 2 -->
+    <article class="pq-cine-card" data-cine-card="2" data-align="right" data-eyebrow="ACQUISITION / CRM">
+      <div class="top"><b>02</b><span>ACQUISITION / CRM</span></div>
+      <h2><span>從接客開始,</span><span>一路<em>追到成交</em></span></h2>
+      <p>自動回覆、異議處理、持續跟進,養客與 CRM 共用同一份客戶脈絡。訊息不漏接,關係不中斷。</p>
+      <ul><li>AI 接客</li><li>客戶追蹤</li><li>標籤分群</li></ul>
+    </article>
+    <!-- Beat 3 -->
+    <article class="pq-cine-card" data-cine-card="3" data-align="left" data-eyebrow="CREATIVE / KNOWLEDGE">
+      <div class="top"><b>03</b><span>CREATIVE / KNOWLEDGE</span></div>
+      <h2><span>內容會生成,</span><span>更<em>懂你的產業</em></span></h2>
+      <p>文字、圖片、影片與產業知識庫彼此連動。不是多一個聊天機器人,而是能把情境做深的創意工作流。</p>
+      <ul><li>行銷內容</li><li>AI 圖片・影片</li><li>產業知識庫</li></ul>
+    </article>
+    <!-- Beat 4 -->
+    <article class="pq-cine-card" data-cine-card="4" data-align="right" data-eyebrow="PROJECT / OPERATIONS">
+      <div class="top"><b>04</b><span>PROJECT / OPERATIONS</span></div>
+      <h2><span>專案、報價、數據,</span><span>在<em>同一個視野</em></span></h2>
+      <p>從報價到執行、從專案財務到管理月報,資訊回到同一座營運駕駛艙,讓每個決定都有依據。</p>
+      <ul><li>專案報價</li><li>財務管理</li><li>營運儀表板</li></ul>
+    </article>
+    <!-- Beat 5 -->
+    <article class="pq-cine-card" data-cine-card="5" data-align="left" data-eyebrow="ONE ENGINE / MANY FACES">
+      <div class="top"><b>05</b><span>ONE ENGINE / MANY FACES</span></div>
+      <h2><span>一套底層,</span><span>長出<em>多個產業品牌</em></span></h2>
+      <p>Peak Ops 服務通用中小企業;冒泡、AI Wedding Pro、AI Interior Pro 把知識與工作流做進垂直場景。自家品牌驗產品、Peak Ops 驗市場——雙軌驗證。</p>
+      <ul><li>Peak Ops</li><li>冒泡</li><li>AI Wedding Pro</li><li>AI Interior Pro</li></ul>
+    </article>
+
+    <nav class="pq-cine-rail" data-cine-rail aria-label="分鏡章節導覽"></nav>
+    <div class="pq-cine-label" aria-hidden="true"><span>ACTIVE LAYER</span><b data-cine-labeltext>ENGINE · ONLINE</b></div>
+
+    <!-- 降級用:品牌屋引擎 SVG(無 WebGL / reduced 時顯示) -->
+    <div id="pq-hero-svg" aria-hidden="true" style="position:relative">
       <svg viewBox="0 0 520 440" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;overflow:visible" role="img">
         <defs>
           <radialGradient id="brHub" cx="50%" cy="50%" r="50%">
@@ -117,37 +218,6 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
-<!-- ============ 雙軌敘事 ============ -->
-<section id="dualtrack" class="pq-sec" style="background:#F2EFE8">
-  <div class="pq-wrap">
-    <div data-reveal style="display:flex;align-items:center;gap:14px">
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">DUAL-TRACK VALIDATION</span>
-    </div>
-    <h2 data-reveal style="margin:16px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">同一套引擎,兩條軌道一起驗證</h2>
-    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:stretch">
-      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#fff;display:flex;flex-direction:column;gap:12px">
-        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">TRACK A</span>
-        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">自家垂直品牌</h3>
-        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">冒泡、AI Wedding Pro、AI Interior Pro 深入產業,累積真實 know-how 與資料飛輪——越用越強,證明產品好用、有真實產業經驗與付費用戶。</p>
-        <div style="margin-top:auto;display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:999px;background:rgba(62,155,255,.14);overflow:hidden;position:relative"><span style="position:absolute;inset:0 40% 0 0;background:#3E9BFF;border-radius:999px"></span></span><span style="font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">產業 know-how ↑</span></div>
-      </div>
-      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#fff;display:flex;flex-direction:column;gap:12px">
-        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">TRACK B</span>
-        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">Peak Ops 外部客戶</h3>
-        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">通用型 AI 業務工具,對外賣給還沒有專門工具的產業——年訂閱制、SaaS ARR 成長,證明市場願意買、可規模化。</p>
-        <div style="margin-top:auto;display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:999px;background:rgba(255,107,44,.14);overflow:hidden;position:relative"><span style="position:absolute;inset:0 25% 0 0;background:#FF6B2C;border-radius:999px"></span></span><span style="font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">SaaS ARR ↑</span></div>
-      </div>
-      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;gap:12px">
-        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">PLATFORM</span>
-        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">AI 營運平台</h3>
-        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">兩條軌道都餵養同一顆引擎與同一份資料飛輪。品牌屋結構下,每個垂直品牌都能獨立分拆或出售。</p>
-        <span style="margin-top:auto;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(101,224,188,.85)">一套引擎 · 持續累積的技術資產</span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ 品牌屋(四品牌卡) ============ -->
 <section id="brands" data-screen-label="品牌屋" class="pq-sec" style="background:rgba(9,11,14,.035)">
   <div class="pq-wrap">
@@ -191,6 +261,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 
 <!-- ============ 跨產業案例牆 ============ -->
 <section id="cases" data-screen-label="案例" class="pq-sec" style="background:#090B0E;color:#F2EFE8">
+  <canvas data-cases-net aria-hidden="true"></canvas>
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">CASE STUDIES</span></div>
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">跨產業實戰成效</h2>
@@ -236,7 +307,8 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 <!-- ============ 合作／聯絡 ============ -->
 <section id="contact" data-screen-label="聯絡" style="background:#090B0E;color:#F2EFE8;position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
-  <div class="pq-wrap pq-sec" style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,64px);align-items:center">
+  <div class="pq-echo" aria-hidden="true"></div>
+  <div class="pq-wrap pq-sec" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,64px);align-items:center">
     <div data-reveal style="display:flex;flex-direction:column;gap:20px">
       <span class="pq-eyebrow">LET'S TALK</span>
       <h2 style="margin:0;font:900 clamp(2rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">投資、合作、<br>或想加入我們?</h2>
@@ -262,6 +334,12 @@ class Component extends DCLogic {
   componentDidMount() {
     import('./content.js').then(m => { if (!this._dead) this.setState({ d: m }); }).catch(() => {});
     import('./seo.js').then(m => m.applySEO('home')).catch(() => {});
+    // 母/子動畫引擎:three.js 3D Hero + 跨產業節點網路 + 雙軌進度 + 章節導覽
+    import('./home-engine.js').then(m => {
+      if (this._dead || this._engine) return;
+      this._engine = m.createHomeEngine();
+      this._engine.start();
+    }).catch(() => {});
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     const els = Array.from(document.querySelectorAll('[data-reveal]'));
     if (reduce || !('IntersectionObserver' in window)) {
@@ -296,7 +374,7 @@ class Component extends DCLogic {
       a.addEventListener('mouseleave', () => { a.style.transform = 'none'; a.style.borderColor = 'rgba(9,11,14,.14)'; a.style.boxShadow = 'none'; });
     });
   }
-  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); if (this._nio) this._nio.disconnect(); }
+  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); if (this._nio) this._nio.disconnect(); if (this._engine) { try { this._engine.destroy(); } catch (e) {} this._engine = null; } }
   renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
 }
 </script>
