@@ -279,9 +279,9 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
-    // U3 翻面:螢幕正對觀眾的目標 yaw(依模型正負校正)
+    // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
     const EMPTY = new Set();
-    const FLIP_YAW = -Math.PI * 0.62;
+    const FLIP_YAW = 2.9;
     const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
     function mkMat(hex, emissive) { return new THREE.MeshStandardMaterial({ color: hex, metalness: 0.62, roughness: 0.27, emissive: emissive == null ? hex : emissive, emissiveIntensity: 0.3 }); }
     function createInternals(asset) {
@@ -481,7 +481,8 @@ export function createHomeEngine() {
       const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
       const yawNormal = spinY * dark + (-0.5) * paperK;
       const xNormal = tiltX * dark + (-0.95) * paperK;
-      rig.rotation.y += ((yawNormal * (1 - flipK) + FLIP_YAW * flipK) - rig.rotation.y) * 0.05;
+      const flipYaw = (typeof window !== 'undefined' && window.__flipYaw != null) ? window.__flipYaw : FLIP_YAW;
+      rig.rotation.y += ((yawNormal * (1 - flipK) + flipYaw * flipK) - rig.rotation.y) * 0.05;
       rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * 0.05;
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
