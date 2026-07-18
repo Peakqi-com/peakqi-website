@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "model": "peakqi-camera-web.glb",
+  "groups": [
+    {
+      "id": "optics",
+      "label": "OPTICAL LENS ASSEMBLY",
+      "prefix": "lenses",
+      "focusChapters": [1],
+      "color": "#fe6a2d"
+    },
+    {
+      "id": "shell",
+      "label": "OUTER SHELL / PLATFORM",
+      "prefix": "case_",
+      "focusChapters": [4],
+      "color": "#ffffff"
+    },
+    {
+      "id": "controls",
+      "label": "CONTROL / OPERATIONS",
+      "prefix": "body.",
+      "focusChapters": [3, 5],
+      "color": "#72e6ff"
+    },
+    {
+      "id": "chassis",
+      "label": "CORE CHASSIS",
+      "prefix": "body_low",
+      "focusChapters": [0, 4],
+      "color": "#ffffff"
+    }
+  ],
+  "internals": [
+    {
+      "id": "PQ_SENSOR",
+      "label": "IMAGE SENSOR / KNOWLEDGE CORE",
+      "focusChapters": [2],
+      "color": "#72e6ff"
+    },
+    {
+      "id": "PQ_MAINBOARD",
+      "label": "MAINBOARD / CRM DATA CORE",
+      "focusChapters": [0, 3],
+      "color": "#72e6ff"
+    },
+    {
+      "id": "PQ_AI_CHIP",
+      "label": "PQ-47 AI PROCESSOR",
+      "focusChapters": [0],
+      "color": "#fe6a2d"
+    },
+    {
+      "id": "PQ_BATTERY",
+      "label": "24/7 AUTOMATION POWER",
+      "focusChapters": [3],
+      "color": "#ffffff"
+    },
+    {
+      "id": "PQ_RIBBON",
+      "label": "INDUSTRY ADOPTION BUS",
+      "focusChapters": [5],
+      "color": "#fe6a2d"
+    }
+  ]
+}
