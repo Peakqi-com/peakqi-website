@@ -397,18 +397,15 @@ export function createHomeEngine() {
     }
     setBeat(0);
 
-    // ---- 攤開白宣紙藍圖:座標 + 業務類別 + 白話 標註 ----
+    // ---- 攤開白宣紙藍圖:座標 + 業務類別 + 白話(卡片式,逐一浮現)----
     const NS = 'http://www.w3.org/2000/svg';
     const svgEl = (tag, cls) => { const e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; };
+    const CARDW = 248, CARDH = 72;
     const ANNOT = [
-      { g: 'optics', biz: '接客 · AI 客服', note: '客人從這裡進來,AI 先接住', ax: 0.20, ay: 0.17 },
-      { g: 'sensor', biz: '行銷 · 內容生成', note: '把 know-how 變成貼文影片', ax: 0.19, ay: 0.39 },
-      { g: 'mainboard', biz: 'CRM · 追客', note: '走到哪一步都記在同一塊板', ax: 0.19, ay: 0.61 },
-      { g: 'chip', biz: '引擎 · 47 模組', note: '一顆核心,驅動所有模組', ax: 0.20, ay: 0.83 },
-      { g: 'controls', biz: '報價 · 數據', note: '一按就出報價,數字看清', ax: 0.80, ay: 0.17 },
-      { g: 'battery', biz: '24h 自動運轉', note: '不打烊的營運電力', ax: 0.81, ay: 0.39 },
-      { g: 'shell', biz: '品牌屋 · 平台層', note: '同一引擎,換不同的臉', ax: 0.81, ay: 0.61 },
-      { g: 'ribbon', biz: '導入 · 整合排線', note: '最快 10 天上線', ax: 0.80, ay: 0.83 }
+      { g: 'optics', idx: '01', biz: '接客 · AI 客服', note: '客人從這裡進來,AI 先接住、先理解', ax: 0.055, ay: 0.26, reveal: 0.70 },
+      { g: 'sensor', idx: '02', biz: '行銷 · 內容生成', note: '把產業 know-how 變成貼文、圖片、影片', ax: 0.055, ay: 0.60, reveal: 0.75 },
+      { g: 'mainboard', idx: '03', biz: 'CRM · 追客', note: '每個客人走到哪一步,都記在同一塊板上', ax: 0.945, ay: 0.26, reveal: 0.80 },
+      { g: 'shell', idx: '04', biz: '品牌屋 · 平台層', note: '同一顆引擎,換上不同產業的臉', ax: 0.945, ay: 0.60, reveal: 0.85 }
     ];
     const annItems = [];
     if (annotSvg) {
@@ -416,17 +413,22 @@ export function createHomeEngine() {
         const left = cfg.ax < 0.5;
         const g = svgEl('g');
         const lead = svgEl('polyline', 'lead');
-        const dot = svgEl('circle', 'dot'); dot.setAttribute('r', '4');
-        const bizline = svgEl('line', 'bizline');
-        const coordT = svgEl('text', 'coord'); coordT.setAttribute('text-anchor', left ? 'start' : 'end');
-        const bizT = svgEl('text', 'biz'); bizT.setAttribute('text-anchor', left ? 'start' : 'end'); bizT.textContent = cfg.biz;
-        const noteT = svgEl('text', 'note'); noteT.setAttribute('text-anchor', left ? 'start' : 'end'); noteT.textContent = cfg.note;
-        g.appendChild(lead); g.appendChild(dot); g.appendChild(bizline); g.appendChild(coordT); g.appendChild(bizT); g.appendChild(noteT);
+        const rect = svgEl('rect', 'card'); rect.setAttribute('rx', '3');
+        const dot = svgEl('circle', 'dot'); dot.setAttribute('r', '3.5');
+        const idxT = svgEl('text', 'idx'); idxT.textContent = cfg.idx;
+        const coordT = svgEl('text', 'coord'); coordT.setAttribute('text-anchor', 'end');
+        const bizT = svgEl('text', 'biz'); bizT.textContent = cfg.biz;
+        const noteT = svgEl('text', 'note'); noteT.textContent = cfg.note;
+        g.appendChild(lead); g.appendChild(rect); g.appendChild(dot); g.appendChild(idxT); g.appendChild(coordT); g.appendChild(bizT); g.appendChild(noteT);
         annotSvg.appendChild(g);
-        annItems.push({ cfg, left, lead, dot, bizline, coordT, bizT, noteT, node: null });
+        annItems.push({ cfg, left, g, rect, lead, dot, idxT, coordT, bizT, noteT, node: null });
       });
     }
     const _wp = THREE ? new THREE.Vector3() : null;
+
+    // 分鏡節奏
+    const DARK_END = 0.55, PAPER_S = 0.55, PAPER_F = 0.70, REASS_S = 0.88;
+    const OFF = 0.72;
 
     const t0 = performance.now();
     ctx.onFrame((now) => {
@@ -434,54 +436,56 @@ export function createHomeEngine() {
       const t = (now - t0) / 1000;
       smoothP += (scrollP - smoothP) * 0.06;
       const p = smoothP;
-      const beat = Math.max(0, Math.min(BEATS - 1, Math.floor(scrollP * BEATS)));
+      const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / DARK_END) * BEATS)));
       setBeat(beat);
-      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.5 ? 2 : p < 0.7 ? 3 : 4);
-      // 母:材質顯現 / 爆炸 / 攤開白宣紙藍圖
-      const materialReveal = ez((p - 0.04) / 0.09);
-      const explosion = ez((p - 0.10) / 0.5);          // 爆炸後保持攤開(不回組)
-      const paperK = ez(sub(p, 0.7, 0.9));             // 0 暗場 → 1 白宣紙藍圖
+      setPhase(p < 0.05 ? 0 : p < 0.12 ? 1 : p < DARK_END ? 2 : p < REASS_S ? 3 : 4);
+      const materialReveal = ez((p - 0.03) / 0.09);
+      const paperK = ez(sub(p, PAPER_S, PAPER_F));                 // 0 暗場 → 1 白宣紙藍圖
       const dark = 1 - paperK;
+      // 攤開後保持,最後(REASS_S→)組裝回原型
+      const fullExplode = ez(sub(p, 0.5, 0.66)) * (1 - ez(sub(p, REASS_S, 0.99)));
       const focusSet = cardFocus[beat] || new Set();
-      const focusAll = focusSet.size === 0 || focusSet.has('all') || paperK > 0.4;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
-      if (annotSvg) annotSvg.style.opacity = ez(sub(p, 0.78, 0.94)).toFixed(3);
+      if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 ? 1 : 0);
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
       hero.classList.toggle('pq-cine-paper-on', paperK > 0.5);
-      // 母:rig 旋轉(暗場變化大)→ 攤開俯視
-      const spinY = -0.6 + p * Math.PI * 2.5 + pointer.x * 0.07;
-      const tumbleX = -0.12 + Math.sin(p * Math.PI * 2.6) * 0.28 - pointer.y * 0.045;
-      rig.rotation.y += ((spinY * dark + (-0.42) * paperK) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((tumbleX * dark + (-1.02) * paperK) - rig.rotation.x) * 0.05;
-      rig.rotation.z = Math.sin(p * Math.PI * 2.2) * 0.09 * dark;
+      // 母:旋轉(暗場=有界擺動,不整圈)→ 攤開俯視
+      const spinY = -0.5 + Math.sin(p * Math.PI * 3.0) * 0.5 + pointer.x * 0.06;
+      const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
+      rig.rotation.y += ((spinY * dark + (-0.48) * paperK) - rig.rotation.y) * 0.05;
+      rig.rotation.x += ((tiltX * dark + (-1.0) * paperK) - rig.rotation.x) * 0.05;
+      rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark;
       const align = cards[beat] && cards[beat].getAttribute('data-align');
-      const targetX = (isMobile ? 0 : (align === 'right' ? -1.3 : 1.3)) * dark;
-      rig.position.x += ((targetX + Math.sin(p * Math.PI * 4) * 0.12 * dark) - rig.position.x) * 0.04;
-      rig.position.y += (((isMobile ? 1.05 : 0) + Math.sin(p * Math.PI * 2) * 0.1 * dark) - rig.position.y) * 0.04;
-      rig.scale.setScalar((isMobile ? 0.66 : 1) * (1 - paperK * (isMobile ? 0.32 : 0.16)));
+      const targetX = (isMobile ? 0 : (align === 'right' ? -0.85 : 0.85)) * dark;
+      rig.position.x += (targetX - rig.position.x) * 0.04;
+      rig.position.y += (((isMobile ? 0.85 : 0) * dark) - rig.position.y) * 0.04;
+      rig.scale.setScalar((isMobile ? 0.6 : 0.88) * (1 - paperK * (isMobile ? 0.34 : 0.3)));
+      camera.position.z = (isMobile ? 13.6 : 12.0) + paperK * 2.6;
 
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
-        const staged = ez((explosion - part.delay) / Math.max(0.2, 0.78 - part.delay));
-        const dest = part.home.clone().addScaledVector(part.offset, staged);
-        part.node.position.lerp(dest, 0.075);
-        const focused = focusAll || focusSet.has(part.groupId);
+        const focused = focusSet.has(part.groupId);
+        // 暗場:只把聚焦零件抽出(其餘維持組裝);攤開:全爆炸→回組
+        const singleExt = (focused ? 0.62 : 0) * (1 - ez(sub(p, 0.5, 0.58)));
+        const staged = ez((fullExplode - part.delay) / Math.max(0.2, 0.78 - part.delay));
+        const ext = Math.max(singleExt, staged);
+        const dest = part.home.clone().addScaledVector(part.offset, ext * OFF);
+        part.node.position.lerp(dest, 0.08);
+        const hi = focused || paperK > 0.4;
         const flick = 0.84 + Math.sin(t * 4.6 + i * 1.43) * 0.14;
-        // 材質:白宣紙模式淡出(留純線稿)
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const op = materialReveal * (focused ? 0.98 : 0.34) * dark;
+          const op = materialReveal * (hi ? 0.98 : 0.32) * dark;
           mat.opacity = op; mat.depthWrite = op > 0.62;
           if (mat.emissive) mat.emissiveIntensity = (focused ? 0.24 + Math.sin(t * 2.2) * 0.06 : 0.03) * dark;
         }
-        // 邊線:白宣紙模式轉黑、變實(工程線稿)
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];
           em.color.copy(part.baseColor).lerp(BLACK, paperK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
-          em.opacity = Math.max(((1 - materialReveal) * 0.9 + (focused ? 0.72 : 0.14)) * flick * dark, paperK * 0.85);
+          em.opacity = Math.max(((1 - materialReveal) * 0.85 + (hi ? 0.7 : 0.16)) * flick * dark, paperK * 0.85);
         }
         const attr = part.connector.geometry.getAttribute('position');
         const dx = part.node.position.x - part.home.x, dy = part.node.position.y - part.home.y, dz = part.node.position.z - part.home.z;
@@ -489,12 +493,14 @@ export function createHomeEngine() {
         attr.setXYZ(1, part.center.x + dx, part.center.y + dy, part.center.z + dz);
         attr.needsUpdate = true;
         part.connector.material.color.copy(part.baseColor).lerp(BLACK, paperK);
-        part.connector.material.opacity = Math.max(staged * (focused ? 0.55 : 0.1) * flick * dark, staged * paperK * 0.5);
+        const cext = Math.max(ext, 0);
+        part.connector.material.opacity = Math.max(cext * (hi ? 0.5 : 0.1) * flick * dark, cext * paperK * 0.5);
       }
-      // 標註投影(僅白宣紙階段)
+      // 藍圖卡片標註(逐一浮現,組裝回組時淡出)
       if (annotSvg && paperK > 0.02) {
         const W = stage.clientWidth || 1, H = stage.clientHeight || 1;
         annotSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        const fade = 1 - ez(sub(p, REASS_S + 0.02, 0.99));
         for (let a = 0; a < annItems.length; a++) {
           const it = annItems[a];
           if (!it.node) { const f = parts.find(pp => pp.groupId === it.cfg.g); it.node = f ? f.node : null; }
@@ -502,23 +508,26 @@ export function createHomeEngine() {
           it.node.getWorldPosition(_wp); _wp.project(camera);
           const sx = (_wp.x * 0.5 + 0.5) * W, sy = (-_wp.y * 0.5 + 0.5) * H;
           const lx = it.cfg.ax * W, ly = it.cfg.ay * H;
-          const elbowX = it.left ? lx + 46 : lx - 46;
+          const cardX = it.left ? lx : lx - CARDW, cardY = ly - CARDH / 2;
+          it.rect.setAttribute('x', cardX.toFixed(1)); it.rect.setAttribute('y', cardY.toFixed(1)); it.rect.setAttribute('width', CARDW); it.rect.setAttribute('height', CARDH);
+          it.idxT.setAttribute('x', (cardX + 14).toFixed(1)); it.idxT.setAttribute('y', (cardY + 20).toFixed(1));
+          it.coordT.setAttribute('x', (cardX + CARDW - 14).toFixed(1)); it.coordT.setAttribute('y', (cardY + 20).toFixed(1));
+          it.bizT.setAttribute('x', (cardX + 14).toFixed(1)); it.bizT.setAttribute('y', (cardY + 42).toFixed(1));
+          it.noteT.setAttribute('x', (cardX + 14).toFixed(1)); it.noteT.setAttribute('y', (cardY + 60).toFixed(1));
+          const edgeX = it.left ? cardX + CARDW : cardX;
+          it.lead.setAttribute('points', edgeX.toFixed(1) + ',' + (cardY + CARDH / 2).toFixed(1) + ' ' + sx.toFixed(1) + ',' + sy.toFixed(1));
           it.dot.setAttribute('cx', sx.toFixed(1)); it.dot.setAttribute('cy', sy.toFixed(1));
-          it.lead.setAttribute('points', sx.toFixed(1) + ',' + sy.toFixed(1) + ' ' + elbowX.toFixed(1) + ',' + ly.toFixed(1) + ' ' + lx.toFixed(1) + ',' + ly.toFixed(1));
-          const endX = it.left ? lx + 44 : lx - 44;
-          it.bizline.setAttribute('x1', lx); it.bizline.setAttribute('y1', (ly + 6).toFixed(1)); it.bizline.setAttribute('x2', endX); it.bizline.setAttribute('y2', (ly + 6).toFixed(1));
-          it.coordT.setAttribute('x', lx); it.coordT.setAttribute('y', (ly - 20).toFixed(1));
-          it.bizT.setAttribute('x', lx); it.bizT.setAttribute('y', (ly - 2).toFixed(1));
-          it.noteT.setAttribute('x', lx); it.noteT.setAttribute('y', (ly + 22).toFixed(1));
           const q = it.node.position;
-          it.coordT.textContent = 'X ' + q.x.toFixed(2) + '  Y ' + q.y.toFixed(2) + '  Z ' + q.z.toFixed(2);
+          it.coordT.textContent = 'X ' + q.x.toFixed(2) + ' Y ' + q.y.toFixed(2) + ' Z ' + q.z.toFixed(2);
+          const rev = ez(sub(p, it.cfg.reveal, it.cfg.reveal + 0.035)) * fade;
+          it.g.setAttribute('opacity', rev.toFixed(3));
         }
       }
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
-      dust.material.opacity = 0.48 * dark;
+      dust.material.opacity = 0.4 * dark;
       grid.material.transparent = true; grid.material.opacity = dark;
-      orangeL.intensity = (13 + Math.sin(t * 2.7) * 3) * (0.4 + 0.6 * dark);
-      if (bloomPass) bloomPass.strength = (0.45 + Math.sin(t * 1.8) * 0.06 + explosion * 0.22) * dark;
+      orangeL.intensity = (12 + Math.sin(t * 2.7) * 3) * (0.4 + 0.6 * dark);
+      if (bloomPass) bloomPass.strength = (0.4 + Math.sin(t * 1.8) * 0.05 + fullExplode * 0.18) * dark;
       if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
     });
   }

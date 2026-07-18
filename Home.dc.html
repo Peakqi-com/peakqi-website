@@ -49,14 +49,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #pq-hero-gl{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;pointer-events:none;transition:opacity .8s ease}
 #pq-hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(130% 120% at 68% 48%,transparent 0 16%,rgba(9,11,14,.14) 44%,rgba(9,11,14,.86) 100%)}
 .pq-cine-noise{position:absolute;inset:0;z-index:2;opacity:.16;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:3px 3px,52px 52px}
-.pq-cine-annot{position:absolute;inset:0;z-index:4;width:100%;height:100%;opacity:0;pointer-events:none;overflow:visible;font-family:'Space Grotesk',monospace}
-.pq-cine-annot .lead{stroke:#090B0E;stroke-width:1;fill:none}
-.pq-cine-annot .dot{fill:none;stroke:#FF6B2C;stroke-width:1.4}
-.pq-cine-annot .tick{stroke:rgba(9,11,14,.5);stroke-width:1}
-.pq-cine-annot .coord{fill:rgba(9,11,14,.55);font:600 9px 'Space Grotesk',monospace;letter-spacing:.06em}
-.pq-cine-annot .biz{fill:#090B0E;font:800 13px 'Noto Sans TC',sans-serif}
-.pq-cine-annot .note{fill:rgba(9,11,14,.66);font:400 11px 'Noto Sans TC',sans-serif}
-.pq-cine-annot .bizline{stroke:#FF6B2C;stroke-width:2}
+.pq-cine-annot{position:absolute;inset:0;z-index:4;width:100%;height:100%;opacity:0;pointer-events:none;overflow:visible}
+.pq-cine-annot .card{fill:rgba(255,255,255,.92);stroke:rgba(9,11,14,.6);stroke-width:1;filter:drop-shadow(0 6px 16px rgba(9,11,14,.1))}
+.pq-cine-annot .lead{stroke:rgba(9,11,14,.72);stroke-width:1;fill:none}
+.pq-cine-annot .dot{fill:#FF6B2C;stroke:#fff;stroke-width:1.2}
+.pq-cine-annot .idx{fill:#FF6B2C;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.05em}
+.pq-cine-annot .coord{fill:rgba(9,11,14,.5);font:600 9px 'Space Grotesk',sans-serif;letter-spacing:.02em}
+.pq-cine-annot .biz{fill:#090B0E;font:800 14.5px 'Noto Sans TC',sans-serif}
+.pq-cine-annot .note{fill:rgba(9,11,14,.66);font:400 11.5px 'Noto Sans TC',sans-serif}
 /* 基礎狀態(降級/引擎未接管):可讀的堆疊版 */
 .pq-cine-intro,.pq-cine-card{position:relative;z-index:3;max-width:640px;margin:0 auto 30px}
 .pq-cine-intro{display:flex;flex-direction:column;gap:20px}
@@ -161,72 +161,48 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
       <a class="pq-cine-scrollcue" href="#brands"><span>向下捲動 · 拆解引擎</span><i>↓</i></a>
     </div>
 
-    <!-- Beat 1:核心引擎 = AI 處理器 + 主機板 -->
-    <article class="pq-cine-card" data-cine-card="1" data-align="left" data-eyebrow="CORE ENGINE" data-focus="chip,mainboard" data-part="PQ-47 AI 處理器 · 主機板">
-      <div class="top"><b>01</b><span>CORE ENGINE</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>PQ-47 AI 處理器 · 主機板</b></div>
-      <h2><span>一套引擎,</span><span><em>驅動 47 個</em> AI 模組</span></h2>
-      <p>就像相機的處理器,PeakQi 把接客、CRM、行銷、報價、專案、數據收進同一顆營運核心——中小企業不再切換五六個工具、資料不再各自為政。</p>
-      <ul><li>47 模組引擎</li><li>共用資料核心</li><li>一次寫入,全線同步</li></ul>
+    <!-- Beat 1:接客 = 抽出鏡頭 -->
+    <article class="pq-cine-card" data-cine-card="1" data-align="left" data-eyebrow="ACQUISITION" data-focus="optics" data-part="OPTICAL LENS · 光學鏡組">
+      <div class="top"><b>01</b><span>ACQUISITION</span></div>
+      <div class="pq-cine-callout"><span>抽出零件 · LENS</span><b>光學鏡組 → 接客</b></div>
+      <h2><span>先看「鏡頭」,</span><span>也就是<em>接客</em></span></h2>
+      <p>鏡頭是相機的入口,接客是生意的入口。AI 自動回覆、理解需求、安排時段,把每一個詢問都接住,半夜的訊息也 30 秒內有回應。</p>
+      <ul><li>AI 24h 接客</li><li>需求理解</li><li>名單不漏接</li></ul>
     </article>
-    <!-- Beat 2:接客 = 光學鏡組 -->
-    <article class="pq-cine-card" data-cine-card="2" data-align="right" data-eyebrow="ACQUISITION" data-focus="optics" data-part="OPTICAL LENS · 光學鏡組">
-      <div class="top"><b>02</b><span>ACQUISITION</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>OPTICAL LENS · 光學鏡組</b></div>
-      <h2><span>從接客開始,</span><span>一路<em>追到成交</em></span></h2>
-      <p>鏡頭是相機的入口,接客是生意的入口。AI 自動回覆、異議處理、持續跟進,把每一個詢問都接住,不讓名單在第一步就流失。</p>
-      <ul><li>AI 24h 接客</li><li>自動追客</li><li>名單不漏接</li></ul>
+    <!-- Beat 2:追客 CRM = 抽出主機板 -->
+    <article class="pq-cine-card" data-cine-card="2" data-align="right" data-eyebrow="CRM" data-focus="mainboard" data-part="MAINBOARD · 主機板">
+      <div class="top"><b>02</b><span>CRM · 追客</span></div>
+      <div class="pq-cine-callout"><span>抽出零件 · MAINBOARD</span><b>主機板 → 追客 CRM</b></div>
+      <h2><span>再抽「主機板」,</span><span>記住<em>每個客人</em></span></h2>
+      <p>主機板是資料核心。誰問過什麼、走到哪一步、標籤與分群,全部集中在同一塊板上;該跟進的,系統主動提醒你。</p>
+      <ul><li>客戶脈絡集中</li><li>標籤與分群</li><li>跟進節奏提醒</li></ul>
     </article>
-    <!-- Beat 3:CRM = 主機板資料核心 -->
-    <article class="pq-cine-card" data-cine-card="3" data-align="left" data-eyebrow="CRM DATA CORE" data-focus="mainboard,sensor" data-part="CRM 資料核心 · 主機板">
-      <div class="top"><b>03</b><span>CRM DATA CORE</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>CRM 資料核心 · 主機板</b></div>
-      <h2><span>每一次互動,</span><span>都<em>寫進同一份脈絡</em></span></h2>
-      <p>養客與 CRM 共用同一份客戶脈絡:誰問過什麼、走到哪一步、標籤與分群,全部集中在同一塊主機板上,關係不中斷。</p>
-      <ul><li>客戶脈絡集中</li><li>標籤與分群</li><li>跨管道同步</li></ul>
-    </article>
-    <!-- Beat 4:創意/知識庫 = 感光元件 -->
-    <article class="pq-cine-card" data-cine-card="4" data-align="right" data-eyebrow="CREATIVE / KNOWLEDGE" data-focus="sensor" data-part="IMAGE SENSOR · 知識核心">
-      <div class="top"><b>04</b><span>CREATIVE / KNOWLEDGE</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>IMAGE SENSOR · 知識核心</b></div>
-      <h2><span>內容會生成,</span><span>更<em>懂你的產業</em></span></h2>
-      <p>感光元件把光變成影像;知識核心把你的產業 know-how 變成內容。文字、圖片、影片與產業知識庫彼此連動,是能把情境做深的創意工作流。</p>
+    <!-- Beat 3:行銷 = 抽出感光元件 -->
+    <article class="pq-cine-card" data-cine-card="3" data-align="left" data-eyebrow="CREATIVE" data-focus="sensor" data-part="IMAGE SENSOR · 感光元件">
+      <div class="top"><b>03</b><span>CREATIVE · 行銷</span></div>
+      <div class="pq-cine-callout"><span>抽出零件 · SENSOR</span><b>感光元件 → 內容生成</b></div>
+      <h2><span>換「感光元件」,</span><span>把光變成<em>內容</em></span></h2>
+      <p>感光元件把光變成影像;它把你的產業 know-how 變成內容。貼文、圖片、影片與產業知識庫彼此連動,不用養小編。</p>
       <ul><li>行銷內容生成</li><li>AI 圖片・影片</li><li>產業知識庫</li></ul>
     </article>
-    <!-- Beat 5:專案/報價/數據 = 控制與顯示 -->
-    <article class="pq-cine-card" data-cine-card="5" data-align="left" data-eyebrow="OPERATIONS" data-focus="controls" data-part="CONTROL DISPLAY · 操作介面">
-      <div class="top"><b>05</b><span>OPERATIONS</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>CONTROL DISPLAY · 操作介面</b></div>
-      <h2><span>專案、報價、數據,</span><span>在<em>同一個視野</em></span></h2>
-      <p>相機的轉盤與螢幕讓你一眼掌握狀態。從報價到執行、從專案財務到管理月報,資訊回到同一座營運駕駛艙,每個決定都有依據。</p>
-      <ul><li>專案・報價</li><li>財務管理</li><li>營運儀表板</li></ul>
+    <!-- Beat 4:報價/數據 = 抽出控制與螢幕 -->
+    <article class="pq-cine-card" data-cine-card="4" data-align="right" data-eyebrow="OPERATIONS" data-focus="controls" data-part="CONTROL DISPLAY · 控制與螢幕">
+      <div class="top"><b>04</b><span>OPERATIONS · 報價/數據</span></div>
+      <div class="pq-cine-callout"><span>抽出零件 · CONTROL</span><b>快門與螢幕 → 報價/數據</b></div>
+      <h2><span>看「螢幕與快門」,</span><span>報價與<em>數據</em></span></h2>
+      <p>轉盤與螢幕讓你一眼掌握狀態。線上報價當天送出、營運儀表板即時更新——每個決定都有數字依據,不靠感覺。</p>
+      <ul><li>線上報價</li><li>營運儀表板</li><li>AI 月報</li></ul>
     </article>
-    <!-- Beat 6:24h 自動運轉 = 電池 -->
-    <article class="pq-cine-card" data-cine-card="6" data-align="right" data-eyebrow="24/7 AUTOMATION" data-focus="battery" data-part="AUTOMATION POWER · 24h 電源">
-      <div class="top"><b>06</b><span>24/7 AUTOMATION</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>AUTOMATION POWER · 24h 電源</b></div>
-      <h2><span>不打烊的,</span><span><em>營運電力</em></span></h2>
-      <p>電池讓相機隨時能拍;自動化讓生意全天候在線。半夜的詢問、假日的名單,系統先接住、先跟進,人力用在真正需要判斷的地方。</p>
-      <ul><li>24h 不漏接</li><li>自動跟進</li><li>省下重複人力</li></ul>
-    </article>
-    <!-- Beat 7:品牌屋 = 外殼平台層 -->
-    <article class="pq-cine-card" data-cine-card="7" data-align="left" data-eyebrow="ONE ENGINE / MANY FACES" data-focus="shell,chassis" data-part="OUTER SHELL · 平台層">
-      <div class="top"><b>07</b><span>ONE ENGINE / MANY FACES</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>OUTER SHELL · 平台層</b></div>
-      <h2><span>一套底層,</span><span>長出<em>多個產業品牌</em></span></h2>
-      <p>同一顆引擎,換上不同的外殼:Peak Ops 服務通用中小企業;冒泡、AI Wedding Pro、AI Interior Pro 把知識與工作流做進垂直場景。</p>
-      <ul><li>Peak Ops</li><li>冒泡</li><li>AI Wedding Pro</li><li>AI Interior Pro</li></ul>
-    </article>
-    <!-- Beat 8:雙軌驗證 = 完整系統回組 -->
-    <article class="pq-cine-card" data-cine-card="8" data-align="right" data-eyebrow="DUAL PROOF" data-focus="all" data-part="COMPLETE SYSTEM · 雙軌驗證">
-      <div class="top"><b>08</b><span>DUAL PROOF</span></div>
-      <div class="pq-cine-callout"><span>FOCUS COMPONENT</span><b>COMPLETE SYSTEM · 雙軌驗證</b></div>
-      <h2><span>產品自己跑,</span><span>市場也<em>願意買</em></span></h2>
-      <p>零件重新組裝成一台完整的相機。自家垂直品牌驗證產品深度、Peak Ops 外部客戶驗證 SaaS 市場——雙軌證明,指向同一個 AI 營運平台。</p>
-      <ul><li>場景驗證</li><li>SaaS ARR</li><li>平台護城河</li></ul>
+    <!-- Beat 5:專案 = 抽出機身底盤 -->
+    <article class="pq-cine-card" data-cine-card="5" data-align="left" data-eyebrow="PROJECT" data-focus="chassis" data-part="CORE CHASSIS · 機身底盤">
+      <div class="top"><b>05</b><span>PROJECT · 專案</span></div>
+      <div class="pq-cine-callout"><span>抽出零件 · CHASSIS</span><b>機身底盤 → 專案</b></div>
+      <h2><span>最後是「機身」,</span><span>把案子<em>撐住</em></span></h2>
+      <p>機身把所有零件固定成一台相機;專案模組把一個案子從報價、執行到交付結案,從頭到尾撐住,不散落各處。</p>
+      <ul><li>任務指派</li><li>進度追蹤</li><li>交付結案</li></ul>
     </article>
 
-    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 線稿</span><span>02 / 材質</span><span>03 / 爆炸</span><span>04 / 零件聚焦</span><span>05 / 攤開藍圖</span></div>
+    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 線稿</span><span>02 / 材質</span><span>03 / 逐件說明</span><span>04 / 攤開藍圖</span><span>05 / 組裝回原型</span></div>
     <div class="pq-cine-loader" data-cine-loader aria-hidden="true">載入 42 網格相機模型…</div>
     <nav class="pq-cine-rail" data-cine-rail aria-label="分鏡章節導覽"></nav>
     <div class="pq-cine-label" aria-hidden="true"><span>ACTIVE LAYER</span><b data-cine-labeltext>PQ-47 CINEMA</b></div>
