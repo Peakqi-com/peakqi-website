@@ -277,6 +277,8 @@ export function createHomeEngine() {
     const BLACK = new THREE.Color(0x141414);
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
+    // U2 細拆:相機追焦點(平順甩鏡)
+    const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
     function mkMat(hex, emissive) { return new THREE.MeshStandardMaterial({ color: hex, metalness: 0.62, roughness: 0.27, emissive: emissive == null ? hex : emissive, emissiveIntensity: 0.3 }); }
     function createInternals(asset) {
@@ -478,8 +480,18 @@ export function createHomeEngine() {
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark;
       rig.position.x += (targetX - rig.position.x) * 0.04;
       rig.position.y += (((isMobile ? 0.8 : 0) * dark) - rig.position.y) * 0.04;
-      rig.scale.setScalar((isMobile ? 0.62 : 0.92) * (1 - disasK * 0.1) * (1 - paperK * (isMobile ? 0.3 : 0.22)));
-      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2;
+      // 開場放大(第一顆鏡頭最大);之後隨旋轉/拆解縮小以容納散開的零件
+      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)));
+      // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
+      const framingK = ez(sub(p, 0.16, 0.24)) * (1 - ez(sub(p, 0.44, 0.52)));
+      let aimX = 0, aimY = 0.1, aimZ = 0;
+      if (framingK > 0.01) {
+        const fp = parts.find(pp => focusSet.has(pp.groupId));
+        if (fp) { fp.node.getWorldPosition(_tmp2); aimX = _tmp2.x * framingK; aimY = 0.1 * (1 - framingK) + _tmp2.y * framingK; aimZ = _tmp2.z * framingK; }
+      }
+      camAim.lerp(_tmp2.set(aimX, aimY, aimZ), 0.1);
+      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 2.2 : 3.4);
+      camera.lookAt(camAim);
 
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
