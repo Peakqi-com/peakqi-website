@@ -165,7 +165,8 @@ export function createHomeEngine() {
     if (!okgl) return; // 無 WebGL:保留堆疊 + SVG 降級
 
     let THREE;
-    try { THREE = await import(/* @vite-ignore */ THREE_URL); } catch (e) { return; }
+    try { THREE = await import('three'); }
+    catch (e) { try { THREE = await import(/* @vite-ignore */ THREE_URL); } catch (e2) { return; } }
     if (destroyed) return;
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' }); }
@@ -176,7 +177,7 @@ export function createHomeEngine() {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.16;
+    renderer.toneMappingExposure = 1.08;
 
     // 接管:切成 pinned 分鏡
     hero.classList.add('pq-cine-on');
@@ -209,6 +210,25 @@ export function createHomeEngine() {
     const rim = new THREE.PointLight(0x3E9BFF, 13, 20, 1.4); rim.position.set(-5, -2, 4); scene.add(rim);
     const fillLight = new THREE.PointLight(0x65E0BC, 7, 18, 1.6); fillLight.position.set(0, -3, -4); scene.add(fillLight);
 
+    // 真 bloom(UnrealBloom;桌機才開,失敗則退回直接 render)
+    let composer = null, bloomPass = null;
+    if (!isMobile) {
+      try {
+        const [{ EffectComposer }, { RenderPass }, { UnrealBloomPass }] = await Promise.all([
+          import('three/addons/postprocessing/EffectComposer.js'),
+          import('three/addons/postprocessing/RenderPass.js'),
+          import('three/addons/postprocessing/UnrealBloomPass.js')
+        ]);
+        if (!destroyed) {
+          composer = new EffectComposer(renderer);
+          composer.addPass(new RenderPass(scene, camera));
+          bloomPass = new UnrealBloomPass(new THREE.Vector2(stage.clientWidth || 1, stage.clientHeight || 1), 0.6, 0.5, 0.22);
+          composer.addPass(bloomPass);
+        }
+      } catch (e) { composer = null; bloomPass = null; }
+    }
+    if (destroyed) return;
+
     const rig = new THREE.Group();
     rig.position.set(1.5, 0, 0);
     rig.rotation.set(-0.15, -0.52, 0.03);
@@ -231,7 +251,7 @@ export function createHomeEngine() {
     }
     function addPart(geo, position, rotation, offset, color, glow) {
       const part = new THREE.Group();
-      const fillMesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x16191e, metalness: 0.72, roughness: 0.26, transparent: true, opacity: 0.22, side: THREE.DoubleSide }));
+      const fillMesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x1b1f26, metalness: 0.5, roughness: 0.42, transparent: true, opacity: 0.9, side: THREE.DoubleSide }));
       const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 18), new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending }));
       part.add(fillMesh, edges);
       part.position.set(position[0], position[1], position[2]);
@@ -245,34 +265,40 @@ export function createHomeEngine() {
       return part;
     }
     const HP = Math.PI / 2;
-    // 外殼
-    addPart(new THREE.BoxGeometry(3.55, 2.28, 1.52, 2, 2, 2), [0, 0, 0], [0, 0, 0], [0.1, 0.1, -0.4], 0xFF6B2C);
-    addPart(new THREE.BoxGeometry(3.2, 0.22, 1.4), [0, 1.25, 0], [0, 0, 0], [0, 2.15, -0.2], 0xF2EFE8);
-    addPart(new THREE.BoxGeometry(3.25, 0.18, 1.36), [0, -1.23, 0], [0, 0, 0], [0, -2.2, -0.25], 0xF2EFE8);
-    addPart(new THREE.BoxGeometry(0.18, 2.05, 1.35), [1.78, 0, 0], [0, 0, 0], [2.8, 0.2, 0.3], 0xF2EFE8);
-    addPart(new THREE.BoxGeometry(0.62, 2.0, 1.2), [1.5, 0, 0.12], [0, 0, 0], [3.3, -0.3, 0.55], 0xFF6B2C);
-    // 鏡頭
-    addPart(new THREE.CylinderGeometry(0.92, 1.06, 1.2, 30, 1, true), [-2.2, 0, 0.15], [HP, 0, 0], [-2.3, 0, 0.1], 0xFF6B2C);
-    addPart(new THREE.CylinderGeometry(0.66, 0.76, 0.78, 30, 1, true), [-2.98, 0, 0.15], [HP, 0, 0], [-3.15, 0.05, 0.2], 0xFF8A4C);
-    addPart(new THREE.TorusGeometry(0.66, 0.06, 10, 36), [-3.36, 0, 0.15], [0, 0, 0], [-4.0, 0.1, 0.35], 0xF2EFE8);
-    addPart(new THREE.CircleGeometry(0.56, 36), [-3.42, 0, 0.15], [0, HP, 0], [-4.5, 0.05, 0.5], 0x3E9BFF, [0x3E9BFF, 1.5, [0, 0, 0.02]]);
-    addPart(new THREE.CylinderGeometry(1.05, 0.98, 0.42, 30, 1, true), [-3.62, 0, 0.15], [HP, 0, 0], [-5.1, 0.15, 0.65], 0xF2EFE8);
-    // 內部
-    addPart(new THREE.BoxGeometry(0.12, 1.2, 1.1), [-0.88, 0, 0.08], [0, 0, 0], [-1.1, 0, 2.6], 0x3E9BFF);
-    const board = addPart(new THREE.BoxGeometry(0.14, 1.64, 1.22), [0.36, 0, 0], [0, 0, 0], [0.6, 0.1, -2.9], 0x65E0BC, [0x65E0BC, 0.9, [0.1, 0, 0]]);
+    // === 機身 ===
+    addPart(new THREE.BoxGeometry(3.4, 2.16, 1.5, 3, 2, 2), [0, 0, 0], [0, 0, 0], [0.1, 0.1, -0.4], 0xFF6B2C);         // 機身主體
+    addPart(new THREE.BoxGeometry(3.32, 0.2, 1.44), [0, 1.18, 0], [0, 0, 0], [0, 2.2, -0.2], 0xF2EFE8);               // 頂蓋
+    addPart(new THREE.BoxGeometry(3.36, 0.16, 1.42), [0, -1.16, 0], [0, 0, 0], [0, -2.3, -0.25], 0xF2EFE8);           // 底座
+    addPart(new THREE.BoxGeometry(0.8, 2.12, 1.28), [1.42, 0, 0.14], [0, 0, 0], [3.35, -0.3, 0.6], 0xFF6B2C);          // 握把
+    // === 鏡頭(前方 -x,同軸堆疊)===
+    addPart(new THREE.CylinderGeometry(0.86, 0.94, 0.92, 44, 1, true), [-1.98, 0, 0.02], [0, 0, HP], [-2.5, 0, 0.1], 0xFF6B2C);   // 鏡筒
+    addPart(new THREE.TorusGeometry(0.86, 0.08, 16, 46), [-2.42, 0, 0.02], [0, HP, 0], [-3.1, 0.1, 0.3], 0xF2EFE8);              // 對焦環
+    addPart(new THREE.CylinderGeometry(0.66, 0.78, 0.66, 44, 1, true), [-2.72, 0, 0.02], [0, 0, HP], [-3.5, 0.05, 0.2], 0xFF8A4C); // 鏡頭中節
+    addPart(new THREE.TorusGeometry(0.68, 0.06, 16, 46), [-3.04, 0, 0.02], [0, HP, 0], [-4.0, 0.1, 0.35], 0xF2EFE8);             // 前端環
+    addPart(new THREE.CylinderGeometry(0.94, 0.74, 0.5, 44, 1, true), [-3.3, 0, 0.02], [0, 0, HP], [-4.75, 0.15, 0.62], 0xF2EFE8); // 遮光罩
+    addPart(new THREE.CircleGeometry(0.64, 46), [-3.52, 0, 0.02], [0, -HP, 0], [-5.25, 0.05, 0.5], 0x3E9BFF, [0x3E9BFF, 1.3, [0, 0, -0.06]]); // 前玉(發光)
+    // === 觀景窗五稜鏡(頂部)===
+    addPart(new THREE.CylinderGeometry(0.34, 0.66, 0.64, 4, 1), [-0.18, 1.52, 0.04], [0, Math.PI / 4, 0], [0, 3.1, -0.3], 0xFF6B2C); // 五稜鏡凸起
+    addPart(new THREE.BoxGeometry(0.48, 0.16, 0.42), [-0.18, 1.9, 0.04], [0, 0, 0], [0, 3.75, -0.15], 0xF2EFE8);      // 熱靴
+    addPart(new THREE.BoxGeometry(0.52, 0.44, 0.34), [-0.18, 1.42, -0.7], [0, 0, 0], [-0.4, 2.9, -1.7], 0xF2EFE8);    // 觀景窗目鏡
+    // === 頂部控制 ===
+    addPart(new THREE.CylinderGeometry(0.33, 0.33, 0.24, 30), [1.22, 1.32, -0.4], [0, 0, 0], [1.9, 3.0, -1.2], 0xF2EFE8);         // 模式轉盤
+    addPart(new THREE.CylinderGeometry(0.18, 0.18, 0.15, 26), [1.34, 1.3, 0.42], [0, 0, 0], [2.6, 2.9, 1.2], 0xFF6B2C, [0xFF6B2C, 0.45, [0, 0.22, 0]]); // 快門鈕(發光)
+    addPart(new THREE.SphereGeometry(0.11, 20, 16), [0.86, 1.3, 0.5], [0, 0, 0], [1.4, 2.7, 1.35], 0xFF6B2C);         // 錄影鈕
+    // === 背面 ===
+    addPart(new THREE.BoxGeometry(0.12, 1.42, 2.0), [1.65, -0.04, 0], [0, 0, 0], [3.5, 0, -0.5], 0x3E9BFF, [0x3E9BFF, 0.7, [0.12, 0, 0]]); // LCD 螢幕(發光)
+    // === 內部(爆炸時露出)===
+    addPart(new THREE.BoxGeometry(0.12, 1.2, 1.1), [-0.95, 0, 0], [0, 0, 0], [-1.2, 0, 2.7], 0x3E9BFF);               // 感光元件
+    const board = addPart(new THREE.BoxGeometry(0.14, 1.5, 1.15), [0.4, 0, 0], [0, 0, 0], [0.7, 0.1, -3.0], 0x65E0BC, [0x65E0BC, 0.9, [0.1, 0, 0]]); // 主機板
     for (let i = 0; i < 8; i++) {
-      const chip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16 + (i % 3) * 0.05, 0.2), new THREE.MeshBasicMaterial({ color: i % 3 === 0 ? 0xFF6B2C : i % 3 === 1 ? 0x3E9BFF : 0x65E0BC }));
-      chip.position.set(-0.11, -0.62 + i * 0.18, -0.44 + (i % 3) * 0.36); board.add(chip);
+      const chip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.15 + (i % 3) * 0.05, 0.2), new THREE.MeshBasicMaterial({ color: i % 3 === 0 ? 0xFF6B2C : i % 3 === 1 ? 0x3E9BFF : 0x65E0BC }));
+      chip.position.set(-0.11, -0.56 + i * 0.17, -0.42 + (i % 3) * 0.34); board.add(chip);
     }
-    const gear = addPart(new THREE.TorusGeometry(0.42, 0.13, 8, 26), [0.36, 0, 0.5], [0, HP, 0], [0.95, 1.5, -2.2], 0x65E0BC, [0x65E0BC, 0.7, [0, 0, 0]]);
-    addPart(new THREE.BoxGeometry(0.82, 1.6, 0.74), [1.28, -0.06, 0], [0, 0, 0], [2.5, -0.5, -2.45], 0xF2EFE8);
-    // 顯示/控制
-    addPart(new THREE.BoxGeometry(2.2, 1.38, 0.12), [0.05, 0, -0.85], [0, 0, 0], [0.15, 0.15, -4.4], 0x3E9BFF);
-    addPart(new THREE.BoxGeometry(0.94, 0.56, 0.8), [0.65, 1.4, -0.05], [0, 0, 0], [0.9, 3.3, -0.85], 0xFF6B2C);
-    addPart(new THREE.CylinderGeometry(0.26, 0.26, 0.17, 22), [-0.9, 1.34, 0.14], [0, 0, HP], [-1.6, 2.9, 0.65], 0xF2EFE8);
-    addPart(new THREE.BoxGeometry(0.52, 0.17, 0.5), [0, 1.46, 0], [0, 0, 0], [0, 3.5, -0.35], 0xF2EFE8);
-    addPart(new THREE.SphereGeometry(0.14, 18, 14), [1.23, 1.27, 0.46], [0, 0, 0], [2.4, 2.7, 1.1], 0xFF6B2C, [0xFF6B2C, 0.8, [0, 0, 0]]);
-    addPart(new THREE.BoxGeometry(0.5, 0.07, 0.72), [1.55, -0.52, 0], [0, 0, 0], [3.7, -1.25, 1.25], 0x65E0BC);
+    const gear = addPart(new THREE.TorusGeometry(0.4, 0.12, 8, 28), [0.4, 0, 0.45], [0, HP, 0], [1.0, 1.6, -2.4], 0x65E0BC, [0x65E0BC, 0.7, [0, 0, 0]]); // 資料飛輪
+    addPart(new THREE.BoxGeometry(0.72, 1.5, 0.7), [1.05, -0.12, 0], [0, 0, 0], [2.4, -0.6, -2.5], 0xF2EFE8);          // 電池
+    // === 背帶環 ===
+    addPart(new THREE.BoxGeometry(0.14, 0.16, 0.34), [-1.55, 1.02, 0.55], [0, 0, 0], [-2.6, 2.4, 1.0], 0xF2EFE8);
+    addPart(new THREE.BoxGeometry(0.14, 0.16, 0.34), [1.55, 1.02, 0.55], [0, 0, 0], [2.8, 2.4, 1.0], 0xF2EFE8);
 
     // 微塵 + 地面格線
     const dustGeo = new THREE.BufferGeometry();
@@ -286,6 +312,8 @@ export function createHomeEngine() {
     function resize() {
       const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
       renderer.setSize(w, h, false);
+      if (composer) composer.setSize(w, h);
+      if (bloomPass) bloomPass.setSize(w, h);
       camera.aspect = w / h; camera.updateProjectionMatrix();
     }
     resize();
@@ -321,14 +349,16 @@ export function createHomeEngine() {
       smoothP += (scrollP - smoothP) * 0.075;
       const p = smoothP;
       setBeat(Math.max(0, Math.min(BEATS - 1, Math.floor(scrollP * BEATS))));
-      const explosion = ez(sub(p, 0.10, 0.94));
-      rig.rotation.y += ((-0.52 + p * Math.PI * 2.2 + pointer.x * 0.08) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((-0.15 + Math.sin(p * Math.PI * 2.4) * 0.2 - pointer.y * 0.05) - rig.rotation.x) * 0.05;
-      rig.rotation.z = Math.sin(p * Math.PI * 3) * 0.07;
-      const shift = isMobile ? 0 : 1.5;
-      rig.position.x += ((shift + Math.sin(p * Math.PI * 4) * 0.15) - rig.position.x) * 0.045;
-      rig.position.y = isMobile ? 1.15 : Math.sin(p * Math.PI * 2) * 0.16;
-      rig.scale.setScalar(isMobile ? 0.66 : 1);
+      // 節奏:第 0 幕維持完整組裝(先讓人看清是相機),0.17 之後才開始爆炸
+      const explosion = ez(sub(p, 0.16, 0.9));
+      rig.rotation.y += ((-0.5 + p * Math.PI * 1.7 + pointer.x * 0.07) - rig.rotation.y) * 0.045;
+      rig.rotation.x += ((-0.12 + Math.sin(p * Math.PI * 2.2) * 0.16 - pointer.y * 0.045) - rig.rotation.x) * 0.045;
+      rig.rotation.z = Math.sin(p * Math.PI * 2.6) * 0.05;
+      // 相機依目前分鏡卡片位置左右讓位(卡片在右→相機往左,避免重疊)
+      const targetX = isMobile ? 0 : ((curBeat === 2 || curBeat === 4) ? -1.35 : 1.35);
+      rig.position.x += (targetX - rig.position.x) * 0.04;
+      rig.position.y = isMobile ? 1.15 : Math.sin(p * Math.PI * 2) * 0.14;
+      rig.scale.setScalar(isMobile ? 0.68 : 0.98);
       parts.forEach((part, index) => {
         const staged = ez((explosion - part.userData.delay) / 0.72);
         const dest = part.userData.home.clone().addScaledVector(part.userData.offset, staged);
@@ -344,8 +374,9 @@ export function createHomeEngine() {
       gear.rotation.z = t * 0.9;
       dust.rotation.y = t * 0.02; dust.rotation.z = -t * 0.01;
       key.intensity = 15 + Math.sin(t * 2.6) * 3;
-      glows.forEach((s, i) => { s.material.opacity = 0.55 + 0.4 * Math.sin(t * 2.4 + i * 1.3); });
-      renderer.render(scene, camera);
+      glows.forEach((s, i) => { s.material.opacity = 0.42 + 0.28 * Math.sin(t * 2.4 + i * 1.3); });
+      if (bloomPass) bloomPass.strength = 0.5 + Math.sin(t * 1.8) * 0.07 + explosion * 0.18;
+      if (composer) composer.render(); else renderer.render(scene, camera);
     });
   }
 
