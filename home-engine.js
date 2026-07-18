@@ -169,6 +169,7 @@ export function createHomeEngine() {
     const vids = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vid')) : [];
     const vcards = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vcard')) : [];
     const flashEl = hero && hero.querySelector('[data-cine-flash]');
+    const sloganEl = hero && hero.querySelector('[data-cine-slogan]');
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
 
@@ -282,6 +283,10 @@ export function createHomeEngine() {
     const BLACK = new THREE.Color(0x141414);
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
+    // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
+    const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
+    // U4b:LCD 影片平面(VideoTexture 貼在背面螢幕上,跟相機一起轉)
+    let vtexPlane = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0);
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -372,6 +377,12 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
+        // U4b:建立 LCD 影片平面(背面朝操作者=-光學軸方向;位置/尺寸在 frame 依可調參數對位)
+        vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
+        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, toneMapped: false, side: THREE.DoubleSide }));
+        vtexPlane.renderOrder = 12;
+        vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
+        asset.add(vtexPlane);
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
         const ms = mb.getSize(new THREE.Vector3());
@@ -431,8 +442,18 @@ export function createHomeEngine() {
         if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
         else { try { v.pause(); } catch (e) {} }
       });
+      if (vtexPlane && s >= 0 && vids[s]) {
+        if (!vtex[s]) { vtex[s] = new THREE.VideoTexture(vids[s]); if ('colorSpace' in vtex[s]) vtex[s].colorSpace = THREE.SRGBColorSpace; }
+        vtexPlane.material.map = vtex[s]; vtexPlane.material.needsUpdate = true;
+      }
       vcards.forEach((c, i) => c.classList.toggle('is-on', i === s));
-      if (s >= 0) flashStart = now;   // 切換=快門閃光
+      if (s >= 0) doFlash();          // 切換=整屏快門閃光(乾淨一閃)
+    }
+    function doFlash() {
+      if (!flashEl) return;
+      flashEl.style.transition = 'none';
+      flashEl.style.opacity = '0.95';
+      requestAnimationFrame(() => { if (flashEl) { flashEl.style.transition = 'opacity .26s ease-out'; flashEl.style.opacity = '0'; } });
     }
     setBeat(0);
 
@@ -543,9 +564,10 @@ export function createHomeEngine() {
         else if (part.groupId === 'ribbon') op2 = 0.5 + 0.5 * Math.sin(t * 4 + i);
         else op2 = 0.7 + 0.3 * Math.sin(t * 1.8 + i * 0.6);
         // 材質(光澤 PBR):solid 主導,線稿階段淡出;emissive 運作微光 + 快門閃
+        const intHide = INT_GROUPS.has(part.groupId) ? (1 - R) : 1;   // 組回後隱藏內部零件
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const mo = solid * (hi ? 1 : 0.9);
+          const mo = solid * (hi ? 1 : 0.9) * intHide;
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
           if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
@@ -601,7 +623,7 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((1 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      if (flashEl) { const fl = flashStart ? Math.max(0, 1 - (now - flashStart) / 180) : 0; flashEl.style.opacity = (fl * 0.82).toFixed(3); }
+      if (vtexPlane) vtexPlane.material.opacity = 0;   // LCD 影片平面暫時停用(待對位)
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
