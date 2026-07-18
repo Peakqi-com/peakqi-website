@@ -501,7 +501,8 @@ export function createHomeEngine() {
       setPhase(p < 0.08 ? 0 : p < 0.26 ? 1 : p < 0.46 ? 2 : p < 0.56 ? 3 : p < 0.64 ? 4 : 5);
       // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)
       const R = ez(sub(p, 0.56, 0.64));             // U3a 組回實體
-      const flipK = ez(sub(p, 0.64, 0.72));         // U3b 翻面(背面螢幕正對)
+      const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
+      const flipK = ez(sub(p, 0.64, 0.72)) * (1 - sloganK);  // U3b 翻面(U5 時反轉回機身)
       const disasK = ez(sub(p, 0.08, 0.34)) * (1 - R);
       const wireK = ez(sub(p, 0.26, 0.44)) * (1 - R);
       const paperK = ez(sub(p, 0.46, 0.54)) * (1 - R);
@@ -616,14 +617,15 @@ export function createHomeEngine() {
         }
       }
       // U4 螢幕看影片:翻面完成 → 右側大影片依序自動播 + 左側業務字卡 + 快門閃光切換
-      const reviewK = ez(sub(p, 0.66, 0.74));
+      const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // Slogan 進場前先淡出影片/字卡
       if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
       if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
       if (reviewK > 0.02) {
-        const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((1 - 0.72) / Math.max(1, vids.length)))));
+        const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
       if (vtexPlane) vtexPlane.material.opacity = 0;   // LCD 影片平面暫時停用(待對位)
+      if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
