@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>聯絡・合作・加入我們｜奇鋒國際 PeakQi</title>
+<meta name="description" content="聯絡奇鋒國際 PeakQi:投資與合作邀請、加入我們、以及一般聯絡。中小企業客戶想看產品請洽 Peak Ops。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#090B0E;color:#F2EFE8;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}::selection{background:#FF6B2C;color:#F2EFE8}
+.pq-wrap{max-width:1280px;margin:0 auto;width:100%}
+.pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
+.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
+</style>
+</helmet>
+<a id="pq-skip" href="#reach">跳到主要內容</a>
+<dc-import name="Nav" active="contact" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
+
+<section style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
+  <div class="pq-wrap pq-sec" style="position:relative">
+    <span data-reveal class="pq-eyebrow">CONTACT · PARTNER · JOIN</span>
+    <h1 data-reveal style="margin:16px 0 0;font:900 clamp(2rem,4.4vw,3.6rem)/1.28 'Noto Sans TC',sans-serif">聊聊合作,<br>或加入我們</h1>
+    <p data-reveal style="margin:18px 0 0;max-width:560px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">投資人、合作夥伴、想更了解奇鋒平台故事的朋友,或想成為我們的一員——直接聯絡我們。中小企業客戶想看產品與 Demo,請直接看 <a href="PeakOps.dc.html" style="color:#FF6B2C">Peak Ops</a>。</p>
+
+    <div style="margin-top:clamp(32px,4vw,52px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+      <a data-reveal href="mailto:peakqi.com@gmail.com?subject=投資／合作邀請" style="text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:10px" style-hover="border-color:#FF6B2C">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">PARTNER</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">投資・合作邀請</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">平台故事、雙軌模式、品牌屋結構,或垂直品牌合作。</p>
+        <span style="margin-top:auto;font:700 14px 'Noto Sans TC',sans-serif;color:#FF6B2C">寄信給我們 →</span>
+      </a>
+      <a data-reveal href="mailto:peakqi.com@gmail.com?subject=加入我們" style="text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:10px" style-hover="border-color:#3E9BFF">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#3E9BFF">JOIN US</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">加入我們</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">和我們一起把台灣中小企業的 AI 營運基礎設施做起來。(職缺內容待補)</p>
+        <span style="margin-top:auto;font:700 14px 'Noto Sans TC',sans-serif;color:#3E9BFF">投遞履歷 →</span>
+      </a>
+      <a data-reveal href="PeakOps.dc.html" style="text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:10px" style-hover="border-color:#65E0BC">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#65E0BC">CUSTOMER</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">我是想用產品的客戶</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">看 Peak Ops 產品、方案與 15 分鐘場景 Demo。</p>
+        <span style="margin-top:auto;font:700 14px 'Noto Sans TC',sans-serif;color:#65E0BC">看 Peak Ops →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="reach" class="pq-sec" style="border-top:1px solid rgba(242,239,232,.1)">
+  <div class="pq-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
+    <a data-reveal href="mailto:peakqi.com@gmail.com" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:22px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">EMAIL</span><span style="font:700 17px 'Space Grotesk',sans-serif">peakqi.com@gmail.com</span></a>
+    <a data-reveal href="tel:0988650951" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:22px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">PHONE</span><span style="font:700 17px 'Space Grotesk',sans-serif">0988-650-951</span></a>
+    <div data-reveal style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">WEB</span><span style="font:700 17px 'Space Grotesk',sans-serif">peakqi.com</span></div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 700}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (reduce || !('IntersectionObserver' in window)) { els.forEach(e => { e.style.opacity = '1'; e.style.transform = 'none'; }); return; }
+    const io = new IntersectionObserver((ens) => { ens.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((e, i) => { e.style.transitionDelay = (Math.min(4, i % 5) * 70) + 'ms'; io.observe(e); });
+    this._io = io;
+  }
+  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); }
+  renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>產品｜奇鋒國際 PeakQi 品牌屋:Peak Ops 與垂直產業品牌</title>
+<meta name="description" content="奇鋒國際旗下品牌:通用型 AI 業務工具 Peak Ops,以及冒泡(房仲)、AI Wedding Pro(婚禮)、AI Interior Pro(室內設計)等垂直產業品牌。同一套引擎,多張產業的臉。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}::selection{background:#FF6B2C;color:#F2EFE8}
+.pq-wrap{max-width:1280px;margin:0 auto;width:100%}
+.pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
+.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
+@keyframes pqSweep{0%{transform:translateX(-120%)}100%{transform:translateX(240%)}}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
+</style>
+</helmet>
+<a id="pq-skip" href="#brandlist">跳到主要內容</a>
+<dc-import name="Nav" active="product" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
+
+<section style="background:#090B0E;color:#F2EFE8">
+  <div class="pq-wrap pq-sec" style="padding-bottom:clamp(36px,5vw,64px)">
+    <span data-reveal class="pq-eyebrow">PRODUCTS · BRAND HOUSE</span>
+    <h1 data-reveal style="margin:16px 0 0;font:900 clamp(2rem,4.4vw,3.6rem)/1.28 'Noto Sans TC',sans-serif">一套引擎,<span style="color:#FF6B2C">多張產業的臉</span></h1>
+    <p data-reveal style="margin:18px 0 0;max-width:560px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">底層共用 47 模組 AI 業務引擎;每個品牌換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
+  </div>
+</section>
+
+<section id="brandlist" class="pq-sec" style="background:#090B0E;color:#F2EFE8;padding-top:0">
+  <div class="pq-wrap" style="display:flex;flex-direction:column;gap:16px">
+    <a data-reveal data-brand href="PeakOps.dc.html" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
+      <span aria-hidden="true" style="position:absolute;left:0;top:0;width:32%;height:3px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqSweep 3s linear infinite"></span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#FF6B2C">GENERAL SaaS · 通用型</span>
+        <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">Peak Ops</h2>
+        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">通用型 AI 業務工具,給還沒有專門工具的產業:接客、追客、養客、報價、數據一套整合。三方案、年訂閱制。</p>
+      </div>
+      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#FF6B2C;white-space:nowrap">了解更多 →</span>
+    </a>
+    <a data-reveal data-brand href="Bubble.dc.html" style="--a:#3E9BFF;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#3E9BFF">REAL ESTATE · 房仲</span>
+        <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">冒泡</h2>
+        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
+      </div>
+      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#3E9BFF;white-space:nowrap">了解更多 →</span>
+    </a>
+    <a data-reveal data-brand href="AIWeddingPro.dc.html" style="--a:#E06B9C;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#E06B9C">WEDDING · 婚禮</span>
+        <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">AI Wedding Pro</h2>
+        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
+      </div>
+      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#E06B9C;white-space:nowrap">了解更多 →</span>
+    </a>
+    <a data-reveal data-brand href="AIInteriorPro.dc.html" style="--a:#65E0BC;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#65E0BC">INTERIOR · 室內設計</span>
+        <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">AI Interior Pro</h2>
+        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
+      </div>
+      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#65E0BC;white-space:nowrap">了解更多 →</span>
+    </a>
+    <p data-reveal style="margin:8px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品,了解更多請至 peakqi.com。</p>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 700}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (reduce || !('IntersectionObserver' in window)) { els.forEach(e => { e.style.opacity = '1'; e.style.transform = 'none'; }); return; }
+    const io = new IntersectionObserver((ens) => { ens.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((e, i) => { e.style.transitionDelay = (Math.min(4, i % 5) * 70) + 'ms'; io.observe(e); });
+    this._io = io;
+    document.querySelectorAll('[data-brand]').forEach(a => {
+      const c = getComputedStyle(a).getPropertyValue('--a').trim() || '#FF6B2C';
+      a.addEventListener('mouseenter', () => { a.style.borderColor = c; a.style.transform = 'translateY(-3px)'; });
+      a.addEventListener('mouseleave', () => { a.style.borderColor = 'rgba(242,239,232,.16)'; a.style.transform = 'none'; });
+    });
+  }
+  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); }
+  renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
+}
+</script>
+</body>
+</html>

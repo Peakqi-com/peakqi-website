@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>冒泡 Bubble｜房仲 AI 助手・串 LINE 官方帳號｜奇鋒國際</title>
+<meta name="description" content="冒泡 是奇鋒國際的房仲垂直品牌:AI 助手串 LINE 官方帳號,自動回物件、排預約帶看,客戶在 LINE 自己約看房,你專心成交就好。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--a:#3E9BFF}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid var(--a);outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--a)}::selection{background:var(--a);color:#fff}
+.pq-wrap{max-width:1160px;margin:0 auto;width:100%}
+.pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
+.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:var(--a)}
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}@keyframes pqPulse{0%,100%{opacity:.4}50%{opacity:1}}
+body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
+</style>
+</helmet>
+<a id="pq-skip" href="#feat">跳到主要內容</a>
+<dc-import name="Nav" active="product" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
+
+<section style="background:#090B0E;color:#F2EFE8">
+  <div class="pq-wrap pq-sec">
+    <span data-reveal style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(62,155,255,.4);color:var(--a);border-radius:999px;padding:5px 13px;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.08em"><span style="width:6px;height:6px;border-radius:50%;background:var(--a);animation:pqPulse 1.6s ease-in-out infinite"></span>REAL ESTATE · 房仲 AI</span>
+    <h1 data-reveal style="margin:18px 0 0;font:900 clamp(2.1rem,4.6vw,3.8rem)/1.24 'Noto Sans TC',sans-serif">冒泡</h1>
+    <p data-reveal style="margin:12px 0 0;font:800 clamp(1.2rem,2.4vw,1.9rem)/1.4 'Noto Sans TC',sans-serif">客戶在 LINE 自己約看房,<br>你<span style="color:var(--a)">專心成交</span>就好。</p>
+    <p data-reveal style="margin:18px 0 0;max-width:540px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">房仲 AI 助手,串 LINE 官方帳號:自動回物件、排預約帶看,回覆從每天數小時縮短到 30 秒內。</p>
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:14px;margin-top:26px">
+      <a href="Demo.dc.html?case=房仲AI助手" style="background:var(--a);color:#fff;padding:15px 26px;border-radius:2px;font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none">預約 15 分鐘 Demo</a>
+      <a href="Products.dc.html" style="border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:14px 22px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none">回品牌總覽</a>
+    </div>
+  </div>
+</section>
+
+<section id="feat" class="pq-sec">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between">
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font:700 clamp(1.8rem,3vw,2.4rem) 'Space Grotesk',sans-serif;color:var(--a)">30 秒</span><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">回覆時間(原本數小時)</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font:700 clamp(1.8rem,3vw,2.4rem) 'Space Grotesk',sans-serif;color:var(--a)">8 小時</span><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">每週省下的排程時間</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font:700 clamp(1.8rem,3vw,2.4rem) 'Space Grotesk',sans-serif;color:var(--a)">↑ 20%</span><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">名單轉化提升</span></div>
+    </div>
+    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">串 LINE 官方帳號</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">客戶在哪裡問,就在哪裡被接住;自動回物件資訊。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">自動排預約帶看</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">客戶自己約時間,系統互相提醒,不再回頭喬時間。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font:800 17px 'Noto Sans TC',sans-serif">物件・客戶 CRM</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">物件、客戶、預約集中一個後台,誰在哪個階段一目了然。</p></div>
+    </div>
+    <p data-reveal style="margin:22px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">冒泡 是奇鋒國際的產品,獨立官網(bubble.tw)建置中。了解更多請至 peakqi.com。</p>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 700}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (reduce || !('IntersectionObserver' in window)) { els.forEach(e => { e.style.opacity = '1'; e.style.transform = 'none'; }); return; }
+    const io = new IntersectionObserver((ens) => { ens.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((e, i) => { e.style.transitionDelay = (Math.min(4, i % 5) * 70) + 'ms'; io.observe(e); });
+    this._io = io;
+  }
+  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); }
+  renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
+}
+</script>
+</body>
+</html>
