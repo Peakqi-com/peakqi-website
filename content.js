@@ -9,9 +9,8 @@ export const contact = {
 
 export const navigation = [
   { href: 'Home.dc.html', key: 'home', label: '首頁' },
-  { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+  { href: 'PeakOps.dc.html', key: 'product', label: '產品' },
   { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
-  { href: 'Pricing.dc.html', key: 'pricing', label: '方案價格' },
   { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' }
 ];
 

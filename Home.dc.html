@@ -8,8 +8,8 @@
 <body>
 <x-dc>
 <helmet>
-<title>PeakQi 奇鋒國際|台灣中小企業 AI 客服、CRM 與營運整合系統</title>
-<meta name="description" content="PeakQi 協助台灣中小企業整合 AI 接客、LINE 客服、CRM、報價、行銷與專案管理,一個後台管理客戶流程,最快 10 個工作天上線。">
+<title>奇鋒國際 PeakQi｜台灣中小企業的 AI 營運基礎設施</title>
+<meta name="description" content="奇鋒國際 PeakQi 是台灣中小企業的 AI 營運平台公司:一套自研 47 模組引擎,孵化多個垂直產業品牌,並對外提供通用型 AI 業務工具 Peak Ops。一套引擎、多個品牌、雙軌驗證。">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,1589 +21,283 @@ html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#FF6B2C}a:hover{color:#D14E12}
 ::selection{background:#FF6B2C;color:#F2EFE8}
-summary::-webkit-details-marker{display:none}
-@keyframes pqFloat{from{transform:translateY(-5px)}to{transform:translateY(7px)}}
-@keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
-@keyframes pqDash{to{stroke-dashoffset:-120}}
-@keyframes pqJitter{0%,100%{transform:translate(0,0)}25%{transform:translate(2px,-1px)}50%{transform:translate(-2px,1px)}75%{transform:translate(1px,1px)}}
-@keyframes pqSweep{from{transform:translateX(-120%) skewX(-18deg)}to{transform:translateX(320%) skewX(-18deg)}}
-@keyframes pqScan{0%{transform:translateY(-60px);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateY(360px);opacity:0}}
-@keyframes pqBarFlow{0%,100%{opacity:.82}50%{opacity:1}}
-@keyframes pqTypeDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
-@keyframes pqGenSweep{0%{transform:translateX(-130%)}100%{transform:translateX(230%)}}
-@keyframes pqCapGrow{0%{transform:scaleX(0)}35%{transform:scaleX(1)}92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
-@keyframes pqSeqLit{0%,6%{opacity:.2}20%,100%{opacity:1}}
-@keyframes pqBarBreath{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
-@keyframes pqAdvract{0%{left:4%;opacity:0}12%{opacity:1}50%{left:48%}88%{opacity:1}100%{left:82%;opacity:0}}
-@keyframes pqHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
-@keyframes pqCountFlash{0%,100%{color:#F2EFE8}50%{color:#65E0BC}}
-@keyframes pqAnxious{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,44,.55)}50%{transform:scale(1.16);box-shadow:0 0 0 6px rgba(255,107,44,0)}}
-@keyframes pqBreakPulse{0%,100%{border-color:rgba(255,107,44,.7);box-shadow:0 0 0 0 rgba(255,107,44,0)}50%{border-color:#FFB48A;box-shadow:0 0 10px 0 rgba(255,107,44,.45)}}
-@keyframes pqBlink{0%,100%{opacity:1}50%{opacity:.28}}
-@keyframes pqPktA{0%{left:-1%;opacity:0}8%{opacity:1}90%{opacity:1}100%{left:99%;opacity:0}}
-@keyframes pqStationLit{0%,12%{opacity:0}22%{opacity:1}34%{opacity:1}46%,100%{opacity:0}}
-#relay [data-rstation]{position:relative}
-#relay [data-rstation]::after{content:'';position:absolute;left:12px;right:12px;top:-1px;height:2px;background:#FF6B2C;border-radius:2px;opacity:0;animation:pqStationLit 3.6s ease-in-out infinite}
-#relay [data-rstation]:nth-child(2)::after{animation-delay:.6s}
-#relay [data-rstation]:nth-child(3)::after{animation-delay:1.2s}
-#relay [data-rstation]:nth-child(4)::after{animation-delay:1.8s}
-#relay [data-rstation]:nth-child(5)::after{animation-delay:2.4s}
-#relay [data-rstation]:nth-child(6)::after{animation-delay:3s}
-@media (prefers-reduced-motion:reduce){#relay [data-rstation]::after{animation:none!important}}
-@media (prefers-reduced-motion:reduce){[style*="pqTypeDot"],[style*="pqGenSweep"],[style*="pqCapGrow"],[style*="pqSeqLit"],[style*="pqBarBreath"],[style*="pqAdvract"],[style*="pqHeart"],[style*="pqCountFlash"],[style*="pqScan"],[style*="pqBarFlow"],[style*="pqAnxious"],[style*="pqBreakPulse"],[style*="pqBlink"],[style*="pqPktA"],[style*="pqPktB"],[style*="pqStationLit"],[style*="pqRelayFill"]{animation:none!important}}
-summary:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
-@media (max-width:899px){#pq-live-grid{grid-template-columns:1fr!important}#pq-live-console{order:1;min-height:440px!important}#pq-live-items{order:2;display:grid!important;grid-template-columns:1fr 1fr!important;justify-content:stretch!important}#pq-live-items [data-live-item]{transform:none!important}#pq-cmp-desk{display:none!important}#pq-tl{flex-direction:column!important;min-width:0!important}#pq-tl>[data-tstep]{border-top:none!important;border-left:2px solid rgba(242,239,232,.18);padding:0 0 30px 24px!important}#pq-tl [data-dot]{top:0!important;left:-6px!important}#pq-tl [data-tline]{left:-2px!important;top:0!important;width:2px!important;height:100%!important}}
-@media (min-width:900px){#pq-cmp-mob{display:none!important}}
+.pq-wrap{max-width:1280px;margin:0 auto;width:100%}
+.pq-sec{padding:clamp(64px,9vw,120px) clamp(20px,5vw,48px)}
+.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
+/* 母動畫:區塊進場(捲動觸發) */
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
+/* 子動畫(獨立循環) */
+@keyframes pqBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes pqRing{0%{transform:scale(.6);opacity:.55}100%{transform:scale(1.7);opacity:0}}
+@keyframes pqDraw{to{stroke-dashoffset:0}}
+@keyframes pqFloatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pqPulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes pqDash{to{stroke-dashoffset:-40}}
+@keyframes pqCount{0%,100%{color:#090B0E}50%{color:#FF6B2C}}
+@keyframes pqSweep{0%{transform:translateX(-120%)}100%{transform:translateX(240%)}}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
-body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
-@media (prefers-reduced-motion:reduce){body{animation:none}}
-@media (max-width:899px){#pq-orbit{display:none!important}}
-@media (min-width:900px){#pq-orbitrow{display:none!important}}
-@media (max-width:899px){#demo-cta [data-echo]{display:none!important}}
+body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
+@media (max-width:820px){#pq-hero-grid{grid-template-columns:1fr!important;gap:32px!important}}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
 </style>
-<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)e.preventDefault();if(r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
-<a id="pq-skip" href="#pain">跳到主要內容</a>
+<a id="pq-skip" href="#brands">跳到主要內容</a>
 <dc-import name="Nav" active="home" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
 
-<section id="hero" data-screen-label="Hero" style="background:#090B0E;color:#F2EFE8;position:relative">
-  <div ref="{{ heroWrap }}" style="position:relative;height:360vh">
-    <div ref="{{ heroStage }}" style="position:sticky;top:0;height:100vh;overflow:hidden">
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
-      <canvas ref="{{ heroCanvas }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
-      <div data-scrim="1" style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,11,14,.85) 0%,rgba(9,11,14,.5) 32%,rgba(9,11,14,0) 58%);pointer-events:none;z-index:2"></div>
-      <div ref="{{ heroT1 }}" style="position:absolute;left:clamp(20px,6vw,84px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:18px;max-width:580px;pointer-events:none">
-        <span style="font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">AI OPERATING SYSTEM FOR TAIWAN SMEs</span>
-        <h1 style="margin:0;font:900 clamp(2rem,4.6vw,3.8rem)/1.3 'Noto Sans TC',sans-serif;letter-spacing:.01em">讓 AI 接住<br>每一個客戶。</h1>
-        <span style="font:400 14px 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(242,239,232,.55)">工具都在運作,但彼此沒有連接。</span>
+<!-- ============ HERO：品牌屋引擎 ============ -->
+<section id="hero" data-screen-label="Hero" style="background:#090B0E;color:#F2EFE8;overflow:hidden">
+  <div class="pq-wrap pq-sec" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,4vw,64px);align-items:center" id="pq-hero-grid">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <span class="pq-eyebrow">PEAKQI · AI OPERATING PLATFORM</span>
+      <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.28 'Noto Sans TC',sans-serif">台灣中小企業的<br><span style="color:#FF6B2C">AI 營運基礎設施</span></h1>
+      <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">一套自研的 47 模組 AI 業務引擎,孵化多個垂直產業品牌作為場景驗證,同時對外提供通用型 AI 業務工具。<b style="color:#F2EFE8;font-weight:700">一套引擎、多個品牌、雙軌驗證。</b></p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px">
+        <a href="PeakOps.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">看 Peak Ops 產品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+        <a href="mailto:peakqi.com@gmail.com?subject=合作邀請" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">投資・合作邀請</a>
       </div>
-      <div ref="{{ heroT2 }}" style="position:absolute;left:clamp(20px,6vw,84px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:16px;max-width:600px;opacity:0;pointer-events:none">
-        <p style="margin:0;font:900 clamp(1.4rem,2.9vw,2.4rem)/1.6 'Noto Sans TC',sans-serif">行銷、客服、報價、CRM、專案管理,<br>不用再開五個軟體切來切去。</p>
-        <p style="margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">未讀在累積、名單在流失、資料接不上——客人就在空隙裡漏掉。</p>
-      </div>
-      <div ref="{{ heroT3 }}" style="position:absolute;left:clamp(20px,6vw,84px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:16px;opacity:0;pointer-events:none">
-        <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">PEAKQI SIGNAL</span>
-        <div data-st="1" style="display:flex;align-items:center;gap:14px;opacity:.18">
-          <span style="width:9px;height:9px;background:#FF6B2C"></span>
-          <span style="font:700 clamp(15px,1.7vw,20px) 'Space Grotesk',sans-serif;letter-spacing:.16em">CAPTURED</span>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">詢問已接住</span>
-        </div>
-        <div data-st="2" style="display:flex;align-items:center;gap:14px;opacity:.18">
-          <span style="width:9px;height:9px;background:#FF6B2C"></span>
-          <span style="font:700 clamp(15px,1.7vw,20px) 'Space Grotesk',sans-serif;letter-spacing:.16em">CLASSIFIED</span>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">需求已分類</span>
-        </div>
-        <div data-st="3" style="display:flex;align-items:center;gap:14px;opacity:.18">
-          <span style="width:9px;height:9px;background:#FF6B2C"></span>
-          <span style="font:700 clamp(15px,1.7vw,20px) 'Space Grotesk',sans-serif;letter-spacing:.16em">ASSIGNED</span>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">已指派負責人</span>
-        </div>
-        <div data-st="4" style="display:flex;align-items:center;gap:14px;opacity:.18">
-          <span style="width:9px;height:9px;background:#FF6B2C"></span>
-          <span style="font:700 clamp(15px,1.7vw,20px) 'Space Grotesk',sans-serif;letter-spacing:.16em">FOLLOW-UP CREATED</span>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">跟進已建立</span>
-        </div>
-      </div>
-      <div ref="{{ heroT4 }}" style="position:absolute;right:clamp(16px,7vw,110px);top:50%;transform:translateY(-50%);z-index:3;opacity:0;pointer-events:none;width:min(370px,86vw);background:#171A1F;border:1px solid rgba(242,239,232,.18);border-radius:8px;box-shadow:0 28px 70px rgba(0,0,0,.55);overflow:hidden">
-        <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
-          <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>
-          <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.08em">客戶卡片・王小姐</span>
-          <span style="margin-left:auto;background:rgba(101,224,188,.16);color:#65E0BC;font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;padding:3px 9px;border-radius:2px">LINE</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px">
-          <div data-chip style="background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">需求類型</span>
-            <span style="font:700 13px 'Noto Sans TC',sans-serif">到府服務</span>
-          </div>
-          <div data-chip style="background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">預算標籤</span>
-            <span style="font:700 13px 'Noto Sans TC',sans-serif">評估中</span>
-          </div>
-          <div data-chip style="background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">服務項目</span>
-            <span style="font:700 13px 'Noto Sans TC',sans-serif">方案諮詢</span>
-          </div>
-          <div data-chip style="background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">聯絡時間</span>
-            <span style="font:700 13px 'Space Grotesk',sans-serif">週五 14:00</span>
-          </div>
-          <div data-chip style="background:rgba(62,155,255,.08);border:1px solid rgba(62,155,255,.3);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">跟進狀態</span>
-            <span style="font:700 13px 'Noto Sans TC',sans-serif;color:#3E9BFF">DAY 1 已排</span>
-          </div>
-          <div data-chip style="background:rgba(101,224,188,.08);border:1px solid rgba(101,224,188,.3);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;opacity:0">
-            <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">真人接手</span>
-            <span style="font:700 13px 'Noto Sans TC',sans-serif;color:#65E0BC">已標記 ✓</span>
-          </div>
-        </div>
-        <div style="padding:0 16px 14px;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">對話已轉為結構化客戶資料,AI 整理・待你確認。</div>
-      </div>
-      <div ref="{{ heroT5 }}" style="position:absolute;left:clamp(20px,6vw,84px);top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:22px;max-width:640px;opacity:0;pointer-events:none">
-        <span style="font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">FROM CHAOS TO CONTROL</span>
-        <p style="margin:0;font:900 clamp(1.55rem,3.2vw,2.6rem)/1.55 'Noto Sans TC',sans-serif">專為台灣中小企業打造,<br>一套系統完成接客、追客與養客,<br>最快 10 個工作天上線。</p>
-        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-          <a href="Demo.dc.html" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 15 分鐘場景 Demo <span data-arrow style="font-family:'Space Grotesk',sans-serif">→</span></a>
-          <a href="Cases.dc.html" data-cta style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
-        </div>
-        <span style="font:400 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.06em;color:rgba(242,239,232,.5)">不推銷・不綁約・30 天內覺得沒效,月費全額退</span>
-      </div>
-      <div ref="{{ heroHint }}" style="position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none">
-        <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:rgba(242,239,232,.5)">SCROLL</span>
-        <span style="width:1px;height:34px;background:linear-gradient(rgba(242,239,232,.6),rgba(242,239,232,0))"></span>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:8px;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+        <span><b style="color:#F2EFE8;font:700 16px 'Space Grotesk',sans-serif">47</b> 模組引擎</span>
+        <span><b style="color:#F2EFE8;font:700 16px 'Space Grotesk',sans-serif">30+</b> 已上線系統</span>
+        <span><b style="color:#F2EFE8;font:700 16px 'Space Grotesk',sans-serif">8+</b> 產業別</span>
       </div>
     </div>
-  </div>
-</section>
-
-<section id="hero-stats" data-screen-label="數字帶" style="background:#090B0E;color:#F2EFE8;padding:0 clamp(20px,5vw,48px) 10px">
-  <div style="max-width:1400px;margin:0 auto">
-    <div style="border-top:1px solid rgba(242,239,232,.14);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0">
-      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
-        <div style="padding:26px 24px 30px 0;display:flex;flex-direction:column;gap:6px">
-          <span style="font:700 clamp(1.7rem,2.8vw,2.4rem) 'Space Grotesk',sans-serif;color:#F2EFE8">{{ s.v }}</span>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ s.l }}</span>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-</section>
-
-<section id="handoff" data-screen-label="System Handoff" style="background:#090B0E;color:#F2EFE8">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <div style="display:flex;align-items:center;gap:14px">
-          <span style="width:36px;height:1px;background:#FF6B2C"></span>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">SYSTEM HANDOFF — 散落的工具,交接成一條資料流</span>
-        </div>
-        <div style="position:relative;margin-top:clamp(30px,3.4vw,44px)" aria-hidden="true">
-          <svg viewBox="0 0 1200 220" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;overflow:visible">
-            <path id="pqHpA" data-hpath d="M8 30 C 260 30, 300 110, 600 110 S 940 190, 1192 190" stroke="#FF6B2C" stroke-width="2"></path>
-            <path id="pqHpB" data-hpath d="M8 190 C 260 190, 300 110, 600 110 S 940 30, 1192 30" stroke="#3E9BFF" stroke-width="1.6" opacity=".8"></path>
-            <path data-hpath d="M8 110 L 1192 110" stroke="rgba(242,239,232,.22)" stroke-width="1" stroke-dasharray="3 7"></path>
-            <g data-hpack opacity="0"><circle r="5" fill="#FF6B2C"></circle></g>
-            <g data-hpack opacity="0"><circle r="4" fill="#3E9BFF"></circle></g>
-            <g data-hpack opacity="0"><circle r="3.5" fill="#65E0BC"></circle></g>
-            <!-- 子動畫:資料封包沿曲線持續流動(獨立於捲動母動畫) -->
-            <circle r="4.5" fill="#FF6B2C"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#pqHpA"/></animateMotion></circle>
-            <circle r="4" fill="#FF6B2C" opacity=".55"><animateMotion dur="3.2s" begin="1.1s" repeatCount="indefinite"><mpath href="#pqHpA"/></animateMotion></circle>
-            <circle r="4" fill="#3E9BFF"><animateMotion dur="3.7s" repeatCount="indefinite"><mpath href="#pqHpB"/></animateMotion></circle>
-            <circle r="3.6" fill="#65E0BC" opacity=".7"><animateMotion dur="3.7s" begin="1.9s" repeatCount="indefinite"><mpath href="#pqHpB"/></animateMotion></circle>
-            <circle cx="600" cy="110" r="7" fill="#090B0E" stroke="#65E0BC" stroke-width="1.6"></circle>
-            <circle cx="8" cy="110" r="4" fill="#65E0BC"></circle>
-            <circle cx="1192" cy="110" r="4" fill="#FF6B2C"></circle>
-          </svg>
-          <span style="position:absolute;left:0;top:-12px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">INPUT — 散落的訊息・名單・報價</span>
-          <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC;background:#090B0E;padding:3px 9px;white-space:nowrap;border-radius:2px">PEAKQI 自動整合</span>
-          <span style="position:absolute;right:0;bottom:-12px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">OUTPUT — 整合後的客戶資料與數據</span>
-        </div>
-        <div style="margin-top:clamp(24px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px">
-          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
-            <div data-hnum style="border:1px solid rgba(242,239,232,.14);border-radius:4px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:6px">
-              <span style="font:700 clamp(1.9rem,3.4vw,2.8rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">{{ s.v }}</span>
-              <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ s.l }}</span>
-            </div>
-          </sc-for>
-        </div>
-        <p data-hnote style="margin:clamp(18px,2.5vw,28px) 0 0;font:500 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);max-width:560px">控制台組裝完成,只是開始。接下來,看資料流進你每天的營運現場。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div data-divider="line" aria-hidden="true" style="background:#090B0E;padding:0 clamp(20px,5vw,48px) 34px">
-  <div style="max-width:1360px;margin:0 auto;display:flex;align-items:center;gap:16px">
-    <span data-label style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(242,239,232,.4)">SECTION / DIAGNOSTIC</span>
-    <span data-line style="flex:1;height:2px;background:linear-gradient(90deg,#FF6B2C,#3E9BFF)"></span>
-  </div>
-</div>
-
-<section id="diagnostic" data-screen-label="Chaos Diagnostic" style="background:#090B0E;color:#F2EFE8">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-          <div>
-            <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">CHAOS DIAGNOSTIC</span>
-            <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">先照一張 X 光:<br>你的客戶流程現在長怎樣?</h2>
-          </div>
-          <span data-dtake style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(101,224,188,.5);color:#65E0BC;font:700 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.1em;padding:8px 16px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC"></span>PEAKQI 開始接管</span>
-        </div>
-        <div style="margin-top:clamp(24px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,40px);align-items:stretch">
-          <div style="position:relative;display:flex;flex-direction:column;gap:12px;min-height:300px">
-            <span data-dscan style="position:absolute;left:-6px;right:-6px;top:0;height:44px;background:linear-gradient(rgba(255,107,44,.09),transparent);opacity:0;pointer-events:none"></span>
-            <div data-dtool data-rot="-2" style="background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:13px 15px;transform:rotate(-2deg);max-width:320px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.6)">LINE・3 個群組</span>
-              <p style="margin:7px 0 0;font:500 13px/1.6 'Noto Sans TC',sans-serif">「請問報價好了嗎?」——三小時前</p>
-            </div>
-            <div data-dtool data-rot="1.5" style="background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:13px 15px;transform:rotate(1.5deg);max-width:300px;align-self:flex-end">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.6)">名單_v7.xlsx</span>
-              <p style="margin:7px 0 0;font:500 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">和 v5 哪筆才是最新?</p>
-            </div>
-            <div data-dtool data-rot="-1" style="background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:13px 15px;transform:rotate(-1deg);max-width:280px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.6)">報價單.pdf</span>
-              <p style="margin:7px 0 0;font:500 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">還在「等一下回頭算」</p>
-            </div>
-            <div data-dtool data-rot="2.5" style="background:#E6E0D2;color:#090B0E;border:1px solid transparent;border-radius:4px;padding:13px 15px;transform:rotate(2.5deg);max-width:240px;align-self:flex-end">
-              <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.5)">備忘錄</span>
-              <p style="margin:6px 0 0;font:700 13px/1.5 'Noto Sans TC',sans-serif">回覆王先生!!(三天前)</p>
-            </div>
-            <div data-dtool data-rot="-1.5" style="background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:13px 15px;transform:rotate(-1.5deg);max-width:300px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.6)">表單回覆・Google Sheet</span>
-              <p style="margin:7px 0 0;font:500 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">沒人記得誰要回</p>
-            </div>
-          </div>
-          <div style="position:relative;overflow:hidden;background:#14171C;border:1px solid rgba(242,239,232,.14);border-radius:8px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:16px">
-            <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:52px;background:linear-gradient(rgba(101,224,188,.14),transparent);animation:pqScan 3.2s cubic-bezier(0.4,0,0.6,1) infinite;pointer-events:none"></span>
-            <div style="display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(242,239,232,.12);padding-bottom:12px">
-              <span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.5s ease-in-out infinite"></span>
-              <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.85)">即時診斷(流程示意)</span>
-              <span style="margin-left:auto;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(101,224,188,.7)">LIVE</span>
-            </div>
-            <sc-for list="{{ diag }}" as="m" hint-placeholder-count="5">
-              <div style="display:flex;flex-direction:column;gap:7px">
-                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
-                  <span style="font:600 13.5px 'Noto Sans TC',sans-serif">{{ m.t }}</span>
-                  <span data-dcount data-max="{{ m.max }}" data-u="{{ m.u }}" style="font:700 12.5px 'Space Grotesk',sans-serif;color:#65E0BC">AI 已接手 ✓</span>
-                </div>
-                <div data-dmeter style="height:8px;border-radius:999px;background:rgba(242,239,232,.08);overflow:hidden">
-                  <div style="height:100%;width:100%;border-radius:999px;background:#65E0BC;transition:width .12s linear;animation:pqBarFlow 2.4s ease-in-out infinite"></div>
-                </div>
-              </div>
-            </sc-for>
-            <p style="margin:0;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">※ 指標為流程視覺示意,非成效數據。</p>
-          </div>
-        </div>
-        <p data-dclose style="margin:clamp(22px,3vw,34px) 0 0;font:900 clamp(1.3rem,2.6vw,2rem)/1.55 'Noto Sans TC',sans-serif;max-width:720px">診斷結果只有一句話——<br>問題不在客人不夠,而是<span style="color:#FF6B2C">接不住、管不動</span>。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="pain" data-screen-label="企業痛點" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,5vw,64px);align-items:start">
-    <div>
-      <div style="display:flex;align-items:center;gap:14px">
-        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
-        <span style="width:36px;height:1px;background:#FF6B2C"></span>
-        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">PAIN POINTS</span>
-      </div>
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">你是不是<br>也這樣?</h2>
-      <p style="margin:22px 0 0;max-width:420px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);text-wrap:pretty">生意不是不好,是客人進來之後,散在太多地方。</p>
-      <div style="display:flex;flex-direction:column;margin-top:10px">
-        <sc-for list="{{ pains }}" as="p" hint-placeholder-count="5">
-          <div style="display:flex;gap:18px;align-items:baseline;padding:19px 0;border-bottom:1px solid rgba(9,11,14,.14)">
-            <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:26px">{{ p.idx }}</span>
-            <span style="font:500 16.5px/1.7 'Noto Sans TC',sans-serif;text-wrap:pretty">{{ p.t }}</span>
-          </div>
-        </sc-for>
-      </div>
-      <p style="margin:28px 0 0;font:900 clamp(1.25rem,2.2vw,1.75rem)/1.6 'Noto Sans TC',sans-serif;text-wrap:pretty">{{ painClose }}</p>
-      <a href="Solutions.dc.html" style="margin-top:16px;font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none;display:inline-flex;gap:8px;align-items:center">看 AI 怎麼分擔這些事 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
-    </div>
-    <div ref="{{ pain }}" aria-hidden="true" style="position:relative;min-height:560px;margin-top:clamp(8px,4vw,56px);background:#090B0E;border-radius:8px;overflow:hidden;box-shadow:0 28px 64px rgba(9,11,14,.18)">
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.045) 1px,transparent 1px);background-size:52px 52px"></div>
-      <svg style="position:absolute;left:0;right:0;bottom:0;width:100%;height:150px" viewBox="0 0 600 150" fill="none" preserveAspectRatio="none">
-        <path d="M12 14 L588 58" stroke="rgba(242,239,232,.22)" stroke-width="1.5"></path>
-        <path d="M12 138 L300 112" stroke="rgba(242,239,232,.22)" stroke-width="1.5"></path>
-        <path d="M368 106 L588 96" stroke="rgba(242,239,232,.22)" stroke-width="1.5"></path>
-        <circle cx="588" cy="77" r="4" fill="#65E0BC"></circle>
+    <!-- 品牌屋引擎 SVG:引擎核心 → 分岔 → 四個品牌(母=載入組裝、子=脈衝/資料流/呼吸) -->
+    <div aria-hidden="true" style="position:relative">
+      <svg viewBox="0 0 520 440" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;overflow:visible" role="img">
+        <defs>
+          <radialGradient id="brHub" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FF6B2C" stop-opacity=".9"></stop>
+            <stop offset="100%" stop-color="#FF6B2C" stop-opacity=".08"></stop>
+          </radialGradient>
+        </defs>
+        <!-- 背景格線 -->
+        <g stroke="rgba(242,239,232,.05)" stroke-width="1">
+          <path d="M0 110 H520 M0 220 H520 M0 330 H520 M130 0 V440 M260 0 V440 M390 0 V440"></path>
+        </g>
+        <!-- 分岔資料線(母動畫:stroke-dashoffset 由 0 描出) -->
+        <g fill="none" stroke-width="2">
+          <path id="brB1" d="M150 220 Q 270 96 372 92" stroke="#FF6B2C" stroke-opacity=".7" stroke-dasharray="360" stroke-dashoffset="360" style="animation:pqDraw 1s cubic-bezier(0.16,1,0.3,1) .15s forwards"></path>
+          <path id="brB2" d="M150 220 Q 280 176 392 172" stroke="#3E9BFF" stroke-opacity=".7" stroke-dasharray="330" stroke-dashoffset="330" style="animation:pqDraw 1s cubic-bezier(0.16,1,0.3,1) .3s forwards"></path>
+          <path id="brB3" d="M150 220 Q 280 268 392 272" stroke="#E06B9C" stroke-opacity=".7" stroke-dasharray="330" stroke-dashoffset="330" style="animation:pqDraw 1s cubic-bezier(0.16,1,0.3,1) .45s forwards"></path>
+          <path id="brB4" d="M150 220 Q 270 348 372 352" stroke="#65E0BC" stroke-opacity=".7" stroke-dasharray="360" stroke-dashoffset="360" style="animation:pqDraw 1s cubic-bezier(0.16,1,0.3,1) .6s forwards"></path>
+        </g>
+        <!-- 資料封包沿線流動(子動畫) -->
+        <g>
+          <circle r="4" fill="#FF6B2C"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#brB1"></mpath></animateMotion></circle>
+          <circle r="4" fill="#3E9BFF"><animateMotion dur="2.6s" begin="-.6s" repeatCount="indefinite"><mpath href="#brB2"></mpath></animateMotion></circle>
+          <circle r="4" fill="#E06B9C"><animateMotion dur="2.6s" begin="-1.2s" repeatCount="indefinite"><mpath href="#brB3"></mpath></animateMotion></circle>
+          <circle r="4" fill="#65E0BC"><animateMotion dur="2.4s" begin="-1.8s" repeatCount="indefinite"><mpath href="#brB4"></mpath></animateMotion></circle>
+        </g>
+        <!-- 引擎核心(子動畫:脈衝環 + 呼吸) -->
+        <g transform="translate(150 220)">
+          <circle r="54" fill="url(#brHub)"></circle>
+          <circle r="30" fill="none" stroke="#FF6B2C" stroke-width="1.5" opacity=".5" style="transform-box:fill-box;transform-origin:center;animation:pqRing 2.6s ease-out infinite"></circle>
+          <circle r="30" fill="none" stroke="#FF6B2C" stroke-width="1.5" opacity=".5" style="transform-box:fill-box;transform-origin:center;animation:pqRing 2.6s ease-out infinite 1.3s"></circle>
+          <circle r="30" fill="#0F1319" stroke="rgba(255,107,44,.7)" stroke-width="1.5" style="transform-box:fill-box;transform-origin:center;animation:pqBreathe 3s ease-in-out infinite"></circle>
+          <text y="-2" text-anchor="middle" fill="#F2EFE8" style="font:800 13px 'Space Grotesk',sans-serif">47</text>
+          <text y="13" text-anchor="middle" fill="rgba(242,239,232,.6)" style="font:600 8px 'Noto Sans TC',sans-serif;letter-spacing:.1em">模組引擎</text>
+        </g>
+        <!-- 四個品牌節點(子動畫:呼吸浮動) -->
+        <g style="animation:pqFloatY 5s ease-in-out infinite">
+          <g transform="translate(372 92)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(255,107,44,.55)"></rect><circle cx="16" cy="0" r="4" fill="#FF6B2C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">Peak Ops</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">通用 AI 業務工具</text></g>
+        </g>
+        <g style="animation:pqFloatY 5.6s ease-in-out infinite .4s">
+          <g transform="translate(392 172)"><rect x="0" y="-22" width="120" height="44" rx="8" fill="#14171C" stroke="rgba(62,155,255,.55)"></rect><circle cx="16" cy="0" r="4" fill="#3E9BFF"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">冒泡</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">房仲 AI</text></g>
+        </g>
+        <g style="animation:pqFloatY 5.6s ease-in-out infinite .8s">
+          <g transform="translate(392 272)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(224,107,156,.55)"></rect><circle cx="16" cy="0" r="4" fill="#E06B9C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">AI Wedding Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">婚禮 AI</text></g>
+        </g>
+        <g style="animation:pqFloatY 5s ease-in-out infinite 1.2s">
+          <g transform="translate(372 352)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(101,224,188,.55)"></rect><circle cx="16" cy="0" r="4" fill="#65E0BC"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">AI Interior Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">室內設計 AI</text></g>
+        </g>
       </svg>
-      <span data-gap style="position:absolute;left:49.5%;bottom:36px;width:64px;height:0;border-bottom:2px dashed #FF6B2C;transform-origin:left center;transform:scaleX(.4) rotate(-3deg)"></span>
-      <span data-leak style="position:absolute;left:50%;bottom:30px;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.6);color:#F2EFE8;font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">客戶 A</span>
-      <span data-leak style="position:absolute;left:55%;bottom:34px;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.6);color:#F2EFE8;font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">客戶 B</span>
-      <span data-leak style="position:absolute;left:46%;bottom:26px;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.6);color:#F2EFE8;font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">客戶 C</span>
-      <div data-win data-dep="1.15" data-rot="-4" style="position:absolute;left:5%;top:5%;width:200px;background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:11px 13px;transform:rotate(-4deg)">
-        <div style="display:flex;align-items:center;gap:7px">
-          <span style="width:7px;height:7px;border-radius:50%;background:#65E0BC"></span>
-          <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.65)">LINE・23:41</span>
-          <span data-badge style="margin-left:auto;background:#FF6B2C;color:#090B0E;font:700 10px 'Space Grotesk',sans-serif;min-width:17px;text-align:center;padding:2px 5px;border-radius:999px;animation:pqAnxious 1.1s ease-in-out infinite">1</span>
-        </div>
-        <p style="margin:9px 0 0;font:500 12.5px/1.6 'Noto Sans TC',sans-serif;color:#F2EFE8">「請問還有檔期嗎?想約這週看方案」</p>
-        <span style="display:block;margin-top:8px;height:6px;width:70%;background:rgba(242,239,232,.14);border-radius:2px"></span>
-      </div>
-      <div data-win data-dep=".85" data-rot="3" style="position:absolute;right:4%;top:9%;width:190px;background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:11px 13px;transform:rotate(3deg)">
-        <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.65)">名單_v7.xlsx</span>
-        <div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">
-          <span style="height:6px;width:88%;background:rgba(242,239,232,.16);border-radius:2px"></span>
-          <span style="height:14px;width:64%;border:1px dashed rgba(255,107,44,.65);border-radius:2px;animation:pqBlink 1.3s ease-in-out infinite"></span>
-          <span style="height:6px;width:74%;background:rgba(242,239,232,.12);border-radius:2px"></span>
-        </div>
-        <p style="margin:8px 0 0;font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">哪一版才是最新的?</p>
-      </div>
-      <div data-win data-dep="1" data-rot="-2" style="position:absolute;left:29%;top:34%;width:240px;background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:12px 14px;transform:rotate(-2deg);z-index:2">
-        <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.65)">CRM・跟進中</span>
-        <div style="margin-top:10px;display:flex;align-items:center;gap:6px">
-          <span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span>
-          <span style="flex:1;height:2px;background:rgba(62,155,255,.5)"></span>
-          <span data-break style="opacity:0;display:inline-flex;align-items:center;gap:5px;color:#FF6B2C;font:700 10.5px 'Noto Sans TC',sans-serif;border:1px dashed rgba(255,107,44,.7);padding:2px 7px;border-radius:2px;animation:pqBreakPulse .8s ease-in-out infinite">✕ 流程斷裂</span>
-          <span style="flex:1;height:2px;background:rgba(242,239,232,.14)"></span>
-          <span style="width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(242,239,232,.35)"></span>
-        </div>
-        <p style="margin:10px 0 0;font:500 12px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)">王小姐・報價中<span style="color:rgba(255,107,44,.9);animation:pqBlink 1.5s ease-in-out infinite">(3 天未動)</span></p>
-      </div>
-      <div data-win data-dep="1.3" data-rot="-7" style="position:absolute;left:6%;top:62%;width:150px;background:#E6E0D2;border-radius:4px;padding:11px 13px;transform:rotate(-7deg)">
-        <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.5)">備忘錄</span>
-        <p style="margin:7px 0 0;font:700 12.5px/1.5 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">回覆王先生!!<br><span style="font-weight:400;color:rgba(9,11,14,.5)">(三天前)</span></p>
-      </div>
-      <div data-win data-dep="1.1" data-rot="5" style="position:absolute;right:7%;top:56%;width:180px;background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:11px 13px;transform:rotate(5deg)">
-        <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.65)">報價單.pdf</span>
-        <div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">
-          <span style="height:6px;width:90%;background:rgba(242,239,232,.16);border-radius:2px"></span>
-          <span style="height:6px;width:60%;background:rgba(242,239,232,.12);border-radius:2px"></span>
-        </div>
-        <p style="margin:9px 0 0;font:700 14px 'Space Grotesk',sans-serif;color:#F2EFE8">NT$ <span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">等你回頭算稅</span></p>
-      </div>
-      <div data-cursor style="position:absolute;left:0;top:0;z-index:6;transform:translate(150px,120px)">
-        <svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1 L2 15 L6.2 11.6 L9 18 L11.6 16.8 L8.8 10.6 L14 10 Z" fill="#F2EFE8" stroke="#090B0E" stroke-width="1"></path></svg>
-      </div>
-      <div data-ba style="display:none;position:absolute;top:14px;right:14px;flex-direction:column;gap:8px;z-index:5">
-        <span style="background:rgba(255,107,44,.14);border:1px solid rgba(255,107,44,.5);color:#FF6B2C;font:700 11px 'Noto Sans TC',sans-serif;padding:5px 12px;border-radius:2px">BEFORE:五套工具,各自為政</span>
-        <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.5);color:#65E0BC;font:700 11px 'Noto Sans TC',sans-serif;padding:5px 12px;border-radius:2px">AFTER:一個後台,全部接住</span>
-      </div>
-      <span style="position:absolute;left:14px;bottom:10px;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(242,239,232,.38)">LEAKY FUNNEL — 客人從空隙漏掉</span>
+      <span style="position:absolute;left:2px;bottom:-6px;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.35)">ONE ENGINE — MANY BRANDS</span>
     </div>
   </div>
 </section>
 
-<section id="loss" data-screen-label="損失情境" style="background:#090B0E;color:#F2EFE8">
-  <div ref="{{ lossWrap }}" style="position:relative">
-    <div ref="{{ lossStage }}" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);box-sizing:border-box">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <div style="display:flex;align-items:center;gap:14px">
-          <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
-          <span style="width:36px;height:1px;background:#FF6B2C"></span>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">THE COST OF CHAOS</span>
-        </div>
-        <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">散、慢、漏的代價</h2>
-        <div style="margin-top:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
-          <div style="flex:1;min-width:150px;display:flex;flex-direction:column;gap:7px">
-            <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.4)">STEP 01</span>
-            <div style="display:flex;align-items:baseline;gap:7px">
-              <span data-lossv data-t="100" style="font:700 clamp(2.3rem,4.6vw,3.7rem)/1 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums">100</span>
-              <span style="font:600 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">組/月</span>
-            </div>
-            <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">詢問進來</span>
-          </div>
-          <span style="align-self:center;color:#FF6B2C;font:700 20px 'Space Grotesk',sans-serif">→</span>
-          <div style="flex:1;min-width:150px;display:flex;flex-direction:column;gap:7px">
-            <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.4)">STEP 02</span>
-            <div style="display:flex;align-items:baseline;gap:7px">
-              <span data-lossv data-t="30" style="font:700 clamp(2.3rem,4.6vw,3.7rem)/1 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;color:#FF6B2C">30</span>
-              <span style="font:600 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">組</span>
-            </div>
-            <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">回太慢、資料接不上而流失</span>
-          </div>
-          <span style="align-self:center;color:#FF6B2C;font:700 20px 'Space Grotesk',sans-serif">→</span>
-          <div style="flex:1;min-width:150px;display:flex;flex-direction:column;gap:7px">
-            <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.4)">STEP 03</span>
-            <div style="display:flex;align-items:baseline;gap:7px">
-              <span data-lossv data-t="1" style="font:700 clamp(2.3rem,4.6vw,3.7rem)/1 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums">1</span>
-              <span style="font:600 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">萬</span>
-            </div>
-            <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">每單平均金額</span>
-          </div>
-          <span style="align-self:center;color:#FF6B2C;font:700 20px 'Space Grotesk',sans-serif">→</span>
-          <div style="flex:1;min-width:150px;display:flex;flex-direction:column;gap:7px">
-            <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.4)">STEP 04</span>
-            <div style="display:flex;align-items:baseline;gap:7px">
-              <span data-lossv data-t="30" style="font:700 clamp(2.3rem,4.6vw,3.7rem)/1 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;color:#FF6B2C">30</span>
-              <span style="font:600 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">萬/月</span>
-            </div>
-            <span style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">每月可能蒸發的營收</span>
-          </div>
-        </div>
-        <div style="position:relative;height:110px;margin-top:clamp(20px,3vw,32px)" aria-hidden="true">
-          <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 1200 110" fill="none" preserveAspectRatio="none">
-            <path d="M8 12 L1192 40" stroke="rgba(242,239,232,.2)" stroke-width="1.5"></path>
-            <path d="M8 98 L560 82" stroke="rgba(242,239,232,.2)" stroke-width="1.5"></path>
-            <path d="M660 78 L1192 64" stroke="rgba(242,239,232,.2)" stroke-width="1.5"></path>
-            <circle cx="14" cy="55" r="3.5" fill="#F2EFE8" opacity=".6"></circle>
-            <circle cx="34" cy="48" r="3.5" fill="#F2EFE8" opacity=".4"></circle>
-            <circle cx="26" cy="66" r="3.5" fill="#F2EFE8" opacity=".5"></circle>
-            <circle cx="1186" cy="52" r="4.5" fill="#65E0BC"></circle>
-          </svg>
-          <span style="position:absolute;right:8px;top:26px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(101,224,188,.8)">接住的,往成交走</span>
-          <span data-lgap style="position:absolute;left:46.6%;top:74%;width:100px;height:0;border-bottom:2px dashed #FF6B2C;transform-origin:left center;transform:scaleX(.2) rotate(-1.5deg)"></span>
-          <span data-drop style="position:absolute;left:47%;top:78%;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.55);color:rgba(242,239,232,.85);font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">半夜漏接</span>
-          <span data-drop style="position:absolute;left:52.5%;top:74%;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.55);color:rgba(242,239,232,.85);font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">忘了跟進</span>
-          <span data-drop style="position:absolute;left:44%;top:70%;opacity:0;background:#171A1F;border:1px solid rgba(255,107,44,.55);color:rgba(242,239,232,.85);font:600 10.5px 'Noto Sans TC',sans-serif;padding:3px 9px;border-radius:999px">資料接不上</span>
-        </div>
-        <div style="margin-top:clamp(24px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,56px);align-items:center">
-          <div>
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-              <span data-lossv data-t="360" style="font:700 clamp(4rem,9vw,8.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C;letter-spacing:-.02em;font-variant-numeric:tabular-nums">360</span>
-              <span style="font:700 clamp(1.3rem,2.4vw,1.9rem) 'Noto Sans TC',sans-serif">萬/年</span>
-              <span style="border:1px solid rgba(242,239,232,.35);color:rgba(242,239,232,.75);font:600 12px 'Noto Sans TC',sans-serif;letter-spacing:.16em;padding:5px 12px;border-radius:999px">情境試算</span>
-            </div>
-            <p style="margin:16px 0 0;max-width:560px;font:400 13px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ lossNote }}</p>
-          </div>
-          <p style="margin:0;font:900 clamp(1.4rem,2.6vw,2.1rem)/1.55 'Noto Sans TC',sans-serif;text-wrap:pretty">工具越多越亂,<br>客人就在<span style="color:#FF6B2C">空隙裡漏掉</span>。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="flow" data-screen-label="接客追客養客">
-  <div ref="{{ flowWrap }}" style="position:relative">
-    <div ref="{{ flowStage }}" style="padding:clamp(72px,9vw,120px) clamp(20px,5vw,48px);box-sizing:border-box">
-      <div style="max-width:1160px;margin:0 auto;width:100%">
-        <div style="display:flex;align-items:center;gap:14px">
-          <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
-          <span style="width:36px;height:1px;background:#FF6B2C"></span>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CAPTURE / FOLLOW / NURTURE</span>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-          <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">把三件事做順:接客、追客、養客</h2>
-          <div style="display:flex;gap:22px;flex-wrap:wrap;padding-bottom:6px">
-            <span data-rail style="display:inline-flex;align-items:center;gap:8px;font:700 13.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.4)"><span style="width:8px;height:8px;border-radius:50%;background:rgba(9,11,14,.25)"></span>01 接客</span>
-            <span data-rail style="display:inline-flex;align-items:center;gap:8px;font:700 13.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.4)"><span style="width:8px;height:8px;border-radius:50%;background:rgba(9,11,14,.25)"></span>02 追客</span>
-            <span data-rail style="display:inline-flex;align-items:center;gap:8px;font:700 13.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.4)"><span style="width:8px;height:8px;border-radius:50%;background:rgba(9,11,14,.25)"></span>03 養客</span>
-          </div>
-        </div>
-        <div data-deck style="position:relative;margin-top:clamp(26px,4vw,40px);display:flex;flex-direction:column;gap:18px">
-          <div data-layer="0" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.12);padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:16px">
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-              <span style="font:700 clamp(1.8rem,3vw,2.4rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
-              <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">接客</h3>
-              <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.4)">CAPTURE</span>
-              <a href="Solutions.dc.html#capture" style="margin-left:auto;font:700 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">看接客細節 →</a>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;align-items:center">
-              <p style="margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">AI 先回應、理解需求、協助安排時段,必要時馬上轉真人。半夜的詢問,30 秒內被接住。</p>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <span style="align-self:flex-start;background:rgba(9,11,14,.06);border-radius:2px 10px 10px 10px;padding:8px 12px;font:500 13px 'Noto Sans TC',sans-serif">請問到府服務多少錢?</span>
-                <span style="align-self:flex-end;background:rgba(101,224,188,.2);border-radius:10px 2px 10px 10px;padding:8px 12px;font:500 13px 'Noto Sans TC',sans-serif">已為您保留時段,細節由專人確認。</span>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">需求辨識 ✓</span>
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">預約時間 ✓</span>
-                  <span style="border:1px solid rgba(255,107,44,.5);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">真人接手</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div data-layer="1" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.12);padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:16px">
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-              <span style="font:700 clamp(1.8rem,3vw,2.4rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
-              <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">追客</h3>
-              <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.4)">FOLLOW</span>
-              <a href="Solutions.dc.html#follow" style="margin-left:auto;font:700 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">看追客細節 →</a>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;align-items:center">
-              <p style="margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">CRM 集中客戶資料、看清每組客人的階段,該跟進的系統提醒你,AI 把訊息擬好。</p>
-              <div style="display:flex;flex-direction:column;gap:10px">
-                <div style="display:flex;gap:8px">
-                  <span style="flex:1;background:rgba(9,11,14,.05);border:1px solid rgba(9,11,14,.12);border-radius:4px;padding:7px 9px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">新詢問・2</span>
-                  <span style="flex:1;background:rgba(62,155,255,.1);border:1px solid rgba(62,155,255,.35);border-radius:4px;padding:7px 9px;font:600 11px 'Noto Sans TC',sans-serif;color:#2b76c9">報價中・1</span>
-                  <span style="flex:1;background:rgba(255,107,44,.08);border:1px solid rgba(255,107,44,.4);border-radius:4px;padding:7px 9px;font:600 11px 'Noto Sans TC',sans-serif;color:#d85a1c">待跟進・1</span>
-                </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <span style="border:1px solid rgba(62,155,255,.5);border-radius:999px;padding:4px 11px;font:600 11.5px 'Space Grotesk',sans-serif;color:#3E9BFF">DAY 1 提醒</span>
-                  <span style="border:1px solid rgba(62,155,255,.5);border-radius:999px;padding:4px 11px;font:600 11.5px 'Space Grotesk',sans-serif;color:#3E9BFF">DAY 3 案例</span>
-                  <span style="border:1px solid rgba(62,155,255,.5);border-radius:999px;padding:4px 11px;font:600 11.5px 'Space Grotesk',sans-serif;color:#3E9BFF">DAY 5 優惠</span>
-                  <span style="border:1px solid rgba(62,155,255,.5);border-radius:999px;padding:4px 11px;font:600 11.5px 'Space Grotesk',sans-serif;color:#3E9BFF">DAY 7 關心</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div data-layer="2" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.12);padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:16px">
-            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-              <span style="font:700 clamp(1.8rem,3vw,2.4rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
-              <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">養客</h3>
-              <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.4)">NURTURE</span>
-              <a href="Solutions.dc.html#marketing" style="margin-left:auto;font:700 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">看養客細節 →</a>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;align-items:center">
-              <p style="margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">案例、內容、優惠與關係維護集中安排,把「考慮中」的客人一步步推向下訂。</p>
-              <div style="display:flex;flex-direction:column;gap:10px">
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">案例內容</span>
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">優惠</span>
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">標籤分群</span>
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">內容排程</span>
-                  <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:4px 11px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">再行銷</span>
-                </div>
-                <span style="display:inline-flex;align-items:center;gap:8px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)"><span style="width:7px;height:7px;background:#65E0BC;border-radius:50%"></span>週三 10:00・案例貼文已排程</span>
-              </div>
-            </div>
-          </div>
-          <p data-mcap style="margin:6px 0 0;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);display:flex;align-items:center;gap:10px"><span style="width:28px;height:1px;background:rgba(9,11,14,.3)"></span>三層最後合併——同一個後台</p>
-          <div data-layer="m" style="background:#090B0E;color:#F2EFE8;border:1.5px solid #FF6B2C;border-radius:8px;box-shadow:0 24px 56px rgba(9,11,14,.3);padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;align-items:center;gap:10px">
-              <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-              <span style="font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.1em">PEAKQI 系統</span>
-              <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">ONE BACKOFFICE</span>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.45);color:#65E0BC;font:700 13px 'Noto Sans TC',sans-serif;padding:7px 16px;border-radius:2px">接客 ✓</span>
-              <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.45);color:#65E0BC;font:700 13px 'Noto Sans TC',sans-serif;padding:7px 16px;border-radius:2px">追客 ✓</span>
-              <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.45);color:#65E0BC;font:700 13px 'Noto Sans TC',sans-serif;padding:7px 16px;border-radius:2px">養客 ✓</span>
-            </div>
-            <p style="margin:0;font:500 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)">三層收進同一個後台,你在一個地方就能完成。</p>
-            <a href="Demo.dc.html" data-cta style="align-self:flex-start;font:700 14px 'Noto Sans TC',sans-serif;color:#FF6B2C;text-decoration:none" style-hover="color:#F2EFE8">用我的場景跑一遍 <span data-arrow>→</span></a>
-          </div>
-          <div data-noise style="position:absolute;inset:-8px;z-index:30;opacity:0;pointer-events:none;border-radius:10px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div data-divider="shutter" aria-hidden="true" style="position:relative;height:110px;overflow:hidden;background:#F2EFE8">
-  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-    <span data-label style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.45)">LIVE OPS — 同一個控制台,六種現場</span>
-  </div>
-  <div data-shut-l style="position:absolute;left:0;top:0;bottom:0;width:52%;background:#090B0E"></div>
-  <div data-shut-r style="position:absolute;right:0;top:0;bottom:0;width:52%;background:#090B0E"></div>
-</div>
-
-<section id="liveops" data-screen-label="Live Ops Console" style="background:#F2EFE8">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-          <div>
-            <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">LIVE OPS CONSOLE</span>
-            <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">同一個控制台,<br>跑你六種營運現場</h2>
-          </div>
-          <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">捲動切換情境 — <span data-live-name style="font-weight:700;color:#090B0E">AI 客服</span></span>
-        </div>
-        <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(18px,2.6vw,36px);align-items:stretch" id="pq-live-grid">
-          <div id="pq-live-console" style="position:relative;display:flex;flex-direction:column;background:#090B0E;color:#F2EFE8;border:1px solid rgba(9,11,14,.2);border-radius:8px;box-shadow:0 24px 56px rgba(9,11,14,.18);overflow:hidden;min-height:460px">
-            <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
-              <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-              <span style="font:700 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.12em">PEAKQI 營運控制台</span>
-              <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">LIVE</span>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(242,239,232,.1)">
-              <div style="padding:11px 16px;border-right:1px solid rgba(242,239,232,.1)"><span style="font:700 18px 'Space Grotesk',sans-serif">12</span><span style="display:block;font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">今日新客</span></div>
-              <div style="padding:11px 16px;border-right:1px solid rgba(242,239,232,.1)"><span style="font:700 18px 'Space Grotesk',sans-serif;color:#3E9BFF">28s</span><span style="display:block;font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">平均回覆</span></div>
-              <div style="padding:11px 16px"><span style="font:700 18px 'Space Grotesk',sans-serif;color:#65E0BC">18%</span><span style="display:block;font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">本週轉換</span></div>
-            </div>
-            <div style="position:relative;flex:1;min-height:340px">
-              <!-- 0・AI 客服:完整聊天 App(訊息區撐滿 + 輸入列) -->
-              <div data-live-panel="0" style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:10px">
-                <div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid rgba(242,239,232,.08)">
-                  <span style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#65E0BC,#3E9BFF)"></span>
-                  <div style="display:flex;flex-direction:column"><span style="font:700 13px 'Noto Sans TC',sans-serif">王小姐・LINE</span><span style="font:500 10.5px 'Noto Sans TC',sans-serif;color:#65E0BC">● 對話中</span></div>
-                  <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.4)">AI 自動接手</span>
-                </div>
-                <div style="flex:1;display:flex;flex-direction:column;gap:9px;overflow:hidden">
-                  <span style="align-self:flex-start;background:rgba(242,239,232,.08);border-radius:2px 12px 12px 12px;padding:9px 13px;font:500 12.5px/1.6 'Noto Sans TC',sans-serif;max-width:82%">請問到府服務多少錢?可以這週嗎?</span>
-                  <span style="align-self:flex-end;background:rgba(101,224,188,.16);border:1px solid rgba(101,224,188,.35);border-radius:12px 2px 12px 12px;padding:9px 13px;font:500 12.5px/1.6 'Noto Sans TC',sans-serif;max-width:82%">會依需求範圍報價,我先幫您保留本週五下午時段,方便說明一下需求嗎?</span>
-                  <span style="align-self:flex-start;background:rgba(242,239,232,.08);border-radius:2px 12px 12px 12px;padding:9px 13px;font:500 12.5px/1.6 'Noto Sans TC',sans-serif;max-width:82%">好,想問三房打掃,大概多少?</span>
-                  <span style="align-self:flex-end;background:rgba(101,224,188,.16);border:1px solid rgba(101,224,188,.35);border-radius:12px 2px 12px 12px;padding:9px 13px;font:500 12.5px/1.6 'Noto Sans TC',sans-serif;max-width:82%">三房約 NT$2,800 起,已幫您建立客戶卡,週五 14:00 我們專人再跟您確認 👌</span>
-                  <span style="align-self:flex-start;display:inline-flex;gap:5px;align-items:center;background:rgba(242,239,232,.06);border-radius:2px 12px 12px 12px;padding:11px 14px">
-                    <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite"></span>
-                    <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite .2s"></span>
-                    <span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqTypeDot 1.2s ease-in-out infinite .4s"></span>
-                  </span>
-                </div>
-                <div style="display:flex;gap:7px;flex-wrap:wrap">
-                  <span style="border:1px solid rgba(242,239,232,.3);border-radius:999px;padding:4px 11px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">需求辨識 ✓</span>
-                  <span style="border:1px solid rgba(242,239,232,.3);border-radius:999px;padding:4px 11px;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">時段保留 ✓</span>
-                  <span style="border:1px solid rgba(255,107,44,.55);border-radius:999px;padding:4px 11px;font:600 11px 'Noto Sans TC',sans-serif;color:#FF6B2C">重要 → 轉真人</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;background:rgba(242,239,232,.06);border:1px solid rgba(242,239,232,.1);border-radius:999px;padding:10px 14px">
-                  <span style="flex:1;font:400 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">輸入訊息…</span>
-                  <span style="width:28px;height:28px;border-radius:50%;background:#65E0BC;display:flex;align-items:center;justify-content:center;font:700 13px sans-serif;color:#090B0E">➤</span>
-                </div>
-              </div>
-              <!-- 1・CRM:客戶管線看板(欄位撐滿 + 卡片推進) -->
-              <div data-live-panel="1" style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:0">
-                <div style="display:flex;align-items:baseline;gap:8px"><span style="font:700 12px 'Noto Sans TC',sans-serif">客戶管線</span><span style="font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">共 18 位・本週新增 5</span></div>
-                <div style="position:relative;flex:1;display:flex;gap:10px">
-                  <div style="flex:1;background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><div style="display:flex;justify-content:space-between"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">新詢問</span><span style="font:700 10px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.4)">3</span></div><div style="background:rgba(242,239,232,.1);border-radius:4px;padding:8px;font:600 11px 'Noto Sans TC',sans-serif">吳傑奇・三房</div><div style="background:rgba(242,239,232,.08);border-radius:4px;padding:8px;font:500 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">李先生・辦公室</div></div>
-                  <div style="flex:1;background:rgba(62,155,255,.07);border:1px solid rgba(62,155,255,.3);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><div style="display:flex;justify-content:space-between"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:#3E9BFF">報價中</span><span style="font:700 10px 'Space Grotesk',sans-serif;color:rgba(62,155,255,.7)">2</span></div><div style="background:rgba(62,155,255,.14);border-radius:4px;padding:8px;font:600 11px 'Noto Sans TC',sans-serif">王小姐・DAY3</div></div>
-                  <div style="flex:1;background:rgba(101,224,188,.07);border:1px solid rgba(101,224,188,.3);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><div style="display:flex;justify-content:space-between"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:#65E0BC">已成交</span><span style="font:700 10px 'Space Grotesk',sans-serif;color:rgba(101,224,188,.7)">6</span></div><div style="background:rgba(101,224,188,.14);border-radius:4px;padding:8px;font:600 11px 'Noto Sans TC',sans-serif">林太太 ✓</div><div style="background:rgba(101,224,188,.1);border-radius:4px;padding:8px;font:500 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">陳老闆 ✓</div></div>
-                  <span style="position:absolute;top:54px;background:#FF6B2C;color:#090B0E;font:700 11px 'Noto Sans TC',sans-serif;padding:5px 10px;border-radius:4px;box-shadow:0 6px 16px rgba(0,0,0,.45);animation:pqAdvract 4.4s ease-in-out infinite">陳先生 → 自動跟進</span>
-                </div>
-                <p style="margin:0;font:500 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">每組客人在哪個階段、誰負責,一眼看清。</p>
-              </div>
-              <!-- 2・行銷:IG 貼文生成器 App(手機預覽 + 生成清單 + 排程) -->
-              <div data-live-panel="2" style="position:absolute;inset:0;padding:16px;display:flex;gap:14px;opacity:0">
-                <div style="width:158px;flex-shrink:0;background:#000;border:1px solid rgba(242,239,232,.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column">
-                  <div style="display:flex;align-items:center;gap:6px;padding:9px 10px">
-                    <span style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#FF6B2C,#65E0BC)"></span>
-                    <span style="font:700 10px 'Noto Sans TC',sans-serif;color:#F2EFE8">peakqi.studio</span>
-                    <span style="margin-left:auto;font:700 12px sans-serif;color:#F2EFE8">···</span>
-                  </div>
-                  <div style="position:relative;flex:1;min-height:120px;overflow:hidden;background:linear-gradient(135deg,rgba(255,107,44,.5),rgba(62,155,255,.45))">
-                    <span style="position:absolute;inset:0;background:linear-gradient(100deg,transparent 32%,rgba(242,239,232,.3) 50%,transparent 68%);animation:pqGenSweep 1.9s linear infinite"></span>
-                    <span style="position:absolute;right:14px;top:14px;width:16px;height:16px;border-radius:50%;background:rgba(242,239,232,.85)"></span>
-                    <span style="position:absolute;left:0;right:0;bottom:0;height:0;border-bottom:26px solid rgba(9,11,14,.35);border-left:64px solid transparent;border-right:64px solid transparent"></span>
-                  </div>
-                  <div style="display:flex;gap:10px;padding:8px 10px 3px;align-items:center">
-                    <span style="display:inline-block;color:#FF6B2C;font:15px sans-serif;animation:pqHeart 1.4s ease-in-out infinite">♥</span>
-                    <span style="color:#F2EFE8;font:12px sans-serif">💬</span>
-                    <span style="color:#F2EFE8;font:12px sans-serif">➤</span>
-                  </div>
-                  <div style="padding:0 10px 10px;display:flex;flex-direction:column;gap:5px">
-                    <span style="height:5px;width:90%;background:rgba(242,239,232,.35);border-radius:3px;transform-origin:left;animation:pqCapGrow 3.6s ease-in-out infinite"></span>
-                    <span style="height:5px;width:64%;background:rgba(242,239,232,.22);border-radius:3px;transform-origin:left;animation:pqCapGrow 3.6s ease-in-out infinite .4s"></span>
-                    <span style="font:600 9px 'Noto Sans TC',sans-serif;color:#3E9BFF;margin-top:2px">#到府服務 #本週限定</span>
-                  </div>
-                </div>
-                <div style="flex:1;display:flex;flex-direction:column;gap:10px">
-                  <span style="font:600 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">AI 內容生成中</span>
-                  <div style="display:flex;align-items:center;gap:8px;animation:pqSeqLit 3.6s ease-in-out infinite"><span style="width:17px;height:17px;border-radius:4px;background:rgba(255,107,44,.9);display:flex;align-items:center;justify-content:center;font:700 9px sans-serif;color:#090B0E">✓</span><span style="font:600 12px 'Noto Sans TC',sans-serif">圖片素材</span></div>
-                  <div style="display:flex;align-items:center;gap:8px;animation:pqSeqLit 3.6s ease-in-out infinite .5s"><span style="width:17px;height:17px;border-radius:4px;background:rgba(62,155,255,.9);display:flex;align-items:center;justify-content:center;font:700 9px sans-serif;color:#090B0E">✓</span><span style="font:600 12px 'Noto Sans TC',sans-serif">短影音</span></div>
-                  <div style="display:flex;align-items:center;gap:8px;animation:pqSeqLit 3.6s ease-in-out infinite 1s"><span style="width:17px;height:17px;border-radius:4px;background:rgba(101,224,188,.9);display:flex;align-items:center;justify-content:center;font:700 9px sans-serif;color:#090B0E">✓</span><span style="font:600 12px 'Noto Sans TC',sans-serif">圖文貼文</span></div>
-                  <div style="margin-top:6px;border-top:1px solid rgba(242,239,232,.1);padding-top:10px;display:flex;flex-direction:column;gap:7px;flex:1">
-                    <span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">本週排程</span>
-                    <div style="display:flex;align-items:center;gap:8px;font:500 11.5px 'Noto Sans TC',sans-serif"><span style="width:6px;height:6px;border-radius:50%;background:#FF6B2C"></span>週三 12:00・IG 貼文<span style="margin-left:auto;color:#65E0BC;font-size:10px">已排</span></div>
-                    <div style="display:flex;align-items:center;gap:8px;font:500 11.5px 'Noto Sans TC',sans-serif"><span style="width:6px;height:6px;border-radius:50%;background:#3E9BFF"></span>週五 18:00・短影音<span style="margin-left:auto;color:#65E0BC;font-size:10px">已排</span></div>
-                  </div>
-                  <span style="align-self:stretch;text-align:center;background:#FF6B2C;color:#090B0E;font:700 12px 'Noto Sans TC',sans-serif;padding:9px;border-radius:4px">一鍵發佈 / 排程</span>
-                </div>
-              </div>
-              <!-- 3・報價:自動算稅單(逐行帶入 + 總額換色 + 動作列) -->
-              <div data-live-panel="3" style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:0">
-                <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;flex-direction:column"><span style="font:700 12.5px 'Noto Sans TC',sans-serif">報價單 #Q-0715</span><span style="font:400 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">王小姐・到府清潔</span></div><span style="font:600 10px 'Space Grotesk',sans-serif;color:#65E0BC;letter-spacing:.1em;border:1px solid rgba(101,224,188,.4);padding:3px 8px;border-radius:2px">自動算稅</span></div>
-                <div style="flex:1;display:flex;flex-direction:column;gap:9px;padding-top:4px">
-                  <div style="display:flex;justify-content:space-between;animation:pqSeqLit 3.6s ease-in-out infinite"><span style="font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">到府基本服務</span><span style="font:600 12.5px 'Space Grotesk',sans-serif">12,000</span></div>
-                  <div style="display:flex;justify-content:space-between;animation:pqSeqLit 3.6s ease-in-out infinite .4s"><span style="font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">加購項目 ×2</span><span style="font:600 12.5px 'Space Grotesk',sans-serif">18,600</span></div>
-                  <div style="display:flex;justify-content:space-between;animation:pqSeqLit 3.6s ease-in-out infinite .8s"><span style="font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">深度清潔加購</span><span style="font:600 12.5px 'Space Grotesk',sans-serif">6,000</span></div>
-                  <div style="display:flex;justify-content:space-between;animation:pqSeqLit 3.6s ease-in-out infinite 1.2s"><span style="font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">營業稅 5%</span><span style="font:600 12.5px 'Space Grotesk',sans-serif">1,830</span></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(242,239,232,.14);padding-top:10px">
-                  <span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">總計(含稅)</span>
-                  <span style="font:700 21px 'Space Grotesk',sans-serif;animation:pqCountFlash 3.6s ease-in-out infinite">NT$ 38,430</span>
-                </div>
-                <div style="display:flex;gap:8px">
-                  <span style="flex:1;text-align:center;background:#FF6B2C;color:#090B0E;font:700 12px 'Noto Sans TC',sans-serif;padding:10px;border-radius:4px">寄給客戶</span>
-                  <span style="text-align:center;border:1px solid rgba(242,239,232,.3);color:#F2EFE8;font:600 12px 'Noto Sans TC',sans-serif;padding:10px 16px;border-radius:4px">下載 PDF</span>
-                </div>
-              </div>
-              <!-- 4・專案:看板(欄位撐滿 + 卡片推進 + 進度) -->
-              <div data-live-panel="4" style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:0">
-                <div style="display:flex;align-items:baseline;gap:8px"><span style="font:700 12px 'Noto Sans TC',sans-serif">專案看板</span><span style="font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">到府清潔・王小姐案</span></div>
-                <div style="position:relative;flex:1;display:flex;gap:10px">
-                  <div style="flex:1;background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">待辦</span><div style="background:rgba(242,239,232,.12);border-radius:4px;padding:8px;font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)">確認清潔範圍</div><div style="background:rgba(242,239,232,.09);border-radius:4px;padding:8px;font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">排派人員</div></div>
-                  <div style="flex:1;background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:#3E9BFF">進行中</span><div style="background:rgba(62,155,255,.28);border-radius:4px;padding:8px;font:500 10.5px 'Noto Sans TC',sans-serif;color:#F2EFE8">寄出報價單</div></div>
-                  <div style="flex:1;background:rgba(242,239,232,.05);border:1px solid rgba(242,239,232,.12);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:7px"><span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:#65E0BC">完成</span><div style="background:rgba(101,224,188,.3);border-radius:4px;padding:8px;font:500 10.5px 'Noto Sans TC',sans-serif;color:#F2EFE8">建立客戶卡 ✓</div><div style="background:rgba(101,224,188,.18);border-radius:4px;padding:8px;font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">保留時段 ✓</div></div>
-                  <span style="position:absolute;top:46px;background:#FF6B2C;color:#090B0E;font:700 11px 'Noto Sans TC',sans-serif;padding:5px 10px;border-radius:4px;box-shadow:0 6px 16px rgba(0,0,0,.45);animation:pqAdvract 5s ease-in-out infinite">報價案</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px"><span style="font:500 10.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">進度 60%</span><div style="flex:1;height:5px;background:rgba(242,239,232,.1);border-radius:3px;overflow:hidden"><span style="display:block;height:100%;background:#65E0BC;transform-origin:left;animation:pqCapGrow 5s ease-in-out infinite"></span></div></div>
-              </div>
-              <!-- 5・數據:營運儀表板(KPI 列 + 長條 + 來源列) -->
-              <div data-live-panel="5" style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:12px;opacity:0">
-                <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 12px 'Noto Sans TC',sans-serif">本月營運儀表板</span><span style="font:700 13px 'Space Grotesk',sans-serif;color:#65E0BC;animation:pqCountFlash 3s ease-in-out infinite">轉換 18% ↑</span></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-                  <div style="background:rgba(242,239,232,.05);border-radius:5px;padding:10px 12px"><span style="font:700 17px 'Space Grotesk',sans-serif">128</span><span style="display:block;font:400 10px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">本月新客</span></div>
-                  <div style="background:rgba(242,239,232,.05);border-radius:5px;padding:10px 12px"><span style="font:700 17px 'Space Grotesk',sans-serif;color:#3E9BFF">28s</span><span style="display:block;font:400 10px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">平均回覆</span></div>
-                  <div style="background:rgba(242,239,232,.05);border-radius:5px;padding:10px 12px"><span style="font:700 17px 'Space Grotesk',sans-serif;color:#FF6B2C">NT$92K</span><span style="display:block;font:400 10px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">本月成交</span></div>
-                </div>
-                <div style="flex:1;display:flex;align-items:flex-end;gap:10px;min-height:80px">
-                  <span style="flex:1;height:100%;background:rgba(62,155,255,.55);border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite"></span>
-                  <span style="flex:1;height:100%;background:rgba(62,155,255,.75);border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite .3s"></span>
-                  <span style="flex:1;height:100%;background:rgba(101,224,188,.7);border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite .6s"></span>
-                  <span style="flex:1;height:100%;background:#FF6B2C;border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite .9s"></span>
-                  <span style="flex:1;height:100%;background:rgba(62,155,255,.6);border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite 1.2s"></span>
-                  <span style="flex:1;height:100%;background:rgba(101,224,188,.6);border-radius:4px 4px 0 0;transform-origin:bottom;animation:pqBarBreath 2.6s ease-in-out infinite 1.5s"></span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font:500 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6);border-top:1px solid rgba(242,239,232,.1);padding-top:9px"><span>來源 · LINE 42% / IG 33% / 官網 25%</span><span style="color:#65E0BC">AI 月報已生成 ✓</span></div>
-              </div>
-            </div>
-            <span data-live-link aria-hidden="true" style="position:absolute;right:-19px;top:12%;width:19px;height:2px;background:#FF6B2C;transition:top 240ms cubic-bezier(0.16,1,0.3,1)"></span>
-          </div>
-          <div id="pq-live-items" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
-            <sc-for list="{{ liveItems }}" as="m" hint-placeholder-count="6">
-              <div data-live-item="{{ m.i }}" data-name="{{ m.name }}" style="border:1px solid rgba(9,11,14,.16);border-radius:6px;background:#F2EFE8;padding:14px 16px;display:flex;flex-direction:column;gap:4px">
-                <div style="display:flex;align-items:baseline;gap:10px">
-                  <span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.n }}</span>
-                  <span style="font:800 15.5px 'Noto Sans TC',sans-serif">{{ m.name }}</span>
-                </div>
-                <span style="font:400 12.5px/1.6 'Noto Sans TC',sans-serif;opacity:.72">{{ m.tag }}</span>
-              </div>
-            </sc-for>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="relay" data-screen-label="Data Relay" style="background:#F2EFE8">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
-      <div style="max-width:1360px;margin:0 auto;width:100%">
-        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">DATA RELAY</span>
-        <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">一筆詢問,在系統裡跑完全程</h2>
-        <div style="position:relative;margin-top:clamp(28px,4vw,48px);height:3px;background:rgba(9,11,14,.12);border-radius:999px" aria-hidden="true">
-          <div data-rfill style="position:absolute;inset:0;background:linear-gradient(90deg,#FF6B2C,#3E9BFF);border-radius:999px;transform-origin:left center"></div>
-          <span data-rpack style="position:absolute;top:-5px;left:2%;width:13px;height:13px;border-radius:50%;background:#FF6B2C;box-shadow:0 0 0 4px rgba(255,107,44,.18)"></span>
-          <!-- 子動畫:資料封包在軌道上持續接力(獨立於捲動母動畫) -->
-          <span style="position:absolute;top:-4px;width:11px;height:11px;border-radius:50%;background:#65E0BC;box-shadow:0 0 8px 2px rgba(101,224,188,.5);animation:pqPktA 3s linear infinite"></span>
-          <span style="position:absolute;top:-3px;width:9px;height:9px;border-radius:50%;background:#3E9BFF;animation:pqPktA 3s linear infinite 1.5s"></span>
-        </div>
-        <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px">
-          <sc-for list="{{ relay }}" as="r" hint-placeholder-count="6">
-            <div data-rstation style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:16px;display:flex;flex-direction:column;gap:8px">
-              <span data-rchip style="align-self:flex-start;border:1px solid #090B0E;background:#090B0E;color:#65E0BC;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.14em;padding:3px 9px;border-radius:2px">{{ r.s }}</span>
-              <span style="font:800 16px 'Noto Sans TC',sans-serif">{{ r.t }}</span>
-              <span style="font:400 12.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ r.d }}</span>
-            </div>
-          </sc-for>
-        </div>
-        <p style="margin:18px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">每一站都在同一個後台,不用換工具、不用重打資料。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="features" data-screen-label="功能總覽" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">04</span>
+<!-- ============ 雙軌敘事 ============ -->
+<section id="dualtrack" class="pq-sec" style="background:#F2EFE8">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px">
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">MODULE MAP</span>
+      <span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">DUAL-TRACK VALIDATION</span>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">功能總覽</h2>
-      <p style="margin:0;max-width:400px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">六個核心模組,裝在同一個後台。每個模組先說結果,再看功能。</p>
-    </div>
-    <div id="pq-orbit" ref="{{ orbitBox }}" style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:minmax(420px,1.15fr) minmax(320px,.85fr);gap:clamp(24px,3vw,48px);align-items:center">
-      <div role="tablist" aria-label="六個核心模組" onKeyDown="{{ orbitKeys }}" style="position:relative;height:470px">
-        <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 600 460" fill="none" preserveAspectRatio="xMidYMid meet">
-          <ellipse cx="300" cy="230" rx="238" ry="164" stroke="rgba(9,11,14,.22)" stroke-dasharray="3 8"></ellipse>
-          <line x1="300" y1="230" x2="{{ orbX }}" y2="{{ orbY }}" stroke="#FF6B2C" stroke-width="1.5" stroke-dasharray="4 6"></line>
-        </svg>
-        <div ref="{{ orbitCore }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:152px;height:152px;border-radius:50%;border:2px solid #FF6B2C;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:1;text-align:center">
-          <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">PEAKQI</span>
-          <span style="font:800 16.5px 'Noto Sans TC',sans-serif">AI 營運核心</span>
-          <span style="display:inline-flex;align-items:center;gap:6px;font:500 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)"><span style="width:6px;height:6px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>24h 在線</span>
-        </div>
-        <sc-for list="{{ orbitMods }}" as="m" hint-placeholder-count="6">
-          <button role="tab" aria-selected="{{ m.ariaSel }}" onClick="{{ m.pick }}" style="{{ m.chipStyle }}" style-hover="border-color:#FF6B2C">
-            <span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.n }}</span>
-            <span style="font:800 15px 'Noto Sans TC',sans-serif">{{ m.name }}</span>
-          </button>
-        </sc-for>
+    <h2 data-reveal style="margin:16px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">同一套引擎,兩條軌道一起驗證</h2>
+    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:stretch">
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#fff;display:flex;flex-direction:column;gap:12px">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">TRACK A</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">自家垂直品牌</h3>
+        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">冒泡、AI Wedding Pro、AI Interior Pro 深入產業,累積真實 know-how 與資料飛輪——越用越強,證明產品好用、有真實產業經驗與付費用戶。</p>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:999px;background:rgba(62,155,255,.14);overflow:hidden;position:relative"><span style="position:absolute;inset:0 40% 0 0;background:#3E9BFF;border-radius:999px"></span></span><span style="font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">產業 know-how ↑</span></div>
       </div>
-      <div role="tabpanel" aria-live="polite" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.1);padding:clamp(24px,2.6vw,32px);display:flex;flex-direction:column;gap:13px;min-height:320px">
-        <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">MODULE {{ selN }}</span>
-        <h3 style="margin:0;font:900 clamp(1.5rem,2.2vw,1.9rem) 'Noto Sans TC',sans-serif">{{ selName }}</h3>
-        <p style="margin:0;font:700 15.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ selTag }}</p>
-        <div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid rgba(9,11,14,.12);padding-top:14px">
-          <sc-for list="{{ selItems }}" as="it" hint-placeholder-count="3">
-            <div style="display:flex;gap:10px;align-items:baseline">
-              <span style="width:5px;height:5px;background:#FF6B2C;flex-shrink:0"></span>
-              <span style="font:400 14.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)">{{ it }}</span>
-            </div>
-          </sc-for>
-        </div>
-        <span style="margin-top:auto;font:400 12px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">提示:鍵盤 ← → 可切換模組</span>
-        <a href="Solutions.dc.html" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">看功能怎麼搭配 →</a>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#fff;display:flex;flex-direction:column;gap:12px">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">TRACK B</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">Peak Ops 外部客戶</h3>
+        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">通用型 AI 業務工具,對外賣給還沒有專門工具的產業——年訂閱制、SaaS ARR 成長,證明市場願意買、可規模化。</p>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:999px;background:rgba(255,107,44,.14);overflow:hidden;position:relative"><span style="position:absolute;inset:0 25% 0 0;background:#FF6B2C;border-radius:999px"></span></span><span style="font:600 11px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">SaaS ARR ↑</span></div>
       </div>
-    </div>
-    <div id="pq-orbitrow" style="margin-top:24px">
-      <div data-orbrow style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
-        <div style="border-radius:8px;background:#090B0E;color:#F2EFE8;border:1.5px solid #FF6B2C;padding:20px;display:flex;flex-direction:column;gap:6px;text-align:center">
-          <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">PEAKQI</span>
-          <span style="font:800 18px 'Noto Sans TC',sans-serif">AI 營運核心</span>
-          <span style="font:500 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">六個模組,同一個後台</span>
-        </div>
-        <sc-for list="{{ mods }}" as="m" hint-placeholder-count="6">
-          <div data-orbcard style="background:#F2EFE8;border:1px solid rgba(9,11,14,.16);border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:9px">
-            <span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.n }}</span>
-            <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">{{ m.name }}</h3>
-            <span style="font:600 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ m.tag }}</span>
-            <div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(9,11,14,.1);padding-top:10px">
-              <sc-for list="{{ m.items }}" as="it" hint-placeholder-count="3">
-                <span style="display:flex;gap:8px;align-items:baseline;font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)"><span style="width:4px;height:4px;background:#FF6B2C;flex-shrink:0"></span>{{ it }}</span>
-              </sc-for>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-    </div>
-    <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-      <span style="font:600 12px 'Noto Sans TC',sans-serif;letter-spacing:.1em;color:rgba(9,11,14,.5)">基礎支援模組</span>
-      <sc-for list="{{ base }}" as="b" hint-placeholder-count="5">
-        <span style="border:1px solid rgba(9,11,14,.18);border-radius:999px;padding:6px 14px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">{{ b }}</span>
-      </sc-for>
-      <a href="Solutions.dc.html" style="margin-left:auto;font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">看功能怎麼搭配 →</a>
-    </div>
-  </div>
-</section>
-
-<section id="cases" data-screen-label="實際案例" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">05</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CASE STUDIES</span>
-    </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">實際案例與成果</h2>
-    <div style="margin-top:clamp(28px,4vw,44px);display:flex;flex-direction:column">
-      <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
-        <div style="border-top:1px solid rgba(9,11,14,.16);padding:30px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:24px">
-          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
-            <span style="border:1px solid rgba(9,11,14,.25);border-radius:999px;padding:5px 13px;font:500 12px 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(9,11,14,.65)">{{ c.industry }}</span>
-            <h3 style="margin:0;font:800 20px/1.4 'Noto Sans TC',sans-serif">{{ c.title }}</h3>
-            <sc-if value="{{ c.hasImg }}" hint-placeholder-val="{{ false }}">
-              <div data-caseimg data-src="{{ c.img }}" role="img" aria-label="{{ c.alt }}" style="width:100%;max-width:320px;height:130px;border-radius:6px;overflow:hidden;background:#090B0E">
-                <div style="{{ c.imgBg }}"></div>
-              </div>
-            </sc-if>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <div>
-              <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本卡在</span>
-              <p style="margin:6px 0 0;font:400 14.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">{{ c.stuck }}</p>
-            </div>
-            <div>
-              <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 我們做了</span>
-              <p style="margin:6px 0 0;font:400 14.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ c.did }}</p>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 該案例成果</span>
-            <sc-for list="{{ c.metrics }}" as="m" hint-placeholder-count="3">
-              <div style="display:flex;align-items:baseline;gap:12px;border-bottom:1px dashed rgba(9,11,14,.18);padding-bottom:8px">
-                <span data-count style="font:700 21px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:96px;font-variant-numeric:tabular-nums">{{ m.v }}</span>
-                <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ m.l }}</span>
-              </div>
-            </sc-for>
-            <a href="{{ c.demoHref }}" style="font:700 13.5px 'Noto Sans TC',sans-serif;text-decoration:none;margin-top:2px">把這個流程套用到我的公司 →</a>
-          </div>
-        </div>
-      </sc-for>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;border-top:1px solid rgba(9,11,14,.16);padding-top:20px">
-      <span style="font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);max-width:560px">※ {{ caseNote }}</span>
-      <a href="Cases.dc.html" style="font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none">看完整案例與更多實績 →</a>
-    </div>
-  </div>
-</section>
-
-<div data-divider="aperture" aria-hidden="true" style="position:relative;height:120px;background:#090B0E;overflow:hidden;display:flex;align-items:center;justify-content:center">
-  <div data-ap style="position:absolute;inset:10px;background-image:linear-gradient(rgba(242,239,232,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.06) 1px,transparent 1px);background-size:40px 40px;border:1px solid rgba(242,239,232,.14)"></div>
-  <span data-label style="position:relative;font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.6)">RESULT WALL — 做出來的東西</span>
-</div>
-
-<section id="portfolio" data-screen-label="精選作品" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">06</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">SELECTED WORKS</span>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">精選作品</h2>
-      <div style="display:flex;align-items:center;gap:16px">
-        <div style="display:flex;gap:8px">
-          <button onClick="{{ galPrevClick }}" aria-label="上一個作品" style="width:42px;height:42px;border-radius:50%;border:1px solid rgba(9,11,14,.3);background:transparent;cursor:pointer;font:600 16px 'Space Grotesk',sans-serif;color:#090B0E" style-hover="border-color:#FF6B2C;color:#FF6B2C">←</button>
-          <button onClick="{{ galNextClick }}" aria-label="下一個作品" style="width:42px;height:42px;border-radius:50%;border:1px solid rgba(9,11,14,.3);background:transparent;cursor:pointer;font:600 16px 'Space Grotesk',sans-serif;color:#090B0E" style-hover="border-color:#FF6B2C;color:#FF6B2C">→</button>
-        </div>
-        <a href="Cases.dc.html#portfolio" style="font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none">瀏覽全部 30+ 實績 →</a>
-      </div>
-    </div>
-  </div>
-  <div ref="{{ galWrap }}">
-   <div ref="{{ galStage }}" style="padding-top:clamp(28px,4vw,44px)">
-    <div ref="{{ galScroller }}" tabindex="0" role="region" aria-label="精選作品展廊,可用左右方向鍵瀏覽" style="max-width:1360px;margin:0 auto;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:10px">
-     <div ref="{{ galTrack }}" style="display:flex;gap:14px;min-width:min-content">
-      <sc-for list="{{ works }}" as="w" hint-placeholder-count="0">
-        <a href="{{ w.href }}" target="{{ w.target }}" rel="noopener" data-tilt style="scroll-snap-align:start;min-width:300px;max-width:300px;background:#090B0E;color:#F2EFE8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;border:1px solid rgba(242,239,232,.1)" style-hover="border-color:#FF6B2C">
-          <sc-if value="{{ w.hasImg }}" hint-placeholder-val="{{ false }}">
-            <div role="img" aria-label="{{ w.alt }}" style="{{ w.imgBoxStyle }}"><div data-bg="{{ w.img }}" style="{{ w.imgInnerStyle }}"></div></div>
-          </sc-if>
-          <div style="display:flex;flex-direction:column;gap:9px;padding:18px 20px 20px;flex:1">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
-              <span style="font:700 12px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.4)">{{ w.idx }}</span>
-              <span style="font:600 10.5px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ w.cat }}</span>
-            </div>
-            <span style="font:800 17px/1.35 'Noto Sans TC',sans-serif">{{ w.t }}</span>
-            <span style="font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ w.problem }}<br>→ {{ w.solution }}</span>
-            <div style="display:flex;flex-direction:column;gap:5px">
-              <sc-for list="{{ w.results }}" as="r" hint-placeholder-count="0">
-                <span style="display:flex;gap:8px;align-items:baseline;font:600 12.5px 'Noto Sans TC',sans-serif;color:#65E0BC"><span style="width:4px;height:4px;background:#65E0BC;flex-shrink:0"></span>{{ r }}</span>
-              </sc-for>
-            </div>
-            <span style="font:500 12px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.45);margin-top:auto;padding-top:8px">{{ w.linkLabel }}</span>
-          </div>
-        </a>
-      </sc-for>
-     </div>
-    </div>
-   </div>
-  </div>
-</section>
-
-<section id="compare" data-screen-label="三種解決方式比較" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">07</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">WHY PEAKQI</span>
-    </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">三種解決方式,一次比清楚</h2>
-    <div id="pq-cmp-desk" style="margin-top:clamp(32px,4vw,48px);overflow-x:auto">
-      <div style="min-width:760px;display:grid;grid-template-columns:120px 1fr 1fr 1.15fr;border:1px solid rgba(9,11,14,.16);border-radius:6px;overflow:hidden">
-        <div style="padding:18px 16px;background:rgba(9,11,14,.04)"></div>
-        <div style="padding:18px 16px;background:rgba(9,11,14,.04);font:700 15px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);border-left:1px solid rgba(9,11,14,.12)">找工程師完整客製</div>
-        <div style="padding:18px 16px;background:rgba(9,11,14,.04);font:700 15px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);border-left:1px solid rgba(9,11,14,.12)">單一客服機器人</div>
-        <div style="padding:18px 16px;background:#090B0E;color:#F2EFE8;font:700 15px 'Noto Sans TC',sans-serif;border-left:2px solid #FF6B2C;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden">奇鋒 PeakQi<span style="background:#FF6B2C;color:#090B0E;font:700 10.5px 'Noto Sans TC',sans-serif;padding:3px 8px;border-radius:999px">推薦</span><span data-sweeper style="position:absolute;top:0;bottom:0;left:0;width:36%;background:linear-gradient(90deg,transparent,rgba(255,107,44,.28),transparent);transform:translateX(-120%) skewX(-18deg);pointer-events:none"></span></div>
-        <sc-for list="{{ compareRows }}" as="r" hint-placeholder-count="4">
-          <div style="display:contents">
-            <div style="padding:17px 16px;border-top:1px solid rgba(9,11,14,.12);font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">{{ r.dim }}</div>
-            <div style="padding:17px 16px;border-top:1px solid rgba(9,11,14,.12);border-left:1px solid rgba(9,11,14,.12);font:400 14.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)">{{ r.a }}</div>
-            <div style="padding:17px 16px;border-top:1px solid rgba(9,11,14,.12);border-left:1px solid rgba(9,11,14,.12);font:400 14.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)">{{ r.b }}</div>
-            <div style="padding:17px 16px;border-top:1px solid rgba(242,239,232,.14);border-left:2px solid #FF6B2C;background:#090B0E;color:#F2EFE8;font:600 14.5px/1.65 'Noto Sans TC',sans-serif">{{ r.c }}</div>
-          </div>
-        </sc-for>
-      </div>
-    </div>
-    <div id="pq-cmp-mob" style="margin-top:clamp(32px,4vw,48px);display:flex;flex-direction:column;gap:14px">
-      <sc-for list="{{ compareCards }}" as="cc" hint-placeholder-count="3">
-        <div style="{{ cc.cardStyle }}">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="{{ cc.nameStyle }}">{{ cc.name }}</span>
-            <sc-if value="{{ cc.hot }}" hint-placeholder-val="{{ false }}">
-              <span style="background:#FF6B2C;color:#090B0E;font:700 10.5px 'Noto Sans TC',sans-serif;padding:3px 8px;border-radius:999px">推薦</span>
-            </sc-if>
-          </div>
-          <sc-for list="{{ cc.rows }}" as="r" hint-placeholder-count="4">
-            <div style="{{ cc.rowStyle }}">
-              <span style="{{ cc.dimStyle }}">{{ r.dim }}</span>
-              <span style="{{ cc.valStyle }}">{{ r.val }}</span>
-            </div>
-          </sc-for>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-</section>
-
-<section id="pricing" data-screen-label="方案與價格" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">08</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">PLANS &amp; PRICING</span>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">快速選擇方案</h2>
-      <p style="margin:0;max-width:380px;font:400 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ planNote }}</p>
-    </div>
-    <div style="margin-top:clamp(28px,4vw,40px);display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
-      <div role="tablist" aria-label="方案切換" onKeyDown="{{ planKeys }}" style="display:inline-flex;gap:6px;background:rgba(9,11,14,.06);border:1px solid rgba(9,11,14,.14);border-radius:999px;padding:5px">
-        <sc-for list="{{ planTabs }}" as="t" hint-placeholder-count="3">
-          <button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
-        </sc-for>
-      </div>
-      <div aria-live="polite" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <span style="font:600 12px 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(9,11,14,.5)">這個方案的系統範圍</span>
-        <sc-for list="{{ planViz }}" as="v" hint-placeholder-count="6">
-          <span style="{{ v.style }}">{{ v.name }}</span>
-        </sc-for>
-        <sc-if value="{{ vizConsole }}" hint-placeholder-val="{{ false }}">
-          <span style="border:1.5px solid #FF6B2C;color:#FF6B2C;background:rgba(255,107,44,.07);border-radius:999px;padding:6px 14px;font:700 12.5px 'Noto Sans TC',sans-serif">營運控制台 ✓</span>
-        </sc-if>
-      </div>
-    </div>
-    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr));gap:16px;align-items:stretch">
-      <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
-        <div onClick="{{ p.select }}" data-tilt style="{{ p.cardStyle }}">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="{{ p.codeStyle }}">{{ p.code }}</span>
-            <span style="{{ p.nameStyle }}">{{ p.name }}</span>
-            <sc-if value="{{ p.featured }}" hint-placeholder-val="{{ false }}">
-              <span style="margin-left:auto;background:#FF6B2C;color:#090B0E;font:700 11px 'Noto Sans TC',sans-serif;letter-spacing:.06em;padding:4px 10px;border-radius:999px">最多人選</span>
-            </sc-if>
-          </div>
-          <div style="{{ p.setupBoxStyle }}">
-            <span style="{{ p.smallLabelStyle }}">建置費(一次性)</span>
-            <div style="display:flex;align-items:baseline;gap:5px">
-              <span style="{{ p.currencyStyle }}">NT$</span>
-              <span style="{{ p.setupStyle }}">{{ p.setup }}</span>
-            </div>
-            <div style="display:flex;align-items:baseline;gap:8px">
-              <span style="{{ p.smallLabelStyle }}">月費</span>
-              <span style="font:700 19px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ p.monthly }}</span>
-              <span style="{{ p.smallLabelStyle }}">元起</span>
-            </div>
-          </div>
-          <sc-if value="{{ p.hasBase }}" hint-placeholder-val="{{ false }}">
-            <span style="{{ p.baseStyle }}">{{ p.base }}</span>
-          </sc-if>
-          <div style="display:flex;flex-direction:column;gap:9px">
-            <sc-for list="{{ p.items }}" as="it" hint-placeholder-count="4">
-              <div style="display:flex;gap:10px;align-items:baseline">
-                <span style="font:700 12px 'Space Grotesk',sans-serif;color:#FF6B2C">+</span>
-                <span style="{{ p.itemStyle }}">{{ it }}</span>
-              </div>
-            </sc-for>
-          </div>
-          <a href="Demo.dc.html" data-cta style="{{ p.btnStyle }}" style-hover="{{ p.btnHover }}">用我的場景試一次 <span data-arrow>→</span></a>
-        </div>
-      </sc-for>
-    </div>
-    <div style="margin-top:18px;background:#090B0E;color:#F2EFE8;border-radius:6px;padding:26px clamp(20px,3vw,36px);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">請一位真人助理</span>
-        <div style="display:flex;align-items:baseline;gap:6px">
-          <span style="font:700 clamp(1.7rem,3vw,2.3rem) 'Space Grotesk',sans-serif">35,000</span>
-          <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">元起/月薪</span>
-        </div>
-      </div>
-      <span style="width:46px;height:46px;border:1.5px solid #FF6B2C;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;flex-shrink:0">VS</span>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">這套系統</span>
-        <div style="display:flex;align-items:baseline;gap:6px">
-          <span style="font:700 clamp(1.7rem,3vw,2.3rem) 'Space Grotesk',sans-serif;color:#FF6B2C">5,000</span>
-          <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">元起/月費</span>
-        </div>
-      </div>
-      <span style="font:700 clamp(15px,1.6vw,18px) 'Noto Sans TC',sans-serif;max-width:300px">還幫你 <span style="color:#65E0BC">24 小時</span>顧前線。</span>
-    </div>
-    <div style="margin-top:18px;border:1px solid rgba(9,11,14,.16);border-radius:6px;padding:26px clamp(20px,3vw,36px);display:flex;flex-direction:column;gap:18px;background:#F2EFE8">
-      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:baseline">
-        <h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">標準模組不夠?整套客製系統我們也做</h3>
-        <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">{{ customNote }}</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
-        <sc-for list="{{ customs }}" as="c" hint-placeholder-count="4">
-          <div style="border:1px dashed rgba(9,11,14,.25);border-radius:4px;padding:16px;display:flex;flex-direction:column;gap:4px">
-            <span style="font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">{{ c.s }}</span>
-            <span style="font:700 20px 'Space Grotesk',sans-serif">{{ c.r }}</span>
-          </div>
-        </sc-for>
-      </div>
-      <p style="margin:0;font:400 13.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ customCred }}</p>
-    </div>
-  </div>
-</section>
-
-<section id="usage" data-screen-label="AI 使用量說明" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,64px)">
-    <div>
-      <div style="display:flex;align-items:center;gap:14px">
-        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">09</span>
-        <span style="width:36px;height:1px;background:#FF6B2C"></span>
-        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">USAGE &amp; BILLING</span>
-      </div>
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.6rem)/1.2 'Noto Sans TC',sans-serif">AI 使用量,<br>不用怕隱形收費</h2>
-      <p style="margin:22px 0 0;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);max-width:420px">講清楚,才不會有意外帳單。{{ usageNote }}</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
-      <sc-for list="{{ usageList }}" as="u" hint-placeholder-count="2">
-        <div onKeyDown="{{ u.esc }}" style="border:1px solid rgba(9,11,14,.14);border-radius:4px;padding:24px 24px 24px 0;display:flex;gap:22px;background:rgba(9,11,14,.02)">
-          <span style="{{ u.barStyle }}"></span>
-          <div style="display:flex;flex-direction:column;gap:10px;flex:1">
-            <div style="display:flex;align-items:center;gap:10px">
-              <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">{{ u.t }}</h3>
-              <button onClick="{{ u.tipToggle }}" aria-expanded="{{ u.tipExpanded }}" aria-controls="{{ u.tipId }}" aria-label="計費說明" style="width:26px;height:26px;border-radius:50%;border:1px solid rgba(9,11,14,.3);background:transparent;cursor:pointer;font:600 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.65);flex-shrink:0" style-hover="border-color:#FF6B2C;color:#FF6B2C">i</button>
-            </div>
-            <p style="margin:0;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">{{ u.d }}</p>
-            <div style="display:flex;align-items:center;gap:10px" aria-hidden="true">
-              <div style="display:flex;gap:3px;flex:1;max-width:220px">
-                <sc-for list="{{ u.cells }}" as="c" hint-placeholder-count="12">
-                  <span style="{{ c.style }}"></span>
-                </sc-for>
-              </div>
-              <span style="{{ u.meterLabelStyle }}">{{ u.meterLabel }}</span>
-            </div>
-            <sc-if value="{{ u.tipOpen }}" hint-placeholder-val="{{ false }}">
-              <div id="{{ u.tipId }}" role="note" style="background:#090B0E;color:#F2EFE8;border-radius:4px;padding:12px 14px;font:400 13px/1.7 'Noto Sans TC',sans-serif">{{ u.tip }}<span style="display:block;margin-top:4px;color:rgba(242,239,232,.5);font-size:11.5px">Esc 關閉</span></div>
-            </sc-if>
-          </div>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-</section>
-
-<section id="timeline" data-screen-label="上線流程" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">10</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">GO-LIVE TIMELINE</span>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">最快 <span style="color:#FF6B2C;font-family:'Space Grotesk',sans-serif">10</span> 個工作天上線</h2>
-      <p style="margin:0;font:400 14px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ timelineNote }}</p>
-    </div>
-    <div style="margin-top:clamp(40px,5vw,60px);overflow-x:auto;padding-bottom:8px">
-      <div id="pq-tl" style="display:flex;min-width:820px;position:relative">
-        <span data-tline aria-hidden="true" style="position:absolute;left:0;top:-2px;width:100%;height:2px;background:#FF6B2C;transform-origin:left center;z-index:1"></span>
-        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
-          <div data-tstep style="flex:1;border-top:2px solid rgba(242,239,232,.18);position:relative;padding:22px 20px 0 2px">
-            <span data-dot style="{{ s.dotStyle }}"></span>
-            <div style="font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:#FF6B2C">{{ s.d }}</div>
-            <p style="margin:8px 0 0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72);max-width:200px">{{ s.t }}</p>
-          </div>
-        </sc-for>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:10px;padding:28px;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;gap:12px">
+        <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">PLATFORM</span>
+        <h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">AI 營運平台</h3>
+        <p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">兩條軌道都餵養同一顆引擎與同一份資料飛輪。品牌屋結構下,每個垂直品牌都能獨立分拆或出售。</p>
+        <span style="margin-top:auto;font:600 11px 'Noto Sans TC',sans-serif;color:rgba(101,224,188,.85)">一套引擎 · 持續累積的技術資產</span>
       </div>
     </div>
   </div>
 </section>
 
-<section id="risk" data-screen-label="低風險機制" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">11</span>
-      <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">LOW RISK</span>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">三個理由,讓你幾乎零風險</h2>
-      <p style="margin:0;font:500 15px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">不推銷、不綁約,降低你的風險。</p>
-    </div>
-    <div style="margin-top:clamp(32px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
-      <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
-        <div style="border:1px solid rgba(9,11,14,.14);border-radius:4px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;background:rgba(9,11,14,.02)">
-          <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">{{ r.n }}</span>
-          <h3 style="margin:0;font:900 21px 'Noto Sans TC',sans-serif">{{ r.t }}</h3>
-          <p style="margin:0;font:400 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">{{ r.d }}</p>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-</section>
-
-<section id="faq" data-screen-label="常見問題" style="padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
-  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,72px)">
-    <div>
-      <div style="display:flex;align-items:center;gap:14px">
-        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">12</span>
-        <span style="width:36px;height:1px;background:#FF6B2C"></span>
-        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FAQ</span>
+<!-- ============ 品牌屋(四品牌卡) ============ -->
+<section id="brands" data-screen-label="品牌屋" class="pq-sec" style="background:rgba(9,11,14,.035)">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between">
+      <div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">BRAND HOUSE</span></div>
+        <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">旗下品牌</h2>
       </div>
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.4vw,3.6rem)/1.2 'Noto Sans TC',sans-serif">常見問題</h2>
-      <p style="margin:22px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:380px">還有其他想確認的?15 分鐘 Demo 裡直接用你的場景回答。</p>
-      <a href="Demo.dc.html" style="margin-top:18px;display:inline-flex;font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none">預約 Demo →</a>
+      <p style="margin:0;max-width:360px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套底層引擎,換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
     </div>
-    <div style="display:flex;flex-direction:column">
-      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="8">
-        <details style="border-bottom:1px solid rgba(9,11,14,.16)">
-          <summary style="cursor:pointer;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;font:700 17px 'Noto Sans TC',sans-serif;list-style:none">
-            {{ f.q }}
-            <span style="font:500 22px 'Space Grotesk',sans-serif;color:#FF6B2C;flex-shrink:0">+</span>
-          </summary>
-          <p style="margin:0 0 24px;font:400 15px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:620px">{{ f.a }}</p>
-        </details>
-      </sc-for>
+    <div style="margin-top:clamp(24px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px" id="pq-brand-grid">
+      <a data-reveal data-brand href="PeakOps.dc.html" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+        <span aria-hidden="true" style="position:absolute;left:0;top:0;width:38%;height:3px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqSweep 3s linear infinite"></span>
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">GENERAL SaaS</span></div>
+        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">Peak Ops</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">通用型 AI 業務工具,給還沒有專門工具的產業:接客、追客、養客、報價、數據一套整合。</p>
+        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">了解更多 →</span>
+      </a>
+      <a data-reveal data-brand href="https://bubble.tw" target="_blank" rel="noopener" style="--a:#3E9BFF;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#3E9BFF"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">REAL ESTATE</span></div>
+        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">冒泡</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
+        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#3E9BFF">了解更多 →</span>
+      </a>
+      <a data-reveal data-brand href="https://aiweddingpro.com" target="_blank" rel="noopener" style="--a:#E06B9C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#E06B9C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">WEDDING</span></div>
+        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Wedding Pro</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
+        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#E06B9C">了解更多 →</span>
+      </a>
+      <a data-reveal data-brand href="https://aiinteriorpro.com" target="_blank" rel="noopener" style="--a:#65E0BC;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#1e9a72"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#1e9a72">INTERIOR</span></div>
+        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Interior Pro</h3>
+        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
+        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#1e9a72">了解更多 →</span>
+      </a>
+    </div>
+    <p data-reveal style="margin:20px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品。</p>
+  </div>
+</section>
+
+<!-- ============ 跨產業案例牆 ============ -->
+<section id="cases" data-screen-label="案例" class="pq-sec" style="background:#090B0E;color:#F2EFE8">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">CASE STUDIES</span></div>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">跨產業實戰成效</h2>
+    <div style="margin-top:clamp(26px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border-top:1px solid rgba(242,239,232,.14)">
+      <div data-reveal style="padding:24px 24px 26px 0"><div class="pq-num" data-to="30" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif">30+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">已上線系統與網站</span></div>
+      <div data-reveal style="padding:24px"><div class="pq-num" data-to="8" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#3E9BFF">8+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">產業別實戰經驗</span></div>
+      <div data-reveal style="padding:24px"><div class="pq-num" data-to="10" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#65E0BC">10 天</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">最快上線(工作天)</span></div>
+      <div data-reveal style="padding:24px"><div style="font:700 clamp(1.4rem,2.4vw,2rem) 'Noto Sans TC',sans-serif;color:#FF6B2C">市府級</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">大型活動官網執行</span></div>
+    </div>
+    <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px">
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC">室內設計</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">提案效率 ↑ 90%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">三天工作 3 小時完成、10+ 風格一鍵切換</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">婚禮婚慶</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">客服 ↓ 70%・成交 5X</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">婚紗試穿、髮妝模擬、8+ AI 功能模組</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">房仲不動產</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">回覆 → 30 秒・名單 ↑ 20%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">串 LINE 自動回物件、每週省 8 小時排程</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">美業</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">報價 ↑ 3X・決策 ↓ 60%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">髮色試換、妝容模擬,消費前先看成果</span></div>
+    </div>
+    <a data-reveal href="Cases.dc.html" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif" style-hover="color:#FF6B2C">看更多實績與作品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+  </div>
+</section>
+
+<!-- ============ 關於／里程碑 ============ -->
+<section id="about" data-screen-label="關於" class="pq-sec" style="background:#F2EFE8">
+  <div class="pq-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:start">
+    <div data-reveal>
+      <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">ABOUT PEAKQI</span></div>
+      <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">奇鋒是平台公司,<br>不是接案公司</h2>
+      <p style="margin:22px 0 0;max-width:460px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">我們幫台灣中小企業把重複的事交給系統——底層通用、賣法垂直:同一套引擎,多張產業的臉。接案為輔,每個案子都餵養產品路線、留下案例。</p>
+      <div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:10px">
+        <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:7px 15px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">47 模組引擎</span>
+        <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:7px 15px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">創意生成</span>
+        <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:7px 15px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">資料飛輪</span>
+        <span style="border:1px solid rgba(9,11,14,.2);border-radius:999px;padding:7px 15px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">品牌屋結構</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div data-reveal style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(9,11,14,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:64px">ENGINE</span><span style="font:500 15px/1.7 'Noto Sans TC',sans-serif">自研 47 模組 AI 業務引擎,持續增加的累積型技術資產。</span></div>
+      <div data-reveal style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(9,11,14,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:64px">PROOF</span><span style="font:500 15px/1.7 'Noto Sans TC',sans-serif">連市府級大型活動官網(嘉義市世博會)都如期交付上線。</span></div>
+      <div data-reveal style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(9,11,14,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:64px">MODEL</span><span style="font:500 15px/1.7 'Noto Sans TC',sans-serif">雙軌驗證:自家垂直品牌 know-how × Peak Ops 外部客戶 ARR。</span></div>
+      <div data-reveal style="display:flex;gap:16px;padding:18px 0"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:64px">NEXT</span><span style="font:500 15px/1.7 'Noto Sans TC',sans-serif">品牌屋結構——每個垂直品牌可獨立分拆或出售。</span></div>
     </div>
   </div>
 </section>
 
-<section id="demo-cta" data-screen-label="Demo CTA" style="background:#090B0E;color:#F2EFE8;position:relative;overflow:hidden;padding:clamp(80px,10vw,140px) clamp(20px,5vw,48px)">
+<!-- ============ 合作／聯絡 ============ -->
+<section id="contact" data-screen-label="聯絡" style="background:#090B0E;color:#F2EFE8;position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
-  <div data-spot style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(340px circle at var(--sx,62%) var(--sy,40%),rgba(255,107,44,.10),transparent 70%)"></div>
-  <div style="position:relative;max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(36px,5vw,72px);align-items:center">
-    <div style="display:flex;flex-direction:column;gap:26px">
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">NEXT STEP</span>
-      <h2 style="margin:0;font:900 clamp(2rem,4.2vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">下一個被 AI 接住的客戶,<br>可能正在<span style="color:#FF6B2C">傳訊息給你</span>。</h2>
-      <p style="margin:0;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);max-width:520px">花 15 分鐘,看這套系統用你的場景跑一遍——不推銷、不綁約,30 天內覺得沒效,月費全額退。</p>
+  <div class="pq-wrap pq-sec" style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,64px);align-items:center">
+    <div data-reveal style="display:flex;flex-direction:column;gap:20px">
+      <span class="pq-eyebrow">LET'S TALK</span>
+      <h2 style="margin:0;font:900 clamp(2rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">投資、合作、<br>或想加入我們?</h2>
+      <p style="margin:0;max-width:480px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">若你是投資人、合作夥伴,想更了解奇鋒國際的平台故事與雙軌模式;或想成為我們的一員——直接聯絡我們。中小企業客戶想看產品,請直接看 Peak Ops。</p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-        <a href="Demo.dc.html" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:17px 30px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘場景 Demo <span data-arrow style="font-family:'Space Grotesk',sans-serif">→</span></a>
-        <a href="tel:0988650951" data-cta style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:16px 26px;border-radius:2px;font:500 15px 'Space Grotesk',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">0988-650-951</a>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:22px;font:400 13.5px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.5)">
-        <a href="mailto:peakqi.com@gmail.com" style="color:rgba(242,239,232,.7);text-decoration:none" style-hover="color:#FF6B2C">peakqi.com@gmail.com</a>
-        <span>PEAKQI.COM</span>
+        <a href="mailto:peakqi.com@gmail.com?subject=合作邀請" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">合作・投資邀請</a>
+        <a href="PeakOps.dc.html" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">看 Peak Ops 產品</a>
       </div>
     </div>
-    <div style="position:relative;max-width:520px;justify-self:center;width:100%">
-      <div data-echo style="position:absolute;left:-26px;top:-30px;z-index:1;background:#14171C;border:1px solid rgba(242,239,232,.18);border-radius:6px;padding:9px 12px;transform:rotate(-5deg);box-shadow:0 12px 30px rgba(0,0,0,.4)">
-        <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.6)">LINE・23:41</span>
-        <span style="display:block;margin-top:4px;font:500 11.5px 'Noto Sans TC',sans-serif">「請問還有檔期嗎?」</span>
-      </div>
-      <div data-echo style="position:absolute;right:-20px;top:34%;z-index:1;background:#E6E0D2;color:#090B0E;border-radius:4px;padding:8px 11px;transform:rotate(4deg);box-shadow:0 12px 30px rgba(0,0,0,.4)">
-        <span style="font:700 11px 'Noto Sans TC',sans-serif">回覆王先生!!</span>
-        <span style="display:block;font:400 9.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">這次,系統記得</span>
-      </div>
-      <div data-echo style="position:absolute;left:-18px;bottom:-18px;z-index:1;background:#14171C;border:1px solid rgba(101,224,188,.4);border-radius:6px;padding:8px 11px;transform:rotate(3deg);box-shadow:0 12px 30px rgba(0,0,0,.4)">
-        <span style="font:600 10.5px 'Noto Sans TC',sans-serif;color:#65E0BC">✓ 已接住・已建檔・已排跟進</span>
-      </div>
-    <div data-console style="background:#171A1F;border:1px solid rgba(242,239,232,.18);border-radius:8px;box-shadow:0 24px 64px rgba(0,0,0,.5);overflow:hidden;width:100%">
-      <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
-        <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-        <span style="font:700 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.85)">PEAKQI 營運控制台</span>
-        <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">LIVE</span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(242,239,232,.12)">
-        <div style="padding:14px 16px;border-right:1px solid rgba(242,239,232,.12)">
-          <div style="font:700 24px 'Space Grotesk',sans-serif;color:#F2EFE8">12</div>
-          <div style="font:400 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">今日新客</div>
-        </div>
-        <div style="padding:14px 16px;border-right:1px solid rgba(242,239,232,.12)">
-          <div style="font:700 24px 'Space Grotesk',sans-serif;color:#3E9BFF">28s</div>
-          <div style="font:400 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">平均回覆速度</div>
-        </div>
-        <div style="padding:14px 16px">
-          <div style="font:700 24px 'Space Grotesk',sans-serif;color:#65E0BC">18%</div>
-          <div style="font:400 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">本週轉換率</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(242,239,232,.08)">
-        <span style="font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.1em;background:rgba(101,224,188,.16);color:#65E0BC;padding:3px 8px;border-radius:2px">接客</span>
-        <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">23:41 詢價已回覆,時段已保留</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(242,239,232,.08)">
-        <span style="font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.1em;background:rgba(62,155,255,.16);color:#3E9BFF;padding:3px 8px;border-radius:2px">跟進</span>
-        <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">DAY 3 案例訊息已擬好,待你確認</span>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px">
-        <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.4);color:#65E0BC;font:700 11px 'Noto Sans TC',sans-serif;padding:4px 11px;border-radius:2px">接客 ✓</span>
-        <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.4);color:#65E0BC;font:700 11px 'Noto Sans TC',sans-serif;padding:4px 11px;border-radius:2px">追客 ✓</span>
-        <span style="background:rgba(101,224,188,.12);border:1px solid rgba(101,224,188,.4);color:#65E0BC;font:700 11px 'Noto Sans TC',sans-serif;padding:4px 11px;border-radius:2px">養客 ✓</span>
-      </div>
-    </div>
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px">
+      <a href="mailto:peakqi.com@gmail.com" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">EMAIL</span><span style="font:700 17px 'Space Grotesk',sans-serif">peakqi.com@gmail.com</span></a>
+      <a href="tel:0988650951" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">PHONE</span><span style="font:700 17px 'Space Grotesk',sans-serif">0988-650-951</span></a>
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">WEB</span><span style="font:700 17px 'Space Grotesk',sans-serif">peakqi.com</span></div>
     </div>
   </div>
 </section>
 
 <dc-import name="Footer" hint-size="100%,460px"></dc-import>
-
-<sc-if value="{{ grainOn }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.05;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
-</sc-if>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;stickyCta&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;介面&quot;}, &quot;grain&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;介面&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
 class Component extends DCLogic {
-  state = { d: null, featSel: 0, planSel: 1, tipOpen: -1 };
+  state = { d: null };
   componentDidMount() {
-    import('./content.js').then(m => {
-      this.setState({ d: m });
-      try {
-        if (!document.getElementById('pq-faq-ld')) {
-          const s = document.createElement('script');
-          s.type = 'application/ld+json'; s.id = 'pq-faq-ld';
-          s.textContent = JSON.stringify(m.faqJsonLd(m.faq));
-          document.head.appendChild(s);
-        }
-      } catch (e) {}
-    });
+    import('./content.js').then(m => { if (!this._dead) this.setState({ d: m }); }).catch(() => {});
     import('./seo.js').then(m => m.applySEO('home')).catch(() => {});
-    Promise.all([import('./motion-kit.js'), import('./motion/home.motion.js')])
-      .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
-      .catch(() => {});
-    import('./analytics.js').then(m => {
-      if (this._dead) return;
-      this._track = m.track;
-      const wire = (sel, name) => {
-        document.querySelectorAll(sel).forEach(el2 => {
-          if (el2.__pqA) return; el2.__pqA = true;
-          el2.addEventListener('click', () => m.track(name), { passive: true });
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(e => { e.style.opacity = '1'; e.style.transform = 'none'; });
+    } else {
+      const io = new IntersectionObserver((ens) => {
+        ens.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); } });
+      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      els.forEach((e) => {
+        const sibs = Array.from(e.parentElement ? e.parentElement.children : []).filter(c => c.hasAttribute && c.hasAttribute('data-reveal'));
+        e.style.transitionDelay = (Math.min(5, sibs.indexOf(e)) * 70) + 'ms';
+        io.observe(e);
+      });
+      this._io = io;
+      // 數字 count-up(子動畫觸發一次)
+      const nums = Array.from(document.querySelectorAll('.pq-num[data-to]'));
+      const nio = new IntersectionObserver((ens) => {
+        ens.forEach(en => {
+          if (!en.isIntersecting) return; nio.unobserve(en.target);
+          const el = en.target, to = parseInt(el.getAttribute('data-to'), 10), suf = el.textContent.replace(/[0-9]/g, '');
+          let t0 = null; const step = (ts) => { if (!t0) t0 = ts; const k = Math.min(1, (ts - t0) / 900); el.textContent = Math.round(to * (k * k * (3 - 2 * k))) + suf; if (k < 1) requestAnimationFrame(step); };
+          requestAnimationFrame(step);
         });
-      };
-      setTimeout(() => {
-        wire('#hero a[href="Demo.dc.html"]', 'hero_demo_click');
-        wire('#hero a[href="Cases.dc.html"]', 'hero_case_click');
-        wire('#cases a[href^="Demo.dc.html?case="]', 'case_cta_click');
-        wire('#pricing a[href="Demo.dc.html"]', 'pricing_cta_click');
-        wire('#demo-cta a[href="Demo.dc.html"]', 'pricing_cta_click');
-        wire('a[href^="tel:"],a[href^="mailto:"]', 'contact_click');
-        this._unIo1 = m.wireOnceObserver(document.querySelector('#cases'), 'case_view');
-        this._unIo2 = m.wireOnceObserver(document.querySelector('#pricing'), 'pricing_plan_view');
-      }, 900);
-    }).catch(() => {});
-    import('./home2-engine.js')
-      .then(m => {
-        if (this._dead || this._h2) return;
-        this._h2 = m.createHome2();
-        this._h2.start();
-      })
-      .catch(() => {});
-    import('./gl-engine.js')
-      .then(m => {
-        if (this._dead || this._gl) return;
-        this._gl = m.createGL({ refs: this._refs || {} });
-        this._gl.start();
-      })
-      .catch(() => {});
-    import('./interactions-engine.js')
-      .then(m => {
-        if (this._dead || this._inter) return;
-        this._inter = m.createInteractions({ refs: this._refs || {} });
-        this._inter.start();
-      })
-      .catch(() => {});
-    import('./sections-engine.js')
-      .then(m => {
-        if (this._dead || this._sections) return;
-        this._sections = m.createSectionsEngine({ refs: this._refs || {} });
-        this._sections.start();
-      })
-      .catch(() => {});
-    Promise.all([import('./hero-engine.js'), import('./sequence/manifest.js')])
-      .then(([eng, man]) => {
-        if (this._dead || this._hero) return;
-        this._hero = eng.createHeroEngine({ refs: this._refs || {}, manifest: man.sequenceManifest });
-        this._hero.start();
-      })
-      .catch(() => {});
+      }, { threshold: 0.5 });
+      nums.forEach(n => nio.observe(n));
+      this._nio = nio;
+    }
+    // 品牌卡 hover:用 CSS var 的品牌色浮起
+    document.querySelectorAll('#pq-brand-grid [data-brand]').forEach(a => {
+      const c = getComputedStyle(a).getPropertyValue('--a').trim() || '#FF6B2C';
+      a.addEventListener('mouseenter', () => { a.style.transform = 'translateY(-6px)'; a.style.borderColor = c; a.style.boxShadow = '0 18px 40px rgba(9,11,14,.14)'; });
+      a.addEventListener('mouseleave', () => { a.style.transform = 'none'; a.style.borderColor = 'rgba(9,11,14,.14)'; a.style.boxShadow = 'none'; });
+    });
   }
-  componentWillUnmount() {
-    this._dead = true;
-    if (this._hero) this._hero.destroy();
-    if (this._sections) this._sections.destroy();
-    if (this._inter) this._inter.destroy();
-    if (this._gl) this._gl.destroy();
-    if (this._unIo1) this._unIo1();
-    if (this._unIo2) this._unIo2();
-    if (this._motion) this._motion.destroy();
-    if (this._h2) this._h2.destroy();
-  }
-  ref(name) {
-    this._refs = this._refs || {};
-    this._refCbs = this._refCbs || {};
-    if (!this._refCbs[name]) this._refCbs[name] = (el) => { this._refs[name] = el; };
-    return this._refCbs[name];
-  }
-  renderVals() {
-    const d = this.state.d;
-    const ivory = '#F2EFE8', ink = '#090B0E';
-    const planSel = this.state.planSel;
-    const plans = (d?.plans ?? []).map((p, pi) => {
-      const on = pi === planSel;   // 選中的卡片=強調樣式(深底橘框),點哪張切到哪張
-      return {
-        ...p,
-        select: () => this.setState({ planSel: pi }),
-        hasBase: !!p.base,
-        cardStyle: {
-          borderRadius: '6px', padding: '30px 28px', display: 'flex', flexDirection: 'column', gap: '20px', cursor: 'pointer',
-          background: on ? ink : ivory, color: on ? ivory : ink,
-          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.16)',
-          boxShadow: on ? '0 24px 56px rgba(9,11,14,.22)' : 'none',
-          transform: on ? 'translateY(-6px)' : 'none',
-          transition: 'background 220ms cubic-bezier(0.16,1,0.3,1), color 220ms cubic-bezier(0.16,1,0.3,1), border-color 220ms, box-shadow 220ms, transform 220ms cubic-bezier(0.16,1,0.3,1)'
-        },
-        codeStyle: { width: '30px', height: '30px', border: '1.5px solid #FF6B2C', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', font: "700 13px 'Space Grotesk',sans-serif", color: '#FF6B2C' },
-        nameStyle: { font: "900 19px 'Noto Sans TC',sans-serif" },
-        setupBoxStyle: { display: 'flex', flexDirection: 'column', gap: '8px', borderTop: on ? '1px solid rgba(242,239,232,.16)' : '1px solid rgba(9,11,14,.12)', paddingTop: '18px' },
-        smallLabelStyle: { font: "400 12px 'Noto Sans TC',sans-serif", color: on ? 'rgba(242,239,232,.55)' : 'rgba(9,11,14,.5)' },
-        currencyStyle: { font: "600 14px 'Space Grotesk',sans-serif", color: on ? 'rgba(242,239,232,.6)' : 'rgba(9,11,14,.55)' },
-        setupStyle: { font: "700 clamp(2rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif" },
-        baseStyle: { font: "600 13px 'Noto Sans TC',sans-serif", color: '#FF6B2C' },
-        itemStyle: { font: "500 14.5px/1.6 'Noto Sans TC',sans-serif", color: on ? 'rgba(242,239,232,.85)' : 'rgba(9,11,14,.8)' },
-        btnStyle: {
-          marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-          padding: '14px', borderRadius: '2px', textDecoration: 'none',
-          font: "700 14.5px 'Noto Sans TC',sans-serif",
-          background: on ? '#FF6B2C' : 'transparent',
-          color: ink,
-          border: on ? 'none' : '1px solid rgba(9,11,14,.3)'
-        },
-        btnHover: on ? 'background:#F2EFE8;color:#090B0E' : 'background:#090B0E;color:#F2EFE8;border-color:#090B0E'
-      };
-    });
-    const works = (d?.worksFeatured ?? []).map((w, i) => ({
-      ...w,
-      hasImg: !!w.img,
-      imgBoxStyle: {
-        width: '100%', height: '150px', backgroundColor: '#171A1F',
-        backgroundImage: 'repeating-linear-gradient(45deg, rgba(242,239,232,.05) 0 10px, transparent 10px 20px)',
-        borderBottom: '1px solid rgba(242,239,232,.12)', overflow: 'hidden'
-      },
-      imgInnerStyle: { width: '100%', height: '100%', backgroundSize: 'cover', backgroundPosition: 'top center', opacity: 0, transition: 'opacity 320ms cubic-bezier(0.16,1,0.3,1)' },
-      idx: String(i + 1).padStart(2, '0'),
-      href: w.url ?? 'Cases.dc.html#portfolio',
-      target: w.url ? '_blank' : '_self',
-      linkLabel: w.url ? '造訪網站 ↗' : '查看案例 →'
-    }));
-    const galNav = (dir) => {
-      if (window.__pqInteractions) { window.__pqInteractions.galNav(dir); return; }
-      const sc = (this._refs || {}).galScroller;
-      if (sc) sc.scrollBy({ left: dir * 314, behavior: 'smooth' });
-    };
-    const steps = (d?.timeline ?? []).map((s, i, arr) => ({
-      ...s,
-      dotStyle: {
-        position: 'absolute', top: '-6px', left: 0, width: '10px', height: '10px', borderRadius: '50%',
-        background: i === arr.length - 1 ? '#65E0BC' : '#FF6B2C'
-      }
-    }));
-    const tipOpenIdx = this.state.tipOpen;
-    const usageTips = [
-      '包含在月費、不限量:AI 對話、文案、報告、SEO 分析。不會因為文字用量多而加價。',
-      '按實際使用量計費、用多少付多少:AI 場景渲染、風格模擬、短影音。實際費率依方案而定,Demo 時可依你的用量情境估算。'
-    ];
-    const usageList = (d?.usage ?? []).map((u, ui) => {
-      const unlimited = ui === 0;
-      const cells = Array.from({ length: 12 }, (_, ci) => ({
-        style: {
-          flex: 1, height: '10px', borderRadius: '2px',
-          background: unlimited ? 'rgba(101,224,188,.75)' : (ci < 4 ? 'rgba(62,155,255,.75)' : 'transparent'),
-          border: unlimited ? 'none' : (ci < 4 ? 'none' : '1px dashed rgba(9,11,14,.25)')
-        }
-      }));
-      return {
-        ...u,
-        barStyle: { width: '4px', flexShrink: 0, background: u.c, borderRadius: '0 2px 2px 0' },
-        cells,
-        meterLabel: unlimited ? '不限量' : '用多少・付多少',
-        meterLabelStyle: { font: "700 12px 'Noto Sans TC',sans-serif", color: unlimited ? '#1e9a72' : '#2b76c9', whiteSpace: 'nowrap' },
-        tip: usageTips[ui] ?? '',
-        tipId: 'pq-tip-' + ui,
-        tipOpen: tipOpenIdx === ui,
-        tipExpanded: tipOpenIdx === ui ? 'true' : 'false',
-        tipToggle: () => this.setState(s => ({ tipOpen: s.tipOpen === ui ? -1 : ui })),
-        esc: (e) => { if (e.key === 'Escape') this.setState({ tipOpen: -1 }); }
-      };
-    });
-    const compareRows = d ? d.compare.dims.map((dim, i) => ({ dim, a: d.compare.cols[0].vals[i], b: d.compare.cols[1].vals[i], c: d.compare.cols[2].vals[i] })) : [];
-    const compareCards = d ? d.compare.cols.map(c => ({
-      name: c.name, hot: c.hot,
-      rows: d.compare.dims.map((dim, i) => ({ dim, val: c.vals[i] })),
-      cardStyle: {
-        borderRadius: '6px', padding: '22px 20px', display: 'flex', flexDirection: 'column', gap: '12px',
-        background: c.hot ? ink : ivory, color: c.hot ? ivory : ink,
-        border: c.hot ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.16)'
-      },
-      nameStyle: { font: "800 17px 'Noto Sans TC',sans-serif" },
-      rowStyle: { display: 'flex', gap: '14px', alignItems: 'baseline', borderTop: c.hot ? '1px solid rgba(242,239,232,.14)' : '1px solid rgba(9,11,14,.1)', paddingTop: '10px' },
-      dimStyle: { font: "600 12.5px 'Noto Sans TC',sans-serif", color: c.hot ? 'rgba(242,239,232,.55)' : 'rgba(9,11,14,.5)', minWidth: '76px', flexShrink: 0 },
-      valStyle: { font: "500 14px/1.6 'Noto Sans TC',sans-serif", color: c.hot ? 'rgba(242,239,232,.92)' : 'rgba(9,11,14,.78)' }
-    })) : [];
-    const planCodes = ['A', 'B', 'C'];
-    const planTabs = (d?.plans ?? []).map((p, pi) => {
-      const on = pi === planSel;
-      return {
-        label: p.code + '・' + p.name,
-        sel: on ? 'true' : 'false',
-        pick: () => this.setState({ planSel: pi }),
-        style: {
-          cursor: 'pointer', borderRadius: '999px', padding: '9px 18px', border: 'none',
-          font: "700 13.5px 'Noto Sans TC',sans-serif",
-          background: on ? '#090B0E' : 'transparent',
-          color: on ? '#F2EFE8' : 'rgba(9,11,14,.6)',
-          transition: 'background 160ms cubic-bezier(0.16,1,0.3,1), color 160ms cubic-bezier(0.16,1,0.3,1)'
-        }
-      };
-    });
-    const planKeys = (e) => {
-      const n = (d?.plans ?? []).length;
-      if (!n || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
-      e.preventDefault();
-      this.setState({ planSel: e.key === 'ArrowRight' ? (planSel + 1) % n : (planSel - 1 + n) % n });
-    };
-    const modScope = (d?.planModules ?? {})[planCodes[planSel] ?? 'B'] ?? [];
-    const planViz = (d?.features ?? []).map(f2 => {
-      const on = modScope.includes(f2.name);
-      return {
-        name: f2.name,
-        style: {
-          borderRadius: '999px', padding: '6px 14px', font: "600 12.5px 'Noto Sans TC',sans-serif",
-          background: on ? '#090B0E' : 'transparent',
-          color: on ? '#F2EFE8' : 'rgba(9,11,14,.35)',
-          border: on ? '1px solid #090B0E' : '1px dashed rgba(9,11,14,.3)',
-          transform: on ? 'scale(1)' : 'scale(.95)', opacity: on ? 1 : 0.55,
-          transition: 'all 320ms cubic-bezier(0.16,1,0.3,1)'
-        }
-      };
-    });
-    const vizConsole = planCodes[planSel] === 'C';
-    const feats = d?.features ?? [];
-    const sel = Math.min(this.state.featSel, Math.max(0, feats.length - 1));
-    const orbPts = [[300, 66], [506, 148], [506, 312], [300, 394], [94, 312], [94, 148]];
-    const orbitMods = feats.map((m, i) => {
-      const on = i === sel;
-      const pt = orbPts[i % 6];
-      return {
-        ...m,
-        ariaSel: on ? 'true' : 'false',
-        pick: () => this.setState({ featSel: i }),
-        chipStyle: {
-          position: 'absolute', left: (pt[0] / 600 * 100) + '%', top: (pt[1] / 460 * 100) + '%',
-          transform: 'translate(-50%,-50%) scale(' + (on ? 1.08 : 1) + ')',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px',
-          padding: '11px 20px', borderRadius: '999px', cursor: 'pointer', zIndex: on ? 3 : 2,
-          background: on ? '#090B0E' : '#F2EFE8',
-          color: on ? '#F2EFE8' : '#090B0E',
-          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
-          boxShadow: on ? '0 16px 36px rgba(9,11,14,.28)' : '0 4px 14px rgba(9,11,14,.08)',
-          transition: 'all 160ms cubic-bezier(0.16,1,0.3,1)'
-        }
-      };
-    });
-    const selMod = feats[sel] ?? { n: '01', name: '', tag: '', items: [] };
-    const selPt = orbPts[sel % 6];
-    const orbitKeys = (e) => {
-      const k = e.key;
-      if (!feats.length || (k !== 'ArrowRight' && k !== 'ArrowLeft' && k !== 'Home' && k !== 'End')) return;
-      e.preventDefault();
-      let n2 = sel;
-      if (k === 'ArrowRight') n2 = (sel + 1) % feats.length;
-      if (k === 'ArrowLeft') n2 = (sel - 1 + feats.length) % feats.length;
-      if (k === 'Home') n2 = 0;
-      if (k === 'End') n2 = feats.length - 1;
-      this.setState({ featSel: n2 });
-    };
-    return {
-      pain: this.ref('pain'),
-      lossWrap: this.ref('lossWrap'),
-      lossStage: this.ref('lossStage'),
-      flowWrap: this.ref('flowWrap'),
-      flowStage: this.ref('flowStage'),
-      orbitBox: this.ref('orbitBox'),
-      orbitCore: this.ref('orbitCore'),
-      orbitMods, orbitKeys,
-      galWrap: this.ref('galWrap'),
-      galStage: this.ref('galStage'),
-      galScroller: this.ref('galScroller'),
-      galTrack: this.ref('galTrack'),
-      galPrevClick: () => galNav(-1),
-      galNextClick: () => galNav(1),
-      planTabs, planKeys, planViz, vizConsole,
-      compareCards,
-      orbX: selPt[0], orbY: selPt[1],
-      selN: selMod.n, selName: selMod.name, selTag: selMod.tag, selItems: selMod.items,
-      heroWrap: this.ref('wrap'),
-      heroStage: this.ref('stage'),
-      heroCanvas: this.ref('canvas'),
-      heroT1: this.ref('t1'),
-      heroT2: this.ref('t2'),
-      heroT3: this.ref('t3'),
-      heroT4: this.ref('t4'),
-      heroT5: this.ref('t5'),
-      heroHint: this.ref('hint'),
-      stickyVal: this.props.stickyCta ?? true,
-      grainOn: this.props.grain ?? false,
-      stats: d?.stats ?? [],
-      pains: (d?.painPoints ?? []).map((t, i) => ({ t, idx: '0' + (i + 1) })),
-      painClose: d?.painClose ?? '',
-      loss: (d?.lossSteps ?? []).map((s, i) => ({ ...s, idx: i })),
-      lossNote: d?.lossYear.note ?? '',
-      flow: d?.flow3 ?? [],
-      mods: d?.features ?? [],
-      base: d?.baseSupport ?? [],
-      cases: (d?.caseStudies ?? []).filter(c => c.img).slice(0, 4).map(c => ({
-        ...c,
-        demoHref: 'Demo.dc.html?case=' + encodeURIComponent(c.slug),
-        hasImg: !!c.img,
-        imgBg: c.img ? { width: '100%', height: '100%', backgroundImage: 'url("' + c.img + '")', backgroundSize: 'cover', backgroundPosition: 'top center', willChange: 'transform' } : {}
-      })),
-      caseNote: d?.caseNote ?? '',
-      works,
-      diag: (d?.diagMetrics ?? []).map((m, i) => ({ ...m, max: [7, 12, 9, 6, 5][i] ?? 7 })),
-      relay: d?.relayStations ?? [],
-      liveItems: (d?.features ?? []).map((f2, i) => ({ ...f2, i })),
-      wall: (d?.worksFeatured ?? []).filter(w => w.img && w.results && w.results.length).slice(0, 4).map(w => ({
-        ...w,
-        results: w.results.slice(0, 2),
-        tileImg: { width: '100%', height: '140px', backgroundImage: 'url("' + w.img + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#090B0E', borderBottom: '1px solid rgba(242,239,232,.1)' }
-      })),
-      compareRows,
-      plans,
-      planNote: d?.planNote ?? '',
-      customs: d?.customRanges ?? [],
-      customNote: d?.customNote ?? '',
-      customCred: d?.customCred ?? '',
-      usageList,
-      usageNote: d?.usageNote ?? '',
-      steps,
-      timelineNote: d?.timelineNote ?? '',
-      risks: d?.risk ?? [],
-      faqs: d?.faq ?? []
-    };
-  }
+  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); if (this._nio) this._nio.disconnect(); }
+  renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
 }
 </script>
 </body>

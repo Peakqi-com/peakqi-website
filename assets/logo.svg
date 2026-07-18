@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="PeakQi">
+  <g stroke="#FF6B2C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 外圈(近全圓) -->
+    <circle cx="50" cy="48" r="43"/>
+    <!-- 指紋環(下方開口) -->
+    <path d="M20 62 A31 31 0 1 1 80 62"/>
+    <!-- P 的碗(右側閉環) -->
+    <path d="M42 28 A16 16 0 1 1 42 60"/>
+    <!-- P 碗內側小勾(指紋收尾) -->
+    <path d="M42 38 A6.5 6.5 0 1 1 42 51"/>
+  </g>
+  <!-- P 的直筆(貫穿至底) -->
+  <path d="M42 24 V90" stroke="#FF6B2C" stroke-width="8.4" stroke-linecap="round"/>
+</svg>

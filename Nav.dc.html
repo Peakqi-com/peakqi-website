@@ -15,11 +15,11 @@
 </helmet>
 <header style="position:sticky;top:0;z-index:100;background:rgba(242,239,232,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(9,11,14,.12)">
   <div style="max-width:1400px;margin:0 auto;padding:0 clamp(16px,4vw,48px);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-    <a href="Home.dc.html" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
-      <svg width="30" height="26" viewBox="0 0 32 26" aria-hidden="true"><path d="M2 24 L11 5 L16 14 L21 3 L30 24" fill="none" stroke="#FF6B2C" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+    <a href="Home.dc.html" aria-label="PeakQi 奇鋒國際 首頁" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
+      <img src="assets/logo.svg" alt="PeakQi" width="32" height="32" style="display:block">
       <span style="display:flex;flex-direction:column;gap:2px;line-height:1">
-        <span style="font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.08em">奇鋒國際</span>
-        <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.36em;color:#FF6B2C">PEAKQI</span>
+        <span style="font:800 16px 'Space Grotesk',sans-serif;letter-spacing:.01em">PeakQi</span>
+        <span style="font:600 9px 'Noto Sans TC',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.5)">奇鋒國際</span>
       </span>
     </a>
     <nav id="pq-links" style="display:flex;align-items:center;gap:clamp(12px,2.2vw,32px)">
@@ -119,9 +119,8 @@ class Component extends DCLogic {
     };
     const items = this.state.nav ?? [
       { href: 'Home.dc.html', key: 'home', label: '首頁' },
-      { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+      { href: 'PeakOps.dc.html', key: 'product', label: '產品' },
       { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
-      { href: 'Pricing.dc.html', key: 'pricing', label: '方案價格' },
       { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' }
     ];
     const links = items.map((l, i) => ({
