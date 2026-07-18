@@ -164,6 +164,11 @@ export function createHomeEngine() {
     const scrimEl = document.getElementById('pq-hero-scrim');
     const noiseEl = hero && hero.querySelector('.pq-cine-noise');
     const annotSvg = hero && hero.querySelector('[data-cine-annot]');
+    // U4 螢幕看影片
+    const reviewEl = hero && hero.querySelector('[data-cine-review]');
+    const vids = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vid')) : [];
+    const vcards = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vcard')) : [];
+    const flashEl = hero && hero.querySelector('[data-cine-flash]');
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
 
@@ -191,7 +196,7 @@ export function createHomeEngine() {
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
     // 更長的視差行程
-    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 520 : 720 });
+    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 820 : 1080 });
 
     // rail 按鈕
     const railBtns = [];
@@ -397,6 +402,7 @@ export function createHomeEngine() {
     cleanups.push(() => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointer);
+      vids.forEach(v => { try { v.pause(); } catch (e) {} });
       try { renderer.dispose(); } catch (e) {}
     });
 
@@ -414,6 +420,19 @@ export function createHomeEngine() {
     function setPhase(ph) {
       if (ph === curPhase) return; curPhase = ph;
       phaseSpans.forEach((s, i) => s.classList.toggle('active', i === ph));
+    }
+    // U4:切換目前播放的影片 + 業務字卡(母=捲動;影片獨立自動播=子)
+    let curShot = -2, flashStart = 0;
+    function setShot(s, now) {
+      if (s === curShot) return;
+      curShot = s;
+      vids.forEach((v, i) => {
+        const on = i === s; v.classList.toggle('is-on', on);
+        if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
+        else { try { v.pause(); } catch (e) {} }
+      });
+      vcards.forEach((c, i) => c.classList.toggle('is-on', i === s));
+      if (s >= 0) flashStart = now;   // 切換=快門閃光
     }
     setBeat(0);
 
@@ -447,7 +466,7 @@ export function createHomeEngine() {
     const _wp = THREE ? new THREE.Vector3() : null;
 
     // 分鏡節奏:光澤PBR → 拆解 → 發光彩色線稿 → 黑白藍圖(母=捲動;運作=時間子動畫)
-    const CONTENT_END = 0.60, OFF = 0.62;
+    const CONTENT_END = 0.48, OFF = 0.62;
 
     const t0 = performance.now();
     ctx.onFrame((now) => {
@@ -456,15 +475,15 @@ export function createHomeEngine() {
       smoothP += (scrollP - smoothP) * 0.06;
       const p = smoothP;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
-      const review = p > 0.60;                      // 藍圖後:組回/翻面,不顯示故事卡
+      const review = p > 0.48;                      // 藍圖後:組回/翻面/看影片,不顯示故事卡
       setBeat(review ? -1 : beat);
-      setPhase(p < 0.10 ? 0 : p < 0.30 ? 1 : p < 0.54 ? 2 : p < 0.72 ? 3 : p < 0.86 ? 4 : 5);
+      setPhase(p < 0.08 ? 0 : p < 0.26 ? 1 : p < 0.46 ? 2 : p < 0.56 ? 3 : p < 0.64 ? 4 : 5);
       // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)
-      const R = ez(sub(p, 0.72, 0.86));             // U3a 組回實體
-      const flipK = ez(sub(p, 0.86, 0.96));         // U3b 翻面迴轉(螢幕正對觀眾)
-      const disasK = ez(sub(p, 0.10, 0.40)) * (1 - R);
-      const wireK = ez(sub(p, 0.30, 0.50)) * (1 - R);
-      const paperK = ez(sub(p, 0.54, 0.64)) * (1 - R);
+      const R = ez(sub(p, 0.56, 0.64));             // U3a 組回實體
+      const flipK = ez(sub(p, 0.64, 0.72));         // U3b 翻面(背面螢幕正對)
+      const disasK = ez(sub(p, 0.08, 0.34)) * (1 - R);
+      const wireK = ez(sub(p, 0.26, 0.44)) * (1 - R);
+      const paperK = ez(sub(p, 0.46, 0.54)) * (1 - R);
       const dark = 1 - paperK;
       const solid = 1 - wireK;
       const focusSet = review ? EMPTY : (cardFocus[beat] || EMPTY);
@@ -472,7 +491,7 @@ export function createHomeEngine() {
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
-      if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 ? 1 : 0);
+      if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 && p < 0.58 ? 1 : 0);
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
       hero.classList.toggle('pq-cine-paper-on', paperK > 0.55);
@@ -492,7 +511,7 @@ export function createHomeEngine() {
       // 開場放大;拆解縮小;翻面看螢幕再放大
       rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.45 : 0.32)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
-      const framingK = ez(sub(p, 0.16, 0.24)) * (1 - ez(sub(p, 0.42, 0.50)));
+      const framingK = ez(sub(p, 0.14, 0.22)) * (1 - ez(sub(p, 0.38, 0.46)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
       if (framingK > 0.01) {
         const fp = parts.find(pp => focusSet.has(pp.groupId));
@@ -574,6 +593,15 @@ export function createHomeEngine() {
           it.g.setAttribute('opacity', rev.toFixed(3));
         }
       }
+      // U4 螢幕看影片:翻面完成 → 右側大影片依序自動播 + 左側業務字卡 + 快門閃光切換
+      const reviewK = ez(sub(p, 0.66, 0.74));
+      if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
+      if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
+      if (reviewK > 0.02) {
+        const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((1 - 0.72) / Math.max(1, vids.length)))));
+        setShot(si, now);
+      } else if (curShot !== -2) { setShot(-1, now); }
+      if (flashEl) { const fl = flashStart ? Math.max(0, 1 - (now - flashStart) / 180) : 0; flashEl.style.opacity = (fl * 0.82).toFixed(3); }
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
