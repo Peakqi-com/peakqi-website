@@ -160,6 +160,10 @@ export function createHomeEngine() {
     const labelText = hero && hero.querySelector('[data-cine-labeltext]');
     const phaseSpans = hero ? Array.from(hero.querySelectorAll('[data-cine-phase] > span')) : [];
     const loader = hero && hero.querySelector('[data-cine-loader]');
+    const paperEl = hero && hero.querySelector('[data-cine-paper]');
+    const scrimEl = document.getElementById('pq-hero-scrim');
+    const noiseEl = hero && hero.querySelector('.pq-cine-noise');
+    const annotSvg = hero && hero.querySelector('[data-cine-annot]');
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
 
@@ -212,10 +216,10 @@ export function createHomeEngine() {
     scene.fog = new THREE.FogExp2(0x090B0E, 0.028);
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     camera.position.set(0, 0.1, 11.5);
-    scene.add(new THREE.HemisphereLight(0xeaf2ff, 0x17110f, 2.1));
-    const keyL = new THREE.DirectionalLight(0xffffff, 4.0); keyL.position.set(4, 6, 7); scene.add(keyL);
-    const orangeL = new THREE.PointLight(0xFF6B2C, 20, 18, 1.4); orangeL.position.set(4, -1, 5); scene.add(orangeL);
-    const blueL = new THREE.PointLight(0x3E9BFF, 15, 16, 1.6); blueL.position.set(-5, 2, 3); scene.add(blueL);
+    scene.add(new THREE.HemisphereLight(0xeaf2ff, 0x17110f, 1.5));
+    const keyL = new THREE.DirectionalLight(0xffffff, 2.9); keyL.position.set(4, 6, 7); scene.add(keyL);
+    const orangeL = new THREE.PointLight(0xFF6B2C, 13, 18, 1.5); orangeL.position.set(4, -1, 5); scene.add(orangeL);
+    const blueL = new THREE.PointLight(0x3E9BFF, 10, 16, 1.7); blueL.position.set(-5, 2, 3); scene.add(blueL);
 
     // bloom(桌機)
     let composer = null, bloomPass = null;
@@ -229,7 +233,7 @@ export function createHomeEngine() {
         if (!destroyed) {
           composer = new EffectComposer(renderer);
           composer.addPass(new RenderPass(scene, camera));
-          bloomPass = new UnrealBloomPass(new THREE.Vector2(stage.clientWidth || 1, stage.clientHeight || 1), 0.85, 0.6, 0.2);
+          bloomPass = new UnrealBloomPass(new THREE.Vector2(stage.clientWidth || 1, stage.clientHeight || 1), 0.5, 0.55, 0.25);
           composer.addPass(bloomPass);
         }
       } catch (e) { composer = null; bloomPass = null; }
@@ -269,6 +273,7 @@ export function createHomeEngine() {
     }
 
     const parts = [];
+    const BLACK = new THREE.Color(0x141414);
     const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
     function mkMat(hex, emissive) { return new THREE.MeshStandardMaterial({ color: hex, metalness: 0.62, roughness: 0.27, emissive: emissive == null ? hex : emissive, emissiveIntensity: 0.3 }); }
     function createInternals(asset) {
@@ -340,7 +345,7 @@ export function createHomeEngine() {
           const lineGeo = new THREE.BufferGeometry().setFromPoints([center.clone(), center.clone()]);
           const lineMat = new THREE.LineBasicMaterial({ color: rule.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
-          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector });
+          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color) });
         });
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
@@ -392,6 +397,37 @@ export function createHomeEngine() {
     }
     setBeat(0);
 
+    // ---- 攤開白宣紙藍圖:座標 + 業務類別 + 白話 標註 ----
+    const NS = 'http://www.w3.org/2000/svg';
+    const svgEl = (tag, cls) => { const e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; };
+    const ANNOT = [
+      { g: 'optics', biz: '接客 · AI 客服', note: '客人從這裡進來,AI 先接住', ax: 0.20, ay: 0.17 },
+      { g: 'sensor', biz: '行銷 · 內容生成', note: '把 know-how 變成貼文影片', ax: 0.19, ay: 0.39 },
+      { g: 'mainboard', biz: 'CRM · 追客', note: '走到哪一步都記在同一塊板', ax: 0.19, ay: 0.61 },
+      { g: 'chip', biz: '引擎 · 47 模組', note: '一顆核心,驅動所有模組', ax: 0.20, ay: 0.83 },
+      { g: 'controls', biz: '報價 · 數據', note: '一按就出報價,數字看清', ax: 0.80, ay: 0.17 },
+      { g: 'battery', biz: '24h 自動運轉', note: '不打烊的營運電力', ax: 0.81, ay: 0.39 },
+      { g: 'shell', biz: '品牌屋 · 平台層', note: '同一引擎,換不同的臉', ax: 0.81, ay: 0.61 },
+      { g: 'ribbon', biz: '導入 · 整合排線', note: '最快 10 天上線', ax: 0.80, ay: 0.83 }
+    ];
+    const annItems = [];
+    if (annotSvg) {
+      ANNOT.forEach(cfg => {
+        const left = cfg.ax < 0.5;
+        const g = svgEl('g');
+        const lead = svgEl('polyline', 'lead');
+        const dot = svgEl('circle', 'dot'); dot.setAttribute('r', '4');
+        const bizline = svgEl('line', 'bizline');
+        const coordT = svgEl('text', 'coord'); coordT.setAttribute('text-anchor', left ? 'start' : 'end');
+        const bizT = svgEl('text', 'biz'); bizT.setAttribute('text-anchor', left ? 'start' : 'end'); bizT.textContent = cfg.biz;
+        const noteT = svgEl('text', 'note'); noteT.setAttribute('text-anchor', left ? 'start' : 'end'); noteT.textContent = cfg.note;
+        g.appendChild(lead); g.appendChild(dot); g.appendChild(bizline); g.appendChild(coordT); g.appendChild(bizT); g.appendChild(noteT);
+        annotSvg.appendChild(g);
+        annItems.push({ cfg, left, lead, dot, bizline, coordT, bizT, noteT, node: null });
+      });
+    }
+    const _wp = THREE ? new THREE.Vector3() : null;
+
     const t0 = performance.now();
     ctx.onFrame((now) => {
       if (destroyed || !bound.inView) return;
@@ -400,23 +436,31 @@ export function createHomeEngine() {
       const p = smoothP;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor(scrollP * BEATS)));
       setBeat(beat);
-      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.62 ? 2 : 3);
-      // 母:材質顯現 / 爆炸 / 回組
+      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.5 ? 2 : p < 0.7 ? 3 : 4);
+      // 母:材質顯現 / 爆炸 / 攤開白宣紙藍圖
       const materialReveal = ez((p - 0.04) / 0.09);
-      const explodeOut = ez((p - 0.10) / 0.5);
-      const reassemble = 1 - ez((p - 0.86) / 0.1);
-      const explosion = explodeOut * reassemble;
+      const explosion = ez((p - 0.10) / 0.5);          // 爆炸後保持攤開(不回組)
+      const paperK = ez(sub(p, 0.7, 0.9));             // 0 暗場 → 1 白宣紙藍圖
+      const dark = 1 - paperK;
       const focusSet = cardFocus[beat] || new Set();
-      const focusAll = focusSet.size === 0 || focusSet.has('all') || beat === BEATS - 1;
-      // 母:rig 旋轉/讓位
-      rig.rotation.y += ((-0.6 + p * Math.PI * 1.9 + pointer.x * 0.07) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((-0.12 + Math.sin(p * Math.PI * 2.4) * 0.18 - pointer.y * 0.045) - rig.rotation.x) * 0.05;
-      rig.rotation.z = Math.sin(p * Math.PI * 2.2) * 0.05;
+      const focusAll = focusSet.size === 0 || focusSet.has('all') || paperK > 0.4;
+      // 背景/疊層切換
+      if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
+      if (annotSvg) annotSvg.style.opacity = ez(sub(p, 0.78, 0.94)).toFixed(3);
+      if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
+      if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
+      hero.classList.toggle('pq-cine-paper-on', paperK > 0.5);
+      // 母:rig 旋轉(暗場變化大)→ 攤開俯視
+      const spinY = -0.6 + p * Math.PI * 2.5 + pointer.x * 0.07;
+      const tumbleX = -0.12 + Math.sin(p * Math.PI * 2.6) * 0.28 - pointer.y * 0.045;
+      rig.rotation.y += ((spinY * dark + (-0.42) * paperK) - rig.rotation.y) * 0.05;
+      rig.rotation.x += ((tumbleX * dark + (-1.02) * paperK) - rig.rotation.x) * 0.05;
+      rig.rotation.z = Math.sin(p * Math.PI * 2.2) * 0.09 * dark;
       const align = cards[beat] && cards[beat].getAttribute('data-align');
-      const targetX = isMobile ? 0 : (align === 'right' ? -1.3 : 1.3);
-      rig.position.x += ((targetX + Math.sin(p * Math.PI * 4) * 0.12) - rig.position.x) * 0.04;
-      rig.position.y += (((isMobile ? 1.05 : 0) + Math.sin(p * Math.PI * 2) * 0.1) - rig.position.y) * 0.04;
-      rig.scale.setScalar(isMobile ? 0.66 : 1);
+      const targetX = (isMobile ? 0 : (align === 'right' ? -1.3 : 1.3)) * dark;
+      rig.position.x += ((targetX + Math.sin(p * Math.PI * 4) * 0.12 * dark) - rig.position.x) * 0.04;
+      rig.position.y += (((isMobile ? 1.05 : 0) + Math.sin(p * Math.PI * 2) * 0.1 * dark) - rig.position.y) * 0.04;
+      rig.scale.setScalar((isMobile ? 0.66 : 1) * (1 - paperK * (isMobile ? 0.32 : 0.16)));
 
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
@@ -425,24 +469,57 @@ export function createHomeEngine() {
         part.node.position.lerp(dest, 0.075);
         const focused = focusAll || focusSet.has(part.groupId);
         const flick = 0.84 + Math.sin(t * 4.6 + i * 1.43) * 0.14;
+        // 材質:白宣紙模式淡出(留純線稿)
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const op = materialReveal * (focused ? 0.98 : 0.34);
+          const op = materialReveal * (focused ? 0.98 : 0.34) * dark;
           mat.opacity = op; mat.depthWrite = op > 0.62;
-          if (mat.emissive) mat.emissiveIntensity = focused ? 0.34 + Math.sin(t * 2.2) * 0.08 : 0.035;
+          if (mat.emissive) mat.emissiveIntensity = (focused ? 0.24 + Math.sin(t * 2.2) * 0.06 : 0.03) * dark;
         }
-        for (let e = 0; e < part.edges.length; e++) part.edges[e].opacity = ((1 - materialReveal) * 0.9 + (focused ? 0.75 : 0.14)) * flick;
+        // 邊線:白宣紙模式轉黑、變實(工程線稿)
+        for (let e = 0; e < part.edges.length; e++) {
+          const em = part.edges[e];
+          em.color.copy(part.baseColor).lerp(BLACK, paperK);
+          em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
+          em.opacity = Math.max(((1 - materialReveal) * 0.9 + (focused ? 0.72 : 0.14)) * flick * dark, paperK * 0.85);
+        }
         const attr = part.connector.geometry.getAttribute('position');
         const dx = part.node.position.x - part.home.x, dy = part.node.position.y - part.home.y, dz = part.node.position.z - part.home.z;
         attr.setXYZ(0, part.center.x, part.center.y, part.center.z);
         attr.setXYZ(1, part.center.x + dx, part.center.y + dy, part.center.z + dz);
         attr.needsUpdate = true;
-        part.connector.material.opacity = staged * (focused ? 0.6 : 0.1) * flick;
+        part.connector.material.color.copy(part.baseColor).lerp(BLACK, paperK);
+        part.connector.material.opacity = Math.max(staged * (focused ? 0.55 : 0.1) * flick * dark, staged * paperK * 0.5);
+      }
+      // 標註投影(僅白宣紙階段)
+      if (annotSvg && paperK > 0.02) {
+        const W = stage.clientWidth || 1, H = stage.clientHeight || 1;
+        annotSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        for (let a = 0; a < annItems.length; a++) {
+          const it = annItems[a];
+          if (!it.node) { const f = parts.find(pp => pp.groupId === it.cfg.g); it.node = f ? f.node : null; }
+          if (!it.node) continue;
+          it.node.getWorldPosition(_wp); _wp.project(camera);
+          const sx = (_wp.x * 0.5 + 0.5) * W, sy = (-_wp.y * 0.5 + 0.5) * H;
+          const lx = it.cfg.ax * W, ly = it.cfg.ay * H;
+          const elbowX = it.left ? lx + 46 : lx - 46;
+          it.dot.setAttribute('cx', sx.toFixed(1)); it.dot.setAttribute('cy', sy.toFixed(1));
+          it.lead.setAttribute('points', sx.toFixed(1) + ',' + sy.toFixed(1) + ' ' + elbowX.toFixed(1) + ',' + ly.toFixed(1) + ' ' + lx.toFixed(1) + ',' + ly.toFixed(1));
+          const endX = it.left ? lx + 44 : lx - 44;
+          it.bizline.setAttribute('x1', lx); it.bizline.setAttribute('y1', (ly + 6).toFixed(1)); it.bizline.setAttribute('x2', endX); it.bizline.setAttribute('y2', (ly + 6).toFixed(1));
+          it.coordT.setAttribute('x', lx); it.coordT.setAttribute('y', (ly - 20).toFixed(1));
+          it.bizT.setAttribute('x', lx); it.bizT.setAttribute('y', (ly - 2).toFixed(1));
+          it.noteT.setAttribute('x', lx); it.noteT.setAttribute('y', (ly + 22).toFixed(1));
+          const q = it.node.position;
+          it.coordT.textContent = 'X ' + q.x.toFixed(2) + '  Y ' + q.y.toFixed(2) + '  Z ' + q.z.toFixed(2);
+        }
       }
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
-      orangeL.intensity = 18 + Math.sin(t * 2.7) * 3;
-      if (bloomPass) bloomPass.strength = 0.7 + Math.sin(t * 1.8) * 0.08 + explosion * 0.3;
-      if (composer) composer.render(); else renderer.render(scene, camera);
+      dust.material.opacity = 0.48 * dark;
+      grid.material.transparent = true; grid.material.opacity = dark;
+      orangeL.intensity = (13 + Math.sin(t * 2.7) * 3) * (0.4 + 0.6 * dark);
+      if (bloomPass) bloomPass.strength = (0.45 + Math.sin(t * 1.8) * 0.06 + explosion * 0.22) * dark;
+      if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
     });
   }
 

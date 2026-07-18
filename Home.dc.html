@@ -45,9 +45,18 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* 母動畫=捲動(相機組裝→爆炸、切章);子動畫=時間(邊線閃爍、微塵、光脈衝) */
 #hero{position:relative;background:#090B0E;color:#F2EFE8}
 .pq-cine-stage{position:relative;min-height:100vh;overflow:hidden}
-#pq-hero-gl{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:0;pointer-events:none;transition:opacity .8s ease}
-#pq-hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 120% at 68% 48%,transparent 0 16%,rgba(9,11,14,.14) 44%,rgba(9,11,14,.82) 100%)}
-.pq-cine-noise{position:absolute;inset:0;z-index:1;opacity:.16;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:3px 3px,52px 52px}
+.pq-cine-paper{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;background:#F2EFE8;background-image:linear-gradient(rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(rgba(9,11,14,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.11) 1px,transparent 1px);background-size:26px 26px,26px 26px,130px 130px,130px 130px}
+#pq-hero-gl{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;pointer-events:none;transition:opacity .8s ease}
+#pq-hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(130% 120% at 68% 48%,transparent 0 16%,rgba(9,11,14,.14) 44%,rgba(9,11,14,.86) 100%)}
+.pq-cine-noise{position:absolute;inset:0;z-index:2;opacity:.16;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:3px 3px,52px 52px}
+.pq-cine-annot{position:absolute;inset:0;z-index:4;width:100%;height:100%;opacity:0;pointer-events:none;overflow:visible;font-family:'Space Grotesk',monospace}
+.pq-cine-annot .lead{stroke:#090B0E;stroke-width:1;fill:none}
+.pq-cine-annot .dot{fill:none;stroke:#FF6B2C;stroke-width:1.4}
+.pq-cine-annot .tick{stroke:rgba(9,11,14,.5);stroke-width:1}
+.pq-cine-annot .coord{fill:rgba(9,11,14,.55);font:600 9px 'Space Grotesk',monospace;letter-spacing:.06em}
+.pq-cine-annot .biz{fill:#090B0E;font:800 13px 'Noto Sans TC',sans-serif}
+.pq-cine-annot .note{fill:rgba(9,11,14,.66);font:400 11px 'Noto Sans TC',sans-serif}
+.pq-cine-annot .bizline{stroke:#FF6B2C;stroke-width:2}
 /* 基礎狀態(降級/引擎未接管):可讀的堆疊版 */
 .pq-cine-intro,.pq-cine-card{position:relative;z-index:3;max-width:640px;margin:0 auto 30px}
 .pq-cine-intro{display:flex;flex-direction:column;gap:20px}
@@ -91,6 +100,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #hero.pq-cine-on .pq-cine-loader{display:block;position:absolute;right:clamp(16px,3vw,40px);top:84px;z-index:5;color:#FF6B2C;font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.16em;transition:opacity .8s ease;pointer-events:none}
 #hero.pq-cine-on .pq-cine-loader.ready{opacity:0}
 #hero.pq-cine-on .pq-cine-loader.error{color:#ff5b5b}
+/* 攤開白宣紙藍圖模式:隱藏暗卡、標籤/導覽轉深色 */
+#hero.pq-cine-paper-on .pq-cine-card,#hero.pq-cine-paper-on .pq-cine-intro{opacity:0!important;pointer-events:none}
+#hero.pq-cine-paper-on .pq-cine-label{color:rgba(9,11,14,.5)}
+#hero.pq-cine-paper-on .pq-cine-label b{color:rgba(9,11,14,.82)}
+#hero.pq-cine-paper-on .pq-cine-rail button{color:rgba(9,11,14,.4)}
+#hero.pq-cine-paper-on .pq-cine-rail button.active{color:#FF6B2C}
+#hero.pq-cine-paper-on .pq-cine-phase{color:rgba(9,11,14,.4)}
 /* 幕4 跨產業:節點網路 canvas(子=漂浮、母=收束) */
 #cases{position:relative;overflow:hidden}
 [data-cases-net]{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -107,6 +123,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   #hero.pq-cine-on .pq-cine-phase span{display:none}
   #hero.pq-cine-on .pq-cine-phase span.active{display:block}
   #hero.pq-cine-on .pq-cine-loader{top:70px}
+  .pq-cine-annot .biz{font-size:11px}
+  .pq-cine-annot .note{display:none}
+  .pq-cine-annot .coord{font-size:7.5px}
   .pq-echo{display:none}
 }
 @media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}#pq-hero-gl,[data-cases-net]{display:none!important}.pq-cine-scrollcue i,.pq-echo{animation:none!important}}
@@ -119,9 +138,11 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 <!-- ============ HERO：爆炸攝影機捲動分鏡(母=捲動組裝/爆炸/切章,子=時間邊線閃爍/微塵/光脈衝) ============ -->
 <section id="hero" data-screen-label="Hero">
   <div class="pq-cine-stage" data-cine-stage>
+    <div class="pq-cine-paper" data-cine-paper aria-hidden="true"></div>
     <canvas id="pq-hero-gl" aria-hidden="true"></canvas>
     <div id="pq-hero-scrim" aria-hidden="true"></div>
     <div class="pq-cine-noise" aria-hidden="true"></div>
+    <svg class="pq-cine-annot" data-cine-annot aria-hidden="true"></svg>
 
     <!-- Beat 0:開場 -->
     <div class="pq-cine-intro" data-cine-card="0" data-eyebrow="ENGINE · ONLINE">
@@ -205,7 +226,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
       <ul><li>場景驗證</li><li>SaaS ARR</li><li>平台護城河</li></ul>
     </article>
 
-    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 線稿</span><span>02 / 材質</span><span>03 / 爆炸</span><span>04 / 零件聚焦</span></div>
+    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 線稿</span><span>02 / 材質</span><span>03 / 爆炸</span><span>04 / 零件聚焦</span><span>05 / 攤開藍圖</span></div>
     <div class="pq-cine-loader" data-cine-loader aria-hidden="true">載入 42 網格相機模型…</div>
     <nav class="pq-cine-rail" data-cine-rail aria-label="分鏡章節導覽"></nav>
     <div class="pq-cine-label" aria-hidden="true"><span>ACTIVE LAYER</span><b data-cine-labeltext>PQ-47 CINEMA</b></div>
@@ -261,6 +282,72 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
         </g>
       </svg>
       <span style="position:absolute;left:2px;bottom:-6px;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.35)">ONE ENGINE — MANY BRANDS</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 六大功能模組(白話) ============ -->
+<section id="modules" class="pq-sec" style="background:#F2EFE8">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">SIX MODULES · 六大功能</span></div>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">相機的六個零件,<br>就是生意的<span style="color:#FF6B2C">六件事</span></h2>
+    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">爆炸圖裡的每個零件,對應一件你每天在忙的業務。這裡用白話再說一次——由小到大,想從哪一塊開始都可以。</p>
+    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">LENS · 鏡頭</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">接客 · AI 客服</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">MAINBOARD · 主機板</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">CRM · 追客</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC;filter:brightness(.7)">SENSOR · 感光元件</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">行銷 · 內容生成</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,不用養小編。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">SHUTTER · 快門</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">報價</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">線上報價單、自動算稅、當天送出,不再來回喬。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">CHASSIS · 機身</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">專案</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p></div>
+      <div data-reveal style="border:1px solid rgba(9,11,14,.14);border-radius:12px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:9px;min-height:210px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC;filter:brightness(.7)">DISPLAY · 螢幕</span><h3 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">數據</h3><p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p></div>
+    </div>
+    <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
+  </div>
+</section>
+
+<!-- ============ 雙軌驗證 · 理念 ============ -->
+<section id="dualtrack" class="pq-sec" style="background:#090B0E;color:#F2EFE8">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">DUAL-TRACK VALIDATION</span></div>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">奇鋒是平台公司,<span style="color:#FF6B2C">不是接案公司</span></h2>
+    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">同一顆引擎,兩條軌道一起驗證:一邊做自家垂直品牌累積 know-how,一邊把通用工具賣給市場。一套引擎、多個品牌、雙軌驗證。</p>
+    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
+      <div data-reveal style="border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">TRACK A</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">自家垂直品牌</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">冒泡、AI Wedding Pro、AI Interior Pro 深入產業,累積真實 know-how 與資料飛輪——越用越強。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">TRACK B</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">Peak Ops 外部客戶</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">通用型 AI 業務工具,對外賣給還沒有專門工具的產業——年訂閱制、SaaS ARR 成長。</p></div>
+      <div data-reveal style="border:1px solid rgba(101,224,188,.35);border-radius:12px;background:linear-gradient(160deg,#14171C,#0f1b18);padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">PLATFORM</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">AI 營運平台</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">兩條軌道都餵養同一顆引擎與同一份資料飛輪;品牌屋結構下,每個垂直品牌都能獨立分拆或出售。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 導入流程 10 天上線 ============ -->
+<section id="onboard" class="pq-sec" style="background:#F2EFE8">
+  <div class="pq-wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">ONBOARDING · 導入流程</span></div>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">最快 <span style="color:#FF6B2C">10 個工作天</span>,系統上線</h2>
+    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">不用等半年。從簽約到上線,一條清楚的時間軸,專人陪你走完。</p>
+    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px">
+      <div data-reveal style="border-top:2px solid #FF6B2C;padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">DAY 0</span><b style="font:800 16px 'Noto Sans TC',sans-serif">簽約啟動</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">確認場景與目標,建立專案</span></div>
+      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 1–4</span><b style="font:800 16px 'Noto Sans TC',sans-serif">建置</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">建知識庫、設定話術、功能模組建置</span></div>
+      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 5–7</span><b style="font:800 16px 'Noto Sans TC',sans-serif">測試</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">實際情境測試,調整 AI 回應</span></div>
+      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 7–10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">校準</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">依回饋校準,人員教育訓練</span></div>
+      <div data-reveal style="border-top:2px solid #65E0BC;padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#1e9a72">DAY 10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">正式上線</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">系統上線,持續協助優化</span></div>
+    </div>
+    <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">完整垂直平台或大型客製系統,參考時程約六週。</p>
+  </div>
+</section>
+
+<!-- ============ 公司介紹 · 里程碑 ============ -->
+<section id="company" class="pq-sec" style="background:#090B0E;color:#F2EFE8">
+  <div class="pq-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center">
+    <div data-reveal>
+      <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">ABOUT · 公司介紹</span></div>
+      <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">從企業每天卡住的<br>流程開始</h2>
+      <p style="margin:20px 0 0;max-width:460px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">奇鋒國際 PeakQi 不是從 AI 名詞開始,而是從行銷、客服、提案、報價這些每天卡住的流程開始,把它們整合進一套營運系統。連市府級大型活動官網(嘉義市世博會)都如期交付上線。</p>
+    </div>
+    <div data-reveal style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:56px">2024</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">自研 47 模組 AI 業務引擎,累積型技術資產成形。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:56px">垂直</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">孵化冒泡、AI Wedding Pro、AI Interior Pro,深入 8+ 產業。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:56px">通用</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">Peak Ops 對外提供通用型 AI 業務工具,30+ 系統上線。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:56px">下一步</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">品牌屋結構——每個垂直品牌可獨立分拆或出售。</span></div>
     </div>
   </div>
 </section>
