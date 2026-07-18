@@ -275,6 +275,8 @@ export function createHomeEngine() {
 
     const parts = [];
     const BLACK = new THREE.Color(0x141414);
+    // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
+    const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
     function mkMat(hex, emissive) { return new THREE.MeshStandardMaterial({ color: hex, metalness: 0.62, roughness: 0.27, emissive: emissive == null ? hex : emissive, emissiveIntensity: 0.3 }); }
     function createInternals(asset) {
@@ -348,6 +350,18 @@ export function createHomeEngine() {
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
           parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color) });
         });
+        // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
+        {
+          const optics = parts.filter(pp => pp.groupId === 'optics');
+          if (optics.length >= 2) {
+            let maxd = 0;
+            optics.forEach(a => optics.forEach(b => { const d = a.center.distanceTo(b.center); if (d > maxd) { maxd = d; lensAxis.copy(a.center).sub(b.center); } }));
+            if (lensAxis.lengthSq() < 1e-6) lensAxis.set(1, 0, 0);
+            lensAxis.normalize();
+            lensPivot.set(0, 0, 0); optics.forEach(pp => lensPivot.add(pp.center)); lensPivot.multiplyScalar(1 / optics.length);
+            optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
+          }
+        }
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
         const ms = mb.getSize(new THREE.Vector3());
@@ -473,6 +487,12 @@ export function createHomeEngine() {
         // 拆解:所有零件適度散開(在框內),之後保持
         const staged = ez((disasK - part.delay * 0.5) / Math.max(0.3, 1 - part.delay * 0.5));
         const dest = part.home.clone().addScaledVector(part.offset, staged * OFF);
+        // 子:鏡頭整組繞光學軸原地自轉(拆解時零件亦一起旋)
+        if (part.lensSpin) {
+          _spinQ.setFromAxisAngle(lensAxis, t * 0.5);
+          dest.sub(lensPivot).applyQuaternion(_spinQ).add(lensPivot);
+          part.node.quaternion.copy(part.lensBaseQuat).premultiply(_spinQ);
+        }
         part.node.position.lerp(dest, 0.08);
         const hi = focused || paperK > 0.4;
         // 子:運作脈動(各零件不同節奏 —— 感光掃描 / 晶片閃爍 / 主機板資料流 / 排線傳輸)
