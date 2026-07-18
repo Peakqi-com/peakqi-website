@@ -186,7 +186,7 @@ export function createHomeEngine() {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.18;
 
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
@@ -216,8 +216,9 @@ export function createHomeEngine() {
     scene.fog = new THREE.FogExp2(0x090B0E, 0.028);
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     camera.position.set(0, 0.1, 11.5);
-    scene.add(new THREE.HemisphereLight(0xeaf2ff, 0x17110f, 1.5));
-    const keyL = new THREE.DirectionalLight(0xffffff, 2.9); keyL.position.set(4, 6, 7); scene.add(keyL);
+    scene.add(new THREE.HemisphereLight(0xeaf2ff, 0x17110f, 2.6));
+    const keyL = new THREE.DirectionalLight(0xffffff, 4.8); keyL.position.set(4, 6, 7); scene.add(keyL);
+    const fillL = new THREE.DirectionalLight(0xbcd4ff, 1.6); fillL.position.set(-6, 1, 4); scene.add(fillL);
     const orangeL = new THREE.PointLight(0xFF6B2C, 13, 18, 1.5); orangeL.position.set(4, -1, 5); scene.add(orangeL);
     const blueL = new THREE.PointLight(0x3E9BFF, 10, 16, 1.7); blueL.position.set(-5, 2, 3); scene.add(blueL);
 
@@ -400,7 +401,7 @@ export function createHomeEngine() {
     // ---- 攤開白宣紙藍圖:座標 + 業務類別 + 白話(卡片式,逐一浮現)----
     const NS = 'http://www.w3.org/2000/svg';
     const svgEl = (tag, cls) => { const e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; };
-    const CARDW = 248, CARDH = 72;
+    const CARDW = ctx.mobile ? 150 : 248, CARDH = ctx.mobile ? 52 : 72;
     const ANNOT = [
       { g: 'optics', idx: '01', biz: '接客 · AI 客服', note: '客人從這裡進來,AI 先接住、先理解', ax: 0.055, ay: 0.26, reveal: 0.70 },
       { g: 'sensor', idx: '02', biz: '行銷 · 內容生成', note: '把產業 know-how 變成貼文、圖片、影片', ax: 0.055, ay: 0.60, reveal: 0.75 },
@@ -426,9 +427,8 @@ export function createHomeEngine() {
     }
     const _wp = THREE ? new THREE.Vector3() : null;
 
-    // 分鏡節奏
-    const DARK_END = 0.55, PAPER_S = 0.55, PAPER_F = 0.70, REASS_S = 0.88;
-    const OFF = 0.72;
+    // 分鏡節奏:光澤PBR → 拆解 → 發光彩色線稿 → 黑白藍圖(母=捲動;運作=時間子動畫)
+    const CONTENT_END = 0.60, OFF = 0.62;
 
     const t0 = performance.now();
     ctx.onFrame((now) => {
@@ -436,71 +436,81 @@ export function createHomeEngine() {
       const t = (now - t0) / 1000;
       smoothP += (scrollP - smoothP) * 0.06;
       const p = smoothP;
-      const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / DARK_END) * BEATS)));
+      const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
       setBeat(beat);
-      setPhase(p < 0.05 ? 0 : p < 0.12 ? 1 : p < DARK_END ? 2 : p < REASS_S ? 3 : 4);
-      const materialReveal = ez((p - 0.03) / 0.09);
-      const paperK = ez(sub(p, PAPER_S, PAPER_F));                 // 0 暗場 → 1 白宣紙藍圖
+      setPhase(p < 0.10 ? 0 : p < 0.34 ? 1 : p < 0.62 ? 2 : p < 0.82 ? 3 : 4);
+      // 母:representation 轉場
+      const disasK = ez(sub(p, 0.10, 0.44));        // 拆解(適度、在框內)
+      const wireK = ez(sub(p, 0.34, 0.56));         // 光澤PBR → 發光彩色線稿
+      const paperK = ez(sub(p, 0.62, 0.80));        // 彩色線稿 → 黑白宣紙藍圖
       const dark = 1 - paperK;
-      // 攤開後保持,最後(REASS_S→)組裝回原型
-      const fullExplode = ez(sub(p, 0.5, 0.66)) * (1 - ez(sub(p, REASS_S, 0.99)));
+      const solid = 1 - wireK;                       // 材質(光澤)存在度
       const focusSet = cardFocus[beat] || new Set();
+      // 子:快門捕捉閃光(暗場循環)
+      const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
       if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 ? 1 : 0);
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
-      hero.classList.toggle('pq-cine-paper-on', paperK > 0.5);
-      // 母:旋轉(暗場=有界擺動,不整圈)→ 攤開俯視
+      hero.classList.toggle('pq-cine-paper-on', paperK > 0.55);
+      // 母:旋轉(有界擺動)→ 藍圖俯視
       const spinY = -0.5 + Math.sin(p * Math.PI * 3.0) * 0.5 + pointer.x * 0.06;
       const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
-      rig.rotation.y += ((spinY * dark + (-0.48) * paperK) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((tiltX * dark + (-1.0) * paperK) - rig.rotation.x) * 0.05;
+      rig.rotation.y += ((spinY * dark + (-0.5) * paperK) - rig.rotation.y) * 0.05;
+      rig.rotation.x += ((tiltX * dark + (-0.95) * paperK) - rig.rotation.x) * 0.05;
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark;
       const align = cards[beat] && cards[beat].getAttribute('data-align');
-      const targetX = (isMobile ? 0 : (align === 'right' ? -0.85 : 0.85)) * dark;
+      const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark;
       rig.position.x += (targetX - rig.position.x) * 0.04;
-      rig.position.y += (((isMobile ? 0.85 : 0) * dark) - rig.position.y) * 0.04;
-      rig.scale.setScalar((isMobile ? 0.6 : 0.88) * (1 - paperK * (isMobile ? 0.34 : 0.3)));
-      camera.position.z = (isMobile ? 13.6 : 12.0) + paperK * 2.6;
+      rig.position.y += (((isMobile ? 0.8 : 0) * dark) - rig.position.y) * 0.04;
+      rig.scale.setScalar((isMobile ? 0.62 : 0.92) * (1 - disasK * 0.1) * (1 - paperK * (isMobile ? 0.3 : 0.22)));
+      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2;
 
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
         const focused = focusSet.has(part.groupId);
-        // 暗場:只把聚焦零件抽出(其餘維持組裝);攤開:全爆炸→回組
-        const singleExt = (focused ? 0.62 : 0) * (1 - ez(sub(p, 0.5, 0.58)));
-        const staged = ez((fullExplode - part.delay) / Math.max(0.2, 0.78 - part.delay));
-        const ext = Math.max(singleExt, staged);
-        const dest = part.home.clone().addScaledVector(part.offset, ext * OFF);
+        // 拆解:所有零件適度散開(在框內),之後保持
+        const staged = ez((disasK - part.delay * 0.5) / Math.max(0.3, 1 - part.delay * 0.5));
+        const dest = part.home.clone().addScaledVector(part.offset, staged * OFF);
         part.node.position.lerp(dest, 0.08);
         const hi = focused || paperK > 0.4;
-        const flick = 0.84 + Math.sin(t * 4.6 + i * 1.43) * 0.14;
+        // 子:運作脈動(各零件不同節奏 —— 感光掃描 / 晶片閃爍 / 主機板資料流 / 排線傳輸)
+        let op2;
+        if (part.groupId === 'sensor') op2 = 0.5 + 0.5 * Math.sin(t * 3.2);
+        else if (part.groupId === 'chip') op2 = Math.sin(t * 7) > 0.4 ? 1 : 0.25;
+        else if (part.groupId === 'mainboard') op2 = 0.55 + 0.45 * Math.sin(t * 2.1 + i);
+        else if (part.groupId === 'ribbon') op2 = 0.5 + 0.5 * Math.sin(t * 4 + i);
+        else op2 = 0.7 + 0.3 * Math.sin(t * 1.8 + i * 0.6);
+        // 材質(光澤 PBR):solid 主導,線稿階段淡出;emissive 運作微光 + 快門閃
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const op = materialReveal * (hi ? 0.98 : 0.32) * dark;
-          mat.opacity = op; mat.depthWrite = op > 0.62;
-          if (mat.emissive) mat.emissiveIntensity = (focused ? 0.24 + Math.sin(t * 2.2) * 0.06 : 0.03) * dark;
+          const mo = solid * (hi ? 1 : 0.9);
+          mat.opacity = mo; mat.depthWrite = mo > 0.6;
+          if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
+        // 邊線(發光彩色線稿 → 黑白):運作脈動
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];
           em.color.copy(part.baseColor).lerp(BLACK, paperK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
-          em.opacity = Math.max(((1 - materialReveal) * 0.85 + (hi ? 0.7 : 0.16)) * flick * dark, paperK * 0.85);
+          const wireLine = wireK * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2);
+          em.opacity = Math.max(wireLine * dark, paperK * 0.85);
         }
+        // 拆解連接線
         const attr = part.connector.geometry.getAttribute('position');
         const dx = part.node.position.x - part.home.x, dy = part.node.position.y - part.home.y, dz = part.node.position.z - part.home.z;
         attr.setXYZ(0, part.center.x, part.center.y, part.center.z);
         attr.setXYZ(1, part.center.x + dx, part.center.y + dy, part.center.z + dz);
         attr.needsUpdate = true;
         part.connector.material.color.copy(part.baseColor).lerp(BLACK, paperK);
-        const cext = Math.max(ext, 0);
-        part.connector.material.opacity = Math.max(cext * (hi ? 0.5 : 0.1) * flick * dark, cext * paperK * 0.5);
+        part.connector.material.opacity = Math.max(staged * wireK * (hi ? 0.5 : 0.14) * dark, staged * paperK * 0.45);
       }
       // 藍圖卡片標註(逐一浮現,組裝回組時淡出)
       if (annotSvg && paperK > 0.02) {
         const W = stage.clientWidth || 1, H = stage.clientHeight || 1;
         annotSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-        const fade = 1 - ez(sub(p, REASS_S + 0.02, 0.99));
+        const fade = 1;
         for (let a = 0; a < annItems.length; a++) {
           const it = annItems[a];
           if (!it.node) { const f = parts.find(pp => pp.groupId === it.cfg.g); it.node = f ? f.node : null; }
@@ -510,10 +520,10 @@ export function createHomeEngine() {
           const lx = it.cfg.ax * W, ly = it.cfg.ay * H;
           const cardX = it.left ? lx : lx - CARDW, cardY = ly - CARDH / 2;
           it.rect.setAttribute('x', cardX.toFixed(1)); it.rect.setAttribute('y', cardY.toFixed(1)); it.rect.setAttribute('width', CARDW); it.rect.setAttribute('height', CARDH);
-          it.idxT.setAttribute('x', (cardX + 14).toFixed(1)); it.idxT.setAttribute('y', (cardY + 20).toFixed(1));
-          it.coordT.setAttribute('x', (cardX + CARDW - 14).toFixed(1)); it.coordT.setAttribute('y', (cardY + 20).toFixed(1));
-          it.bizT.setAttribute('x', (cardX + 14).toFixed(1)); it.bizT.setAttribute('y', (cardY + 42).toFixed(1));
-          it.noteT.setAttribute('x', (cardX + 14).toFixed(1)); it.noteT.setAttribute('y', (cardY + 60).toFixed(1));
+          it.idxT.setAttribute('x', (cardX + 12).toFixed(1)); it.idxT.setAttribute('y', (cardY + CARDH * 0.27).toFixed(1));
+          it.coordT.setAttribute('x', (cardX + CARDW - 12).toFixed(1)); it.coordT.setAttribute('y', (cardY + CARDH * 0.27).toFixed(1));
+          it.bizT.setAttribute('x', (cardX + 12).toFixed(1)); it.bizT.setAttribute('y', (cardY + CARDH * 0.58).toFixed(1));
+          it.noteT.setAttribute('x', (cardX + 12).toFixed(1)); it.noteT.setAttribute('y', (cardY + CARDH * 0.84).toFixed(1));
           const edgeX = it.left ? cardX + CARDW : cardX;
           it.lead.setAttribute('points', edgeX.toFixed(1) + ',' + (cardY + CARDH / 2).toFixed(1) + ' ' + sx.toFixed(1) + ',' + sy.toFixed(1));
           it.dot.setAttribute('cx', sx.toFixed(1)); it.dot.setAttribute('cy', sy.toFixed(1));
@@ -524,10 +534,10 @@ export function createHomeEngine() {
         }
       }
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
-      dust.material.opacity = 0.4 * dark;
+      dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
-      orangeL.intensity = (12 + Math.sin(t * 2.7) * 3) * (0.4 + 0.6 * dark);
-      if (bloomPass) bloomPass.strength = (0.4 + Math.sin(t * 1.8) * 0.05 + fullExplode * 0.18) * dark;
+      orangeL.intensity = (15 + Math.sin(t * 2.7) * 3 + shot * 26) * (0.4 + 0.6 * dark);
+      if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark;
       if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
     });
   }

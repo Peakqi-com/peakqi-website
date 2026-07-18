@@ -46,6 +46,12 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #hero{position:relative;background:#090B0E;color:#F2EFE8}
 .pq-cine-stage{position:relative;min-height:100vh;overflow:hidden}
 .pq-cine-paper{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;background:#F2EFE8;background-image:linear-gradient(rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(rgba(9,11,14,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.11) 1px,transparent 1px);background-size:26px 26px,26px 26px,130px 130px,130px 130px}
+.pq-cine-paper::after{content:"";position:absolute;inset:clamp(16px,3.2vw,46px);border:1.5px solid rgba(9,11,14,.5)}
+.pq-cine-paper::before{content:"";position:absolute;inset:clamp(24px,4.2vw,60px);border:1px solid rgba(9,11,14,.18)}
+.pq-cine-titleblock{position:absolute;z-index:5;right:clamp(20px,3.4vw,50px);bottom:clamp(20px,3.4vw,50px);display:none;flex-direction:column;gap:2px;padding:10px 14px;border:1.5px solid rgba(9,11,14,.5);background:rgba(242,239,232,.7);color:rgba(9,11,14,.7);font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.12em;text-align:right}
+.pq-cine-titleblock b{color:#090B0E;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.06em}
+.pq-cine-titleblock span{color:#FF6B2C}
+#hero.pq-cine-paper-on .pq-cine-titleblock{display:flex}
 #pq-hero-gl{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:0;pointer-events:none;transition:opacity .8s ease}
 #pq-hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(130% 120% at 68% 48%,transparent 0 16%,rgba(9,11,14,.14) 44%,rgba(9,11,14,.86) 100%)}
 .pq-cine-noise{position:absolute;inset:0;z-index:2;opacity:.16;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:3px 3px,52px 52px}
@@ -125,7 +131,10 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   #hero.pq-cine-on .pq-cine-loader{top:70px}
   .pq-cine-annot .biz{font-size:11px}
   .pq-cine-annot .note{display:none}
-  .pq-cine-annot .coord{font-size:7.5px}
+  .pq-cine-annot .coord{display:none}
+  .pq-cine-annot .idx{font-size:9px}
+  /* 手機:隱藏浮動 Demo 鈕(避免遮擋內容) */
+  :has(> a[data-cta]){display:none!important}
   .pq-echo{display:none}
 }
 @media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}#pq-hero-gl,[data-cases-net]{display:none!important}.pq-cine-scrollcue i,.pq-echo{animation:none!important}}
@@ -202,8 +211,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
       <ul><li>任務指派</li><li>進度追蹤</li><li>交付結案</li></ul>
     </article>
 
-    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 線稿</span><span>02 / 材質</span><span>03 / 逐件說明</span><span>04 / 攤開藍圖</span><span>05 / 組裝回原型</span></div>
+    <div class="pq-cine-phase" data-cine-phase aria-hidden="true"><span>01 / 光澤原型</span><span>02 / 拆解</span><span>03 / 發光線稿</span><span>04 / 黑白藍圖</span><span>05 / 規格標註</span></div>
     <div class="pq-cine-loader" data-cine-loader aria-hidden="true">載入 42 網格相機模型…</div>
+    <div class="pq-cine-titleblock" aria-hidden="true"><span>PEAKQI OPERATING SYSTEM</span><b>MODEL PQ-47</b><span>EXPLODED SPEC / SHEET 01</span></div>
     <nav class="pq-cine-rail" data-cine-rail aria-label="分鏡章節導覽"></nav>
     <div class="pq-cine-label" aria-hidden="true"><span>ACTIVE LAYER</span><b data-cine-labeltext>PQ-47 CINEMA</b></div>
 
