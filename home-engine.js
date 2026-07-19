@@ -318,7 +318,7 @@ export function createHomeEngine() {
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
     const SCR_R = 0.05, SCR_INSET = 0.02, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮 + 每角分段
-    let SCR_OFFX = -0.04, SCR_OFFY = 0.0, SCR_ROT_DEG = 1.5, SCR_SCALE = 0.98;   // 微調:位移(-右)+ 旋轉(+順時針=左下提/右上縮回)+ 整體縮放(<1 縮小)。window.__scrTune(ox,oy,rot,scale) 即時調
+    let SCR_OFFX = -0.04, SCR_OFFY = 0.0, SCR_ROT_DEG = -2, SCR_SCALE = 0.98;   // 微調:位移(-右)+ 旋轉(-逆時針=右上角往上外提到螢幕角)+ 整體縮放(<1 縮小)。window.__scrTune(ox,oy,rot,scale) 即時調
     const screenLocalPts = [];                    // 圓角矩形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
     // 由螢幕 mesh 幾何 bounding box「前面(靠相機的 z 面)」建立「圓角矩形」控制點:每角一段 90° 弧逼近圓角,再套用位移+旋轉微調
