@@ -535,9 +535,6 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
-        if (typeof window !== 'undefined') {
-          window.__partsInfo = () => parts.map((pp, i) => { const b = new THREE.Box3().setFromObject(pp.node); const s = b.getSize(new THREE.Vector3()); return { i, name: pp.name, g: pp.groupId, sz: [+s.x.toFixed(2), +s.y.toFixed(2), +s.z.toFixed(2)], home: [+pp.home.x.toFixed(2), +pp.home.y.toFixed(2), +pp.home.z.toFixed(2)] }; });
-        }
         // U3s:把 5 個零件對到現有真實 node(沿用模型零件;找不到就用最接近的,見註解)
         {
           const byName = (nm) => parts.find(pp => pp.name === nm);
@@ -702,7 +699,6 @@ export function createHomeEngine() {
         sTextK = ez(sub(cp, 0.26, 0.40)) * (1 - ez(sub(cp, 0.80, 0.94)));  // 文字停留
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
-      if (typeof window !== 'undefined') window.__sdbg = { sComp, sFocusK: +sFocusK.toFixed(2), studyP: +studyP.toFixed(3), scrollP: +scrollP.toFixed(3), p: +p.toFixed(3), R: +R.toFixed(2), flipK: +flipK.toFixed(2), summaryK: +summaryK.toFixed(2) };
       // 展示位置(相機相對:中央偏右/左,拉近放大成畫面焦點)
       if (sFocusK > 0.001 && sPartNode) {
         const cfg = STUDY[sComp], side = cfg.side === 'right' ? 1 : -1;

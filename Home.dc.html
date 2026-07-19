@@ -204,7 +204,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   :has(> a[data-cta]){display:none!important}
   .pq-echo{display:none}
 }
-@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}#pq-hero-gl,[data-cases-net]{display:none!important}.pq-cine-scrollcue i,.pq-echo{animation:none!important}}
+@media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}#pq-hero-gl,[data-cases-net]{display:none!important}.pq-cine-scrollcue i,.pq-echo{animation:none!important}
+  /* 零件展示改為靜態五項文字列表 + 章節標題;隱藏動畫用疊層 */
+  .pq-cine-studytitle{position:static!important;opacity:1!important;transform:none!important;max-width:none;margin:32px auto 8px;padding:0 6vw;left:auto;top:auto}
+  .pq-study{position:static!important;inset:auto;display:flex;flex-direction:column;gap:22px;padding:8px 6vw 40px}
+  .pq-study-card,.pq-study-card[data-side="left"],.pq-study-card[data-side="right"]{position:static!important;opacity:1!important;transform:none!important;width:auto;left:auto;right:auto;top:auto;bottom:auto;text-align:left;border-left:2px solid rgba(254,106,45,.5);padding-left:16px}
+  .pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}
+  .pq-cine-lenstitle,.pq-cine-flash{display:none!important}}
 </style>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)e.preventDefault();if(r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
