@@ -703,7 +703,7 @@ export function createHomeEngine() {
           screenEl.style.left = minX.toFixed(1) + 'px'; screenEl.style.top = minY.toFixed(1) + 'px';
           screenEl.style.width = bw.toFixed(1) + 'px'; screenEl.style.height = bh.toFixed(1) + 'px';
           let poly = '';
-          for (let i = 0; i < 8; i++) poly += (_scrPx[i].x - minX).toFixed(1) + 'px ' + (_scrPx[i].y - minY).toFixed(1) + 'px' + (i < 7 ? ', ' : '');
+          for (let i = 0; i < N; i++) poly += (_scrPx[i].x - minX).toFixed(1) + 'px ' + (_scrPx[i].y - minY).toFixed(1) + 'px' + (i < N - 1 ? ', ' : '');
           screenEl.style.clipPath = 'polygon(' + poly + ')';
           screenEl.style.opacity = vidK.toFixed(3);
           if (dbgRedEl) dbgRedEl.setAttribute('points', _scrPx.map(pp => pp.x.toFixed(1) + ',' + pp.y.toFixed(1)).join(' '));
