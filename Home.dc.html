@@ -83,9 +83,10 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* U5 Slogan:外框字掃描填實 + 逐段浮現(--k 由捲動驅動;子=持續微光掃描) */
 .pq-slogan{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(12px,1.8vw,24px);text-align:center;padding:0 6vw;pointer-events:none;opacity:clamp(0,calc(var(--k,0)*3),1)}
 .pq-slogan-eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;opacity:clamp(0,calc((var(--k,0) - .04)*6),1);transform:translateY(calc((1 - var(--k,0))*10px))}
-.pq-slogan-title{position:relative;margin:0;font:900 clamp(2rem,6.4vw,5.4rem)/1.12 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:clamp(1px,.16vw,2px) rgba(255,107,44,.75)}
-.pq-slogan-title::before{content:attr(data-text);position:absolute;inset:0;color:transparent;-webkit-text-stroke:clamp(1px,.16vw,2px) #F2EFE8;clip-path:inset(0 calc((1 - var(--k,0))*100%) 0 0)}
-.pq-slogan-title::after{content:"";position:absolute;top:-4%;bottom:-4%;left:calc(var(--k,0)*100%);width:3px;background:#FF6B2C;box-shadow:0 0 20px 3px #FF6B2C;opacity:clamp(0,calc(var(--k,0)*(1 - var(--k,0))*8),1)}
+.pq-slogan-title{position:relative;margin:0;font:900 clamp(2rem,6.4vw,5.4rem)/1.12 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8;--step:.04;--dur:.24}
+/* 逐字「開機/解碼」浮現:每字由暗、模糊、下移的殘影 → 實體字,通電時橘光一波掃過(--k 由捲動驅動,--i 每字索引) */
+.pq-slogan-title .ch{display:inline-block;white-space:pre;--p:clamp(0,calc((var(--k,0) - var(--i,0)*var(--step)) / var(--dur)),1);color:#F2EFE8;opacity:calc(.05 + .95*var(--p));transform:translateY(calc((1 - var(--p))*.42em)) scale(calc(.9 + .1*var(--p)));filter:blur(calc((1 - var(--p))*7px));text-shadow:0 0 calc(var(--p)*(1 - var(--p))*52px) rgba(255,107,44,.95),0 0 calc(var(--p)*(1 - var(--p))*20px) #FF6B2C;will-change:opacity,transform,filter}
+.pq-slogan-title .ch.accent{color:#FF6B2C}
 .pq-slogan-lock{font:700 clamp(11px,1.3vw,15px) 'Space Grotesk',sans-serif;letter-spacing:calc(.12em + var(--k,0)*.34em);color:rgba(242,239,232,.72);opacity:clamp(0,calc((var(--k,0) - .3)*4.5),1)}
 .pq-slogan-sub{margin:0;font:600 13px 'Noto Sans TC',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.5);opacity:clamp(0,calc((var(--k,0) - .45)*5),1)}
 .pq-slogan-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px;pointer-events:auto;opacity:clamp(0,calc((var(--k,0) - .6)*5),1)}
@@ -322,7 +323,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
     <!-- U5 回機身 + Slogan(外框字掃描填實 + 逐段浮現;--k 由捲動驅動) -->
     <div class="pq-slogan" data-cine-slogan aria-hidden="true">
       <span class="pq-slogan-eyebrow">OUR MISSION · PEAKQI 2026</span>
-      <h2 class="pq-slogan-title" data-text="別讓瑣碎,耽誤真正重要的事">別讓瑣碎,耽誤真正重要的事</h2>
+      <h2 class="pq-slogan-title" data-accent="6">別讓瑣碎,耽誤真正重要的事</h2>
       <div class="pq-slogan-lock">MADE FOR WHAT MATTERS</div>
       <p class="pq-slogan-sub">一套引擎 · 多個品牌 · 雙軌驗證</p>
       <div class="pq-slogan-cta">
