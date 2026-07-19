@@ -227,6 +227,56 @@ export function createHomeEngine() {
         buildScreenPts(screenMesh);
         return JSON.stringify(cornerLocal);
       };
+      // 互動式四角拖曳工具:window.__cornerTool(true) 開,拖藍點對齊,左下框顯示可貼給 AI 的數值
+      const _rayToLocal = (px, py) => {
+        const el = renderer.domElement, W = el.clientWidth || window.innerWidth, H = el.clientHeight || window.innerHeight;
+        const rc = new THREE.Raycaster();
+        rc.setFromCamera(new THREE.Vector2(px / W * 2 - 1, -(py / H * 2 - 1)), camera);
+        const hs = rc.intersectObject(screenMesh, false);
+        return hs.length ? screenMesh.worldToLocal(hs[0].point.clone()) : null;
+      };
+      const _ctEnsure = () => {
+        if (_ctEls) return;
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none';
+        const labels = ['左上', '右上', '右下', '左下'], handles = [];
+        for (let i = 0; i < 4; i++) {
+          const h = document.createElement('div');
+          h.style.cssText = 'position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;border:2px solid #3E9BFF;background:rgba(62,155,255,.4);pointer-events:auto;cursor:grab;box-shadow:0 0 12px #3E9BFF;touch-action:none';
+          const lb = document.createElement('span');
+          lb.textContent = labels[i];
+          lb.style.cssText = 'position:absolute;left:26px;top:-2px;font:700 11px sans-serif;color:#9fd2ff;white-space:nowrap;text-shadow:0 1px 3px #000';
+          h.appendChild(lb);
+          h.addEventListener('pointerdown', (e) => { _ctDrag = i; try { h.setPointerCapture(e.pointerId); } catch (er) {} h.style.cursor = 'grabbing'; e.preventDefault(); });
+          wrap.appendChild(h); handles.push(h);
+        }
+        const read = document.createElement('textarea');
+        read.readOnly = true;
+        read.style.cssText = 'position:fixed;left:16px;bottom:16px;width:560px;height:56px;z-index:99999;pointer-events:auto;background:rgba(9,11,14,.92);color:#65E0BC;border:1px solid #3E9BFF;font:12px/1.4 monospace;padding:8px;border-radius:6px;resize:none';
+        document.body.appendChild(wrap); document.body.appendChild(read);
+        const onMove = (e) => {
+          if (_ctDrag < 0 || !screenMesh || !cornerLocal) return;
+          const rect = renderer.domElement.getBoundingClientRect();
+          const v = _rayToLocal(e.clientX - rect.left, e.clientY - rect.top);
+          if (v) { cornerLocal[_ctDrag] = [+v.x.toFixed(4), +v.y.toFixed(4), +v.z.toFixed(4)]; buildScreenPts(screenMesh); }
+        };
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', () => { if (_ctDrag >= 0) { _ctDrag = -1; handles.forEach(h => h.style.cursor = 'grab'); } });
+        _ctEls = { wrap, handles, read };
+      };
+      window.__cornerTool = (on) => {
+        if (!screenMesh) return 'screenMesh 還沒好,捲到影片顯示的段落再開';
+        if (!cornerLocal) {   // 初始化為螢幕 mesh bbox 四角
+          screenMesh.geometry.computeBoundingBox(); const b = screenMesh.geometry.boundingBox, z = b.min.z;
+          cornerLocal = [[b.max.x, b.max.y, z], [b.min.x, b.max.y, z], [b.min.x, b.min.y, z], [b.max.x, b.min.y, z]].map(c => [+c[0].toFixed(4), +c[1].toFixed(4), +c[2].toFixed(4)]);
+          buildScreenPts(screenMesh);
+        }
+        _ctEnsure();
+        _ctOn = on !== false;
+        _ctEls.wrap.style.display = _ctOn ? 'block' : 'none';
+        _ctEls.read.style.display = _ctOn ? 'block' : 'none';
+        return _ctOn ? '拖曳四個藍點對齊螢幕,左下框的數值複製貼給我(關閉:window.__cornerTool(false))' : '已關閉';
+      };
     }
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
@@ -346,12 +396,13 @@ export function createHomeEngine() {
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
-    const SCR_R = 0.05, SCR_INSET = 0.02, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮 + 每角分段
-    let SCR_OFFX = -0.04, SCR_OFFY = 0.0, SCR_ROT_DEG = -2, SCR_SCALE = 0.98;   // (bbox 後備用)微調:位移/旋轉/縮放。window.__scrTune(ox,oy,rot,scale)
-    // 影片 4 角(mesh-local,TL,TR,BR,BL;隨相機轉、不飄);用 window.__setCorners([tlx,tly],[trx,try],[blx,bly],[brx,bry]) 由畫面像素反投影設定後,把回傳值貼進這裡寫死
-    const SCR_CORNERS_HARD = [[0.5842, 0.4677, -0.2902], [-0.6537, 0.4617, -0.2911], [-0.6683, -0.4156, -0.4139], [0.554, -0.4526, -0.4191]];
+    const SCR_R = 0.05, SCR_INSET = 0.0, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮(0=貼滿 bbox 四角)+ 每角分段
+    let SCR_OFFX = 0.0, SCR_OFFY = 0.0, SCR_ROT_DEG = 0, SCR_SCALE = 1.0;   // 預設不位移/旋轉/縮放 → 影片精準貼「螢幕 mesh 四角(=藍色 debug 框)」。window.__scrTune(ox,oy,rot,scale)
+    // 影片 4 角(mesh-local,TL,TR,BR,BL;隨相機轉、不飄);null=直接用螢幕 mesh 的 bbox 四角(藍框)。要自訂用 window.__setCorners(...) 取回傳值貼這
+    const SCR_CORNERS_HARD = null;
     const screenLocalPts = [];                    // 圓角多邊形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
+    let _ctOn = false, _ctEls = null, _ctDrag = -1;   // 互動式四角拖曳工具狀態
     // 4 個角(mesh-local,順序 TL,TR,BR,BL);由 __setCorners 用畫面像素反投影設定 → 影片精準貼 4 點且隨相機轉;null=用 bbox
     let cornerLocal = SCR_CORNERS_HARD;
     // 由 4 個角(自訂或 bbox 前面)建「圓角四邊形」控制點:每角用二次貝茲曲線做圓角(對任意四邊形都成立)
@@ -774,6 +825,17 @@ export function createHomeEngine() {
             dbgBlueEl.setAttribute('points', rc.join(' '));
           }
         }
+      }
+      // 互動式四角拖曳工具:把 4 角投影到畫面定位藍點手把 + 更新可複製數值
+      if (_ctOn && _ctEls && cornerLocal && screenMesh) {
+        screenMesh.updateWorldMatrix(true, false);
+        const el = renderer.domElement, SW = el.clientWidth || 1, SH = el.clientHeight || 1, rect = el.getBoundingClientRect();
+        for (let i = 0; i < 4; i++) {
+          _wp.set(cornerLocal[i][0], cornerLocal[i][1], cornerLocal[i][2]).applyMatrix4(screenMesh.matrixWorld).project(camera);
+          _ctEls.handles[i].style.left = ((_wp.x * 0.5 + 0.5) * SW + rect.left).toFixed(1) + 'px';
+          _ctEls.handles[i].style.top = ((-_wp.y * 0.5 + 0.5) * SH + rect.top).toFixed(1) + 'px';
+        }
+        _ctEls.read.value = 'const SCR_CORNERS_HARD = ' + JSON.stringify(cornerLocal) + ';';
       }
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
