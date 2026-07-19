@@ -214,6 +214,19 @@ export function createHomeEngine() {
         buildScreenPts(screenMesh);
         return JSON.stringify(cornerLocal);
       };
+      // 只調單一角(其他不動):i = 0左上/1右上/2右下/3左下,pt=[畫面x,畫面y]。回傳完整 4 角可寫死
+      window.__setCorner = (i, pt) => {
+        if (!screenMesh || !cornerLocal) return 'need cornerLocal';
+        const el = renderer.domElement, W = el.clientWidth || window.innerWidth, H = el.clientHeight || window.innerHeight;
+        const rc = new THREE.Raycaster();
+        rc.setFromCamera(new THREE.Vector2(pt[0] / W * 2 - 1, -(pt[1] / H * 2 - 1)), camera);
+        const hs = rc.intersectObject(screenMesh, false);
+        if (!hs.length) return 'ray miss';
+        const v = screenMesh.worldToLocal(hs[0].point.clone());
+        cornerLocal[i] = [+v.x.toFixed(4), +v.y.toFixed(4), +v.z.toFixed(4)];
+        buildScreenPts(screenMesh);
+        return JSON.stringify(cornerLocal);
+      };
     }
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
@@ -336,7 +349,7 @@ export function createHomeEngine() {
     const SCR_R = 0.05, SCR_INSET = 0.02, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮 + 每角分段
     let SCR_OFFX = -0.04, SCR_OFFY = 0.0, SCR_ROT_DEG = -2, SCR_SCALE = 0.98;   // (bbox 後備用)微調:位移/旋轉/縮放。window.__scrTune(ox,oy,rot,scale)
     // 影片 4 角(mesh-local,TL,TR,BR,BL;隨相機轉、不飄);用 window.__setCorners([tlx,tly],[trx,try],[blx,bly],[brx,bry]) 由畫面像素反投影設定後,把回傳值貼進這裡寫死
-    const SCR_CORNERS_HARD = [[0.5842, 0.4677, -0.2902], [-0.6537, 0.4617, -0.2911], [-0.67, -0.4082, -0.4129], [0.554, -0.4526, -0.4191]];
+    const SCR_CORNERS_HARD = [[0.5842, 0.4677, -0.2902], [-0.6537, 0.4617, -0.2911], [-0.6683, -0.4156, -0.4139], [0.554, -0.4526, -0.4191]];
     const screenLocalPts = [];                    // 圓角多邊形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
     // 4 個角(mesh-local,順序 TL,TR,BR,BL);由 __setCorners 用畫面像素反投影設定 → 影片精準貼 4 點且隨相機轉;null=用 bbox
