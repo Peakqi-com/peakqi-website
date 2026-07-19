@@ -161,6 +161,7 @@ export function createHomeEngine() {
     const phaseSpans = hero ? Array.from(hero.querySelectorAll('[data-cine-phase] > span')) : [];
     const loader = hero && hero.querySelector('[data-cine-loader]');
     const paperEl = hero && hero.querySelector('[data-cine-paper]');
+    const studyTitleEl = hero && hero.querySelector('[data-cine-studytitle]');
     const scrimEl = document.getElementById('pq-hero-scrim');
     const noiseEl = hero && hero.querySelector('.pq-cine-noise');
     const annotSvg = hero && hero.querySelector('[data-cine-annot]');
@@ -210,7 +211,7 @@ export function createHomeEngine() {
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
     // 更長的視差行程
-    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 1180 : 1300 });   // 加長捲動行程 → 整體(含影片切換)節奏放慢,手機加更多
+    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 1400 : 1750 });   // 加長:騰出白藍圖「單一零件展示」章節(~525vh);組回→翻面→影片→slogan 的 scrollP 不變
 
     // rail 按鈕
     const railBtns = [];
@@ -422,6 +423,9 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
+        if (typeof window !== 'undefined') {
+          window.__partsInfo = () => parts.map((pp, i) => { const b = new THREE.Box3().setFromObject(pp.node); const s = b.getSize(new THREE.Vector3()); return { i, name: pp.name, g: pp.groupId, sz: [+s.x.toFixed(2), +s.y.toFixed(2), +s.z.toFixed(2)], home: [+pp.home.x.toFixed(2), +pp.home.y.toFixed(2), +pp.home.z.toFixed(2)] }; });
+        }
         // U4b:找到 GLB 內的螢幕面 mesh(Object_12),由它的幾何前面建立 8 個斜切角控制點 → DOM 影片直接錨定真實螢幕位置
         asset.traverse(o => { if (o.isMesh && o.name === SCR_NAME) screenMesh = o; });
         if (!screenMesh) {   // 後備:找最像螢幕的扁平 camera_body mesh(寬>1、高>0.7、深<0.25)
@@ -537,7 +541,7 @@ export function createHomeEngine() {
     const _wp = THREE ? new THREE.Vector3() : null;
 
     // 分鏡節奏:光澤PBR → 拆解 → 發光彩色線稿 → 黑白藍圖(母=捲動;運作=時間子動畫)
-    const CONTENT_END = 0.48, OFF = 0.62;
+    const CONTENT_END = 0.24, OFF = 0.62;   // 8 段故事卡集中在拆解/線稿(0–0.24),之後進白藍圖零件展示
 
     const t0 = performance.now();
     ctx.onFrame((now) => {
@@ -546,16 +550,20 @@ export function createHomeEngine() {
       smoothP += (scrollP - smoothP) * 0.06;
       const p = smoothP;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
-      const review = p > 0.48;                      // 藍圖後:組回/翻面/看影片,不顯示故事卡
+      const review = p > 0.26;                      // 藍圖/零件展示起,不顯示故事卡
       setBeat(review ? -1 : beat);
-      setPhase(p < 0.08 ? 0 : p < 0.26 ? 1 : p < 0.46 ? 2 : p < 0.56 ? 3 : p < 0.64 ? 4 : 5);
-      // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)
+      // 新增相位 3=黑白藍圖(含零件展示 0.22–0.56);組回(4)、翻面看螢幕(5)沿用
+      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.22 ? 2 : p < 0.56 ? 3 : p < 0.64 ? 4 : 5);
+      // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)。組回/翻面/影片/slogan scrollP 全部不變
       const R = ez(sub(p, 0.56, 0.64));             // U3a 組回實體
       const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
       const flipK = ez(sub(scrollP, 0.64, 0.72)) * (1 - sloganK);  // U3b 翻面:用 scrollP 立即反應(不吃 smoothP 延遲),配合快 lerp 捲到就位
-      const disasK = ez(sub(p, 0.08, 0.34)) * (1 - R);
-      const wireK = ez(sub(p, 0.26, 0.44)) * (1 - R);
-      const paperK = ez(sub(p, 0.46, 0.54)) * (1 - R);
+      const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R);   // 前段壓縮,騰出零件展示
+      const wireK = ez(sub(p, 0.14, 0.24)) * (1 - R);
+      const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
+      // U3s 白藍圖「單一零件展示」章節:studyP 0→1 對應 5 個零件(每個 0.2);章節標題在最前面淡入淡出
+      const studyP = sub(p, 0.29, 0.53);
+      const introK = ez(sub(p, 0.245, 0.29)) * (1 - ez(sub(p, 0.30, 0.335)));   // 章節標題:藍圖展開時出現,第一個零件開始時淡出
       const dark = 1 - paperK;
       const solid = 1 - wireK;
       const focusSet = review ? EMPTY : (cardFocus[beat] || EMPTY);
@@ -563,6 +571,7 @@ export function createHomeEngine() {
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
+      if (studyTitleEl) studyTitleEl.style.setProperty('--k', introK.toFixed(3));   // U3s 零件展示章節標題
       if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 && p < 0.58 ? 1 : 0);
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
@@ -589,7 +598,7 @@ export function createHomeEngine() {
       // 開場放大;拆解縮小;翻面看螢幕再放大
       rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
-      const framingK = ez(sub(p, 0.14, 0.22)) * (1 - ez(sub(p, 0.38, 0.46)));
+      const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
       if (framingK > 0.01) {
         const fp = parts.find(pp => focusSet.has(pp.groupId));
