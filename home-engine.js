@@ -389,8 +389,8 @@ export function createHomeEngine() {
         { const _ph = document.createElement('canvas'); _ph.width = _ph.height = 2; vtexMat.map = new THREE.CanvasTexture(_ph); }
         // 影片四角切圓角:在 UV(依長寬比修正)做 rounded-box SDF,遮掉角外像素
         vtexMat.onBeforeCompile = (sh) => {
-          sh.uniforms.uRadius = { value: 0.14 };
-          sh.uniforms.uAspect = { value: 2.82 / 2.03 };
+          sh.uniforms.uRadius = { value: 0.06 };
+          sh.uniforms.uAspect = { value: 3.05 / 2.0 };
           sh.fragmentShader = 'uniform float uRadius; uniform float uAspect;\n' + sh.fragmentShader.replace(
             '#include <dithering_fragment>',
             `#include <dithering_fragment>
@@ -468,10 +468,11 @@ export function createHomeEngine() {
       phaseSpans.forEach((s, i) => s.classList.toggle('active', i === ph));
     }
     // U4:切換目前播放的影片 + 業務字卡(母=捲動;影片獨立自動播=子)
-    let curShot = -2, flashStart = 0;
+    let curShot = -2, flashStart = 0, shotFadeStart = -1;
     function setShot(s, now) {
       if (s === curShot) return;
       curShot = s;
+      if (s >= 0) shotFadeStart = now;   // 每次換片 → 影片在原地淡入
       vids.forEach((v, i) => {
         const on = i === s; v.classList.toggle('is-on', on);
         if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
@@ -563,8 +564,11 @@ export function createHomeEngine() {
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
-      rig.position.x += ((targetX + flipK * (isMobile ? 0 : 1.1)) - rig.position.x) * 0.04;   // 翻面時相機靠右(前面不變)
+      const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
+      rig.position.x += ((_posTargetX - rig.position.x) * 0.04);   // 翻面時相機靠右(前面不變)
       rig.position.y += (((isMobile ? 0.8 : 0) * dark * (1 - flipK)) - rig.position.y) * 0.04;
+      // 相機是否已停在最終翻面姿態:讓螢幕影片「就位後才在原地淡入」,不從右側滑入
+      const settleK = clamp(1 - (Math.abs(rig.rotation.y - (yawNormal * (1 - flipK) + flipYaw * flipK)) / 0.18 + Math.abs(rig.position.x - _posTargetX) / 0.28), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
       rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
@@ -663,11 +667,13 @@ export function createHomeEngine() {
       } else if (curShot !== -2) { setShot(-1, now); }
       // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動(對齊桌機主流視角/長寬比)
       if (vtexPlane) {
-        vtexPlane.material.opacity = screenK;
+        // 就位後才在原地淡入(settleK)+ 每支影片切換時原地淡入(shotFadeK),不從右側飛入
+        const shotFadeK = shotFadeStart < 0 ? 1 : ez(clamp((now - shotFadeStart) / 420, 0, 1));
+        vtexPlane.material.opacity = screenK * settleK * shotFadeK;
         vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
         vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-        const vpw = 2.82, vph = 2.03;   // 裁切在螢幕玻璃內(留一點邊),四角圓角
-        vtexPlane.translateX(0.851); vtexPlane.translateY(-0.268);
+        const vpw = 3.05, vph = 2.0;   // 對齊螢幕玻璃藍框,四角小圓角
+        vtexPlane.translateX(0.783); vtexPlane.translateY(-0.229);
         vtexPlane.scale.set(vpw, vph, 1);
         // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
         if (recBadge) {
@@ -675,7 +681,7 @@ export function createHomeEngine() {
           recBadge.scale.set(bw / vpw, bh / vph, 1);
           // 平面 local +X 對應畫面左側(此平面 X 為鏡射),故左上角用 +X 邊
           recBadge.position.set(0.5 - (bw / vpw) / 2 - 0.06, 0.5 - (bh / vph) / 2 - 0.045, 0.002);
-          recBadge.material.opacity = screenK * (0.78 + 0.22 * (0.5 + 0.5 * Math.sin(t * 4)));   // 只讓紅點感覺閃,不整個消失
+          recBadge.material.opacity = screenK * settleK * shotFadeK * (0.78 + 0.22 * (0.5 + 0.5 * Math.sin(t * 4)));   // 隨影片就位淡入,紅點閃爍
         }
       }
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
