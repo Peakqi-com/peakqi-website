@@ -286,7 +286,7 @@ export function createHomeEngine() {
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
     // U4b:LCD 影片平面(VideoTexture 貼在背面螢幕上,跟相機一起轉)
-    let vtexPlane = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0);
+    let vtexPlane = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -379,8 +379,8 @@ export function createHomeEngine() {
         }
         // U4b:建立 LCD 影片平面(背面朝操作者=-光學軸方向;位置/尺寸在 frame 依可調參數對位)
         vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
-        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, toneMapped: false, side: THREE.DoubleSide }));
-        vtexPlane.renderOrder = 12;
+        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false, side: THREE.DoubleSide }));
+        vtexPlane.renderOrder = 20;
         vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
         asset.add(vtexPlane);
         const mb = new THREE.Box3().setFromObject(asset);
@@ -528,10 +528,10 @@ export function createHomeEngine() {
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
-      rig.position.x += (targetX - rig.position.x) * 0.04;
+      rig.position.x += ((targetX + flipK * (isMobile ? 0 : 1.1)) - rig.position.x) * 0.04;   // 翻面時相機靠右(前面不變)
       rig.position.y += (((isMobile ? 0.8 : 0) * dark * (1 - flipK)) - rig.position.y) * 0.04;
       // 開場放大;拆解縮小;翻面看螢幕再放大
-      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.45 : 0.32)));
+      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.14, 0.22)) * (1 - ez(sub(p, 0.38, 0.46)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
@@ -624,7 +624,14 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      if (vtexPlane) vtexPlane.material.opacity = 0;   // LCD 影片平面暫時停用(待對位)
+      // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動
+      if (vtexPlane) {
+        vtexPlane.material.opacity = reviewK;
+        vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
+        vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
+        vtexPlane.translateX(0.88); vtexPlane.translateY(-0.06);
+        vtexPlane.scale.set(2.7, 1.92, 1);
+      }
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;
