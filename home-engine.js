@@ -167,6 +167,11 @@ export function createHomeEngine() {
     // U4 螢幕看影片
     const reviewEl = hero && hero.querySelector('[data-cine-review]');
     const vids = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vid')) : [];
+    // 影片一律無限重播:loop 屬性 + ended 保險(隱藏面板/節流時仍自動接回)
+    vids.forEach(v => {
+      v.loop = true; v.muted = true;
+      v.addEventListener('ended', () => { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} });
+    });
     const vcards = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vcard')) : [];
     const flashEl = hero && hero.querySelector('[data-cine-flash]');
     const sloganEl = hero && hero.querySelector('[data-cine-slogan]');
