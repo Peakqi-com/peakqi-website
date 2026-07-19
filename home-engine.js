@@ -398,8 +398,8 @@ export function createHomeEngine() {
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
     const SCR_R = 0.05, SCR_INSET = 0.0, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮(0=貼滿 bbox 四角)+ 每角分段
     let SCR_OFFX = 0.0, SCR_OFFY = 0.0, SCR_ROT_DEG = 0, SCR_SCALE = 1.0;   // 預設不位移/旋轉/縮放 → 影片精準貼「螢幕 mesh 四角(=藍色 debug 框)」。window.__scrTune(ox,oy,rot,scale)
-    // 影片 4 角(mesh-local,TL,TR,BR,BL;隨相機轉、不飄);null=直接用螢幕 mesh 的 bbox 四角(藍框)。要自訂用 window.__setCorners(...) 取回傳值貼這
-    const SCR_CORNERS_HARD = null;
+    // 影片 4 角(mesh-local,TL,TR,BR,BL;隨相機轉、不飄);由 window.__cornerTool 拖曳對位後寫死。null=用螢幕 mesh bbox 四角
+    const SCR_CORNERS_HARD = [[0.6342, 0.4508, -0.2926], [-0.6555, 0.461, -0.2912], [-0.6517, -0.4537, -0.4193], [0.6299, -0.4491, -0.4186]];
     const screenLocalPts = [];                    // 圓角多邊形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
     let _ctOn = false, _ctEls = null, _ctDrag = -1;   // 互動式四角拖曳工具狀態
