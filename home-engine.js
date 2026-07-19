@@ -290,8 +290,8 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
-    // U4b:LCD 影片平面(VideoTexture 貼在背面螢幕上,跟相機一起轉)
-    let vtexPlane = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
+    // U4b:LCD 影片平面(VideoTexture 貼在背面螢幕上,跟相機一起轉)+ REC 角標(影片左上角,同平面子物件)
+    let vtexPlane = null, recBadge = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -388,6 +388,19 @@ export function createHomeEngine() {
         vtexPlane.renderOrder = 20;
         vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
         asset.add(vtexPlane);
+        // REC 角標:紅點 + REC 字,畫在小 canvas 貼圖,當 vtexPlane 子物件永遠貼在影片左上角
+        const recCv = document.createElement('canvas'); recCv.width = 256; recCv.height = 80;
+        const rg = recCv.getContext('2d');
+        rg.clearRect(0, 0, 256, 80);
+        // 深色藥丸底(讓紅點+字在亮畫面上也讀得到)
+        rg.fillStyle = 'rgba(9,11,14,0.55)';
+        rg.beginPath(); const rr = 40; rg.moveTo(rr, 6); rg.arcTo(250, 6, 250, 74, rr); rg.arcTo(250, 74, 6, 74, rr); rg.arcTo(6, 74, 6, 6, rr); rg.arcTo(6, 6, 250, 6, rr); rg.closePath(); rg.fill();
+        rg.fillStyle = '#ff3b30'; rg.beginPath(); rg.arc(42, 40, 15, 0, Math.PI * 2); rg.fill();
+        rg.fillStyle = '#f2efe8'; rg.font = '700 42px "Space Grotesk", system-ui, sans-serif';
+        rg.textBaseline = 'middle'; rg.fillText('REC', 70, 43);
+        const recTex = new THREE.CanvasTexture(recCv); if ('colorSpace' in recTex) recTex.colorSpace = THREE.SRGBColorSpace;
+        recBadge = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: recTex, transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false }));
+        recBadge.renderOrder = 21; vtexPlane.add(recBadge);
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
         const ms = mb.getSize(new THREE.Vector3());
@@ -621,8 +634,10 @@ export function createHomeEngine() {
           it.g.setAttribute('opacity', rev.toFixed(3));
         }
       }
-      // U4 螢幕看影片:翻面完成 → 右側大影片依序自動播 + 左側業務字卡 + 快門閃光切換
-      const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // Slogan 進場前先淡出影片/字卡
+      // U4 螢幕看影片:翻面完成 → 左側業務字卡 + LCD 螢幕亮起播影片 + 快門閃光切換
+      const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // 左側字卡:翻面途中即可進場
+      // 螢幕影片只在「翻面完成、停在最終角度」後才亮起(不在旋轉途中滑入,避免脫離螢幕)
+      const screenK = ez(sub(p, 0.72, 0.78)) * (1 - ez(sub(p, 0.89, 0.94)));
       if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
       if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
       if (reviewK > 0.02) {
@@ -631,11 +646,20 @@ export function createHomeEngine() {
       } else if (curShot !== -2) { setShot(-1, now); }
       // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動
       if (vtexPlane) {
-        vtexPlane.material.opacity = reviewK;
+        vtexPlane.material.opacity = screenK;
         vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
         vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-        vtexPlane.translateX(0.88); vtexPlane.translateY(-0.06);
-        vtexPlane.scale.set(2.7, 1.92, 1);
+        const vpw = 3.22, vph = 2.36;
+        vtexPlane.translateX(0.92); vtexPlane.translateY(-0.07);
+        vtexPlane.scale.set(vpw, vph, 1);
+        // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
+        if (recBadge) {
+          const bw = 0.66, bh = 0.21;
+          recBadge.scale.set(bw / vpw, bh / vph, 1);
+          // 平面 local +X 對應畫面左側(此平面 X 為鏡射),故左上角用 +X 邊
+          recBadge.position.set(0.5 - (bw / vpw) / 2 - 0.06, 0.5 - (bh / vph) / 2 - 0.045, 0.002);
+          recBadge.material.opacity = screenK * (0.78 + 0.22 * (0.5 + 0.5 * Math.sin(t * 4)));   // 只讓紅點感覺閃,不整個消失
+        }
       }
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
