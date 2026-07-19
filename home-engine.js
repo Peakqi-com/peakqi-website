@@ -384,7 +384,24 @@ export function createHomeEngine() {
         }
         // U4b:建立 LCD 影片平面(背面朝操作者=-光學軸方向;位置/尺寸在 frame 依可調參數對位)
         vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
-        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false, side: THREE.DoubleSide }));
+        const vtexMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false, side: THREE.DoubleSide });
+        // 佔位貼圖:讓 vMapUv varying 從一開始就存在(否則首次無貼圖編譯時 shader 參照 vMapUv 會報錯),之後 setShot 換成影片
+        { const _ph = document.createElement('canvas'); _ph.width = _ph.height = 2; vtexMat.map = new THREE.CanvasTexture(_ph); }
+        // 影片四角切圓角:在 UV(依長寬比修正)做 rounded-box SDF,遮掉角外像素
+        vtexMat.onBeforeCompile = (sh) => {
+          sh.uniforms.uRadius = { value: 0.14 };
+          sh.uniforms.uAspect = { value: 2.82 / 2.03 };
+          sh.fragmentShader = 'uniform float uRadius; uniform float uAspect;\n' + sh.fragmentShader.replace(
+            '#include <dithering_fragment>',
+            `#include <dithering_fragment>
+            vec2 _rp = (vMapUv - 0.5); _rp.x *= uAspect;
+            vec2 _b = vec2(0.5 * uAspect, 0.5) - uRadius;
+            vec2 _q = abs(_rp) - _b;
+            float _d = min(max(_q.x, _q.y), 0.0) + length(max(_q, 0.0)) - uRadius;
+            gl_FragColor.a *= 1.0 - smoothstep(-0.006, 0.006, _d);`
+          );
+        };
+        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), vtexMat);
         vtexPlane.renderOrder = 20;
         vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
         asset.add(vtexPlane);
@@ -649,8 +666,8 @@ export function createHomeEngine() {
         vtexPlane.material.opacity = screenK;
         vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
         vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-        const vpw = 3.22, vph = 2.36;
-        vtexPlane.translateX(0.667); vtexPlane.translateY(-0.251);
+        const vpw = 2.82, vph = 2.03;   // 裁切在螢幕玻璃內(留一點邊),四角圓角
+        vtexPlane.translateX(0.851); vtexPlane.translateY(-0.268);
         vtexPlane.scale.set(vpw, vph, 1);
         // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
         if (recBadge) {
