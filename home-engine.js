@@ -176,6 +176,7 @@ export function createHomeEngine() {
     });
     const vcards = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vcard')) : [];
     const flashEl = hero && hero.querySelector('[data-cine-flash]');
+    const lensTitleEl = hero && hero.querySelector('[data-cine-lenstitle]');
     const sloganEl = hero && hero.querySelector('[data-cine-slogan]');
     // U5 slogan:把標題切成逐字 span(--i 索引;末 N 字=橘色重點),CSS 用 --k 做「逐字開機/解碼」科技感浮現
     const sloganTitleEl = sloganEl && sloganEl.querySelector('.pq-slogan-title');
@@ -545,9 +546,9 @@ export function createHomeEngine() {
           const topBtn = ctrls.slice().sort((a, b) => b.center.y - a.center.y)[0];                              // 02 頂部按鈕≈center.y 最高的 control
           const sideDial = ctrls.slice().sort((a, b) => Math.abs(b.center.x) - Math.abs(a.center.x)).find(pp => pp !== topBtn) || ctrls[1]; // 04 側邊控制鍵≈|x| 最大
           STUDY[0].part = byName('lenses_low_40') || optics[0];                        // 01 對焦環=最外圈鏡組
-          STUDY[1].part = topBtn;                                                       // 02 快門/頂部按鈕(替代:最頂部 control node)
-          STUDY[2].part = byName('lenses010_low_37') || optics[optics.length - 1];      // 03 光圈=最內側鏡片(以縮放模擬葉片開合)
-          STUDY[3].part = sideDial;                                                     // 04 模式轉盤(替代:側邊 control node)
+          STUDY[1].part = topBtn;                                                       // 02 快門/頂部按鈕(替代:最頂部 control node,下壓一次)
+          STUDY[2].part = byName('lenses005_low_32') || optics[Math.floor(optics.length / 2)]; // 03 光圈(替代:中段鏡片,以縮放模擬葉片開合)
+          STUDY[3].part = byName('lenses002_low_29') || byName('lenses003_low_30') || optics[1]; // 04 模式轉盤(替代:一片鏡環,繞軸跳格轉;機身無獨立轉盤)
           STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
           // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
           parts.forEach(pp => { pp.node.parent.updateWorldMatrix(true, false); pp.gcLocal = pp.node.parent.worldToLocal(new THREE.Box3().setFromObject(pp.node).getCenter(new THREE.Vector3())); });
@@ -679,11 +680,12 @@ export function createHomeEngine() {
       const review = p > 0.26;                      // 藍圖/零件展示起,不顯示故事卡
       setBeat(review ? -1 : beat);
       // 新增相位 3=黑白藍圖(含零件展示 0.22–0.56);組回(4)、翻面看螢幕(5)沿用
-      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.22 ? 2 : p < 0.56 ? 3 : p < 0.64 ? 4 : 5);
+      setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.22 ? 2 : p < 0.56 ? 3 : p < 0.665 ? 4 : 5);
       // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)。組回/翻面/影片/slogan scrollP 全部不變
-      const R = ez(sub(p, 0.56, 0.64));             // U3a 組回實體
+      const R = ez(sub(p, 0.56, 0.62));             // U3a 組回實體(提早到 0.62 完成,騰出鏡頭總結標題停留)
       const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
-      const flipK = ez(sub(scrollP, 0.64, 0.72)) * (1 - sloganK);  // U3b 翻面:用 scrollP 立即反應(不吃 smoothP 延遲),配合快 lerp 捲到就位
+      const flipK = ez(sub(scrollP, 0.67, 0.72)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
+      const summaryK = ez(sub(scrollP, 0.618, 0.652)) * (1 - ez(sub(scrollP, 0.678, 0.705)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
       const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R);   // 前段壓縮,騰出零件展示
       const wireK = ez(sub(p, 0.14, 0.24)) * (1 - R);
       const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
@@ -700,7 +702,7 @@ export function createHomeEngine() {
         sTextK = ez(sub(cp, 0.26, 0.40)) * (1 - ez(sub(cp, 0.80, 0.94)));  // 文字停留
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
-      if (typeof window !== 'undefined') window.__sdbg = { sComp, sFocusK: +sFocusK.toFixed(2), sActionK: +sActionK.toFixed(2), studyP: +studyP.toFixed(3), part: sComp >= 0 && STUDY[sComp].part ? STUDY[sComp].part.name : null };
+      if (typeof window !== 'undefined') window.__sdbg = { sComp, sFocusK: +sFocusK.toFixed(2), studyP: +studyP.toFixed(3), scrollP: +scrollP.toFixed(3), p: +p.toFixed(3), R: +R.toFixed(2), flipK: +flipK.toFixed(2), summaryK: +summaryK.toFixed(2) };
       // 展示位置(相機相對:中央偏右/左,拉近放大成畫面焦點)
       if (sFocusK > 0.001 && sPartNode) {
         const cfg = STUDY[sComp], side = cfg.side === 'right' ? 1 : -1;
@@ -777,7 +779,7 @@ export function createHomeEngine() {
         // 展示放大目標(1.5–2.4x 內取中庸值,手機更小)
         if (part.studyScale == null) part.studyScale = 1;
         let tScale = 1;
-        if (isFocus) { tScale = 1 + sFocusK * (isMobile ? 0.55 : 0.75); if (STUDY[sComp].action === 'iris') tScale *= 0.62 + 0.5 * ez(sub(sActionK, 0.0, 0.6)); }
+        if (isFocus) { tScale = 1 + sFocusK * (isMobile ? 0.55 : 0.75); if (STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9)); }   // 光圈:小→大開一次→稍收回穩定
         part.studyScale += (tScale - part.studyScale) * 0.14;
         if (isFocus) {
           _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);   // 展示世界位置 → 該零件父層 local
@@ -912,6 +914,7 @@ export function createHomeEngine() {
         }
         _ctEls.read.value = 'const SCR_CORNERS_HARD = ' + JSON.stringify(cornerLocal) + ';';
       }
+      if (lensTitleEl) lensTitleEl.style.setProperty('--k', summaryK.toFixed(3));   // U3c 組裝完成鏡頭總結標題
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;

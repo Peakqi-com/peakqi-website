@@ -91,6 +91,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-vcard ul{margin:20px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:7px}
 .pq-cine-vcard li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 11px 'Noto Sans TC',sans-serif;letter-spacing:.03em}
 .pq-cine-flash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;pointer-events:none}
+/* U3c 組裝完成鏡頭正面章節總結標題(暗場置中,鏡頭中心對齊;非品牌 Slogan) */
+.pq-cine-lenstitle{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:clamp(10px,1.6vw,20px);padding:0 8vw;pointer-events:none;opacity:var(--k,0)}
+.pq-cine-lenstitle::before{content:"";position:absolute;left:50%;top:50%;width:min(760px,86vw);height:min(520px,60vh);transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(9,11,14,.62) 0%,rgba(9,11,14,0) 70%);z-index:-1}
+.pq-cine-lenstitle .eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C;transform:translateY(calc((1 - var(--k,0))*10px))}
+.pq-cine-lenstitle h2{margin:0;font:900 clamp(1.8rem,5vw,4rem)/1.16 'Noto Sans TC',sans-serif;color:#F2EFE8;letter-spacing:-.01em;text-shadow:0 2px 30px rgba(0,0,0,.6);transform:translateY(calc((1 - var(--k,0))*14px))}
+.pq-cine-lenstitle p{margin:0;font:400 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:30em}
+@media (max-width:820px){.pq-cine-lenstitle h2{font-size:1.7rem}}
 /* U5 Slogan:外框字掃描填實 + 逐段浮現(--k 由捲動驅動;子=持續微光掃描) */
 .pq-slogan{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(12px,1.8vw,24px);text-align:center;padding:0 6vw;pointer-events:none;opacity:clamp(0,calc(var(--k,0)*3),1)}
 .pq-slogan-eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;opacity:clamp(0,calc((var(--k,0) - .04)*6),1);transform:translateY(calc((1 - var(--k,0))*10px))}
@@ -354,6 +361,12 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
     </div>
     <div class="pq-cine-flash" data-cine-flash aria-hidden="true"></div>
 
+    <!-- U3c 組裝完成鏡頭正面「章節總結標題」(--k 由捲動驅動;翻面前淡出。這不是品牌 Hero Slogan) -->
+    <div class="pq-cine-lenstitle" data-cine-lenstitle aria-hidden="true">
+      <span class="eyebrow">ONE SYSTEM / EVERYDAY OPERATIONS</span>
+      <h2>組起來，讓日常自動運轉。</h2>
+      <p>接客、跟進、內容、專案與數據，回到同一套系統。</p>
+    </div>
     <!-- U5 回機身 + Slogan(外框字掃描填實 + 逐段浮現;--k 由捲動驅動) -->
     <div class="pq-slogan" data-cine-slogan aria-hidden="true">
       <span class="pq-slogan-eyebrow">OUR MISSION · PEAKQI 2026</span>
