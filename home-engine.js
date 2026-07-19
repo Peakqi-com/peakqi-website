@@ -290,8 +290,37 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
-    // U4b:LCD 影片平面(VideoTexture 貼在背面螢幕上,跟相機一起轉)+ REC 角標(影片左上角,同平面子物件)
+    // U4b:LCD 影片螢幕(VideoTexture 貼在背面螢幕上,跟相機一起轉)+ REC 角標(影片左上角,同平面子物件)
     let vtexPlane = null, recBadge = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
+    // 影片螢幕世界尺寸(對齊藍框)+ 四角斜切量(局部單位,x/y 各自 → 世界斜角約 45°)
+    const VTEX_W = 3.05, VTEX_H = 2.0, VTEX_CX = 0.10, VTEX_CY = 0.15;
+    // 螢幕邊界 8 個控制點(影片 mesh 的 local 座標,x,y ∈ [-0.5,0.5]);可逐點微調對齊藍框斜切角
+    const screenPoints = [
+      [-0.5 + VTEX_CX,  0.5],          // 0 左上水平起點
+      [ 0.5 - VTEX_CX,  0.5],          // 1 右上水平終點
+      [ 0.5,            0.5 - VTEX_CY], // 2 右上斜角終點
+      [ 0.5,           -0.5 + VTEX_CY], // 3 右下斜角起點
+      [ 0.5 - VTEX_CX, -0.5],          // 4 右下水平終點
+      [-0.5 + VTEX_CX, -0.5],          // 5 左下水平起點
+      [-0.5,           -0.5 + VTEX_CY], // 6 左下斜角終點
+      [-0.5,            0.5 - VTEX_CY]  // 7 左上斜角起點
+    ];
+    // Debug:目標螢幕邊界(藍線);預設同 screenPoints,可另外微調後再抄回上面
+    const targetPoints = screenPoints.map(p => p.slice());
+    // 自訂螢幕幾何:8 外框頂點 + 中心,扇形三角化;UV 依 object-fit:cover(置中裁切,不變形)
+    function buildScreenGeo() {
+      const va = 16 / 9, sa = VTEX_W / VTEX_H;         // 影片比例 / 螢幕比例
+      let su = 1, sv = 1;
+      if (va > sa) su = sa / va; else sv = va / sa;    // cover:較長邊裁切,置中
+      const pos = [0, 0, 0], uv = [0.5, 0.5], idx = [], n = screenPoints.length;
+      screenPoints.forEach(p => { pos.push(p[0], p[1], 0); uv.push(0.5 + p[0] * su, 0.5 + p[1] * sv); });
+      for (let i = 0; i < n; i++) idx.push(0, 1 + i, 1 + ((i + 1) % n));
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      g.setIndex(idx); g.computeVertexNormals();
+      return g;
+    }
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -382,29 +411,35 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
-        // U4b:建立 LCD 影片平面(背面朝操作者=-光學軸方向;位置/尺寸在 frame 依可調參數對位)
+        // U4b:建立 LCD 影片螢幕(背面朝操作者=-光學軸方向;自訂斜切角幾何,位置/尺寸在 frame 對位)
         vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
+        // depthTest:false + 高 renderOrder → 影片永遠畫在最上層不會 z-fighting/穿模;
+        // 幾何本身內縮到螢幕開口內,邊緣自然貼齊機殼開口(比 depth 遮擋在斜視角更穩)
         const vtexMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false, side: THREE.DoubleSide });
-        // 佔位貼圖:讓 vMapUv varying 從一開始就存在(否則首次無貼圖編譯時 shader 參照 vMapUv 會報錯),之後 setShot 換成影片
-        { const _ph = document.createElement('canvas'); _ph.width = _ph.height = 2; vtexMat.map = new THREE.CanvasTexture(_ph); }
-        // 影片四角切圓角:在 UV(依長寬比修正)做 rounded-box SDF,遮掉角外像素
-        vtexMat.onBeforeCompile = (sh) => {
-          sh.uniforms.uRadius = { value: 0.06 };
-          sh.uniforms.uAspect = { value: 3.05 / 2.0 };
-          sh.fragmentShader = 'uniform float uRadius; uniform float uAspect;\n' + sh.fragmentShader.replace(
-            '#include <dithering_fragment>',
-            `#include <dithering_fragment>
-            vec2 _rp = (vMapUv - 0.5); _rp.x *= uAspect;
-            vec2 _b = vec2(0.5 * uAspect, 0.5) - uRadius;
-            vec2 _q = abs(_rp) - _b;
-            float _d = min(max(_q.x, _q.y), 0.0) + length(max(_q, 0.0)) - uRadius;
-            gl_FragColor.a *= 1.0 - smoothstep(-0.006, 0.006, _d);`
-          );
-        };
-        vtexPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), vtexMat);
+        vtexPlane = new THREE.Mesh(buildScreenGeo(), vtexMat);
         vtexPlane.renderOrder = 20;
         vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
         asset.add(vtexPlane);
+        // Debug:紅=目前影片邊界, 藍=目標螢幕邊界, 黃球=控制點(window.__vdebug(true) 開)
+        const _dbg = new THREE.Group(); _dbg.visible = false; _dbg.renderOrder = 31; vtexPlane.add(_dbg);
+        const _loop = (pts, color, z) => new THREE.LineLoop(
+          new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(p[0], p[1], z))),
+          new THREE.LineBasicMaterial({ color, depthTest: false, transparent: true }));
+        _dbg.add(_loop(screenPoints, 0xff3b30, 0.004));   // 紅=目前
+        _dbg.add(_loop(targetPoints, 0x3e9bff, 0.006));   // 藍=目標
+        screenPoints.forEach(p => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd400, depthTest: false })); s.position.set(p[0], p[1], 0.006); _dbg.add(s); });
+        // 螢幕像素 → 影片 mesh local 座標(打在影片平面本身,回傳 x,y ≈ [-0.5,0.5],z≈0;供逐點微調 screenPoints)
+        const _sl = { n: new THREE.Vector3(), o: new THREE.Vector3(), q: new THREE.Quaternion(), pl: new THREE.Plane(), hit: new THREE.Vector3() };
+        const screenToLocal = (px, py) => {
+          const el = renderer.domElement, W = el.clientWidth || window.innerWidth, H = el.clientHeight || window.innerHeight;
+          const rc = new THREE.Raycaster();
+          rc.setFromCamera(new THREE.Vector2((px / W) * 2 - 1, -(py / H) * 2 + 1), camera);
+          vtexPlane.getWorldQuaternion(_sl.q); vtexPlane.getWorldPosition(_sl.o);
+          _sl.n.set(0, 0, 1).applyQuaternion(_sl.q);
+          _sl.pl.setFromNormalAndCoplanarPoint(_sl.n, _sl.o);
+          return rc.ray.intersectPlane(_sl.pl, _sl.hit) ? vtexPlane.worldToLocal(_sl.hit.clone()) : null;
+        };
+        if (typeof window !== 'undefined') { window.__vdebug = (on) => { _dbg.visible = on !== false; }; window.__screenToLocal = screenToLocal; }
         // REC 角標:紅點 + REC 字,畫在小 canvas 貼圖,當 vtexPlane 子物件永遠貼在影片左上角
         const recCv = document.createElement('canvas'); recCv.width = 256; recCv.height = 80;
         const rg = recCv.getContext('2d');
@@ -672,7 +707,7 @@ export function createHomeEngine() {
         vtexPlane.material.opacity = screenK * settleK * shotFadeK;
         vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
         vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-        const vpw = 3.05, vph = 2.0;   // 對齊螢幕玻璃藍框,四角小圓角
+        const vpw = VTEX_W, vph = VTEX_H;   // 對齊螢幕玻璃藍框(自訂斜切角幾何)
         vtexPlane.translateX(0.783); vtexPlane.translateY(-0.229);
         vtexPlane.scale.set(vpw, vph, 1);
         // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
