@@ -403,8 +403,10 @@ export function createHomeEngine() {
       { action: 'dial',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null },
       { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null }
     ];
-    // 零件展示暫存向量(相機相對展示位置)
+    // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
+    const _axisW = new THREE.Vector3(), _toCam = new THREE.Vector3(), _rgtCam = new THREE.Vector3(), _tgtAxis = new THREE.Vector3(), _gcOff = new THREE.Vector3();
+    const _qP = new THREE.Quaternion(), _partW = new THREE.Quaternion(), _tgtW = new THREE.Quaternion(), _locT = new THREE.Quaternion(), _delta = new THREE.Quaternion(), _spin = new THREE.Quaternion();
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
@@ -549,6 +551,14 @@ export function createHomeEngine() {
           STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
           // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
           parts.forEach(pp => { pp.node.parent.updateWorldMatrix(true, false); pp.gcLocal = pp.node.parent.worldToLocal(new THREE.Box3().setFromObject(pp.node).getCenter(new THREE.Vector3())); });
+          // 展示零件的「主面法線」(幾何最薄軸=盤面/鏡面法線,node local);展示時把此軸轉向鏡頭 → 清楚呈現
+          STUDY.forEach(c => {
+            if (!c.part) return;
+            let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
+            c.part.node.traverse(o => { if (o.isMesh && o.geometry) { o.geometry.computeBoundingBox(); const s = o.geometry.boundingBox.getSize(new THREE.Vector3()); const m = Math.min(s.x, s.y, s.z); if (m < minD) { minD = m; thin.set(s.x === m ? 1 : 0, s.y === m ? 1 : 0, s.z === m ? 1 : 0); } } });
+            c.part.faceLocal = thin;
+            c.part.gcNode = c.part.gcLocal.clone().applyQuaternion(c.part.baseQuat.clone().invert());   // 幾何中心(node 自身 local,不含 base 旋轉)→ 換角度後可正確重算對位
+          });
         }
         // U4b:找到 GLB 內的螢幕面 mesh(Object_12),由它的幾何前面建立 8 個斜切角控制點 → DOM 影片直接錨定真實螢幕位置
         asset.traverse(o => { if (o.isMesh && o.name === SCR_NAME) screenMesh = o; });
@@ -706,7 +716,7 @@ export function createHomeEngine() {
         _rgt.crossVectors(_fwd, _WUP).normalize();
         _up2.crossVectors(_rgt, _fwd).normalize();
         const dist = camera.position.distanceTo(camAim) * (isMobile ? 0.82 : 0.66);
-        _disp.copy(camera.position).addScaledVector(_fwd, dist).addScaledVector(_rgt, isMobile ? 0 : side * dist * 0.26).addScaledVector(_up2, isMobile ? dist * 0.16 : 0);
+        _disp.copy(camera.position).addScaledVector(_fwd, dist).addScaledVector(_rgt, isMobile ? 0 : side * dist * 0.34).addScaledVector(_up2, isMobile ? dist * 0.18 : 0);
       }
       const dark = 1 - paperK;
       const solid = 1 - wireK;
@@ -778,17 +788,28 @@ export function createHomeEngine() {
         if (isFocus) { tScale = 1 + sFocusK * (isMobile ? 0.55 : 0.75); if (STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9)); }   // 光圈:小→大開一次→稍收回穩定
         part.studyScale += (tScale - part.studyScale) * 0.14;
         if (isFocus) {
-          _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);   // 展示世界位置 → 該零件父層 local
-          if (part.gcLocal) _dispL.addScaledVector(part.gcLocal, -part.studyScale);   // 縮放繞 node 原點 → 補幾何中心位移,使幾何中心對準展示位置
-          dest.lerp(_dispL, sFocusK);                                   // 由爆炸位置 blend 到展示位置
           const act = STUDY[sComp].action;
-          if (act === 'ring' || act === 'dial') {                       // 環體/轉盤:繞光學軸轉一次(dial 跳 3 格)
-            const ang = act === 'dial' ? (Math.round(sActionK * 3) / 3) * 0.5 : sActionK * 0.55;
-            _actQ.setFromAxisAngle(lensAxis, ang);
-            part.node.quaternion.copy(part.baseQuat).premultiply(_actQ);
-          } else if (act === 'press') {                                 // 按鈕:下壓一次再回
-            dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);
+          // 1) 換角度:把零件「主面」轉向鏡頭(3/4 視角)清楚呈現;動作(環轉/轉盤跳格)繞主面軸疊加
+          if (part.faceLocal) {
+            part.node.parent.getWorldQuaternion(_qP);
+            _partW.copy(_qP).multiply(part.baseQuat);
+            _axisW.copy(part.faceLocal).applyQuaternion(_partW).normalize();
+            _toCam.copy(camera.position).sub(_disp).normalize();
+            _rgtCam.crossVectors(_toCam, _WUP).normalize();
+            _tgtAxis.copy(_toCam).applyAxisAngle(_rgtCam, 0.4);         // 面向鏡頭 + 下傾~23° 立體感
+            if (_axisW.dot(_tgtAxis) < 0) _tgtAxis.negate();            // 取較近的面,避免翻半圈
+            _delta.setFromUnitVectors(_axisW, _tgtAxis);
+            const ang = act === 'dial' ? (Math.round(sActionK * 3) / 3) * 0.5 : (act === 'ring' ? sActionK * 0.55 : 0);
+            _spin.setFromAxisAngle(_tgtAxis, ang);
+            _tgtW.copy(_spin).multiply(_delta).multiply(_partW);
+            _locT.copy(_qP).invert().multiply(_tgtW);
+            part.node.quaternion.copy(part.baseQuat).slerp(_locT, sFocusK);
           }
+          // 2) 定位:讓「幾何中心」對準展示位置(用當前旋轉+縮放重算 node 原點偏移,換角度後不飄)
+          _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);
+          if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _dispL.sub(_gcOff); }
+          dest.lerp(_dispL, sFocusK);
+          if (act === 'press') dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);   // 按鈕:下壓一次再回
         }
         if (isFocus || Math.abs(part.studyScale - 1) > 0.002) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
         part.node.position.lerp(dest, isFocus ? 0.12 : 0.08);
