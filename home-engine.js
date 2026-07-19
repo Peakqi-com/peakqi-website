@@ -295,24 +295,23 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
-    // U4b:影片改用 DOM 疊層(CSS clip-path 裁切),四角每幀由 3D 螢幕投影 → 永遠跟拍相機、不飄
-    let vtexPlane = null; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
-    // 螢幕平面世界尺寸(對齊螢幕開口)+ 四角斜切量(局部單位,x/y 各自 → 世界斜角約 45°)
-    const VTEX_W = 3.05, VTEX_H = 2.0, VTEX_CX = 0.10, VTEX_CY = 0.15;
-    // 螢幕邊界 8 個控制點(錨點 local 座標,x,y ∈ [-0.5,0.5]);逐點微調斜切角對齊螢幕開口
-    const screenPoints = [
-      [-0.5 + VTEX_CX,  0.5],          // 0 左上水平起點
-      [ 0.5 - VTEX_CX,  0.5],          // 1 右上水平終點
-      [ 0.5,            0.5 - VTEX_CY], // 2 右上斜角終點
-      [ 0.5,           -0.5 + VTEX_CY], // 3 右下斜角起點
-      [ 0.5 - VTEX_CX, -0.5],          // 4 右下水平終點
-      [-0.5 + VTEX_CX, -0.5],          // 5 左下水平起點
-      [-0.5,           -0.5 + VTEX_CY], // 6 左下斜角終點
-      [-0.5,            0.5 - VTEX_CY]  // 7 左上斜角起點
-    ];
-    // 投影暫存:8 個 local 點的 Vector3 + 投影後畫面像素
-    const _scrLocal = screenPoints.map(p => new THREE.Vector3(p[0], p[1], 0));
-    const _scrPx = screenPoints.map(() => ({ x: 0, y: 0 }));
+    // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影其前面 8 個斜切角控制點 → 精準貼齊、不飄
+    let screenMesh = null;
+    const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
+    const SCR_CHX = 0.09, SCR_CHY = 0.11, SCR_INSET = 0.02;   // 斜切量(寬/高比例)+ 邊緣內縮;逐項微調
+    const screenLocalPts = [];                    // 8 個控制點(Object_12 幾何 local 座標)
+    const _scrPx = Array.from({ length: 8 }, () => ({ x: 0, y: 0 }));
+    // 由螢幕 mesh 的幾何 bounding box「前面(靠相機的 z 面)」建立 8 個斜切角控制點
+    function buildScreenPts(mesh) {
+      mesh.geometry.computeBoundingBox();
+      const b = mesh.geometry.boundingBox;
+      const w = b.max.x - b.min.x, h = b.max.y - b.min.y;
+      const ix = w * SCR_INSET, iy = h * SCR_INSET, cx = w * SCR_CHX, cy = h * SCR_CHY, z = b.min.z; // zMin=靠相機的前面
+      const L = b.min.x + ix, R = b.max.x - ix, B = b.min.y + iy, TP = b.max.y - iy;
+      const pts = [[L + cx, TP], [R - cx, TP], [R, TP - cy], [R, B + cy], [R - cx, B], [L + cx, B], [L, B + cy], [L, TP - cy]];
+      screenLocalPts.length = 0;
+      pts.forEach(p => screenLocalPts.push(new THREE.Vector3(p[0], p[1], z)));
+    }
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -403,11 +402,20 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
-        // U4b:螢幕錨點(背面朝操作者=-光學軸方向)。不渲染,只用來每幀把 8 個螢幕控制點投影到畫面像素 → 驅動 DOM 影片裁切
-        vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
-        vtexPlane = new THREE.Object3D();
-        vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
-        asset.add(vtexPlane);
+        // U4b:找到 GLB 內的螢幕面 mesh(Object_12),由它的幾何前面建立 8 個斜切角控制點 → DOM 影片直接錨定真實螢幕位置
+        asset.traverse(o => { if (o.isMesh && o.name === SCR_NAME) screenMesh = o; });
+        if (!screenMesh) {   // 後備:找最像螢幕的扁平 camera_body mesh(寬>1、高>0.7、深<0.25)
+          let best = null, bestScore = 1e9;
+          asset.traverse(o => {
+            if (!o.isMesh || !o.geometry) return;
+            const m = Array.isArray(o.material) ? o.material[0] : o.material;
+            if (!m || m.name !== 'camera_body') return;
+            o.geometry.computeBoundingBox(); const s = new THREE.Vector3(); o.geometry.boundingBox.getSize(s);
+            if (s.x > 1 && s.y > 0.7 && s.z < 0.25) { const sc = s.z; if (sc < bestScore) { bestScore = sc; best = o; } }
+          });
+          screenMesh = best;
+        }
+        if (screenMesh) buildScreenPts(screenMesh);
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
         const ms = mb.getSize(new THREE.Vector3());
@@ -654,24 +662,19 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      // DOM 影片螢幕:每幀把 3D 螢幕 8 個控制點投影到畫面像素 → 設定裁切容器位置/大小 + clip-path 斜切多邊形
-      if (vtexPlane && screenEl) {
+      // DOM 影片螢幕:每幀把「螢幕面 mesh(Object_12)」前面 8 個斜切角控制點投影到畫面像素 → 設定裁切容器 + clip-path
+      if (screenMesh && screenEl && screenLocalPts.length === 8) {
         const shotFadeK = shotFadeStart < 0 ? 1 : ez(clamp((now - shotFadeStart) / 420, 0, 1));
         const vidK = screenK * settleK * shotFadeK;   // 就位後原地淡入 + 每支影片切換原地淡入
         if (vidK < 0.004) {
           screenEl.style.opacity = '0';
         } else {
-          // 錨點:與螢幕開口共面的對位變換(和先前 3D 對位一致)
-          vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
-          vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-          vtexPlane.translateX(0.783); vtexPlane.translateY(-0.229);
-          vtexPlane.scale.set(VTEX_W, VTEX_H, 1);
-          vtexPlane.updateWorldMatrix(true, false);
+          screenMesh.updateWorldMatrix(true, false);
           const SW = stage.clientWidth || 1, SH = stage.clientHeight || 1;
           let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
           for (let i = 0; i < 8; i++) {
-            _scrLocal[i].set(screenPoints[i][0], screenPoints[i][1], 0).applyMatrix4(vtexPlane.matrixWorld).project(camera);
-            const x = (_scrLocal[i].x * 0.5 + 0.5) * SW, y = (-_scrLocal[i].y * 0.5 + 0.5) * SH;
+            _wp.copy(screenLocalPts[i]).applyMatrix4(screenMesh.matrixWorld).project(camera);
+            const x = (_wp.x * 0.5 + 0.5) * SW, y = (-_wp.y * 0.5 + 0.5) * SH;
             _scrPx[i].x = x; _scrPx[i].y = y;
             if (x < minX) minX = x; if (y < minY) minY = y; if (x > maxX) maxX = x; if (y > maxY) maxY = y;
           }
@@ -683,9 +686,10 @@ export function createHomeEngine() {
           screenEl.style.clipPath = 'polygon(' + poly + ')';
           screenEl.style.opacity = vidK.toFixed(3);
           if (dbgRedEl) dbgRedEl.setAttribute('points', _scrPx.map(pp => pp.x.toFixed(1) + ',' + pp.y.toFixed(1)).join(' '));
-          if (dbgBlueEl) {   // 藍=未斜切的外框矩形(4 角),當螢幕開口參考
-            const rc = [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]].map(c => {
-              _wp.set(c[0], c[1], 0).applyMatrix4(vtexPlane.matrixWorld).project(camera);
+          if (dbgBlueEl) {   // 藍=螢幕 mesh bounding box 前面矩形(未斜切),當開口參考
+            const b = screenMesh.geometry.boundingBox, z = b.min.z;
+            const rc = [[b.min.x, b.max.y, z], [b.max.x, b.max.y, z], [b.max.x, b.min.y, z], [b.min.x, b.min.y, z]].map(c => {
+              _wp.set(c[0], c[1], c[2]).applyMatrix4(screenMesh.matrixWorld).project(camera);
               return ((_wp.x * 0.5 + 0.5) * SW).toFixed(1) + ',' + ((-_wp.y * 0.5 + 0.5) * SH).toFixed(1);
             });
             dbgBlueEl.setAttribute('points', rc.join(' '));
