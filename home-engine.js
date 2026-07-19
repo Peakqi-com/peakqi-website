@@ -396,13 +396,15 @@ export function createHomeEngine() {
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
     // U3s 白藍圖「單一零件展示」:5 個零件設定(part 於 load 後填入真實 node;文案繁中、動詞、白話)
-    const BODY_GRP = ['controls', 'chassis', 'shell'], INT_GRP = ['sensor', 'mainboard', 'chip', 'battery', 'ribbon'];
+    const INT_GRP = ['sensor', 'mainboard', 'chip', 'battery', 'ribbon'];
+    // 機身「主元件」= 整台機身(外殼/控制/機架 + 全部內部零件),移出放大時整台一起跑,不留下零件
+    const BODY_GRP = ['controls', 'chassis', 'shell'].concat(INT_GRP);
     const STUDY = [
       { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: ['optics'] },   // 鏡桶(標對焦環)
       { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: BODY_GRP },     // 機身(標頂部按鈕)
       { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: ['optics'] },   // 鏡桶(標內側鏡片/光圈)
       { action: 'mark',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: BODY_GRP },     // 機身(標側邊控制鍵)
-      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: BODY_GRP.concat(['sensor', 'mainboard', 'chip']) }   // 機身+內部(標感光板)
+      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: BODY_GRP }   // 機身+內部(標感光板)
     ];
     // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
