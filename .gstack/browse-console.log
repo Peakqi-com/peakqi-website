@@ -1,6 +1,6 @@
-[2026-07-19T05:55:45.517Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-19T05:55:45.517Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-19T05:55:46.927Z] [warning] [.WebGL-0x4d9c0d240600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-19T05:55:47.598Z] [warning] [.WebGL-0x4d9c0d240600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-19T05:55:47.866Z] [warning] [.WebGL-0x4d9c0d240600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-19T05:55:48.139Z] [warning] [.WebGL-0x4d9c0d240600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[2026-07-19T06:26:53.842Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-19T06:26:53.842Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-19T06:26:55.632Z] [warning] [.WebGL-0x3dc0c90a900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-19T06:26:56.400Z] [warning] [.WebGL-0x3dc0c90a900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-19T06:26:56.744Z] [warning] [.WebGL-0x3dc0c90a900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-19T06:26:56.903Z] [warning] [.WebGL-0x3dc0c90a900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
