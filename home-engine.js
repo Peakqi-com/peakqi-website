@@ -179,7 +179,10 @@ export function createHomeEngine() {
     const screenEl = hero && hero.querySelector('[data-cine-screen]');
     const dbgRedEl = hero && hero.querySelector('[data-cine-dbg-red]');
     const dbgBlueEl = hero && hero.querySelector('[data-cine-dbg-blue]');
-    if (typeof window !== 'undefined') window.__vdebug = (on) => { if (reviewEl) reviewEl.classList.toggle('debug', on !== false); };
+    if (typeof window !== 'undefined') {
+      window.__vdebug = (on) => { if (reviewEl) reviewEl.classList.toggle('debug', on !== false); };
+      window.__scrTune = (ox, oy, rot) => { if (ox != null) SCR_OFFX = ox; if (oy != null) SCR_OFFY = oy; if (rot != null) SCR_ROT_DEG = rot; if (screenMesh) buildScreenPts(screenMesh); return { SCR_OFFX, SCR_OFFY, SCR_ROT_DEG }; };
+    }
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
 
@@ -295,22 +298,39 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
-    // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影其前面 8 個斜切角控制點 → 精準貼齊、不飄
+    // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
-    const SCR_CHX = 0.09, SCR_CHY = 0.11, SCR_INSET = 0.02;   // 斜切量(寬/高比例)+ 邊緣內縮;逐項微調
-    const screenLocalPts = [];                    // 8 個控制點(Object_12 幾何 local 座標)
-    const _scrPx = Array.from({ length: 8 }, () => ({ x: 0, y: 0 }));
-    // 由螢幕 mesh 的幾何 bounding box「前面(靠相機的 z 面)」建立 8 個斜切角控制點
+    const SCR_R = 0.05, SCR_INSET = 0.02, SCR_SEG = 5;   // 圓角半徑(寬/高比例,不要太大)+ 邊緣內縮 + 每角分段
+    let SCR_OFFX = -0.04, SCR_OFFY = 0.0, SCR_ROT_DEG = 3;   // 微調:整體位移(寬/高比例;-右)+ 旋轉(度,+順時針)。window.__scrTune(ox,oy,rot) 可即時再調
+    const screenLocalPts = [];                    // 圓角矩形控制點(Object_12 幾何 local 座標)
+    const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
+    // 由螢幕 mesh 幾何 bounding box「前面(靠相機的 z 面)」建立「圓角矩形」控制點:每角一段 90° 弧逼近圓角,再套用位移+旋轉微調
     function buildScreenPts(mesh) {
       mesh.geometry.computeBoundingBox();
       const b = mesh.geometry.boundingBox;
-      const w = b.max.x - b.min.x, h = b.max.y - b.min.y;
-      const ix = w * SCR_INSET, iy = h * SCR_INSET, cx = w * SCR_CHX, cy = h * SCR_CHY, z = b.min.z; // zMin=靠相機的前面
+      const w = b.max.x - b.min.x, h = b.max.y - b.min.y, z = b.min.z;   // zMin=靠相機的前面
+      const ix = w * SCR_INSET, iy = h * SCR_INSET, rx = w * SCR_R, ry = h * SCR_R;
       const L = b.min.x + ix, R = b.max.x - ix, B = b.min.y + iy, TP = b.max.y - iy;
-      const pts = [[L + cx, TP], [R - cx, TP], [R, TP - cy], [R, B + cy], [R - cx, B], [L + cx, B], [L, B + cy], [L, TP - cy]];
-      screenLocalPts.length = 0;
-      pts.forEach(p => screenLocalPts.push(new THREE.Vector3(p[0], p[1], z)));
+      const cx0 = (L + R) / 2, cy0 = (B + TP) / 2;                       // 幾何中心(旋轉樞紐)
+      const rot = SCR_ROT_DEG * Math.PI / 180, cs = Math.cos(rot), sn = Math.sin(rot);
+      const offX = w * SCR_OFFX, offY = h * SCR_OFFY;
+      const corners = [
+        [L + rx, TP - ry, Math.PI, Math.PI / 2],       // 左上
+        [R - rx, TP - ry, Math.PI / 2, 0],             // 右上
+        [R - rx, B + ry, 0, -Math.PI / 2],             // 右下
+        [L + rx, B + ry, -Math.PI / 2, -Math.PI]       // 左下
+      ];
+      screenLocalPts.length = 0; _scrPx.length = 0;
+      corners.forEach(c => {
+        for (let s = 0; s <= SCR_SEG; s++) {
+          const a = c[2] + (c[3] - c[2]) * (s / SCR_SEG);
+          const px = c[0] + Math.cos(a) * rx, py = c[1] + Math.sin(a) * ry;
+          const dx = px - cx0, dy = py - cy0;
+          screenLocalPts.push(new THREE.Vector3(cx0 + (dx * cs - dy * sn) + offX, cy0 + (dx * sn + dy * cs) + offY, z));
+          _scrPx.push({ x: 0, y: 0 });
+        }
+      });
     }
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
@@ -662,8 +682,8 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      // DOM 影片螢幕:每幀把「螢幕面 mesh(Object_12)」前面 8 個斜切角控制點投影到畫面像素 → 設定裁切容器 + clip-path
-      if (screenMesh && screenEl && screenLocalPts.length === 8) {
+      // DOM 影片螢幕:每幀把「螢幕面 mesh(Object_12)」前面圓角控制點投影到畫面像素 → 設定裁切容器 + clip-path
+      if (screenMesh && screenEl && screenLocalPts.length >= 4) {
         const shotFadeK = shotFadeStart < 0 ? 1 : ez(clamp((now - shotFadeStart) / 420, 0, 1));
         const vidK = screenK * settleK * shotFadeK;   // 就位後原地淡入 + 每支影片切換原地淡入
         if (vidK < 0.004) {
@@ -671,8 +691,9 @@ export function createHomeEngine() {
         } else {
           screenMesh.updateWorldMatrix(true, false);
           const SW = stage.clientWidth || 1, SH = stage.clientHeight || 1;
+          const N = screenLocalPts.length;
           let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
-          for (let i = 0; i < 8; i++) {
+          for (let i = 0; i < N; i++) {
             _wp.copy(screenLocalPts[i]).applyMatrix4(screenMesh.matrixWorld).project(camera);
             const x = (_wp.x * 0.5 + 0.5) * SW, y = (-_wp.y * 0.5 + 0.5) * SH;
             _scrPx[i].x = x; _scrPx[i].y = y;
