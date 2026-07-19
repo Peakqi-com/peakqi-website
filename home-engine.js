@@ -644,13 +644,13 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動
+      // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動(對齊桌機主流視角/長寬比)
       if (vtexPlane) {
         vtexPlane.material.opacity = screenK;
         vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
         vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
         const vpw = 3.22, vph = 2.36;
-        vtexPlane.translateX(0.92); vtexPlane.translateY(-0.07);
+        vtexPlane.translateX(0.667); vtexPlane.translateY(-0.251);
         vtexPlane.scale.set(vpw, vph, 1);
         // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
         if (recBadge) {
