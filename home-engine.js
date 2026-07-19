@@ -396,18 +396,21 @@ export function createHomeEngine() {
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
     // U3s 白藍圖「單一零件展示」:5 個零件設定(part 於 load 後填入真實 node;文案繁中、動詞、白話)
+    const BODY_GRP = ['controls', 'chassis', 'shell'], INT_GRP = ['sensor', 'mainboard', 'chip', 'battery', 'ribbon'];
     const STUDY = [
-      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: 'optics' },
-      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: null },
-      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: null },
-      { action: 'dial',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: 'optics' },
-      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: null }
+      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: ['optics'] },   // 鏡桶(標對焦環)
+      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: BODY_GRP },     // 機身(標頂部按鈕)
+      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: ['optics'] },   // 鏡桶(標內側鏡片/光圈)
+      { action: 'mark',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: BODY_GRP },     // 機身(標側邊控制鍵)
+      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: BODY_GRP.concat(['sensor', 'mainboard', 'chip']) }   // 機身+內部(標感光板)
     ];
     // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
     const _axisW = new THREE.Vector3(), _toCam = new THREE.Vector3(), _rgtCam = new THREE.Vector3(), _tgtAxis = new THREE.Vector3(), _gcOff = new THREE.Vector3(), _tmpV = new THREE.Vector3();
     const _groupCentroid = {};   // displayGroup → 組合中心(parent-local,爆炸排列下)
-    const _qP = new THREE.Quaternion(), _partW = new THREE.Quaternion(), _tgtW = new THREE.Quaternion(), _locT = new THREE.Quaternion(), _delta = new THREE.Quaternion(), _spin = new THREE.Quaternion();
+    const _qP = new THREE.Quaternion(), _partW = new THREE.Quaternion(), _tgtW = new THREE.Quaternion(), _locT = new THREE.Quaternion(), _delta = new THREE.Quaternion(), _spin = new THREE.Quaternion(), _qInv = new THREE.Quaternion(), _turnQ = new THREE.Quaternion();
+    const _upLocal = new THREE.Vector3(), _wScale = new THREE.Vector3();
+    let sGroupScale = 1, sTurn = 0;   // 群組展示:填滿畫面的放大倍率 + 轉盤角度
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
@@ -547,25 +550,31 @@ export function createHomeEngine() {
           const sideDial = ctrls.slice().sort((a, b) => Math.abs(b.center.x) - Math.abs(a.center.x)).find(pp => pp !== topBtn) || ctrls[1]; // 04 側邊控制鍵≈|x| 最大
           STUDY[0].part = byName('lenses_low_40') || optics[0];                        // 01 對焦環=最外圈鏡組
           STUDY[1].part = topBtn;                                                       // 02 快門/頂部按鈕(替代:最頂部 control node,下壓一次)
-          STUDY[2].part = byName('lenses005_low_32') || optics[Math.floor(optics.length / 2)]; // 03 光圈(替代:中段鏡片,以縮放模擬葉片開合)
-          STUDY[3].part = byName('lenses002_low_29') || byName('lenses003_low_30') || optics[1]; // 04 模式轉盤(替代:一片鏡環,繞軸跳格轉;機身無獨立轉盤)
+          STUDY[2].part = byName('lenses005_low_32') || optics[Math.floor(optics.length / 2)]; // 03 光圈(替代:中段鏡片)
+          STUDY[3].part = sideDial;                                                     // 04 模式轉盤(替代:側邊 control 鍵)
           STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
           // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
           parts.forEach(pp => { pp.node.parent.updateWorldMatrix(true, false); pp.gcLocal = pp.node.parent.worldToLocal(new THREE.Box3().setFromObject(pp.node).getCenter(new THREE.Vector3())); });
-          // 展示零件的「主面法線」(幾何最薄軸=盤面/鏡面法線,node local);展示時把此軸轉向鏡頭 → 清楚呈現
-          STUDY.forEach(c => {
-            if (!c.part) return;
+          // 展示零件的「主面法線」(幾何最薄軸,node local)+ node 自身幾何中心(不含 base 旋轉)
+          parts.forEach(pp => {
             let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
-            c.part.node.traverse(o => { if (o.isMesh && o.geometry) { o.geometry.computeBoundingBox(); const s = o.geometry.boundingBox.getSize(new THREE.Vector3()); const m = Math.min(s.x, s.y, s.z); if (m < minD) { minD = m; thin.set(s.x === m ? 1 : 0, s.y === m ? 1 : 0, s.z === m ? 1 : 0); } } });
-            c.part.faceLocal = thin;
-            c.part.gcNode = c.part.gcLocal.clone().applyQuaternion(c.part.baseQuat.clone().invert());   // 幾何中心(node 自身 local,不含 base 旋轉)→ 換角度後可正確重算對位
+            pp.node.traverse(o => { if (o.isMesh && o.geometry) { o.geometry.computeBoundingBox(); const s = o.geometry.boundingBox.getSize(new THREE.Vector3()); const m = Math.min(s.x, s.y, s.z); if (m < minD) { minD = m; thin.set(s.x === m ? 1 : 0, s.y === m ? 1 : 0, s.z === m ? 1 : 0); } } });
+            pp.faceLocal = thin;
+            pp.gcNode = pp.gcLocal.clone().applyQuaternion(pp.baseQuat.clone().invert());
           });
-          // 展示群組(主元件,如鏡桶)在爆炸排列下的組合中心(parent-local):各零件幾何中心 = offset*OFF + gcLocal
-          ['optics'].forEach(gid => {
-            const gp = parts.filter(pp => pp.groupId === gid); if (!gp.length) return;
-            const c = new THREE.Vector3();
-            gp.forEach(pp => c.add(_tmpV.copy(pp.offset).multiplyScalar(OFF).add(pp.gcLocal)));
-            _groupCentroid[gid] = c.multiplyScalar(1 / gp.length);
+          // 每個展示章節的「主元件群組」:組合中心(parent-local,爆炸排列)+ 主面軸(換角度朝鏡頭用)+ 群組尺寸(決定放大幅度)
+          STUDY.forEach(c => {
+            if (!c.group) return;
+            c.groupParts = parts.filter(pp => c.group.indexOf(pp.groupId) >= 0);
+            if (!c.groupParts.length) { c.group = null; return; }
+            const cen = new THREE.Vector3(), box = new THREE.Box3();
+            // 用「組裝態」排列(gcLocal,無爆炸位移)→ 緊湊的真實元件形狀,展示時才能放大填滿畫面
+            c.groupParts.forEach(pp => { cen.add(pp.gcLocal); box.expandByPoint(pp.gcLocal); });
+            c.groupCentroid = cen.multiplyScalar(1 / c.groupParts.length);
+            const gsz = box.getSize(new THREE.Vector3()); c.groupSpan = Math.max(gsz.x, gsz.y, gsz.z) || 1;
+            // 主面軸:optics 用光學軸;其他(機身/內部)用群組 bounding box 最薄軸(≈正面法線)
+            if (c.group.indexOf('optics') >= 0) { c.faceAxisLocal = lensAxis.clone(); }
+            else { const m = Math.min(gsz.x, gsz.y, gsz.z); c.faceAxisLocal = new THREE.Vector3(gsz.x === m ? 1 : 0, gsz.y === m ? 1 : 0, gsz.z === m ? 1 : 0); }
           });
         }
         // U4b:找到 GLB 內的螢幕面 mesh(Object_12),由它的幾何前面建立 8 個斜切角控制點 → DOM 影片直接錨定真實螢幕位置
@@ -708,23 +717,28 @@ export function createHomeEngine() {
       const studyP = sub(p, 0.29, 0.53);
       const introK = ez(sub(p, 0.242, 0.278)) * (1 - ez(sub(p, 0.283, 0.30)));   // 章節標題:藍圖展開時出現,第一個零件文字卡出現前(~0.30)完全淡出,避免重疊
       // U3s 零件展示狀態:哪個零件、聚焦/動作/文字/回位進度(每個零件 15%移出 20%放大 35%動作 15%文字 15%回位)
-      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0;
+      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sGroupScale = 1; sTurn = 0;
       if (paperK > 0.4 && studyP > 0.0005 && studyP < 0.9995) {
         sComp = Math.min(4, Math.floor(studyP * 5));
         const cp = clamp((studyP - sComp * 0.2) / 0.2, 0, 1);
         sFocusK = ez(sub(cp, 0.0, 0.32)) * (1 - ez(sub(cp, 0.85, 1.0)));   // 移出+放大 → 定住 → 回位
         sActionK = ez(sub(cp, 0.35, 0.70));                                // 本體機械動作(一次,不循環)
         sTextK = ez(sub(cp, 0.26, 0.40)) * (1 - ez(sub(cp, 0.80, 0.94)));  // 文字停留
+        sTurn = (cp - 0.5) * (isMobile ? 1.3 : 2.2);                        // 轉盤:隨捲動掃過角度(換角度看,過中點時正對)
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
-      // 展示位置(相機相對:中央偏右/左,拉近放大成畫面焦點)
+      // 展示位置:畫面正中央;主元件群組放大到「幾乎填滿畫面」
       if (sFocusK > 0.001 && sPartNode) {
-        const cfg = STUDY[sComp], side = cfg.side === 'right' ? 1 : -1;
+        const cfg = STUDY[sComp];
         _fwd.copy(camAim).sub(camera.position).normalize();
-        _rgt.crossVectors(_fwd, _WUP).normalize();
-        _up2.crossVectors(_rgt, _fwd).normalize();
-        const dist = camera.position.distanceTo(camAim) * (isMobile ? 0.82 : 0.66);
-        _disp.copy(camera.position).addScaledVector(_fwd, dist).addScaledVector(_rgt, isMobile ? 0 : side * dist * 0.34).addScaledVector(_up2, isMobile ? dist * 0.18 : 0);
+        const dist = camera.position.distanceTo(camAim) * (isMobile ? 0.86 : 0.72);
+        _disp.copy(camera.position).addScaledVector(_fwd, dist);           // 畫面中央
+        if (cfg.group && cfg.groupParts && cfg.groupParts.length) {
+          const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);   // 展示距離下的畫面世界高度
+          cfg.groupParts[0].node.parent.getWorldScale(_wScale);
+          const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
+          sGroupScale = clamp((viewH * (isMobile ? 0.5 : 0.64)) / ((cfg.groupSpan || 1) * wS), 1, 16);   // 放大到主導畫面(留邊,避免溢出/散開)
+        }
       }
       const dark = 1 - paperK;
       const solid = 1 - wireK;
@@ -783,7 +797,7 @@ export function createHomeEngine() {
         const dest = part.home.clone().addScaledVector(part.offset, staged * OFF);
         // U3s 零件展示:聚焦零件 / 同一「主元件」群組(整組一起移出放大)/ 其餘變淡
         const dg = sComp >= 0 ? STUDY[sComp].group : null;
-        const isGroupMember = !!dg && part.groupId === dg && sFocusK > 0.001;
+        const isGroupMember = !!dg && dg.indexOf(part.groupId) >= 0 && sFocusK > 0.001;
         const isFocus = sPartNode === part.node && sFocusK > 0.001;
         const isShown = isFocus || isGroupMember;                   // 展示中(移出放大)的零件
         const isStudyDim = sComp >= 0 && !isShown;
@@ -796,17 +810,22 @@ export function createHomeEngine() {
         // 展示放大目標(1.5–2.4x 內取中庸值,手機更小)
         if (part.studyScale == null) part.studyScale = 1;
         let tScale = 1;
-        if (isShown) { const scAmt = dg ? (isMobile ? 0.18 : 0.3) : (isMobile ? 0.55 : 0.75); tScale = 1 + sFocusK * scAmt; if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9)); }   // 主元件整組(鏡桶)本身已大 → 放大幅度較小
-        part.studyScale += (tScale - part.studyScale) * 0.14;
+        if (isShown) { tScale = dg ? (1 + sFocusK * (sGroupScale - 1)) : (1 + sFocusK * (isMobile ? 0.55 : 0.75)); if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9)); }
+        part.studyScale += (tScale - part.studyScale) * 0.12;
         if (isGroupMember) {
-          // 主元件整組(鏡桶):保持相對排列,整組平移到展示位置 + 繞組合中心縮放(維持鏡桶完整、可辨識)
+          // 主元件整組(鏡桶/機身):置中、放大到填滿畫面、整組轉盤旋轉(換角度看);保持相對排列
+          const comp = STUDY[sComp];
+          part.node.parent.getWorldQuaternion(_qP);
+          _upLocal.set(0, 1, 0).applyQuaternion(_qInv.copy(_qP).invert());   // 世界垂直軸 → 父層 local(繞它轉盤)
+          _turnQ.setFromAxisAngle(_upLocal, sTurn);
           _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);
-          const gc = _groupCentroid[dg];
-          _tmpV.copy(part.offset).multiplyScalar(OFF).add(part.gcLocal);   // 該鏡片爆炸幾何中心
-          _tmpV.sub(gc).multiplyScalar(part.studyScale).add(_dispL);        // 繞組合中心縮放 + 平移到展示位置
-          _tmpV.addScaledVector(part.gcLocal, -part.studyScale);            // 幾何中心 → node 原點
+          _tmpV.copy(part.gcLocal).sub(comp.groupCentroid);                                         // 相對組合中心(組裝態,緊湊)
+          _tmpV.applyQuaternion(_turnQ).multiplyScalar(part.studyScale).add(_dispL);                // 轉盤 + 縮放 + 置中
+          _gcOff.copy(part.gcLocal).applyQuaternion(_turnQ).multiplyScalar(part.studyScale);
+          _tmpV.sub(_gcOff);                                                 // 幾何中心 → node 原點
           dest.lerp(_tmpV, sFocusK);
-          part.node.quaternion.copy(part.baseQuat);                         // 維持桶內原姿態
+          _tgtW.copy(_turnQ).multiply(part.baseQuat);
+          part.node.quaternion.copy(part.baseQuat).slerp(_tgtW, sFocusK);     // 整組一起轉;隨 sFocusK 收斂回 baseQuat(回位不殘留旋轉)
         } else if (isFocus) {
           const act = STUDY[sComp].action;
           // 換角度:把單一零件「主面」轉向鏡頭(3/4 視角)清楚呈現;動作繞主面軸疊加
