@@ -175,6 +175,11 @@ export function createHomeEngine() {
     const vcards = reviewEl ? Array.from(reviewEl.querySelectorAll('.pq-cine-vcard')) : [];
     const flashEl = hero && hero.querySelector('[data-cine-flash]');
     const sloganEl = hero && hero.querySelector('[data-cine-slogan]');
+    // DOM 影片螢幕:裁切容器 + debug 邊界線(紅=影片裁切,藍=螢幕遮罩;.debug class 顯示)
+    const screenEl = hero && hero.querySelector('[data-cine-screen]');
+    const dbgRedEl = hero && hero.querySelector('[data-cine-dbg-red]');
+    const dbgBlueEl = hero && hero.querySelector('[data-cine-dbg-blue]');
+    if (typeof window !== 'undefined') window.__vdebug = (on) => { if (reviewEl) reviewEl.classList.toggle('debug', on !== false); };
     if (!hero || !stage || !canvas || cards.length < 2) return;
     const BEATS = cards.length;
 
@@ -202,7 +207,7 @@ export function createHomeEngine() {
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
     // 更長的視差行程
-    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 820 : 1080 });
+    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 1180 : 1300 });   // 加長捲動行程 → 整體(含影片切換)節奏放慢,手機加更多
 
     // rail 按鈕
     const railBtns = [];
@@ -290,11 +295,11 @@ export function createHomeEngine() {
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
-    // U4b:LCD 影片螢幕(VideoTexture 貼在背面螢幕上,跟相機一起轉)+ REC 角標(影片左上角,同平面子物件)
-    let vtexPlane = null, recBadge = null; const vtex = []; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
-    // 影片螢幕世界尺寸(對齊藍框)+ 四角斜切量(局部單位,x/y 各自 → 世界斜角約 45°)
+    // U4b:影片改用 DOM 疊層(CSS clip-path 裁切),四角每幀由 3D 螢幕投影 → 永遠跟拍相機、不飄
+    let vtexPlane = null; const vtexBackDir = new THREE.Vector3(-1, 0, 0), _ZAXIS = new THREE.Vector3(0, 0, 1);
+    // 螢幕平面世界尺寸(對齊螢幕開口)+ 四角斜切量(局部單位,x/y 各自 → 世界斜角約 45°)
     const VTEX_W = 3.05, VTEX_H = 2.0, VTEX_CX = 0.10, VTEX_CY = 0.15;
-    // 螢幕邊界 8 個控制點(影片 mesh 的 local 座標,x,y ∈ [-0.5,0.5]);可逐點微調對齊藍框斜切角
+    // 螢幕邊界 8 個控制點(錨點 local 座標,x,y ∈ [-0.5,0.5]);逐點微調斜切角對齊螢幕開口
     const screenPoints = [
       [-0.5 + VTEX_CX,  0.5],          // 0 左上水平起點
       [ 0.5 - VTEX_CX,  0.5],          // 1 右上水平終點
@@ -305,22 +310,9 @@ export function createHomeEngine() {
       [-0.5,           -0.5 + VTEX_CY], // 6 左下斜角終點
       [-0.5,            0.5 - VTEX_CY]  // 7 左上斜角起點
     ];
-    // Debug:目標螢幕邊界(藍線);預設同 screenPoints,可另外微調後再抄回上面
-    const targetPoints = screenPoints.map(p => p.slice());
-    // 自訂螢幕幾何:8 外框頂點 + 中心,扇形三角化;UV 依 object-fit:cover(置中裁切,不變形)
-    function buildScreenGeo() {
-      const va = 16 / 9, sa = VTEX_W / VTEX_H;         // 影片比例 / 螢幕比例
-      let su = 1, sv = 1;
-      if (va > sa) su = sa / va; else sv = va / sa;    // cover:較長邊裁切,置中
-      const pos = [0, 0, 0], uv = [0.5, 0.5], idx = [], n = screenPoints.length;
-      screenPoints.forEach(p => { pos.push(p[0], p[1], 0); uv.push(0.5 + p[0] * su, 0.5 + p[1] * sv); });
-      for (let i = 0; i < n; i++) idx.push(0, 1 + i, 1 + ((i + 1) % n));
-      const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-      g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-      g.setIndex(idx); g.computeVertexNormals();
-      return g;
-    }
+    // 投影暫存:8 個 local 點的 Vector3 + 投影後畫面像素
+    const _scrLocal = screenPoints.map(p => new THREE.Vector3(p[0], p[1], 0));
+    const _scrPx = screenPoints.map(() => ({ x: 0, y: 0 }));
     // U2 細拆:相機追焦點(平順甩鏡)
     const camAim = new THREE.Vector3(0, 0.1, 0), _tmp2 = new THREE.Vector3();
     // U3 翻面:轉到相機「背面 LCD 螢幕」正對觀眾(實測值)
@@ -411,48 +403,11 @@ export function createHomeEngine() {
             optics.forEach(pp => { pp.lensSpin = true; pp.lensBaseQuat = pp.node.quaternion.clone(); });
           }
         }
-        // U4b:建立 LCD 影片螢幕(背面朝操作者=-光學軸方向;自訂斜切角幾何,位置/尺寸在 frame 對位)
+        // U4b:螢幕錨點(背面朝操作者=-光學軸方向)。不渲染,只用來每幀把 8 個螢幕控制點投影到畫面像素 → 驅動 DOM 影片裁切
         vtexBackDir.copy(lensAxis).multiplyScalar(-1).normalize();
-        // depthTest:false + 高 renderOrder → 影片永遠畫在最上層不會 z-fighting/穿模;
-        // 幾何本身內縮到螢幕開口內,邊緣自然貼齊機殼開口(比 depth 遮擋在斜視角更穩)
-        const vtexMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false, side: THREE.DoubleSide });
-        vtexPlane = new THREE.Mesh(buildScreenGeo(), vtexMat);
-        vtexPlane.renderOrder = 20;
+        vtexPlane = new THREE.Object3D();
         vtexPlane.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), vtexBackDir);
         asset.add(vtexPlane);
-        // Debug:紅=目前影片邊界, 藍=目標螢幕邊界, 黃球=控制點(window.__vdebug(true) 開)
-        const _dbg = new THREE.Group(); _dbg.visible = false; _dbg.renderOrder = 31; vtexPlane.add(_dbg);
-        const _loop = (pts, color, z) => new THREE.LineLoop(
-          new THREE.BufferGeometry().setFromPoints(pts.map(p => new THREE.Vector3(p[0], p[1], z))),
-          new THREE.LineBasicMaterial({ color, depthTest: false, transparent: true }));
-        _dbg.add(_loop(screenPoints, 0xff3b30, 0.004));   // 紅=目前
-        _dbg.add(_loop(targetPoints, 0x3e9bff, 0.006));   // 藍=目標
-        screenPoints.forEach(p => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd400, depthTest: false })); s.position.set(p[0], p[1], 0.006); _dbg.add(s); });
-        // 螢幕像素 → 影片 mesh local 座標(打在影片平面本身,回傳 x,y ≈ [-0.5,0.5],z≈0;供逐點微調 screenPoints)
-        const _sl = { n: new THREE.Vector3(), o: new THREE.Vector3(), q: new THREE.Quaternion(), pl: new THREE.Plane(), hit: new THREE.Vector3() };
-        const screenToLocal = (px, py) => {
-          const el = renderer.domElement, W = el.clientWidth || window.innerWidth, H = el.clientHeight || window.innerHeight;
-          const rc = new THREE.Raycaster();
-          rc.setFromCamera(new THREE.Vector2((px / W) * 2 - 1, -(py / H) * 2 + 1), camera);
-          vtexPlane.getWorldQuaternion(_sl.q); vtexPlane.getWorldPosition(_sl.o);
-          _sl.n.set(0, 0, 1).applyQuaternion(_sl.q);
-          _sl.pl.setFromNormalAndCoplanarPoint(_sl.n, _sl.o);
-          return rc.ray.intersectPlane(_sl.pl, _sl.hit) ? vtexPlane.worldToLocal(_sl.hit.clone()) : null;
-        };
-        if (typeof window !== 'undefined') { window.__vdebug = (on) => { _dbg.visible = on !== false; }; window.__screenToLocal = screenToLocal; }
-        // REC 角標:紅點 + REC 字,畫在小 canvas 貼圖,當 vtexPlane 子物件永遠貼在影片左上角
-        const recCv = document.createElement('canvas'); recCv.width = 256; recCv.height = 80;
-        const rg = recCv.getContext('2d');
-        rg.clearRect(0, 0, 256, 80);
-        // 深色藥丸底(讓紅點+字在亮畫面上也讀得到)
-        rg.fillStyle = 'rgba(9,11,14,0.55)';
-        rg.beginPath(); const rr = 40; rg.moveTo(rr, 6); rg.arcTo(250, 6, 250, 74, rr); rg.arcTo(250, 74, 6, 74, rr); rg.arcTo(6, 74, 6, 6, rr); rg.arcTo(6, 6, 250, 6, rr); rg.closePath(); rg.fill();
-        rg.fillStyle = '#ff3b30'; rg.beginPath(); rg.arc(42, 40, 15, 0, Math.PI * 2); rg.fill();
-        rg.fillStyle = '#f2efe8'; rg.font = '700 42px "Space Grotesk", system-ui, sans-serif';
-        rg.textBaseline = 'middle'; rg.fillText('REC', 70, 43);
-        const recTex = new THREE.CanvasTexture(recCv); if ('colorSpace' in recTex) recTex.colorSpace = THREE.SRGBColorSpace;
-        recBadge = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: recTex, transparent: true, opacity: 0, depthWrite: false, depthTest: false, toneMapped: false }));
-        recBadge.renderOrder = 21; vtexPlane.add(recBadge);
         const mb = new THREE.Box3().setFromObject(asset);
         const mc = mb.getCenter(new THREE.Vector3());
         const ms = mb.getSize(new THREE.Vector3());
@@ -513,10 +468,6 @@ export function createHomeEngine() {
         if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
         else { try { v.pause(); } catch (e) {} }
       });
-      if (vtexPlane && s >= 0 && vids[s]) {
-        if (!vtex[s]) { vtex[s] = new THREE.VideoTexture(vids[s]); if ('colorSpace' in vtex[s]) vtex[s].colorSpace = THREE.SRGBColorSpace; }
-        vtexPlane.material.map = vtex[s]; vtexPlane.material.needsUpdate = true;
-      }
       vcards.forEach((c, i) => c.classList.toggle('is-on', i === s));
       if (s >= 0) doFlash();          // 切換=整屏快門閃光(乾淨一閃)
     }
@@ -703,23 +654,42 @@ export function createHomeEngine() {
         const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
-      // LCD 影片平面對位(已定位寫死):貼在相機背面螢幕上,隨相機翻面轉動(對齊桌機主流視角/長寬比)
-      if (vtexPlane) {
-        // 就位後才在原地淡入(settleK)+ 每支影片切換時原地淡入(shotFadeK),不從右側飛入
+      // DOM 影片螢幕:每幀把 3D 螢幕 8 個控制點投影到畫面像素 → 設定裁切容器位置/大小 + clip-path 斜切多邊形
+      if (vtexPlane && screenEl) {
         const shotFadeK = shotFadeStart < 0 ? 1 : ez(clamp((now - shotFadeStart) / 420, 0, 1));
-        vtexPlane.material.opacity = screenK * settleK * shotFadeK;
-        vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
-        vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
-        const vpw = VTEX_W, vph = VTEX_H;   // 對齊螢幕玻璃藍框(自訂斜切角幾何)
-        vtexPlane.translateX(0.783); vtexPlane.translateY(-0.229);
-        vtexPlane.scale.set(vpw, vph, 1);
-        // REC 角標:反向抵銷父平面縮放(維持固定尺寸),定位在影片左上角內側,紅點閃爍
-        if (recBadge) {
-          const bw = 0.66, bh = 0.21;
-          recBadge.scale.set(bw / vpw, bh / vph, 1);
-          // 平面 local +X 對應畫面左側(此平面 X 為鏡射),故左上角用 +X 邊
-          recBadge.position.set(0.5 - (bw / vpw) / 2 - 0.06, 0.5 - (bh / vph) / 2 - 0.045, 0.002);
-          recBadge.material.opacity = screenK * settleK * shotFadeK * (0.78 + 0.22 * (0.5 + 0.5 * Math.sin(t * 4)));   // 隨影片就位淡入,紅點閃爍
+        const vidK = screenK * settleK * shotFadeK;   // 就位後原地淡入 + 每支影片切換原地淡入
+        if (vidK < 0.004) {
+          screenEl.style.opacity = '0';
+        } else {
+          // 錨點:與螢幕開口共面的對位變換(和先前 3D 對位一致)
+          vtexPlane.quaternion.setFromUnitVectors(_ZAXIS, vtexBackDir);
+          vtexPlane.position.copy(lensPivot).addScaledVector(vtexBackDir, 2.4);
+          vtexPlane.translateX(0.783); vtexPlane.translateY(-0.229);
+          vtexPlane.scale.set(VTEX_W, VTEX_H, 1);
+          vtexPlane.updateWorldMatrix(true, false);
+          const SW = stage.clientWidth || 1, SH = stage.clientHeight || 1;
+          let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+          for (let i = 0; i < 8; i++) {
+            _scrLocal[i].set(screenPoints[i][0], screenPoints[i][1], 0).applyMatrix4(vtexPlane.matrixWorld).project(camera);
+            const x = (_scrLocal[i].x * 0.5 + 0.5) * SW, y = (-_scrLocal[i].y * 0.5 + 0.5) * SH;
+            _scrPx[i].x = x; _scrPx[i].y = y;
+            if (x < minX) minX = x; if (y < minY) minY = y; if (x > maxX) maxX = x; if (y > maxY) maxY = y;
+          }
+          const bw = Math.max(1, maxX - minX), bh = Math.max(1, maxY - minY);
+          screenEl.style.left = minX.toFixed(1) + 'px'; screenEl.style.top = minY.toFixed(1) + 'px';
+          screenEl.style.width = bw.toFixed(1) + 'px'; screenEl.style.height = bh.toFixed(1) + 'px';
+          let poly = '';
+          for (let i = 0; i < 8; i++) poly += (_scrPx[i].x - minX).toFixed(1) + 'px ' + (_scrPx[i].y - minY).toFixed(1) + 'px' + (i < 7 ? ', ' : '');
+          screenEl.style.clipPath = 'polygon(' + poly + ')';
+          screenEl.style.opacity = vidK.toFixed(3);
+          if (dbgRedEl) dbgRedEl.setAttribute('points', _scrPx.map(pp => pp.x.toFixed(1) + ',' + pp.y.toFixed(1)).join(' '));
+          if (dbgBlueEl) {   // 藍=未斜切的外框矩形(4 角),當螢幕開口參考
+            const rc = [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]].map(c => {
+              _wp.set(c[0], c[1], 0).applyMatrix4(vtexPlane.matrixWorld).project(camera);
+              return ((_wp.x * 0.5 + 0.5) * SW).toFixed(1) + ',' + ((-_wp.y * 0.5 + 0.5) * SH).toFixed(1);
+            });
+            dbgBlueEl.setAttribute('points', rc.join(' '));
+          }
         }
       }
       if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度

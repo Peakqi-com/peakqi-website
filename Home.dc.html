@@ -54,10 +54,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #hero.pq-cine-paper-on .pq-cine-titleblock{display:flex}
 /* U4 翻面看螢幕:右側大影片 + 左側業務/宗旨字卡 + 快門閃光 */
 .pq-cine-review{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none}
-/* 影片來源面板:視覺隱藏(影片已貼到相機 LCD),但保留佈局讓 <video> 持續解碼餵給 VideoTexture(勿用 display:none) */
-.pq-cine-vstage{position:absolute;right:clamp(16px,3vw,60px);top:50%;transform:translateY(-50%);width:clamp(300px,47vw,800px);aspect-ratio:16/10;border-radius:10px;overflow:hidden;opacity:0;pointer-events:none}
+/* 影片螢幕:DOM 疊層,left/top/width/height + clip-path 由引擎每幀依 3D 螢幕投影設定(跟拍相機、不飄) */
+.pq-cine-screen{position:absolute;left:0;top:0;width:10px;height:10px;overflow:hidden;opacity:0;pointer-events:none;will-change:left,top,width,height,clip-path,opacity;z-index:5}
 .pq-cine-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
 .pq-cine-vid.is-on{opacity:1}
+/* Debug 對位線:紅=影片裁切多邊形,藍=螢幕外框矩形;reviewEl 加 .debug class 顯示 */
+.pq-cine-dbg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;opacity:0;z-index:8}
+.pq-cine-review.debug .pq-cine-dbg{opacity:1}
 .pq-cine-rec{position:absolute;left:14px;top:12px;z-index:2;display:flex;align-items:center;gap:7px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.9);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .pq-cine-rec i{width:9px;height:9px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 10px #ff3b3b;animation:pqPulse 1.4s ease-in-out infinite}
 .pq-cine-vcard{position:absolute;left:clamp(20px,6vw,72px);top:50%;transform:translateY(calc(-50% + 24px));width:min(400px,38vw);border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.66);backdrop-filter:blur(14px);padding:26px 26px 28px;opacity:0;transition:opacity .5s cubic-bezier(0.16,1,0.3,1),transform .5s cubic-bezier(0.16,1,0.3,1)}
@@ -258,14 +261,19 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 
     <!-- U4 翻面看螢幕:右側大影片(自動播=子)+ 左側業務/宗旨字卡;母=捲動切換 -->
     <div class="pq-cine-review" data-cine-review aria-hidden="true">
-      <div class="pq-cine-vstage">
-        <span class="pq-cine-rec"><i></i>REC</span>
+      <!-- 影片螢幕:引擎每幀依 3D 相機螢幕投影設定位置與 clip-path 斜切多邊形 -->
+      <div class="pq-cine-screen" data-cine-screen>
         <video class="pq-cine-vid" data-shot="0" muted loop playsinline preload="auto" poster="assets/shots/shot-01.png"><source src="assets/shots/shot-01.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="1" muted loop playsinline preload="auto" poster="assets/shots/shot-02.png"><source src="assets/shots/shot-02.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="2" muted loop playsinline preload="auto" poster="assets/shots/shot-03.png"><source src="assets/shots/shot-03.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="3" muted loop playsinline preload="auto" poster="assets/shots/shot-04.png"><source src="assets/shots/shot-04.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="4" muted loop playsinline preload="auto" poster="assets/shots/shot-05.png"><source src="assets/shots/shot-05.mp4" type="video/mp4"></video>
       </div>
+      <!-- Debug 對位線(reviewEl.debug 顯示):紅=影片裁切多邊形,藍=螢幕外框矩形 -->
+      <svg class="pq-cine-dbg" data-cine-dbg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon data-cine-dbg-blue fill="none" stroke="#3e9bff" stroke-width="2" vector-effect="non-scaling-stroke"></polygon>
+        <polygon data-cine-dbg-red fill="none" stroke="#ff3b30" stroke-width="2" vector-effect="non-scaling-stroke"></polygon>
+      </svg>
       <article class="pq-cine-vcard" data-shot="0">
         <div class="top"><b>01</b><span>ACQUISITION · 接客</span></div>
         <h2><span>半夜的訊息,</span><span>AI <em>先接住</em></span></h2>
