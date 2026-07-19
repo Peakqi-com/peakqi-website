@@ -573,7 +573,7 @@ export function createHomeEngine() {
       // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)
       const R = ez(sub(p, 0.56, 0.64));             // U3a 組回實體
       const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
-      const flipK = ez(sub(p, 0.64, 0.72)) * (1 - sloganK);  // U3b 翻面(U5 時反轉回機身)
+      const flipK = ez(sub(scrollP, 0.64, 0.72)) * (1 - sloganK);  // U3b 翻面:用 scrollP 立即反應(不吃 smoothP 延遲),配合快 lerp 捲到就位
       const disasK = ez(sub(p, 0.08, 0.34)) * (1 - R);
       const wireK = ez(sub(p, 0.26, 0.44)) * (1 - R);
       const paperK = ez(sub(p, 0.46, 0.54)) * (1 - R);
@@ -594,16 +594,19 @@ export function createHomeEngine() {
       const yawNormal = spinY * dark + (-0.5) * paperK;
       const xNormal = tiltX * dark + (-0.95) * paperK;
       const flipYaw = (typeof window !== 'undefined' && window.__flipYaw != null) ? window.__flipYaw : FLIP_YAW;
-      rig.rotation.y += ((yawNormal * (1 - flipK) + flipYaw * flipK) - rig.rotation.y) * 0.05;
-      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * 0.05;
+      // 翻面時大幅加快收斂(否則捲動到影片段相機還卡在半途轉、看到鏡頭正面),避免「就位太慢=看起來壞掉」
+      const flipLerp = 0.05 + flipK * flipK * 0.4;
+      const _rotTargetY = yawNormal * (1 - flipK) + flipYaw * flipK;
+      rig.rotation.y += (_rotTargetY - rig.rotation.y) * flipLerp;
+      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * flipLerp;
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
       const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
-      rig.position.x += ((_posTargetX - rig.position.x) * 0.04);   // 翻面時相機靠右(前面不變)
+      rig.position.x += (_posTargetX - rig.position.x) * (0.04 + flipK * flipK * 0.35);   // 翻面時相機靠右(前面不變)並快速就位
       rig.position.y += (((isMobile ? 0.8 : 0) * dark * (1 - flipK)) - rig.position.y) * 0.04;
-      // 相機是否已停在最終翻面姿態:讓螢幕影片「就位後才在原地淡入」,不從右側滑入
-      const settleK = clamp(1 - (Math.abs(rig.rotation.y - (yawNormal * (1 - flipK) + flipYaw * flipK)) / 0.18 + Math.abs(rig.position.x - _posTargetX) / 0.28), 0, 1);
+      // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
+      const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
       rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
@@ -693,7 +696,7 @@ export function createHomeEngine() {
       // U4 螢幕看影片:翻面完成 → 左側業務字卡 + LCD 螢幕亮起播影片 + 快門閃光切換
       const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // 左側字卡:翻面途中即可進場
       // 螢幕影片只在「翻面完成、停在最終角度」後才亮起(不在旋轉途中滑入,避免脫離螢幕)
-      const screenK = ez(sub(p, 0.72, 0.78)) * (1 - ez(sub(p, 0.89, 0.94)));
+      const screenK = ez(sub(scrollP, 0.72, 0.78)) * (1 - ez(sub(scrollP, 0.89, 0.94)));   // 用 scrollP,相機就位後影片即現(淡入交給 shotFadeK)
       if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
       if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
       if (reviewK > 0.02) {
