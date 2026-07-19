@@ -162,6 +162,7 @@ export function createHomeEngine() {
     const loader = hero && hero.querySelector('[data-cine-loader]');
     const paperEl = hero && hero.querySelector('[data-cine-paper]');
     const studyTitleEl = hero && hero.querySelector('[data-cine-studytitle]');
+    const studyCards = hero ? Array.from(hero.querySelectorAll('.pq-study-card')) : [];
     const scrimEl = document.getElementById('pq-hero-scrim');
     const noiseEl = hero && hero.querySelector('.pq-cine-noise');
     const annotSvg = hero && hero.querySelector('[data-cine-annot]');
@@ -388,11 +389,21 @@ export function createHomeEngine() {
     }
 
     const parts = [];
-    const BLACK = new THREE.Color(0x141414);
+    const BLACK = new THREE.Color(0x141414), PQ_ORANGE = new THREE.Color(0xFF6B2C);
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
     const INT_GROUPS = new Set(['sensor', 'mainboard', 'chip', 'battery', 'ribbon']);
+    // U3s 白藍圖「單一零件展示」:5 個零件設定(part 於 load 後填入真實 node;文案繁中、動詞、白話)
+    const STUDY = [
+      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null },
+      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null },
+      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null },
+      { action: 'dial',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null },
+      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null }
+    ];
+    // 零件展示暫存向量(相機相對展示位置)
+    const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
@@ -509,7 +520,7 @@ export function createHomeEngine() {
           const lineGeo = new THREE.BufferGeometry().setFromPoints([center.clone(), center.clone()]);
           const lineMat = new THREE.LineBasicMaterial({ color: rule.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
-          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color) });
+          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
         });
         // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
         {
@@ -525,6 +536,21 @@ export function createHomeEngine() {
         }
         if (typeof window !== 'undefined') {
           window.__partsInfo = () => parts.map((pp, i) => { const b = new THREE.Box3().setFromObject(pp.node); const s = b.getSize(new THREE.Vector3()); return { i, name: pp.name, g: pp.groupId, sz: [+s.x.toFixed(2), +s.y.toFixed(2), +s.z.toFixed(2)], home: [+pp.home.x.toFixed(2), +pp.home.y.toFixed(2), +pp.home.z.toFixed(2)] }; });
+        }
+        // U3s:把 5 個零件對到現有真實 node(沿用模型零件;找不到就用最接近的,見註解)
+        {
+          const byName = (nm) => parts.find(pp => pp.name === nm);
+          const optics = parts.filter(pp => pp.groupId === 'optics');
+          const ctrls = parts.filter(pp => pp.groupId === 'controls');
+          const topBtn = ctrls.slice().sort((a, b) => b.center.y - a.center.y)[0];                              // 02 頂部按鈕≈center.y 最高的 control
+          const sideDial = ctrls.slice().sort((a, b) => Math.abs(b.center.x) - Math.abs(a.center.x)).find(pp => pp !== topBtn) || ctrls[1]; // 04 側邊控制鍵≈|x| 最大
+          STUDY[0].part = byName('lenses_low_40') || optics[0];                        // 01 對焦環=最外圈鏡組
+          STUDY[1].part = topBtn;                                                       // 02 快門/頂部按鈕(替代:最頂部 control node)
+          STUDY[2].part = byName('lenses010_low_37') || optics[optics.length - 1];      // 03 光圈=最內側鏡片(以縮放模擬葉片開合)
+          STUDY[3].part = sideDial;                                                     // 04 模式轉盤(替代:側邊 control node)
+          STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
+          // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
+          parts.forEach(pp => { pp.node.parent.updateWorldMatrix(true, false); pp.gcLocal = pp.node.parent.worldToLocal(new THREE.Box3().setFromObject(pp.node).getCenter(new THREE.Vector3())); });
         }
         // U4b:找到 GLB 內的螢幕面 mesh(Object_12),由它的幾何前面建立 8 個斜切角控制點 → DOM 影片直接錨定真實螢幕位置
         asset.traverse(o => { if (o.isMesh && o.name === SCR_NAME) screenMesh = o; });
@@ -663,7 +689,27 @@ export function createHomeEngine() {
       const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
       // U3s 白藍圖「單一零件展示」章節:studyP 0→1 對應 5 個零件(每個 0.2);章節標題在最前面淡入淡出
       const studyP = sub(p, 0.29, 0.53);
-      const introK = ez(sub(p, 0.245, 0.29)) * (1 - ez(sub(p, 0.30, 0.335)));   // 章節標題:藍圖展開時出現,第一個零件開始時淡出
+      const introK = ez(sub(p, 0.242, 0.278)) * (1 - ez(sub(p, 0.283, 0.30)));   // 章節標題:藍圖展開時出現,第一個零件文字卡出現前(~0.30)完全淡出,避免重疊
+      // U3s 零件展示狀態:哪個零件、聚焦/動作/文字/回位進度(每個零件 15%移出 20%放大 35%動作 15%文字 15%回位)
+      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0;
+      if (paperK > 0.4 && studyP > 0.0005 && studyP < 0.9995) {
+        sComp = Math.min(4, Math.floor(studyP * 5));
+        const cp = clamp((studyP - sComp * 0.2) / 0.2, 0, 1);
+        sFocusK = ez(sub(cp, 0.0, 0.32)) * (1 - ez(sub(cp, 0.85, 1.0)));   // 移出+放大 → 定住 → 回位
+        sActionK = ez(sub(cp, 0.35, 0.70));                                // 本體機械動作(一次,不循環)
+        sTextK = ez(sub(cp, 0.26, 0.40)) * (1 - ez(sub(cp, 0.80, 0.94)));  // 文字停留
+      }
+      const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
+      if (typeof window !== 'undefined') window.__sdbg = { sComp, sFocusK: +sFocusK.toFixed(2), sActionK: +sActionK.toFixed(2), studyP: +studyP.toFixed(3), part: sComp >= 0 && STUDY[sComp].part ? STUDY[sComp].part.name : null };
+      // 展示位置(相機相對:中央偏右/左,拉近放大成畫面焦點)
+      if (sFocusK > 0.001 && sPartNode) {
+        const cfg = STUDY[sComp], side = cfg.side === 'right' ? 1 : -1;
+        _fwd.copy(camAim).sub(camera.position).normalize();
+        _rgt.crossVectors(_fwd, _WUP).normalize();
+        _up2.crossVectors(_rgt, _fwd).normalize();
+        const dist = camera.position.distanceTo(camAim) * (isMobile ? 0.82 : 0.66);
+        _disp.copy(camera.position).addScaledVector(_fwd, dist).addScaledVector(_rgt, isMobile ? 0 : side * dist * 0.26).addScaledVector(_up2, isMobile ? dist * 0.16 : 0);
+      }
       const dark = 1 - paperK;
       const solid = 1 - wireK;
       const focusSet = review ? EMPTY : (cardFocus[beat] || EMPTY);
@@ -672,6 +718,11 @@ export function createHomeEngine() {
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
       if (studyTitleEl) studyTitleEl.style.setProperty('--k', introK.toFixed(3));   // U3s 零件展示章節標題
+      for (let c = 0; c < studyCards.length; c++) {   // U3s 零件文字卡:只顯示當前零件,隨停留淡入淡出
+        const on = c === sComp ? sTextK : 0;
+        studyCards[c].style.opacity = on.toFixed(3);
+        studyCards[c].style.setProperty('--on', on.toFixed(3));
+      }
       if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 && p < 0.58 ? 1 : 0);
       if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
@@ -714,14 +765,36 @@ export function createHomeEngine() {
         // 拆解:所有零件適度散開(在框內),之後保持
         const staged = ez((disasK - part.delay * 0.5) / Math.max(0.3, 1 - part.delay * 0.5));
         const dest = part.home.clone().addScaledVector(part.offset, staged * OFF);
-        // 子:鏡頭整組繞光學軸原地自轉(拆解時零件亦一起旋)
-        if (part.lensSpin) {
+        // U3s 零件展示:此零件是否為當前聚焦零件 / 其餘變淡
+        const isFocus = sPartNode === part.node && sFocusK > 0.001;
+        const isStudyDim = sComp >= 0 && !isFocus;
+        // 子:鏡頭整組繞光學軸原地自轉(聚焦展示時停自轉,改跑機械動作)
+        if (part.lensSpin && !isFocus) {
           _spinQ.setFromAxisAngle(lensAxis, t * 0.5);
           dest.sub(lensPivot).applyQuaternion(_spinQ).add(lensPivot);
           part.node.quaternion.copy(part.lensBaseQuat).premultiply(_spinQ);
         }
-        part.node.position.lerp(dest, 0.08);
-        const hi = focused || paperK > 0.4;
+        // 展示放大目標(1.5–2.4x 內取中庸值,手機更小)
+        if (part.studyScale == null) part.studyScale = 1;
+        let tScale = 1;
+        if (isFocus) { tScale = 1 + sFocusK * (isMobile ? 0.55 : 0.75); if (STUDY[sComp].action === 'iris') tScale *= 0.62 + 0.5 * ez(sub(sActionK, 0.0, 0.6)); }
+        part.studyScale += (tScale - part.studyScale) * 0.14;
+        if (isFocus) {
+          _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);   // 展示世界位置 → 該零件父層 local
+          if (part.gcLocal) _dispL.addScaledVector(part.gcLocal, -part.studyScale);   // 縮放繞 node 原點 → 補幾何中心位移,使幾何中心對準展示位置
+          dest.lerp(_dispL, sFocusK);                                   // 由爆炸位置 blend 到展示位置
+          const act = STUDY[sComp].action;
+          if (act === 'ring' || act === 'dial') {                       // 環體/轉盤:繞光學軸轉一次(dial 跳 3 格)
+            const ang = act === 'dial' ? (Math.round(sActionK * 3) / 3) * 0.5 : sActionK * 0.55;
+            _actQ.setFromAxisAngle(lensAxis, ang);
+            part.node.quaternion.copy(part.baseQuat).premultiply(_actQ);
+          } else if (act === 'press') {                                 // 按鈕:下壓一次再回
+            dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);
+          }
+        }
+        if (isFocus || Math.abs(part.studyScale - 1) > 0.002) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
+        part.node.position.lerp(dest, isFocus ? 0.12 : 0.08);
+        const hi = focused || isFocus || paperK > 0.4;
         // 子:運作脈動(各零件不同節奏 —— 感光掃描 / 晶片閃爍 / 主機板資料流 / 排線傳輸)
         let op2;
         if (part.groupId === 'sensor') op2 = 0.5 + 0.5 * Math.sin(t * 3.2);
@@ -731,19 +804,21 @@ export function createHomeEngine() {
         else op2 = 0.7 + 0.3 * Math.sin(t * 1.8 + i * 0.6);
         // 材質(光澤 PBR):solid 主導,線稿階段淡出;emissive 運作微光 + 快門閃
         const intHide = INT_GROUPS.has(part.groupId) ? (1 - R) : 1;   // 組回後隱藏內部零件
+        const studyDim = isStudyDim ? (1 - paperK * 0.78) : 1;         // 展示時非聚焦零件降到 ~22%(隨 paperK)
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const mo = solid * (hi ? 1 : 0.9) * intHide;
+          const mo = solid * (hi ? 1 : 0.9) * intHide * studyDim;
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
-          if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused ? 0.5 : 0.2) + shot * 0.6) * solid;
+          if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused || isFocus ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
-        // 邊線(發光彩色線稿 → 黑白):運作脈動
+        // 邊線(發光彩色線稿 → 黑白藍圖線):展示時聚焦零件線條較深、其餘變淡;聚焦零件帶少量橘
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];
           em.color.copy(part.baseColor).lerp(BLACK, paperK);
+          if (isFocus) em.color.lerp(PQ_ORANGE, 0.32 * sFocusK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
           const wireLine = wireK * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2);
-          em.opacity = Math.max(wireLine * dark, paperK * 0.85);
+          em.opacity = Math.max(wireLine * dark, paperK * 0.85 * (isStudyDim ? 0.28 : 1));
         }
         // 拆解連接線
         const attr = part.connector.geometry.getAttribute('position');

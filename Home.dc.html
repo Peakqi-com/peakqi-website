@@ -58,6 +58,17 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-studytitle h2{margin:0 0 16px;font:900 clamp(1.7rem,3.6vw,3rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
 .pq-cine-studytitle p{margin:0;font:400 15px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:26em}
 @media (max-width:820px){.pq-cine-studytitle{left:20px;right:20px;top:26%;max-width:none}.pq-cine-studytitle h2{font-size:1.5rem}}
+/* U3s 零件展示文字卡:工程圖語言(深墨字 + 橘色編號 + 細引線 + 留白) */
+.pq-study{position:absolute;inset:0;z-index:5;pointer-events:none}
+.pq-study-card{position:absolute;top:50%;transform:translateY(calc(-50% + (1 - var(--on,0))*14px));width:min(360px,32vw);opacity:0;will-change:opacity,transform}
+.pq-study-card[data-side="left"]{left:clamp(28px,7vw,120px)}
+.pq-study-card[data-side="right"]{right:clamp(28px,7vw,120px);text-align:right}
+.pq-study-idx{display:flex;gap:11px;align-items:baseline;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.45);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(9,11,14,.16)}
+.pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row-reverse}
+.pq-study-idx b{color:#FF6B2C;font:800 24px 'Space Grotesk',sans-serif;letter-spacing:0}
+.pq-study-card h3{margin:0 0 12px;font:900 clamp(1.5rem,2.9vw,2.5rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
+.pq-study-card p{margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)}
+@media (max-width:820px){.pq-study-card,.pq-study-card[data-side="left"],.pq-study-card[data-side="right"]{left:20px;right:20px;width:auto;top:auto;bottom:8%;transform:none;text-align:left}.pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}.pq-study-card h3{font-size:1.4rem}}
 /* U4 翻面看螢幕:右側大影片 + 左側業務/宗旨字卡 + 快門閃光 */
 .pq-cine-review{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none}
 /* 影片螢幕:DOM 疊層,left/top/width/height + clip-path 由引擎每幀依 3D 螢幕投影設定(跟拍相機、不飄) */
@@ -202,6 +213,29 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
       <span class="eyebrow">INSIDE PEAKQI / COMPONENT STUDY</span>
       <h2>拆開來看，每個零件都在替你做事。</h2>
       <p>每個元件各自運作，最後回到同一套系統。</p>
+    </div>
+    <!-- U3s 零件展示文字卡(繁中,存在 DOM;由引擎依當前零件顯示。奇數零件文字在左、偶數在右) -->
+    <div class="pq-study" data-cine-study aria-hidden="true">
+      <article class="pq-study-card" data-study-card="0" data-side="left">
+        <div class="pq-study-idx"><b>01</b><span>LENS-R01</span></div>
+        <h3>對焦需求</h3><p>接住詢問、辨識需求、安排下一步。</p>
+      </article>
+      <article class="pq-study-card" data-study-card="1" data-side="right">
+        <div class="pq-study-idx"><b>02</b><span>BODY-B02</span></div>
+        <h3>啟動下一步</h3><p>自動回覆、跟進、提醒與流程觸發。</p>
+      </article>
+      <article class="pq-study-card" data-study-card="2" data-side="left">
+        <div class="pq-study-idx"><b>03</b><span>OPT-I03</span></div>
+        <h3>調整每一次輸出</h3><p>文案、圖片與影片內容。</p>
+      </article>
+      <article class="pq-study-card" data-study-card="3" data-side="right">
+        <div class="pq-study-idx"><b>04</b><span>CTRL-D04</span></div>
+        <h3>推進每一件工作</h3><p>報價、專案、進度與財務。</p>
+      </article>
+      <article class="pq-study-card" data-study-card="4" data-side="left">
+        <div class="pq-study-idx"><b>05</b><span>CIS-S05</span></div>
+        <h3>留下每一次結果</h3><p>資料、紀錄、月報與營運判讀。</p>
+      </article>
     </div>
     <canvas id="pq-hero-gl" aria-hidden="true"></canvas>
     <div id="pq-hero-scrim" aria-hidden="true"></div>
