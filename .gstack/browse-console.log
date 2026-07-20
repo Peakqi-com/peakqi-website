@@ -46,3 +46,15 @@
 [2026-07-20T16:02:45.778Z] [error] Error: <line> attribute y2: Expected length, "{{ orbY }}".
 [2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
 [2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:31:47.552Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:31:47.552Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:33:01.756Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:33:01.756Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:33:48.751Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:33:48.751Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:36:22.262Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:36:22.262Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:37:45.622Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:37:45.622Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:38:38.227Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:38:38.227Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.

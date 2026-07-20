@@ -391,7 +391,11 @@ export function createHomeEngine() {
 
     const parts = [];
     const BLACK = new THREE.Color(0x141414), PQ_ORANGE = new THREE.Color(0xFF6B2C);
-    const PAPER = new THREE.Color(0xF2EFE8);   // 白藍圖紙色:零件平塗填色用(遮住後方線條)
+    const PAPER = new THREE.Color(0xF2EFE8);
+    // A3 隱線消除:共用的「紙色遮擋面」——不吃光的平塗 + 會寫深度,
+    // polygonOffset 讓填色稍微退後,邊線壓在上面才不會 z-fighting。
+    // toneMapped:false → 不吃 renderer 的色調映射,填色才會剛好等於紙色背景(否則會偏灰,零件像蒙了一層)
+    const PAPER_FILL = new THREE.MeshBasicMaterial({ color: 0xF2EFE8, toneMapped: false, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });   // 白藍圖紙色:零件平塗填色用(遮住後方線條)
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
@@ -527,7 +531,7 @@ export function createHomeEngine() {
       ribbon.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 36, 0.025, 6, false), mkMat(0xFF6B2C, 0xFF6B2C))); asset.add(ribbon);
     }
     function addPartVisuals(node, color) {
-      const materials = [], edges = [];
+      const materials = [], edges = [], fills = [];   // fills 這裡存的是 mesh 本身(供材質替換)
       // 先蒐集再加子物件:traverse 期間掛上「Mesh」子節點會被同一次走訪再次拜訪 → 無限遞迴、模型永遠載不完。
       // (edge 是 LineSegments 不是 Mesh,所以原本沒事;之後若要再加遮擋面務必沿用這個寫法。)
       const meshes = [];
@@ -537,10 +541,14 @@ export function createHomeEngine() {
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });
         obj.material = Array.isArray(obj.material) ? clones : clones[0];
+        // 隱線消除改用「材質替換」:白藍圖階段把這個 mesh 的材質換成紙色平塗(會寫深度),
+        // 重用既有物件 → 完全不增加 draw call。原材質先存起來以便還原。
+        obj.userData.pqMat = obj.material;
+        fills.push(obj);
         const em = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthTest: true });
         const edge = new THREE.LineSegments(new THREE.EdgesGeometry(obj.geometry, 24), em); edge.renderOrder = 4; obj.add(edge); edges.push(em);
       });
-      return { materials, edges };
+      return { materials, edges, fills };
     }
     function calcOffset(name, center, index) {
       if (name.startsWith('lenses')) return V3(center.x * 0.18, center.y * 0.18, 1.35 + Math.max(0, center.z - 0.75) * 1.35);
@@ -581,7 +589,7 @@ export function createHomeEngine() {
           const lineGeo = new THREE.BufferGeometry().setFromPoints([center.clone(), center.clone()]);
           const lineMat = new THREE.LineBasicMaterial({ color: rule.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
-          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
+          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, fills: vis.fills, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
         });
         // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
         {
@@ -880,6 +888,7 @@ export function createHomeEngine() {
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
+
       if (studyTitleEl) studyTitleEl.style.setProperty('--k', introK.toFixed(3));   // U3s 零件展示章節標題
       for (let c = 0; c < studyCards.length; c++) {   // U3s 零件文字卡:只顯示當前零件,隨停留淡入淡出
         const on = c === sComp ? sTextK : 0;
@@ -1039,6 +1048,16 @@ export function createHomeEngine() {
           const mo = solid * (hi ? 1 : 0.9) * intHide * studyDim;
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
           if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused || isShown ? 0.5 : 0.2) + shot * 0.6) * solid;
+        }
+        // 隱線消除:白藍圖完全展開時把材質換成紙色平塗(遮住後方線條),離開時還原。
+        // 只在「狀態改變」的那一幀做替換,平常零成本。
+        const wantPaper = paperK > 0.9 && intHide > 0.5;
+        if (part.paperOn !== wantPaper) {
+          part.paperOn = wantPaper;
+          for (let f = 0; f < part.fills.length; f++) {
+            const mh = part.fills[f];
+            mh.material = wantPaper ? PAPER_FILL : mh.userData.pqMat;
+          }
         }
         // 邊線(發光彩色線稿 → 黑白藍圖線):展示時聚焦零件線條較深、其餘變淡;聚焦零件帶少量橘
         for (let e = 0; e < part.edges.length; e++) {
