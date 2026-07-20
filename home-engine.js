@@ -807,6 +807,105 @@ export function createHomeEngine() {
       try { renderer.dispose(); } catch (e) {}
     });
 
+    // ── Phase 2:?debugSceneLayout=1 場景版面除錯疊層 ────────────────────
+    // production 完全不建立元素、不寫 console;所有向量/Box3 預先配置,不在每幀 new。
+    const DEBUG_LAYOUT = (function () {
+      try { return new URLSearchParams(location.search).get('debugSceneLayout') === '1'; } catch (e) { return false; }
+    })();
+    const _dbg = DEBUG_LAYOUT ? {
+      box: new THREE.Box3(), v: new THREE.Vector3(),
+      corners: Array.from({ length: 8 }, () => new THREE.Vector3()),
+      vel: 0, lastPx: 0
+    } : null;
+    let dbgRoot = null, dbgPanel = null, dbgObjBox = null, dbgCardBoxes = [];
+    function buildDebugOverlay() {
+      if (!DEBUG_LAYOUT || dbgRoot) return;
+      dbgRoot = document.createElement('div');
+      dbgRoot.setAttribute('data-debug-scene-layout', '');
+      dbgRoot.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;font:11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace';
+      const line = (css) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;' + css; dbgRoot.appendChild(d); return d; };
+      // safe zone:左右 4vw、上 11vh、下 12vh
+      line('left:4vw;top:0;bottom:0;width:1px;background:rgba(0,229,255,.55)');
+      line('right:4vw;top:0;bottom:0;width:1px;background:rgba(0,229,255,.55)');
+      line('left:0;right:0;top:11vh;height:1px;background:rgba(255,193,7,.55)');
+      line('left:0;right:0;bottom:12vh;height:1px;background:rgba(255,193,7,.55)');
+      // viewport 中心線
+      line('left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22)');
+      line('left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.22)');
+      // Three.js 主物件 screen-space bounding box
+      dbgObjBox = line('border:1.5px solid #ff2d55;left:0;top:0;width:0;height:0');
+      dbgPanel = document.createElement('div');
+      dbgPanel.style.cssText = 'position:absolute;left:8px;top:8px;padding:8px 10px;background:rgba(0,0,0,.82);color:#c8facc;white-space:pre;border:1px solid rgba(255,255,255,.18);border-radius:4px;max-width:46vw';
+      dbgRoot.appendChild(dbgPanel);
+      document.body.appendChild(dbgRoot);
+      ctx.add(() => { if (dbgRoot && dbgRoot.parentNode) dbgRoot.parentNode.removeChild(dbgRoot); dbgRoot = null; });
+    }
+    function debugCardBox(el, label, i) {
+      if (!dbgCardBoxes[i]) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:absolute;border:1.5px solid #38d9a9;color:#38d9a9;font:10px ui-monospace,monospace;padding:1px 3px';
+        dbgRoot.appendChild(d); dbgCardBoxes[i] = d;
+      }
+      const b = dbgCardBoxes[i];
+      if (!el || +getComputedStyle(el).opacity < 0.05) { b.style.display = 'none'; return; }
+      const r = el.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) { b.style.display = 'none'; return; }
+      const W = window.innerWidth || 1, H = window.innerHeight || 1;
+      b.style.display = 'block';
+      b.style.left = r.left + 'px'; b.style.top = r.top + 'px';
+      b.style.width = r.width + 'px'; b.style.height = r.height + 'px';
+      b.textContent = label + ' x' + Math.round((r.left + r.width / 2) / W * 100) + '% y' + Math.round((r.top + r.height / 2) / H * 100) +
+        '% w' + Math.round(r.width / W * 100) + '% h' + Math.round(r.height / H * 100) + '%';
+    }
+    function updateDebugOverlay(activeScene, localP, dt) {
+      if (!DEBUG_LAYOUT) return;
+      buildDebugOverlay();
+      const W = window.innerWidth || 1, H = window.innerHeight || 1;
+      // Three.js 主物件:rig 的 world Box3 投影 8 個角 → screen-space
+      let ox = 0, oy = 0, ow = 0, oh = 0;
+      if (rig && modelReady) {
+        _dbg.box.setFromObject(rig);
+        if (!_dbg.box.isEmpty()) {
+          const mn = _dbg.box.min, mx = _dbg.box.max;
+          let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, k = 0;
+          for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) for (let c = 0; c < 2; c++) {
+            const v = _dbg.corners[k++].set(a ? mx.x : mn.x, b ? mx.y : mn.y, c ? mx.z : mn.z).project(camera);
+            const sx = (v.x * 0.5 + 0.5) * W, sy = (-v.y * 0.5 + 0.5) * H;
+            if (sx < x0) x0 = sx; if (sx > x1) x1 = sx;
+            if (sy < y0) y0 = sy; if (sy > y1) y1 = sy;
+          }
+          ox = (x0 + x1) / 2 / W * 100; oy = (y0 + y1) / 2 / H * 100;
+          ow = (x1 - x0) / W * 100; oh = (y1 - y0) / H * 100;
+          dbgObjBox.style.left = x0 + 'px'; dbgObjBox.style.top = y0 + 'px';
+          dbgObjBox.style.width = Math.max(0, x1 - x0) + 'px'; dbgObjBox.style.height = Math.max(0, y1 - y0) + 'px';
+        }
+      }
+      // 字卡 bounding box(只畫目前可見的)
+      let bi = 0;
+      studyCards.forEach((c, i) => debugCardBox(c, 'study-0' + (i + 1), bi++));
+      vcards.forEach((c, i) => debugCardBox(c, 'video-0' + (i + 1), bi++));
+      cards.forEach((c, i) => debugCardBox(c, 'beat-' + i, bi++));
+      debugCardBox(sloganEl, 'cta', bi++);
+      debugCardBox(lensTitleEl, 'summary', bi++);
+      debugCardBox(studyTitleEl, 'bp-intro', bi++);
+      const sc = sceneById[activeScene] || { startPx: 0, endPx: 0, lengthPx: 0, group: '-' };
+      _dbg.vel = Math.abs(renderedScrollPx - _dbg.lastPx) / Math.max(1e-4, dt);
+      _dbg.lastPx = renderedScrollPx;
+      dbgPanel.textContent = [
+        'scene      ' + activeScene + '  (' + sc.group + ')',
+        'localP     ' + localP.toFixed(4),
+        'scene px   ' + Math.round(sc.startPx) + ' -> ' + Math.round(sc.endPx) + '  (len ' + Math.round(sc.lengthPx) + ')',
+        'raw        ' + scrollRaw.toFixed(4),
+        'target px  ' + Math.round(targetScrollPx),
+        'rendered   ' + Math.round(renderedScrollPx) + ' / ' + Math.round(totalScrollPx),
+        'legacy p   ' + legacyFromPx(renderedScrollPx).toFixed(4),
+        'velocity   ' + Math.round(_dbg.vel) + ' px/s',
+        'dt         ' + (dt * 1000).toFixed(1) + ' ms',
+        'isTouch    ' + isTouch,
+        'viewport   ' + W + ' x ' + H + '  (stable ' + Math.round(stableVw) + ' x ' + Math.round(stableVh) + ')',
+        'object     x' + ox.toFixed(1) + '% y' + oy.toFixed(1) + '% w' + ow.toFixed(1) + '% h' + oh.toFixed(1) + '%'
+      ].join(String.fromCharCode(10));
+    }
     let scrollP = 0, curBeat = -1, curPhase = -1;
     let snapFrames = 8;   // 進場時直接就位 → 從任何位置進來畫面都一致
     ScrollChapter(ctx, hero, (v) => { scrollRaw = v; }, { pinned: true });
@@ -1358,6 +1457,11 @@ export function createHomeEngine() {
       orangeL.intensity = (15 + Math.sin(t * 2.7) * 3 + shot * 26) * (0.4 + 0.6 * dark);
       if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark;
       if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
+      if (DEBUG_LAYOUT) {
+        let _actId = sceneLayout.length ? sceneLayout[0].id : '';
+        for (let _i = 0; _i < sceneLayout.length; _i++) if (renderedScrollPx >= sceneLayout[_i].startPx) _actId = sceneLayout[_i].id;
+        updateDebugOverlay(_actId, sceneProgress(_actId), dt);
+      }
     });
   }
 
