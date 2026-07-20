@@ -507,8 +507,11 @@ export function createHomeEngine() {
     }
     function addPartVisuals(node, color) {
       const materials = [], edges = [], fills = [];
-      node.traverse(obj => {
-        if (!(obj instanceof THREE.Mesh)) return;
+      // 先蒐集,再加子物件:traverse 期間若把「Mesh」掛成子節點,會被同一次走訪再次拜訪 →
+      // 無限遞迴、模型永遠載不完(頁面直接 HUNG)。原本的 edge 是 LineSegments 不是 Mesh 才沒事。
+      const meshes = [];
+      node.traverse(obj => { if (obj instanceof THREE.Mesh) meshes.push(obj); });
+      meshes.forEach(obj => {
         obj.frustumCulled = false;
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });

@@ -1,8 +1,8 @@
 {
-  "pid": 29528,
-  "port": 28299,
-  "token": "360e8a89-56e7-4885-be22-8b281762607a",
-  "startedAt": "2026-07-20T13:13:06.539Z",
+  "pid": 34056,
+  "port": 20730,
+  "token": "8d821ef7-caed-4ddd-beae-e46993e615f3",
+  "startedAt": "2026-07-20T13:31:14.174Z",
   "serverPath": "C:\\Users\\User\\.claude\\skills\\gstack\\browse\\src\\server.ts",
   "mode": "launched"
 }
