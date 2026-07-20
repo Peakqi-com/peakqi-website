@@ -641,7 +641,9 @@ export function createHomeEngine() {
             let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
             pp.node.traverse(o => { if (o.isMesh && o.geometry) { o.geometry.computeBoundingBox(); const s = o.geometry.boundingBox.getSize(new THREE.Vector3()); const m = Math.min(s.x, s.y, s.z); if (m < minD) { minD = m; thin.set(s.x === m ? 1 : 0, s.y === m ? 1 : 0, s.z === m ? 1 : 0); } } });
             pp.faceLocal = thin;
-            pp.gcNode = pp.gcLocal.clone().applyQuaternion(pp.baseQuat.clone().invert());
+            // 從「node 原點」到「幾何中心」的偏移 = gcLocal - home。
+            // 不能直接用 gcLocal:程式生成的內部零件 home 不為 0,會把整段位移當成偏移扣掉 → 特寫偏離中心。
+            pp.gcNode = pp.gcLocal.clone().sub(pp.home).applyQuaternion(pp.baseQuat.clone().invert());
           });
           // 每個展示章節的「主元件群組」:組合中心(parent-local,爆炸排列)+ 主面軸(換角度朝鏡頭用)+ 群組尺寸(決定放大幅度)
           STUDY.forEach(c => {
@@ -788,8 +790,6 @@ export function createHomeEngine() {
     ctx.onFrame((now) => {
       if (destroyed || !bound.inView) return;
       const t = (now - t0) / 1000;
-      // 大跳動(重新整理落在中段、錨點跳轉)也視為需要吸附,避免「由下往上滑」看到不同的角度
-      if (Math.abs(scrollP - smoothP) > 0.06) snapFrames = Math.max(snapFrames, 6);
       if (snapFrames > 0) { smoothP = scrollP; snapFrames--; } else smoothP += (scrollP - smoothP) * 0.06;
       const snapping = snapFrames > 0;
       const p = smoothP;
@@ -799,15 +799,18 @@ export function createHomeEngine() {
       // 新增相位 3=黑白藍圖(含零件展示 0.22–0.56);組回(4)、翻面看螢幕(5)沿用
       setPhase(p < 0.05 ? 0 : p < 0.14 ? 1 : p < 0.22 ? 2 : p < 0.56 ? 3 : p < 0.665 ? 4 : 5);
       // 母:representation 轉場(藍圖後 R 倒放 → 組回光澤實體 → 翻面)。組回/翻面/影片/slogan scrollP 全部不變
-      const R = ez(sub(p, 0.56, 0.62));             // U3a 組回實體(提早到 0.62 完成,騰出鏡頭總結標題停留)
+      // C 白藍圖收尾:零件先在「還是線稿」的狀態收合成一台完整相機並停留,之後才轉成實體。
+      // (原本 R 同時負責收零件+收線稿+淡出紙面,三件事一起發生 → 看不到「組好的線稿相機」)
+      const blueAsmK = ez(sub(p, 0.505, 0.552));   // 在白藍圖內收合成完整相機
+      const R = ez(sub(p, 0.578, 0.632));          // U3a 組回實體(紙面淡出、材質回來)
       const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
       const flipK = ez(sub(scrollP, 0.67, 0.72)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
       const summaryK = ez(sub(scrollP, 0.618, 0.652)) * (1 - ez(sub(scrollP, 0.678, 0.705)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
-      const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R);   // 前段壓縮,騰出零件展示
+      const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R) * (1 - blueAsmK);   // 前段壓縮;白藍圖收尾時先收合(此時紙面仍在)
       const wireK = ez(sub(p, 0.14, 0.24)) * (1 - R);
       const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
       // U3s 白藍圖「單一零件展示」章節:studyP 0→1 對應 5 個零件(每個 0.2);章節標題在最前面淡入淡出
-      const studyP = sub(p, 0.29, 0.53);
+      const studyP = sub(p, 0.29, 0.50);   // 讓出 0.50→0.578 給「組成完整線稿相機 + 停留」
       const introK = ez(sub(p, 0.242, 0.278)) * (1 - ez(sub(p, 0.283, 0.30)));   // 章節標題:藍圖展開時出現,第一個零件文字卡出現前(~0.30)完全淡出,避免重疊
       // U3s 零件展示狀態:哪個零件、聚焦/動作/文字/回位進度(每個零件 15%移出 20%放大 35%動作 15%文字 15%回位)
       let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sGroupScale = 1; sTurn = 0; sKnollK = 0;
@@ -1051,7 +1054,8 @@ export function createHomeEngine() {
         }
         // 隱線消除:白藍圖完全展開時把材質換成紙色平塗(遮住後方線條),離開時還原。
         // 只在「狀態改變」的那一幀做替換,平常零成本。
-        const wantPaper = paperK > 0.9 && intHide > 0.5;
+        // 遲滯(0.86 / 0.92):否則停在門檻附近時會每幀來回替換材質 → 閃爍
+        const wantPaper = (part.paperOn ? paperK > 0.86 : paperK > 0.92) && intHide > 0.5;
         if (part.paperOn !== wantPaper) {
           part.paperOn = wantPaper;
           for (let f = 0; f < part.fills.length; f++) {
