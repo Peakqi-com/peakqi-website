@@ -911,7 +911,12 @@ export function createHomeEngine() {
       const nowSec = now / 1000;
       const dt = Math.min(lastFrameSec ? Math.max(0, nowSec - lastFrameSec) : 1 / 60, 1 / 30);
       lastFrameSec = nowSec;
+      const prevTarget = targetScrollPx;
       targetScrollPx = scrollRaw * totalScrollPx;
+      // 不連續跳躍(錨點跳轉、rail 按鈕、瀏覽器還原位置)才吸附。
+      // 判斷依據是「目標值自己這一幀跳了多少」,不是目標與當前的差距 ——
+      // 後者在連續快速捲動時會反覆跨過門檻,造成吸附/平滑來回切換而抖動。
+      if (Math.abs(targetScrollPx - prevTarget) > stableVh * 1.5) snapFrames = Math.max(snapFrames, 1);
       if (snapFrames > 0) { renderedScrollPx = targetScrollPx; snapFrames--; }
       else {
         const lambda = isTouch ? 5.5 : 9;
