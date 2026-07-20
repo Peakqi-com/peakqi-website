@@ -53,13 +53,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-titleblock span{color:#FF6B2C}
 #hero.pq-cine-paper-on .pq-cine-titleblock{display:flex}
 /* U3s 白藍圖零件展示章節標題:工程圖語言(深墨線 + 少量橘 + 大量留白) */
-.pq-cine-studytitle{position:absolute;z-index:5;left:clamp(28px,7vw,120px);top:38%;max-width:min(560px,52vw);pointer-events:none;opacity:var(--k,0);transform:translateY(calc((1 - var(--k,0))*14px));transition:none}
+/* 文字層一律高於影片(z=5)與 debug(z=8):字卡永遠不被蓋住 */
+.pq-cine-studytitle{z-index:20;position:absolute;z-index:5;left:clamp(28px,7vw,120px);top:38%;max-width:min(560px,52vw);pointer-events:none;opacity:var(--k,0);transform:translateY(calc((1 - var(--k,0))*14px));transition:none}
 .pq-cine-studytitle .eyebrow{display:block;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C;margin-bottom:18px;padding-left:2px;border-left:0}
 .pq-cine-studytitle h2{margin:0 0 16px;font:900 clamp(1.7rem,3.6vw,3rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
 .pq-cine-studytitle p{margin:0;font:400 15px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:26em}
 @media (max-width:820px){.pq-cine-studytitle{left:20px;right:20px;top:26%;max-width:none}.pq-cine-studytitle h2{font-size:1.5rem}}
 /* U3s 零件展示文字卡:工程圖語言(深墨字 + 橘色編號 + 細引線 + 留白) */
-.pq-study{position:absolute;inset:0;z-index:5;pointer-events:none}
+.pq-study{position:absolute;inset:0;z-index:20;pointer-events:none}
 /* B 字卡手繪線稿感:像工程師直接在藍圖上手寫的註記 —— 歪斜手繪外框 + 重描第二筆 + 指向零件的引線 */
 .pq-study-card{position:absolute;top:50%;transform:translateY(calc(-50% + (1 - var(--on,0))*14px)) rotate(-.45deg);width:min(360px,32vw);opacity:0;will-change:opacity,transform;
   padding:18px 20px 20px;background:rgba(242,239,232,.55);
@@ -127,7 +128,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-review.debug .pq-cine-dbg{opacity:1}
 .pq-cine-rec{position:absolute;left:14px;top:12px;z-index:2;display:flex;align-items:center;gap:7px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.9);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .pq-cine-rec i{width:9px;height:9px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 10px #ff3b3b;animation:pqPulse 1.4s ease-in-out infinite}
-.pq-cine-vcard{position:absolute;left:clamp(20px,6vw,72px);top:50%;transform:translateY(calc(-50% + 24px));width:min(400px,38vw);border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.66);backdrop-filter:blur(14px);padding:26px 26px 28px;opacity:0;transition:opacity .5s cubic-bezier(0.16,1,0.3,1),transform .5s cubic-bezier(0.16,1,0.3,1)}
+.pq-cine-vcard{z-index:20;position:absolute;left:clamp(20px,6vw,72px);top:50%;transform:translateY(calc(-50% + 24px));width:min(400px,38vw);border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.66);backdrop-filter:blur(14px);padding:26px 26px 28px;opacity:0;transition:opacity .5s cubic-bezier(0.16,1,0.3,1),transform .5s cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-vcard.is-on{opacity:1;transform:translateY(-50%)}
 .pq-cine-vcard .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
 .pq-cine-vcard .top b{color:#FF6B2C;font:700 15px 'Space Grotesk',sans-serif}
@@ -139,14 +140,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-vcard li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 11px 'Noto Sans TC',sans-serif;letter-spacing:.03em}
 .pq-cine-flash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;pointer-events:none}
 /* U3c 組裝完成鏡頭正面章節總結標題(暗場置中,鏡頭中心對齊;非品牌 Slogan) */
-.pq-cine-lenstitle{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:clamp(10px,1.6vw,20px);padding:0 8vw;pointer-events:none;opacity:var(--k,0)}
+.pq-cine-lenstitle{position:absolute;inset:0;z-index:21;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:clamp(10px,1.6vw,20px);padding:0 8vw;pointer-events:none;opacity:var(--k,0)}
 .pq-cine-lenstitle::before{content:"";position:absolute;left:50%;top:50%;width:min(760px,86vw);height:min(520px,60vh);transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(9,11,14,.62) 0%,rgba(9,11,14,0) 70%);z-index:-1}
 .pq-cine-lenstitle .eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C;transform:translateY(calc((1 - var(--k,0))*10px))}
 .pq-cine-lenstitle h2{margin:0;font:900 clamp(1.8rem,5vw,4rem)/1.16 'Noto Sans TC',sans-serif;color:#F2EFE8;letter-spacing:-.01em;text-shadow:0 2px 30px rgba(0,0,0,.6);transform:translateY(calc((1 - var(--k,0))*14px))}
 .pq-cine-lenstitle p{margin:0;font:400 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:30em}
 @media (max-width:820px){.pq-cine-lenstitle h2{font-size:1.7rem}}
 /* U5 Slogan:外框字掃描填實 + 逐段浮現(--k 由捲動驅動;子=持續微光掃描) */
-.pq-slogan{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(12px,1.8vw,24px);text-align:center;padding:0 6vw;pointer-events:none;opacity:clamp(0,calc(var(--k,0)*3),1)}
+.pq-slogan{position:absolute;inset:0;z-index:22;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(12px,1.8vw,24px);text-align:center;padding:0 6vw;pointer-events:none;opacity:clamp(0,calc(var(--k,0)*3),1)}
 .pq-slogan-eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;opacity:clamp(0,calc((var(--k,0) - .04)*6),1);transform:translateY(calc((1 - var(--k,0))*10px))}
 .pq-slogan-title{position:relative;margin:0;font:900 clamp(2rem,6.4vw,5.4rem)/1.12 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8;--step:.04;--dur:.24}
 /* 逐字「開機/解碼」浮現:每字由暗、模糊、下移的殘影 → 實體字,通電時橘光一波掃過(--k 由捲動驅動,--i 每字索引) */
@@ -155,10 +156,29 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-slogan-lock{font:700 clamp(11px,1.3vw,15px) 'Space Grotesk',sans-serif;letter-spacing:calc(.12em + var(--k,0)*.34em);color:rgba(242,239,232,.72);opacity:clamp(0,calc((var(--k,0) - .3)*4.5),1)}
 .pq-slogan-sub{margin:0;font:600 13px 'Noto Sans TC',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.5);opacity:clamp(0,calc((var(--k,0) - .45)*5),1)}
 .pq-slogan-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px;pointer-events:auto;opacity:clamp(0,calc((var(--k,0) - .6)*5),1)}
-.pq-slogan-btn{display:inline-flex;align-items:center;gap:9px;background:#FF6B2C;color:#090B0E;padding:15px 26px;border-radius:2px;font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none}
-.pq-slogan-btn span{font-family:'Space Grotesk',sans-serif}
-.pq-slogan-ghost{display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.34);color:#F2EFE8;padding:14px 22px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none}
-.pq-slogan-ghost:hover{border-color:#FF6B2C;color:#FF6B2C}
+/* E 廣告式按鈕:更大的量體、字距,加上掃過的高光 */
+.pq-slogan-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:11px;background:#FF6B2C;color:#090B0E;padding:18px 34px;border-radius:2px;font:800 16px 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:0 14px 40px rgba(255,107,44,.32);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s}
+.pq-slogan-btn span{font-family:'Space Grotesk',sans-serif;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.pq-slogan-btn:hover{transform:translateY(-2px);box-shadow:0 20px 52px rgba(255,107,44,.46)}
+.pq-slogan-btn:hover span{transform:translateX(5px)}
+.pq-slogan-btn::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:pqShine 4.4s ease-in-out infinite}
+@keyframes pqShine{0%,72%{left:-60%}86%,100%{left:130%}}
+.pq-slogan-ghost{display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.34);color:#F2EFE8;padding:17px 30px;border-radius:2px;font:600 16px 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;transition:border-color .3s,color .3s,background .3s}
+.pq-slogan-ghost:hover{border-color:#FF6B2C;color:#FF6B2C;background:rgba(255,107,44,.07)}
+/* E 一直拍照的相機:連拍節奏的快門閃光 + 取景框角標 + 拍攝參數列 */
+.pq-slogan-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:pqBurst 4.4s ease-out infinite}
+@keyframes pqBurst{0%{opacity:0}2%{opacity:.20}5%{opacity:0}8%{opacity:.14}11%{opacity:0}52%{opacity:0}54%{opacity:.18}57%{opacity:0}100%{opacity:0}}
+.pq-slogan-marks{position:absolute;inset:clamp(18px,4vw,56px);pointer-events:none;opacity:calc(var(--k,0)*.85)}
+.pq-slogan-marks i{position:absolute;width:clamp(18px,2.2vw,34px);height:clamp(18px,2.2vw,34px);border:2px solid rgba(255,107,44,.75);animation:pqMark 4.4s ease-out infinite}
+.pq-slogan-marks i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.pq-slogan-marks i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.pq-slogan-marks i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.pq-slogan-marks i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+@keyframes pqMark{0%,50%{transform:scale(1);opacity:.55}2%,54%{transform:scale(.9);opacity:1}12%,64%{transform:scale(1);opacity:.55}}
+.pq-slogan-meta{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px);font:700 clamp(9.5px,1vw,11.5px) 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.42);opacity:clamp(0,calc((var(--k,0) - .5)*5),1)}
+.pq-slogan-meta b{display:flex;align-items:center;gap:6px;color:rgba(242,239,232,.6);font-weight:700}
+.pq-slogan-meta b::before{content:'';width:7px;height:7px;border-radius:50%;background:#ff3b30;box-shadow:0 0 9px #ff3b30;animation:pqRecBlink 1.35s steps(1,end) infinite}
+@media (prefers-reduced-motion:reduce){.pq-slogan-flash,.pq-slogan-marks i,.pq-slogan-btn::after{animation:none!important}.pq-slogan-flash{opacity:0!important}}
 @media (max-width:820px){.pq-slogan{gap:14px}.pq-slogan-title{font-size:2rem}.pq-slogan-cta{flex-direction:column;width:100%;max-width:320px}.pq-slogan-btn,.pq-slogan-ghost{justify-content:center}}
 @media (max-width:820px){
   .pq-cine-vstage{left:12px;right:12px;width:auto;top:11%;transform:none}
@@ -442,10 +462,14 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
     <!-- U5 回機身 + Slogan(外框字掃描填實 + 逐段浮現;--k 由捲動驅動) -->
     <div class="pq-slogan" data-cine-slogan aria-hidden="true">
+      <!-- E 一直拍照的相機:連拍快門閃光 + 取景框角標(純 CSS,不進每幀迴圈) -->
+      <div class="pq-slogan-flash"></div>
+      <div class="pq-slogan-marks"><i></i><i></i><i></i><i></i></div>
       <span class="pq-slogan-eyebrow">OUR MISSION · PEAKQI 2026</span>
       <h2 class="pq-slogan-title" data-accent="6">別讓瑣碎,耽誤真正重要的事</h2>
       <div class="pq-slogan-lock">MADE FOR WHAT MATTERS</div>
       <p class="pq-slogan-sub">一套引擎 · 多個品牌 · 雙軌驗證</p>
+      <div class="pq-slogan-meta"><b>REC</b><span>F2.8</span><span>1/250</span><span>ISO 400</span><span>4K · 24P</span></div>
       <div class="pq-slogan-cta">
         <a class="pq-slogan-btn" href="PeakOps.dc.html">看 Peak Ops 產品 <span>→</span></a>
         <a class="pq-slogan-ghost" href="Demo.dc.html">預約 15 分鐘 Demo</a>

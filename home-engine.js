@@ -820,7 +820,7 @@ export function createHomeEngine() {
       const studyP = sub(p, 0.29, 0.50);   // 讓出 0.50→0.578 給「組成完整線稿相機 + 停留」
       const introK = ez(sub(p, 0.242, 0.278)) * (1 - ez(sub(p, 0.283, 0.30)));   // 章節標題:藍圖展開時出現,第一個零件文字卡出現前(~0.30)完全淡出,避免重疊
       // U3s 零件展示狀態:哪個零件、聚焦/動作/文字/回位進度(每個零件 15%移出 20%放大 35%動作 15%文字 15%回位)
-      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sGroupScale = 1; sTurn = 0; sKnollK = 0;
+      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sTurn = 0; sKnollK = 0;
       if (paperK > 0.4 && studyP > 0.0005 && studyP < 0.9995) {
         sComp = Math.min(4, Math.floor(studyP * 5));
         const cp = clamp((studyP - sComp * 0.2) / 0.2, 0, 1);
@@ -832,6 +832,7 @@ export function createHomeEngine() {
         sKnollK = ez(sub(studyP, 0.0, 0.055)) * (1 - ez(sub(studyP, 0.945, 1.0)));
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
+      let sGroupTarget = 1;   // 這一幀算出的特寫倍率目標(下面平滑逼近,避免章節交界跳動)
       // 展示舞台:畫面正中央 + 攤平陳列網格(中央淨空給主角);主元件群組放大到「主導畫面」
       if ((sKnollK > 0.001 || sFocusK > 0.001) && parts.length) {
         _fwd.copy(camAim).sub(camera.position).normalize();
@@ -887,10 +888,11 @@ export function createHomeEngine() {
             // 寬度取兩個水平軸的平均直徑,而不是對角線:對角線對扁平零件太保守 → 特寫會偏小
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, exR + exF);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
-            sGroupScale = clamp(Math.min(viewW * (_grp ? 0.62 : 0.50) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.66 : 1) / ph), 1, 60);
+            sGroupTarget = clamp(Math.min(viewW * (_grp ? 0.62 : 0.50) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.66 : 1) / ph), 1, 60);
           }
         }
       }
+      sGroupScale += (sGroupTarget - sGroupScale) * (snapping ? 1 : 0.14);   // 平滑:切換一半的狀態不會抖
       const dark = 1 - paperK;
       const solid = 1 - wireK;
       const focusSet = review ? EMPTY : (cardFocus[beat] || EMPTY);
@@ -992,10 +994,17 @@ export function createHomeEngine() {
             _tgtW.copy(_delta).multiply(_partW);
             _locT.copy(_qP).invert().multiply(_tgtW);
             part.node.quaternion.slerp(_locT, sKnollK);                        // 由 baseQuat 出發 → 回位精確
+            // 等待中的零件:微微自轉(被拉到中間的主角走 isFocus 分支,會被覆蓋 → 主角靜止不動)
+            _tgtAxis.copy(_fwd).applyQuaternion(_qInv.copy(_qP).invert()).normalize();
+            _spin.setFromAxisAngle(_tgtAxis, Math.sin(t * 0.33 + part.knollIdx * 1.7) * 0.17 * sKnollK);
+            part.node.quaternion.premultiply(_spin);
           }
           if (sKnollK > 0.001) {
             const slot = _knoll.items[part.knollIdx % _knoll.items.length];
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW).addScaledVector(_up2, slot.ny * _knoll.gridW);
+            // 微微漂浮:幅度取排版尺寸的一小比例,不會讓相鄰零件重疊
+            const _amp = _knoll.f * _knoll.gridW * 0.085 * sKnollK, _ph = part.knollIdx * 1.7;
+            const _fx = Math.sin(t * 0.5 + _ph) * _amp, _fy = Math.cos(t * 0.42 + _ph * 1.3) * _amp;
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, slot.ny * _knoll.gridW + _fy);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
