@@ -430,7 +430,7 @@ export function createHomeEngine() {
     function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, zones, botCut) {
       // zones:字卡禁區(矩形,正規化座標),排版會繞開 → 零件永遠不會壓到字卡
       // botCut:手機用,砍掉下方一段高度留給置底字卡 → 模型與字卡上下分區,互不遮擋
-      const Hn = 1 / aspect, gap = 0.014, yTop = Hn / 2, yBot = -Hn / 2 + (botCut || 0) * Hn;
+      const Hn = 1 / aspect, gap = 0.009, yTop = Hn / 2, yBot = -Hn / 2 + (botCut || 0) * Hn;
       function pack(f) {
         const out = [];
         let x = -0.5, y = yTop, rowH = 0;
@@ -636,6 +636,13 @@ export function createHomeEngine() {
           _sorted.forEach((pp, r) => { pp.knollIdx = r; });
           knollMaxSize = _sorted[0] ? _sorted[0].sizeLocal : 0.001;
           knollSizes = _sorted.map(pp => pp.sizeLocal / knollMaxSize);   // 排版用:真實比例(最大=1)
+          // D 材質化掃描:依零件在模型上的左右位置給一個 0~1 的順序,轉場時像一道波掃過去
+          {
+            let xmin = Infinity, xmax = -Infinity;
+            parts.forEach(pp => { if (pp.center.x < xmin) xmin = pp.center.x; if (pp.center.x > xmax) xmax = pp.center.x; });
+            const span = Math.max(1e-4, xmax - xmin);
+            parts.forEach(pp => { pp.swp = (pp.center.x - xmin) / span; });
+          }
           // 展示零件的「主面法線」(幾何最薄軸,node local)+ node 自身幾何中心(不含 base 旋轉)
           parts.forEach(pp => {
             let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
@@ -839,9 +846,9 @@ export function createHomeEngine() {
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
-        const gridW = viewW * 0.94, gridH = viewH * 0.92;
+        const gridW = viewW * 1.04, gridH = viewH * 1.0;   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
-        const holeRXn = (isMobile ? 0.34 : 0.30) / 0.94, holeRYn = (isMobile ? 0.30 : 0.36) / 0.92;
+        const holeRXn = (isMobile ? 0.34 : 0.30) / 1.04, holeRYn = (isMobile ? 0.30 : 0.36) / 1.0;
         const aspect = gridW / gridH;
         // G 字卡禁區:桌機字卡在左右兩側垂直置中(兩側都保留,版面才不會隨章節左右跳動);
         //            手機字卡整寬置底 → 改成砍掉下方高度,模型與字卡上下分區。
@@ -1045,10 +1052,16 @@ export function createHomeEngine() {
         else op2 = 0.7 + 0.3 * Math.sin(t * 1.8 + i * 0.6);
         // 材質(光澤 PBR):solid 主導,線稿階段淡出;emissive 運作微光 + 快門閃
         const intHide = INT_GROUPS.has(part.groupId) ? (1 - R) : 1;   // 組回後隱藏內部零件
+        // D 材質化掃描:rp = 這個零件的材質化進度(左邊的零件先變實體)
+        const rp = clamp((R - (part.swp || 0) * 0.42) / 0.58, 0, 1);
+        part.solidP = 1 - ez(sub(p, 0.14, 0.24)) * (1 - rp);
+        const wireP = 1 - part.solidP;                       // 這個零件當下的線稿強度
+        const front = rp > 0 && rp < 1 ? 1 - Math.abs(rp * 2 - 1) : 0;   // 波前:正在材質化的那一刻最亮
         const studyDim = isStudyDim ? (1 - paperK * 0.78) : 1;         // 展示時非聚焦零件降到 ~22%(隨 paperK)
         for (let m = 0; m < part.materials.length; m++) {
           const mat = part.materials[m];
-          const mo = solid * (hi ? 1 : 0.9) * intHide * studyDim;
+          // D:每個零件的材質化進度交錯 → 線稿→實體像一道波掃過整台相機,而不是整台一起淡入
+          const mo = part.solidP * (hi ? 1 : 0.9) * intHide * studyDim;
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
           if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused || isShown ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
@@ -1069,7 +1082,7 @@ export function createHomeEngine() {
           em.color.copy(part.baseColor).lerp(BLACK, paperK);
           if (isFocus) em.color.lerp(PQ_ORANGE, 0.32 * sFocusK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
-          const wireLine = wireK * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2);
+          const wireLine = wireP * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2) + front * 0.9;   // 波前加亮 = 掃過去的那道光
           // 展示時的線條層次(壓掉雜線):強調零件 1.0 → 同組其餘 0.4 → 被推開的零件最淡;隨 sFocusK 平順過渡
           const edgeTgt = isFocus ? 1 : (isShown ? 0.4 : 0.24);
           const paperEdge = sComp >= 0 ? 0.85 + (edgeTgt - 0.85) * sFocusK : 0.85;
