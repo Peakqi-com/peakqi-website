@@ -5,7 +5,7 @@ const ROUTES = {
   home: { path: '/', file: 'Home.dc.html', name: '首頁' },
   solutions: { path: '/solutions', file: 'Solutions.dc.html', name: '解決方案' },
   cases: { path: '/cases', file: 'Cases.dc.html', name: '案例與作品' },
-  pricing: { path: '/pricing', file: 'Pricing.dc.html', name: '方案價格' },
+  pricing: { path: '/pricing', file: 'Pricing.dc.html', name: '方案說明' },
   about: { path: '/about', file: 'About.dc.html', name: '關於 PeakQi' },
   demo: { path: '/demo', file: 'Demo.dc.html', name: '預約 Demo' }
 };

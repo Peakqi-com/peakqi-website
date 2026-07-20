@@ -30,3 +30,19 @@
 [2026-07-20T15:48:20.956Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
 [2026-07-20T15:49:54.427Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
 [2026-07-20T15:49:54.427Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T15:53:24.008Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T15:53:24.008Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T15:54:23.739Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T15:54:23.739Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:00:34.520Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
+[2026-07-20T16:00:34.521Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
+[2026-07-20T16:00:39.327Z] [error] Error: <line> attribute x2: Expected length, "{{ orbX }}".
+[2026-07-20T16:00:39.327Z] [error] Error: <line> attribute y2: Expected length, "{{ orbY }}".
+[2026-07-20T16:01:02.748Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
+[2026-07-20T16:01:02.748Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
+[2026-07-20T16:02:41.929Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
+[2026-07-20T16:02:41.929Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
+[2026-07-20T16:02:45.778Z] [error] Error: <line> attribute x2: Expected length, "{{ orbX }}".
+[2026-07-20T16:02:45.778Z] [error] Error: <line> attribute y2: Expected length, "{{ orbY }}".
+[2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.

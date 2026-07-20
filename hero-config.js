@@ -67,10 +67,10 @@ export const heroConfig = {
     totalVh: { desktop: 380, tablet: 290, mobile: 190 },
     scenes: [
       { id: 'racks',  label: '三個機架',   kicker: 'SCENE 01 · EMPTY RACKS',    line: '三個空的系統機架進場:接客、業務助理、營運平台。',                        d: [0, .12],   m: [0, .2] },
-      { id: 'cap',    label: 'AI 接客組裝', kicker: 'SCENE 02 · CAPTURE UNIT',   line: 'AI 自動回覆、需求了解、預約、轉真人裝進第一座——NT$39,000,月費 2,500 起。', d: [.12, .26], m: null },
-      { id: 'assist', label: '業務助理擴充', kicker: 'SCENE 03 · ASSISTANT UNIT', line: 'CRM、追蹤、跟進序列與分析加入——NT$78,000,月費 5,000 起。',               d: [.26, .4],  m: null },
-      { id: 'plat',   label: '營運平台成形', kicker: 'SCENE 04 · PLATFORM UNIT',  line: '行銷、報價、專案、數據補齊——NT$128,000,月費 8,000 起。',                 d: [.4, .57],  m: [.2, .45] },
-      { id: 'cmp',    label: '三方案並列',  kicker: 'SCENE 05 · SIDE BY SIDE',   line: 'NT$39,000/月 2,500 起・NT$78,000/月 5,000 起・NT$128,000/月 8,000 起。',   d: [.57, .72], m: [.45, .68] },
+      { id: 'cap',    label: 'AI 接客組裝', kicker: 'SCENE 02 · CAPTURE UNIT',   line: 'AI 自動回覆、需求了解、預約、轉真人裝進第一座。', d: [.12, .26], m: null },
+      { id: 'assist', label: '業務助理擴充', kicker: 'SCENE 03 · ASSISTANT UNIT', line: 'CRM、追蹤、跟進序列與分析加入。',               d: [.26, .4],  m: null },
+      { id: 'plat',   label: '營運平台成形', kicker: 'SCENE 04 · PLATFORM UNIT',  line: '行銷、報價、專案、數據補齊。',                 d: [.4, .57],  m: [.2, .45] },
+      { id: 'cmp',    label: '三方案並列',  kicker: 'SCENE 05 · SIDE BY SIDE',   line: '三種規劃並列比較,實際範圍與費用依你的場景評估。',   d: [.57, .72], m: [.45, .68] },
       { id: 'use',    label: '兩條計費通道', kicker: 'SCENE 06 · TWO CHANNELS',   line: '文字類 AI 走 Included 不限量;圖片/影片走 Usage-based,用多少算多少。',     d: [.72, .88], m: [.68, .88] },
       { id: 'run',    label: '系統穩定運作', kicker: 'SCENE 07 · RUNNING',        line: '選定方案,系統上線。用你的需求比較方案,或 15 分鐘 Demo。',                 d: [.88, 1],   m: [.88, 1] }
     ],

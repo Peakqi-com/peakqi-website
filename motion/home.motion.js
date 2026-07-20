@@ -8,7 +8,7 @@ export default {
     { id: 'liveops', label: '營運控制台' },
     { id: 'relay', label: '資料接力' },
     { id: 'cases', label: '實際案例' },
-    { id: 'pricing', label: '方案價格' },
+    { id: 'pricing', label: '方案說明' },
     { id: 'demo-cta', label: '預約 Demo' }
   ],
   intro: null,

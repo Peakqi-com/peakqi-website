@@ -412,9 +412,9 @@ function paintPricing(g, e) {
   const ry = z.y + z.h * .05, rh = z.h * (mobile ? .48 : .56);
   const rx = (i) => z.x + i * (rw + gap);
   const meta = [
-    { zh: '接客', en: 'CAPTURE', kk: k1, c: C.orange, price: 'NT$39,000', mo: '月費 2,500 起', mods: ['自動回覆', '需求了解', '預約', '轉真人'], base: null },
-    { zh: '業務助理', en: 'ASSISTANT', kk: k2, c: C.orange, price: 'NT$78,000', mo: '月費 5,000 起', mods: ['CRM', '追蹤', '跟進序列', '分析'], base: '含 A 全部', badge: '最多人選' },
-    { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: 'NT$128,000', mo: '月費 8,000 起', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
+    { zh: '接客', en: 'CAPTURE', kk: k1, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['自動回覆', '需求了解', '預約', '轉真人'], base: null },
+    { zh: '業務助理', en: 'ASSISTANT', kk: k2, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['CRM', '追蹤', '跟進序列', '分析'], base: '含 A 全部', badge: '最多人選' },
+    { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: '依需求報價', mo: '預約諮詢', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
   ];
   meta.forEach((m, i) => {
     const a = ez(clamp(kR * 3 - i * .45, 0, 1));

@@ -21,7 +21,7 @@ export const navigation = [
   { href: 'Contact.dc.html', key: 'contact', label: '聯絡' },
   { key: 'more', label: '更多', children: [
     { href: 'Solutions.dc.html', label: '解決方案', desc: '接客追客養客深談' },
-    { href: 'Pricing.dc.html', label: '方案價格', desc: 'Peak Ops 三方案與計費' },
+    { href: 'Pricing.dc.html', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' },
     { href: 'Demo.dc.html', label: '預約 Demo', desc: '15 分鐘場景 Demo' },
     { href: 'Cases.dc.html', label: '案例與作品', desc: '更多實績' }
   ] }
@@ -162,20 +162,20 @@ export const compare = {
 };
 
 export const plans = [
-  { code: 'A', name: 'AI 接客方案', setup: '39,000', monthly: '2,500', base: '', items: ['自動回覆', '需求了解', '預約', '轉接', '知識庫'], featured: false, badge: '' },
-  { code: 'B', name: 'AI 業務助理', setup: '78,000', monthly: '5,000', base: '包含 A 方案全部功能,再加上:', items: ['異議處理', '跟進序列', '養客 CRM', '月報分析'], featured: true, badge: '最多人選' },
-  { code: 'C', name: 'AI 營運平台', setup: '128,000', monthly: '8,000', base: '包含 B 方案全部功能,再加上:', items: ['社群貼文', '行銷排程', '提案簡報', '專案報價', '數據儀表板'], featured: false, badge: '' }
+  { code: 'A', name: 'AI 接客方案', quote: '依需求報價', base: '', items: ['自動回覆', '需求了解', '預約', '轉接', '知識庫'], featured: false, badge: '' },
+  { code: 'B', name: 'AI 業務助理', quote: '依需求報價', base: '包含 A 方案全部功能,再加上:', items: ['異議處理', '跟進序列', '養客 CRM', '月報分析'], featured: true, badge: '最多人選' },
+  { code: 'C', name: 'AI 營運平台', quote: '依需求報價', base: '包含 B 方案全部功能,再加上:', items: ['社群貼文', '行銷排程', '提案簡報', '專案報價', '數據儀表板'], featured: false, badge: '' }
 ];
-export const planNote = '建置費為一次性費用;月費為「起」價,依方案與使用情境而定。';
-export const humanCompare = { leftT: '請一位真人助理', leftV: '35,000', leftU: '元起/月薪', rightT: '這套系統', rightV: '5,000', rightU: '元起/月費', rightD: '還幫你 24 小時顧前線。' };
+export const planNote = '實際費用依需求範圍與使用情境評估。歡迎預約諮詢,我們會依你的場景給出建議與報價;各產品的詳細價格請見該產品官網。';
+export const humanCompare = { leftT: '請一位真人助理', leftV: '月薪＋招募與管理成本', leftU: '', rightT: '這套系統', rightV: '一次導入,持續運作', rightU: '', rightD: '還幫你 24 小時顧前線。' };
 
 export const customRanges = [
-  { s: '小型', r: '5–10 萬' },
-  { s: '中型', r: '10–25 萬' },
-  { s: '大型', r: '25–80 萬' },
-  { s: '超大型', r: '100 萬+' }
+  { s: '小型', r: '單一流程導入' },
+  { s: '中型', r: '多模組整合' },
+  { s: '大型', r: '跨部門營運系統' },
+  { s: '超大型', r: '客製平台開發' }
 ];
-export const customNote = '實際價格依功能複雜度、串接範圍、資料移轉與開發需求另行評估。';
+export const customNote = '實際範圍依功能複雜度、串接範圍、資料移轉與開發需求評估,歡迎預約諮詢。';
 export const customCred = '客製實績:嘉義市世博會官網、品牌官網、倉儲監控平台、售票系統、社區管理 APP 等——市府級大型活動官網也有執行經驗。';
 
 export const usage = [
