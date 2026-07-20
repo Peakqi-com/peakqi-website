@@ -1,146 +1,16 @@
-[2026-07-20T15:18:45.050Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:18:45.050Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:18:46.175Z] [warning] [.WebGL-0x59e408c16900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-20T15:18:46.823Z] [warning] [.WebGL-0x59e408c16900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-20T15:18:46.941Z] [warning] [.WebGL-0x59e408c16900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[2026-07-20T15:18:47.084Z] [warning] [.WebGL-0x59e408c16900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
-[2026-07-20T15:26:42.227Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:26:42.227Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:29:34.723Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:29:34.723Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:30:55.681Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:30:55.681Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:32:36.031Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:32:36.031Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:33:29.276Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:33:29.276Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:37:46.121Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:37:46.121Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:40:03.153Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:40:03.153Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:41:37.618Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:41:37.618Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:44:10.969Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:44:10.969Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:45:23.410Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:45:23.410Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:46:36.578Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:46:36.578Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:48:20.956Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:48:20.956Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:49:54.427Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:49:54.427Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:53:24.008Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:53:24.008Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:54:23.739Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T15:54:23.739Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:00:34.520Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
-[2026-07-20T16:00:34.521Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
-[2026-07-20T16:00:39.327Z] [error] Error: <line> attribute x2: Expected length, "{{ orbX }}".
-[2026-07-20T16:00:39.327Z] [error] Error: <line> attribute y2: Expected length, "{{ orbY }}".
-[2026-07-20T16:01:02.748Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
-[2026-07-20T16:01:02.748Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
-[2026-07-20T16:02:41.929Z] [warning] [dc-runtime] Pricing: {{ fp.setup }} never resolved — rendered as empty
-[2026-07-20T16:02:41.929Z] [warning] [dc-runtime] Pricing: {{ fp.monthly }} never resolved — rendered as empty
-[2026-07-20T16:02:45.778Z] [error] Error: <line> attribute x2: Expected length, "{{ orbX }}".
-[2026-07-20T16:02:45.778Z] [error] Error: <line> attribute y2: Expected length, "{{ orbY }}".
-[2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:02:50.287Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:31:47.552Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:31:47.552Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:33:01.756Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:33:01.756Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:33:48.751Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:33:48.751Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:36:22.262Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:36:22.262Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:37:45.622Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:37:45.622Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:38:38.227Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:38:38.227Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:42:14.812Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:42:14.812Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:44:35.458Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:44:35.458Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:49:07.878Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:49:07.878Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:52:41.148Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:52:41.148Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:55:08.862Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:55:08.862Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:59:03.456Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T16:59:03.456Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:00:36.206Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:00:36.206Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:04:31.976Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:04:31.976Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:07:56.812Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:07:56.812Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:09:35.491Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:09:35.491Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:10:40.050Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:10:40.050Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:12:07.879Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:12:07.879Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:15:53.006Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:15:53.006Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:18:19.938Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:18:19.938Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:21:21.850Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:21:21.850Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:22:42.683Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:22:42.683Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:23:54.320Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:23:54.321Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:27:32.139Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:27:32.139Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:29:40.872Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:29:40.872Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:31:13.621Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:31:13.621Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:32:12.832Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:32:12.832Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:33:45.132Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:33:45.132Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:35:12.522Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T17:35:12.522Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:00:12.490Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:00:12.490Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:03:57.463Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:03:57.463Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:05:10.620Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:05:10.620Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:06:27.924Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:06:27.924Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:26:40.212Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:26:40.212Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:29:22.302Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:29:22.302Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:30:57.779Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:30:57.779Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:39:27.204Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:39:27.204Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:45:01.554Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:45:01.554Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:46:38.198Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:46:38.198Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:48:37.373Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:48:37.373Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:56:39.532Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:56:39.532Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:58:08.433Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:58:08.433Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:59:22.553Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T18:59:22.553Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:00:54.797Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:00:54.797Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:02:20.231Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:02:20.231Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:09:11.713Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:09:11.713Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:13:17.298Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:13:17.298Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:29:41.007Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:29:41.007Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:31:00.358Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
-[2026-07-20T19:31:00.358Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:43:16.484Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:43:16.484Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:44:07.005Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:44:07.005Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:45:15.936Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:45:15.937Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:46:33.943Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:46:33.943Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:50:19.860Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:50:19.860Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:50:23.212Z] [warning] [.WebGL-0x20c09751500]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-20T19:50:24.282Z] [warning] [.WebGL-0x20c09751500]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-20T19:50:24.634Z] [warning] [.WebGL-0x20c09751500]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[2026-07-20T19:50:24.998Z] [warning] [.WebGL-0x20c09751500]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[2026-07-20T19:50:34.643Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T19:50:34.643Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
