@@ -417,27 +417,41 @@ export function createHomeEngine() {
     // U3s「攤平陳列」(knolling):展示章節期間所有零件排成不重疊的整齊網格,中央留空給主角
     let sKnollK = 0;                  // 章節級進度(整段維持 1,不隨單一零件歸零)
     let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
-    const _knoll = { slots: [], cellWn: 0, cellHn: 0, cellMin: 0, key: '' };
-    // 版面用「正規化座標」(-0.5~0.5)算一次就好:只跟零件數與長寬比有關,與相機距離無關。
-    // (先前把 gridW/gridH 放進 cache key,而它們每幀隨相機距離變動 → 每幀重建整個網格 → 卡頓/當機)
-    function buildKnollSlots(n, aspect, holeRXn, holeRYn) {
-      // 逐步加密網格,直到「扣掉中央留空後」的格子數足夠容納 n 個零件 → 一格一件,保證不重疊
-      for (let cols = 4; cols <= 40; cols++) {
-        const rows = Math.max(1, Math.round(cols / aspect));
-        const cwn = 1 / cols, chn = 1 / rows;
-        const slots = [];
-        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-          const nx = -0.5 + (c + 0.5) * cwn, ny = 0.5 - (r + 0.5) * chn;
-          const dh = Math.hypot(nx / holeRXn, ny / holeRYn);
-          if (dh < 1) continue;   // 中央淨空
-          slots.push({ nx, ny, d: dh });
+    let knollSizes = [];              // 依大小遞減排序、以最大件正規化(=1)的尺寸表
+    const _knoll = { items: [], f: 0, key: '' };
+    // A1 攤平陳列版面:改成「依尺寸緊密排版」(shelf packing),不是每件都給一樣大的格子。
+    // 等格網格會讓最大件剛好塞滿、小件只佔格子一角 → 中間全是空隙、看起來像灑出來的碎屑。
+    // 這裡大件排前面、小件往後緊密補位,維持真實比例(全部同一個縮放),中央保留給主角特寫。
+    // 版面用正規化座標算一次就好:只跟零件數與長寬比有關,與相機距離無關(放進 cache key 會每幀重建 → 當機)。
+    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn) {
+      const Hn = 1 / aspect, gap = 0.014, yTop = Hn / 2, yBot = -Hn / 2;
+      function pack(f) {
+        const out = [];
+        let x = -0.5, y = yTop, rowH = 0;
+        for (let i = 0; i < sizes.length; i++) {
+          const w = sizes[i] * f;                      // 正方形佔位(取最長邊)→ 保證不重疊
+          if (!(w > 0)) return null;
+          for (let tries = 0; ; tries++) {
+            if (tries > 64) return null;
+            if (x + w > 0.5) { x = -0.5; y -= rowH + gap; rowH = 0; }   // 換行
+            if (y - w < yBot) return null;                              // 高度不夠 → 這個 f 太大
+            const cy = y - w / 2;
+            // 中央淨空:會壓到主角就把 x 跳到洞的右側
+            if (Math.abs(cy) < holeRYn && x < holeRXn && x + w > -holeRXn) { x = holeRXn + gap; continue; }
+            break;
+          }
+          out.push({ nx: x + w / 2, ny: y - w / 2 });
+          x += w + gap; if (w > rowH) rowH = w;
         }
-        if (slots.length >= n) {
-          slots.sort((a, b) => a.d - b.d);   // 由內而外:大零件靠近中央,小零件往外圍
-          return { slots, cellWn: cwn, cellHn: chn };
-        }
+        return out;
       }
-      return { slots: [], cellWn: 0, cellHn: 0 };
+      // 二分搜尋「排得下的最大縮放」→ 排得密、又不溢出
+      let lo = 0.001, hi = 1.4, best = null, bestF = 0;
+      for (let it = 0; it < 30; it++) {
+        const mid = (lo + hi) / 2, r = pack(mid);
+        if (r) { best = r; bestF = mid; lo = mid; } else hi = mid;
+      }
+      return { items: best || [], f: bestF };
     }
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
@@ -601,8 +615,10 @@ export function createHomeEngine() {
             pp.sizeLocal = Math.max(bs.x, bs.y, bs.z) || 0.001;   // 攤平陳列:縮到格子內用
           });
           // 攤平陳列順序:大件排前面(靠近中央),小件往外圍
-          parts.slice().sort((a, b) => b.sizeLocal - a.sizeLocal).forEach((pp, r) => { pp.knollIdx = r; });
-          knollMaxSize = parts.reduce((m, pp) => Math.max(m, pp.sizeLocal), 0.001);
+          const _sorted = parts.slice().sort((a, b) => b.sizeLocal - a.sizeLocal);
+          _sorted.forEach((pp, r) => { pp.knollIdx = r; });
+          knollMaxSize = _sorted[0] ? _sorted[0].sizeLocal : 0.001;
+          knollSizes = _sorted.map(pp => pp.sizeLocal / knollMaxSize);   // 排版用:真實比例(最大=1)
           // 展示零件的「主面法線」(幾何最薄軸,node local)+ node 自身幾何中心(不含 base 旋轉)
           parts.forEach(pp => {
             let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
@@ -804,11 +820,10 @@ export function createHomeEngine() {
         // cache key 只放「零件數 + 長寬比」→ 捲動時不會每幀重建網格
         const key = parts.length + '|' + aspect.toFixed(2);
         if (_knoll.key !== key) {
-          const b = buildKnollSlots(parts.length, aspect, holeRXn, holeRYn);
-          _knoll.slots = b.slots; _knoll.cellWn = b.cellWn; _knoll.cellHn = b.cellHn; _knoll.key = key;
+          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn);
+          _knoll.items = b.items; _knoll.f = b.f; _knoll.key = key;
         }
-        _knoll.cellMin = Math.min(_knoll.cellWn * gridW, _knoll.cellHn * gridH);
-        _knoll.gridW = gridW; _knoll.gridH = gridH;
+        _knoll.gridW = gridW;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
           const _grp = !!(cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin);
@@ -820,17 +835,19 @@ export function createHomeEngine() {
             // 轉盤是繞世界垂直軸轉,因此「垂直高度」與「離垂直軸的水平半徑」都是轉不變量,用它們量測即可穩定。
             (_grp ? cfg.groupParts[0] : cfg.part).node.parent.getWorldQuaternion(_qP);
             const bmn = _bmn, bmx = _bmx;
-            let mny = Infinity, mxy = -Infinity, rmax = 0;
+            let mny = Infinity, mxy = -Infinity, exR = 0, exF = 0;
             for (let cx = 0; cx < 2; cx++) for (let cy = 0; cy < 2; cy++) for (let cz = 0; cz < 2; cz++) {
               _tmpV.set(cx ? bmx.x : bmn.x, cy ? bmx.y : bmn.y, cz ? bmx.z : bmn.z);
               _tmpV.applyQuaternion(_qP).multiplyScalar(wS);        // → 世界方向(不含 turn)
               const py = _tmpV.dot(_up2);
               if (py < mny) mny = py; if (py > mxy) mxy = py;
-              const r = Math.hypot(_tmpV.dot(_rgt), _tmpV.dot(_fwd));   // 水平面上離軸半徑(轉不變)
-              if (r > rmax) rmax = r;
+              const ar = Math.abs(_tmpV.dot(_rgt)), af = Math.abs(_tmpV.dot(_fwd));
+              if (ar > exR) exR = ar; if (af > exF) exF = af;   // 兩個水平軸的半extent(轉不變)
             }
-            const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * rmax);
-            sGroupScale = clamp(Math.min(viewW * 0.72 / pw, viewH * 0.88 / ph), 1, 16);
+            // 寬度取兩個水平軸的平均直徑,而不是對角線:對角線對扁平零件太保守 → 特寫會偏小
+            const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, exR + exF);
+            // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
+            sGroupScale = clamp(Math.min(viewW * (_grp ? 0.62 : 0.50) / pw, viewH * (_grp ? 0.82 : 0.86) / ph), 1, 60);
           }
         }
       }
@@ -904,10 +921,9 @@ export function createHomeEngine() {
         // 縮放:攤平陳列時縮到「不超過自己的格子」→ 一格一件、絕不重疊;被拆出來的主元件再放大
         if (part.studyScale == null) part.studyScale = 1;
         let knollFit = 1;
-        if (sKnollK > 0.001 && _knoll.cellMin > 0) {
-          // 全部零件套「同一個」縮放比例 → 維持彼此真實的大小比例(大的還是大、小的還是小),不個別亂調
-          // 比例基準:最大的零件剛好塞進一格 → 其餘都比一格小 → 一格一件,保證不重疊
-          knollFit = (_knoll.cellMin * 0.92) / Math.max(1e-4, knollMaxSize * _knoll.wS);
+        if (sKnollK > 0.001 && _knoll.f > 0) {
+          // 全部零件同一個倍率 → 維持真實比例(大的還是大、小的還是小),不個別亂調
+          knollFit = (_knoll.f * _knoll.gridW) / Math.max(1e-4, knollMaxSize * _knoll.wS);
         }
         const knollBase = 1 + (knollFit - 1) * sKnollK;
         let tScale = knollBase;
@@ -918,7 +934,7 @@ export function createHomeEngine() {
         }
         part.studyScale += (tScale - part.studyScale) * 0.12;
         // 攤平陳列:正對鏡頭的平面上,一件一格排開(先定姿態再定位置,gcOff 才算得準)
-        if (sComp >= 0 && _knoll.slots.length) {
+        if (sComp >= 0 && _knoll.items.length) {
           part.node.quaternion.copy(part.baseQuat);
           if (sKnollK > 0.001 && part.faceLocal) {
             part.node.parent.getWorldQuaternion(_qP);
@@ -932,8 +948,8 @@ export function createHomeEngine() {
             part.node.quaternion.slerp(_locT, sKnollK);                        // 由 baseQuat 出發 → 回位精確
           }
           if (sKnollK > 0.001) {
-            const slot = _knoll.slots[part.knollIdx % _knoll.slots.length];
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW).addScaledVector(_up2, slot.ny * _knoll.gridH);
+            const slot = _knoll.items[part.knollIdx % _knoll.items.length];
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW).addScaledVector(_up2, slot.ny * _knoll.gridW);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
