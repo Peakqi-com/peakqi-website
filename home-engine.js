@@ -419,24 +419,27 @@ export function createHomeEngine() {
     // U3s「攤平陳列」(knolling):展示章節期間所有零件排成不重疊的整齊網格,中央留空給主角
     let sKnollK = 0;                  // 章節級進度(整段維持 1,不隨單一零件歸零)
     let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
-    const _knoll = { slots: [], cellMin: 0, key: '' };
-    function buildKnollSlots(n, gridW, gridH, holeRX, holeRY) {
+    const _knoll = { slots: [], cellWn: 0, cellHn: 0, cellMin: 0, key: '' };
+    // 版面用「正規化座標」(-0.5~0.5)算一次就好:只跟零件數與長寬比有關,與相機距離無關。
+    // (先前把 gridW/gridH 放進 cache key,而它們每幀隨相機距離變動 → 每幀重建整個網格 → 卡頓/當機)
+    function buildKnollSlots(n, aspect, holeRXn, holeRYn) {
       // 逐步加密網格,直到「扣掉中央留空後」的格子數足夠容納 n 個零件 → 一格一件,保證不重疊
       for (let cols = 4; cols <= 40; cols++) {
-        const rows = Math.max(1, Math.round(cols * (gridH / gridW)));
-        const cellW = gridW / cols, cellH = gridH / rows;
+        const rows = Math.max(1, Math.round(cols / aspect));
+        const cwn = 1 / cols, chn = 1 / rows;
         const slots = [];
         for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-          const x = -gridW / 2 + (c + 0.5) * cellW, y = gridH / 2 - (r + 0.5) * cellH;
-          if ((x / holeRX) * (x / holeRX) + (y / holeRY) * (y / holeRY) < 1) continue;   // 中央淨空
-          slots.push({ x, y, d: Math.hypot(x / holeRX, y / holeRY) });
+          const nx = -0.5 + (c + 0.5) * cwn, ny = 0.5 - (r + 0.5) * chn;
+          const dh = Math.hypot(nx / holeRXn, ny / holeRYn);
+          if (dh < 1) continue;   // 中央淨空
+          slots.push({ nx, ny, d: dh });
         }
         if (slots.length >= n) {
           slots.sort((a, b) => a.d - b.d);   // 由內而外:大零件靠近中央,小零件往外圍
-          return { slots, cellMin: Math.min(cellW, cellH) };
+          return { slots, cellWn: cwn, cellHn: chn };
         }
       }
-      return { slots: [], cellMin: 0 };
+      return { slots: [], cellWn: 0, cellHn: 0 };
     }
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
@@ -798,9 +801,17 @@ export function createHomeEngine() {
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
         const gridW = viewW * 0.94, gridH = viewH * 0.92;
-        const holeRX = viewW * (isMobile ? 0.34 : 0.30), holeRY = viewH * (isMobile ? 0.30 : 0.36);   // 中央淨空半徑要蓋得住放大的主元件
-        const key = parts.length + '|' + gridW.toFixed(2) + '|' + gridH.toFixed(2);
-        if (_knoll.key !== key) { const b = buildKnollSlots(parts.length, gridW, gridH, holeRX, holeRY); _knoll.slots = b.slots; _knoll.cellMin = b.cellMin; _knoll.key = key; }
+        // 中央淨空(正規化):半徑要蓋得住放大的主元件
+        const holeRXn = (isMobile ? 0.34 : 0.30) / 0.94, holeRYn = (isMobile ? 0.30 : 0.36) / 0.92;
+        const aspect = gridW / gridH;
+        // cache key 只放「零件數 + 長寬比」→ 捲動時不會每幀重建網格
+        const key = parts.length + '|' + aspect.toFixed(2);
+        if (_knoll.key !== key) {
+          const b = buildKnollSlots(parts.length, aspect, holeRXn, holeRYn);
+          _knoll.slots = b.slots; _knoll.cellWn = b.cellWn; _knoll.cellHn = b.cellHn; _knoll.key = key;
+        }
+        _knoll.cellMin = Math.min(_knoll.cellWn * gridW, _knoll.cellHn * gridH);
+        _knoll.gridW = gridW; _knoll.gridH = gridH;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
           if (cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin) {
@@ -923,7 +934,7 @@ export function createHomeEngine() {
           }
           if (sKnollK > 0.001) {
             const slot = _knoll.slots[part.knollIdx % _knoll.slots.length];
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.x).addScaledVector(_up2, slot.y);
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW).addScaledVector(_up2, slot.ny * _knoll.gridH);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
