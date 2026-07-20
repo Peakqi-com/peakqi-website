@@ -411,8 +411,30 @@ export function createHomeEngine() {
     const _axisW = new THREE.Vector3(), _toCam = new THREE.Vector3(), _rgtCam = new THREE.Vector3(), _tgtAxis = new THREE.Vector3(), _gcOff = new THREE.Vector3(), _tmpV = new THREE.Vector3();
     const _groupCentroid = {};   // displayGroup → 組合中心(parent-local,爆炸排列下)
     const _qP = new THREE.Quaternion(), _partW = new THREE.Quaternion(), _tgtW = new THREE.Quaternion(), _locT = new THREE.Quaternion(), _delta = new THREE.Quaternion(), _spin = new THREE.Quaternion(), _qInv = new THREE.Quaternion(), _turnQ = new THREE.Quaternion();
-    const _upLocal = new THREE.Vector3(), _wScale = new THREE.Vector3();
+    const _upLocal = new THREE.Vector3(), _wScale = new THREE.Vector3(), _knollW = new THREE.Vector3(), _knollL = new THREE.Vector3();
     let sGroupScale = 1, sTurn = 0;   // 群組展示:填滿畫面的放大倍率 + 轉盤角度
+    // U3s「攤平陳列」(knolling):展示章節期間所有零件排成不重疊的整齊網格,中央留空給主角
+    let sKnollK = 0;                  // 章節級進度(整段維持 1,不隨單一零件歸零)
+    let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
+    const _knoll = { slots: [], cellMin: 0, key: '' };
+    function buildKnollSlots(n, gridW, gridH, holeRX, holeRY) {
+      // 逐步加密網格,直到「扣掉中央留空後」的格子數足夠容納 n 個零件 → 一格一件,保證不重疊
+      for (let cols = 4; cols <= 40; cols++) {
+        const rows = Math.max(1, Math.round(cols * (gridH / gridW)));
+        const cellW = gridW / cols, cellH = gridH / rows;
+        const slots = [];
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+          const x = -gridW / 2 + (c + 0.5) * cellW, y = gridH / 2 - (r + 0.5) * cellH;
+          if ((x / holeRX) * (x / holeRX) + (y / holeRY) * (y / holeRY) < 1) continue;   // 中央淨空
+          slots.push({ x, y, d: Math.hypot(x / holeRX, y / holeRY) });
+        }
+        if (slots.length >= n) {
+          slots.sort((a, b) => a.d - b.d);   // 由內而外:大零件靠近中央,小零件往外圍
+          return { slots, cellMin: Math.min(cellW, cellH) };
+        }
+      }
+      return { slots: [], cellMin: 0 };
+    }
     // U4b:影片改用 DOM 疊層(CSS clip-path),邊界直接錨定 GLB 內的「螢幕面 mesh」(Object_12),每幀投影控制點 → 精準貼齊、不飄
     let screenMesh = null;
     const SCR_NAME = 'Object_12';                 // 螢幕面 mesh(camera_body,前面靠相機那面就是螢幕玻璃)
@@ -556,7 +578,23 @@ export function createHomeEngine() {
           STUDY[3].part = sideDial;                                                     // 04 模式轉盤(替代:側邊 control 鍵)
           STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
           // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
-          parts.forEach(pp => { pp.node.parent.updateWorldMatrix(true, false); pp.gcLocal = pp.node.parent.worldToLocal(new THREE.Box3().setFromObject(pp.node).getCenter(new THREE.Vector3())); });
+          parts.forEach(pp => {
+            pp.node.parent.updateWorldMatrix(true, false);
+            const bb = new THREE.Box3().setFromObject(pp.node);   // world bbox
+            // 換算成「父層 local」bbox(轉 8 個角點):此時 asset 尚未縮放/掛上 rig,不能直接拿 world 尺寸當 local
+            const bl = new THREE.Box3();
+            for (let sx = 0; sx < 2; sx++) for (let sy = 0; sy < 2; sy++) for (let sz = 0; sz < 2; sz++) {
+              bl.expandByPoint(pp.node.parent.worldToLocal(new THREE.Vector3(
+                sx ? bb.max.x : bb.min.x, sy ? bb.max.y : bb.min.y, sz ? bb.max.z : bb.min.z)));
+            }
+            pp.bbMin = bl.min.clone(); pp.bbMax = bl.max.clone();
+            pp.gcLocal = bl.getCenter(new THREE.Vector3());
+            const bs = bl.getSize(new THREE.Vector3());
+            pp.sizeLocal = Math.max(bs.x, bs.y, bs.z) || 0.001;   // 攤平陳列:縮到格子內用
+          });
+          // 攤平陳列順序:大件排前面(靠近中央),小件往外圍
+          parts.slice().sort((a, b) => b.sizeLocal - a.sizeLocal).forEach((pp, r) => { pp.knollIdx = r; });
+          knollMaxSize = parts.reduce((m, pp) => Math.max(m, pp.sizeLocal), 0.001);
           // 展示零件的「主面法線」(幾何最薄軸,node local)+ node 自身幾何中心(不含 base 旋轉)
           parts.forEach(pp => {
             let thin = new THREE.Vector3(0, 0, 1), minD = Infinity;
@@ -569,11 +607,19 @@ export function createHomeEngine() {
             if (!c.group) return;
             c.groupParts = parts.filter(pp => c.group.indexOf(pp.groupId) >= 0);
             if (!c.groupParts.length) { c.group = null; return; }
-            const cen = new THREE.Vector3(), box = new THREE.Box3();
-            // 用「組裝態」排列(gcLocal,無爆炸位移)→ 緊湊的真實元件形狀,展示時才能放大填滿畫面
-            c.groupParts.forEach(pp => { cen.add(pp.gcLocal); box.expandByPoint(pp.gcLocal); });
-            c.groupCentroid = cen.multiplyScalar(1 / c.groupParts.length);
-            const gsz = box.getSize(new THREE.Vector3()); c.groupSpan = Math.max(gsz.x, gsz.y, gsz.z) || 1;
+            const box = new THREE.Box3();
+            // 用「組裝態」排列(bbMin/bbMax,無爆炸位移)→ 緊湊的真實元件形狀,展示時才能放大填滿畫面
+            // 用每個零件的真實 bbox(只用中心點會讓實際邊界超出 → 主角偏移、尺寸低估)
+            c.groupParts.forEach(pp => { box.expandByPoint(pp.bbMin); box.expandByPoint(pp.bbMax); });
+            // 用 bbox 中心(不是各零件中心的平均):零件分布不均時平均值會偏掉,導致主角沒對準畫面中央
+            c.groupCentroid = box.getCenter(new THREE.Vector3());
+            // 相對組合中心的 bbox:每幀用它投影到畫面量實際大小 → 不同角度都能正確填滿
+            c.groupBoxMin = box.min.clone().sub(c.groupCentroid);
+            c.groupBoxMax = box.max.clone().sub(c.groupCentroid);
+            // 用「兩個最大邊的平均」當視覺尺寸:鏡桶端面朝鏡頭時看到的是直徑而非長度,單用最長邊會把它縮得太小
+            const gsz = box.getSize(new THREE.Vector3());
+            const gd = [gsz.x, gsz.y, gsz.z].sort((a, b) => b - a);
+            c.groupSpan = (gd[0] + gd[1]) / 2 || 1;
             // 主面軸:optics 用光學軸;其他(機身/內部)用群組 bounding box 最薄軸(≈正面法線)
             if (c.group.indexOf('optics') >= 0) { c.faceAxisLocal = lensAxis.clone(); }
             else { const m = Math.min(gsz.x, gsz.y, gsz.z); c.faceAxisLocal = new THREE.Vector3(gsz.x === m ? 1 : 0, gsz.y === m ? 1 : 0, gsz.z === m ? 1 : 0); }
@@ -719,7 +765,7 @@ export function createHomeEngine() {
       const studyP = sub(p, 0.29, 0.53);
       const introK = ez(sub(p, 0.242, 0.278)) * (1 - ez(sub(p, 0.283, 0.30)));   // 章節標題:藍圖展開時出現,第一個零件文字卡出現前(~0.30)完全淡出,避免重疊
       // U3s 零件展示狀態:哪個零件、聚焦/動作/文字/回位進度(每個零件 15%移出 20%放大 35%動作 15%文字 15%回位)
-      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sGroupScale = 1; sTurn = 0;
+      let sComp = -1, sFocusK = 0, sActionK = 0, sTextK = 0; sGroupScale = 1; sTurn = 0; sKnollK = 0;
       if (paperK > 0.4 && studyP > 0.0005 && studyP < 0.9995) {
         sComp = Math.min(4, Math.floor(studyP * 5));
         const cp = clamp((studyP - sComp * 0.2) / 0.2, 0, 1);
@@ -727,19 +773,46 @@ export function createHomeEngine() {
         sActionK = ez(sub(cp, 0.35, 0.70));                                // 本體機械動作(一次,不循環)
         sTextK = ez(sub(cp, 0.26, 0.40)) * (1 - ez(sub(cp, 0.80, 0.94)));  // 文字停留
         sTurn = (cp - 0.5) * (isMobile ? 1.3 : 2.2);                        // 轉盤:隨捲動掃過角度(換角度看,過中點時正對)
+        // 章節級:進場攤平成陳列、離場收回。整段維持 1,零件不會在每個零件之間彈回爆炸雲
+        sKnollK = ez(sub(studyP, 0.0, 0.055)) * (1 - ez(sub(studyP, 0.945, 1.0)));
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
-      // 展示位置:畫面正中央;主元件群組放大到「幾乎填滿畫面」
-      if (sFocusK > 0.001 && sPartNode) {
-        const cfg = STUDY[sComp];
+      // 展示舞台:畫面正中央 + 攤平陳列網格(中央淨空給主角);主元件群組放大到「主導畫面」
+      if ((sKnollK > 0.001 || sFocusK > 0.001) && parts.length) {
         _fwd.copy(camAim).sub(camera.position).normalize();
         const dist = camera.position.distanceTo(camAim) * (isMobile ? 0.86 : 0.72);
         _disp.copy(camera.position).addScaledVector(_fwd, dist);           // 畫面中央
-        if (cfg.group && cfg.groupParts && cfg.groupParts.length) {
-          const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);   // 展示距離下的畫面世界高度
-          cfg.groupParts[0].node.parent.getWorldScale(_wScale);
-          const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
-          sGroupScale = clamp((viewH * (isMobile ? 0.5 : 0.64)) / ((cfg.groupSpan || 1) * wS), 1, 16);   // 放大到主導畫面(留邊,避免溢出/散開)
+        _rgt.crossVectors(_fwd, _WUP).normalize();                         // 攤平平面 = 垂直視線的平面(正對鏡頭)
+        _up2.crossVectors(_rgt, _fwd).normalize();
+        const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
+        const viewW = viewH * camera.aspect;
+        parts[0].node.parent.getWorldScale(_wScale);
+        const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
+        _knoll.wS = wS;
+        const gridW = viewW * 0.94, gridH = viewH * 0.92;
+        const holeRX = viewW * (isMobile ? 0.34 : 0.30), holeRY = viewH * (isMobile ? 0.30 : 0.36);   // 中央淨空半徑要蓋得住放大的主元件
+        const key = parts.length + '|' + gridW.toFixed(2) + '|' + gridH.toFixed(2);
+        if (_knoll.key !== key) { const b = buildKnollSlots(parts.length, gridW, gridH, holeRX, holeRY); _knoll.slots = b.slots; _knoll.cellMin = b.cellMin; _knoll.key = key; }
+        if (sFocusK > 0.001 && sPartNode) {
+          const cfg = STUDY[sComp];
+          if (cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin) {
+            // 依「投影到畫面的實際尺寸」決定放大倍率:同一個 3D bbox 在不同轉角投影差很多
+            // (鏡桶端面朝鏡頭 vs 機身正面朝鏡頭),單一係數無法同時服務兩者
+            cfg.groupParts[0].node.parent.getWorldQuaternion(_qP);
+            _upLocal.set(0, 1, 0).applyQuaternion(_qInv.copy(_qP).invert());
+            _turnQ.setFromAxisAngle(_upLocal, sTurn);
+            const bmn = cfg.groupBoxMin, bmx = cfg.groupBoxMax;
+            let mnx = Infinity, mxx = -Infinity, mny = Infinity, mxy = -Infinity;
+            for (let cx = 0; cx < 2; cx++) for (let cy = 0; cy < 2; cy++) for (let cz = 0; cz < 2; cz++) {
+              _tmpV.set(cx ? bmx.x : bmn.x, cy ? bmx.y : bmn.y, cz ? bmx.z : bmn.z);
+              _tmpV.applyQuaternion(_turnQ).applyQuaternion(_qP).multiplyScalar(wS);   // → 世界方向
+              const px = _tmpV.dot(_rgt), py = _tmpV.dot(_up2);                        // → 投影到畫面軸
+              if (px < mnx) mnx = px; if (px > mxx) mxx = px;
+              if (py < mny) mny = py; if (py > mxy) mxy = py;
+            }
+            const pw = Math.max(1e-4, mxx - mnx), ph = Math.max(1e-4, mxy - mny);
+            sGroupScale = clamp(Math.min(viewW * 0.60 / pw, viewH * 0.80 / ph), 1, 16);
+          }
         }
       }
       const dark = 1 - paperK;
@@ -809,11 +882,45 @@ export function createHomeEngine() {
           dest.sub(lensPivot).applyQuaternion(_spinQ).add(lensPivot);
           part.node.quaternion.copy(part.lensBaseQuat).premultiply(_spinQ);
         }
-        // 展示放大目標(1.5–2.4x 內取中庸值,手機更小)
+        // 縮放:攤平陳列時縮到「不超過自己的格子」→ 一格一件、絕不重疊;被拆出來的主元件再放大
         if (part.studyScale == null) part.studyScale = 1;
-        let tScale = 1;
-        if (isShown) { tScale = dg ? (1 + sFocusK * (sGroupScale - 1)) : (1 + sFocusK * (isMobile ? 0.55 : 0.75)); if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9)); }
+        let knollFit = 1;
+        if (sKnollK > 0.001 && _knoll.cellMin > 0) {
+          // 壓縮尺寸差距:每件佔格子的 48%~94%,陳列密實不留大空隙,但仍保有大小層次;上限 <1 格 → 保證不重疊
+          const sizeW = Math.max(1e-4, part.sizeLocal * _knoll.wS);
+          const shown = _knoll.cellMin * (0.48 + 0.46 * Math.pow(part.sizeLocal / knollMaxSize, 0.5));
+          knollFit = shown / sizeW;
+        }
+        const knollBase = 1 + (knollFit - 1) * sKnollK;
+        let tScale = knollBase;
+        if (isShown) {
+          const shownTgt = dg ? sGroupScale : (isMobile ? 1.55 : 1.75);
+          tScale = knollBase + (shownTgt - knollBase) * sFocusK;   // 由陳列尺寸放大到主角尺寸
+          if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9));
+        }
         part.studyScale += (tScale - part.studyScale) * 0.12;
+        // 攤平陳列:正對鏡頭的平面上,一件一格排開(先定姿態再定位置,gcOff 才算得準)
+        if (sComp >= 0 && _knoll.slots.length) {
+          part.node.quaternion.copy(part.baseQuat);
+          if (sKnollK > 0.001 && part.faceLocal) {
+            part.node.parent.getWorldQuaternion(_qP);
+            _partW.copy(_qP).multiply(part.baseQuat);
+            _axisW.copy(part.faceLocal).applyQuaternion(_partW).normalize();   // 零件最薄軸(正面法線)
+            _toCam.copy(camera.position).sub(_disp).normalize();
+            if (_axisW.dot(_toCam) < 0) _toCam.negate();
+            _delta.setFromUnitVectors(_axisW, _toCam);                         // 轉到「面朝鏡頭」= 攤平
+            _tgtW.copy(_delta).multiply(_partW);
+            _locT.copy(_qP).invert().multiply(_tgtW);
+            part.node.quaternion.slerp(_locT, sKnollK);                        // 由 baseQuat 出發 → 回位精確
+          }
+          if (sKnollK > 0.001) {
+            const slot = _knoll.slots[part.knollIdx % _knoll.slots.length];
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.x).addScaledVector(_up2, slot.y);
+            _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
+            if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
+            dest.lerp(_knollL, sKnollK);
+          }
+        }
         if (isGroupMember) {
           // 主元件整組(鏡桶/機身):置中、放大到填滿畫面、整組轉盤旋轉(換角度看);保持相對排列
           const comp = STUDY[sComp];
@@ -827,7 +934,7 @@ export function createHomeEngine() {
           _tmpV.sub(_gcOff);                                                 // 幾何中心 → node 原點
           dest.lerp(_tmpV, sFocusK);
           _tgtW.copy(_turnQ).multiply(part.baseQuat);
-          part.node.quaternion.copy(part.baseQuat).slerp(_tgtW, sFocusK);     // 整組一起轉;隨 sFocusK 收斂回 baseQuat(回位不殘留旋轉)
+          part.node.quaternion.slerp(_tgtW, sFocusK);                        // 由「陳列姿態」轉到組合姿態;sFocusK→0 時留在陳列姿態(每幀重算,不累積)
         } else if (isFocus) {
           const act = STUDY[sComp].action;
           // 換角度:把單一零件「主面」轉向鏡頭(3/4 視角)清楚呈現;動作繞主面軸疊加
@@ -850,11 +957,6 @@ export function createHomeEngine() {
           if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _dispL.sub(_gcOff); }
           dest.lerp(_dispL, sFocusK);
           if (act === 'press') dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);
-        } else if (sFocusK > 0.001 && sPartNode) {
-          // 其他零件:以展示中心為原點往外推開,讓出中央舞台(不擋住放大的主元件)
-          // 純徑向縮放;sFocusK→0 時倍率→1,回位精確不殘留位移
-          _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);
-          dest.sub(_dispL).multiplyScalar(1 + sFocusK * (isMobile ? 1.05 : 1.45)).add(_dispL);
         }
         if (isShown || Math.abs(part.studyScale - 1) > 0.002) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
         part.node.position.lerp(dest, isShown ? 0.12 : 0.08);
@@ -894,7 +996,7 @@ export function createHomeEngine() {
         attr.setXYZ(1, part.center.x + dx, part.center.y + dy, part.center.z + dz);
         attr.needsUpdate = true;
         part.connector.material.color.copy(part.baseColor).lerp(BLACK, paperK);
-        part.connector.material.opacity = Math.max(staged * wireK * (hi ? 0.5 : 0.14) * dark, staged * paperK * 0.45);
+        part.connector.material.opacity = Math.max(staged * wireK * (hi ? 0.5 : 0.14) * dark, staged * paperK * 0.45) * (1 - sKnollK);   // 攤平陳列時收掉拆解連接線(否則滿畫面放射雜線)
       }
       // 藍圖卡片標註(逐一浮現,組裝回組時淡出)
       if (annotSvg && paperK > 0.02) {

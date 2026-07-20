@@ -1,8 +1,8 @@
 // 奇鋒國際 PeakQi — 全站內容資料層(唯一內容來源:AI 方案 Sales Kit)
 export const contact = {
-  email: 'peakqi.com@gmail.com',
-  phone: '0988650951',
-  phoneDisplay: '0988-650-951',
+  email: 'jacky@peakqi.com',
+  phone: '0266093699',
+  phoneDisplay: '(02) 6609-3699',
   site: 'peakqi.com',
   url: 'https://peakqi.com'
 };
@@ -140,7 +140,6 @@ export const portfolioAI = [
   { t: '團購通', d: '電商系統,串接 LINE 官方帳號', cat: '客製系統', img: 'assets/works/work-groupbuy.png' },
   { t: 'Hungmen Voice', d: '聲音檢測自我狀態報告', cat: 'AI 系統' },
   { t: 'AI 神農氏', d: '保健品配方健檢與開發評估', cat: 'AI 系統' },
-  { t: 'AIVideoGod', d: 'AI 影片生成工具平台', cat: 'AI 系統', url: 'https://aivideogod.vercel.app/zh-tw' },
   { t: 'AutoDraft 台灣 AI 補助王', d: '補助計畫書 AI 搜尋、分析與撰寫', cat: 'AI 系統', url: 'https://autodraft-mvp.vercel.app/' },
   { t: 'Pounds Network', d: '服務業會員忠誠度與獎勵平台', cat: 'AI 系統', url: 'https://www.pounds.network/en' },
   { t: 'AI LINE 群組摘要', d: 'LINE 群組對話自動總結', cat: 'AI 系統', url: 'https://line-requirement-bot.vercel.app/', img: 'assets/works/work-linesummary.png' },

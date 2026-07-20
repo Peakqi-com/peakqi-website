@@ -43,7 +43,7 @@ export function applySEO(key) {
     const org = {
       '@context': 'https://schema.org', '@type': 'Organization',
       name: '奇鋒國際有限公司', alternateName: 'PeakQi', url: SITE,
-      logo: SITE + '/assets/favicon.png', email: 'peakqi.com@gmail.com', telephone: '+886-988-650-951',
+      logo: SITE + '/assets/favicon.png', email: 'jacky@peakqi.com', telephone: '+886-2-6609-3699',
       areaServed: 'TW'
     };
     const site = {
