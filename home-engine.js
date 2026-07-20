@@ -309,7 +309,71 @@ export function createHomeEngine() {
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
     // 更長的視差行程
-    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 1400 : 1750 });   // 加長:騰出白藍圖「單一零件展示」章節(~525vh);組回→翻面→影片→slogan 的 scrollP 不變
+    // ── Phase 1:虛擬場景表(scene table)──────────────────────────────
+    // 這是「距離的唯一來源」。legacy 是該場景在舊 global p 軸上的區間,
+    // 用來把 renderedScrollPx 分段線性映射回舊軸 → 既有的 sub(p,…) 全部原樣可用,
+    // 但每個場景的實際捲動距離改由本表決定(舊軸是等比切割,這才是跳段的根因)。
+    const CINEMA_SCENES = [
+      { id: 'hero',            group: 'intro',       legacy: [0.000, 0.040], desktopVh: 165, touchVh: 210 },
+      { id: 'lens',            group: 'camera-part', legacy: [0.040, 0.080], desktopVh: 140, touchVh: 200 },
+      { id: 'mainboard',       group: 'camera-part', legacy: [0.080, 0.120], desktopVh: 140, touchVh: 200 },
+      { id: 'sensor',          group: 'camera-part', legacy: [0.120, 0.160], desktopVh: 140, touchVh: 200 },
+      { id: 'shutter',         group: 'camera-part', legacy: [0.160, 0.200], desktopVh: 140, touchVh: 200 },
+      { id: 'chassis-rainbow', group: 'camera-part', legacy: [0.200, 0.240], desktopVh: 300, touchVh: 390 },
+      { id: 'blueprint-intro', group: 'white',       legacy: [0.240, 0.290], desktopVh: 180, touchVh: 240 },
+      { id: 'study-01',        group: 'white-part',  legacy: [0.290, 0.332], desktopVh: 135, touchVh: 190 },
+      { id: 'study-02',        group: 'white-part',  legacy: [0.332, 0.374], desktopVh: 135, touchVh: 190 },
+      { id: 'study-03',        group: 'white-part',  legacy: [0.374, 0.416], desktopVh: 135, touchVh: 190 },
+      { id: 'study-04',        group: 'white-part',  legacy: [0.416, 0.458], desktopVh: 135, touchVh: 190 },
+      { id: 'study-05',        group: 'white-part',  legacy: [0.458, 0.500], desktopVh: 135, touchVh: 190 },
+      { id: 'reassembly',      group: 'white',       legacy: [0.500, 0.578], desktopVh: 250, touchVh: 320 },
+      { id: 'summary',         group: 'transition',  legacy: [0.578, 0.700], desktopVh: 160, touchVh: 220 },
+      { id: 'video-01',        group: 'video',       legacy: [0.700, 0.744], desktopVh: 135, touchVh: 190 },
+      { id: 'video-02',        group: 'video',       legacy: [0.744, 0.788], desktopVh: 135, touchVh: 190 },
+      { id: 'video-03',        group: 'video',       legacy: [0.788, 0.832], desktopVh: 135, touchVh: 190 },
+      { id: 'video-04',        group: 'video',       legacy: [0.832, 0.876], desktopVh: 135, touchVh: 190 },
+      { id: 'video-05',        group: 'video',       legacy: [0.876, 0.920], desktopVh: 162, touchVh: 228 },
+      { id: 'cta',             group: 'outro',       legacy: [0.920, 1.000], desktopVh: 145, touchVh: 180 }
+    ];
+    const isTouch = (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) || (navigator.maxTouchPoints || 0) > 0;
+    let sceneLayout = [], sceneById = Object.create(null), totalScrollPx = 0;
+    let stableVh = window.innerHeight || 1;      // 手機網址列收合造成的小幅變動不重建
+    let stableVw = window.innerWidth || 1;
+    function buildSceneLayout() {
+      let cursor = 0;
+      sceneLayout = CINEMA_SCENES.map(sc => {
+        const lengthPx = stableVh * (isTouch ? sc.touchVh : sc.desktopVh) / 100;
+        const r = { id: sc.id, group: sc.group, legacy: sc.legacy, startPx: cursor, endPx: cursor + lengthPx, lengthPx };
+        cursor += lengthPx;
+        return r;
+      });
+      totalScrollPx = cursor;
+      sceneById = Object.create(null);
+      sceneLayout.forEach(sc => { sceneById[sc.id] = sc; });
+      return totalScrollPx;
+    }
+    // renderedScrollPx → 舊 global p(分段線性,保持既有視覺不變)
+    function legacyFromPx(px) {
+      const L = sceneLayout, n = L.length;
+      if (!n) return 0;
+      for (let i = 0; i < n; i++) {
+        const sc = L[i];
+        if (px < sc.endPx || i === n - 1) {
+          const t = clamp((px - sc.startPx) / Math.max(1, sc.lengthPx), 0, 1);
+          return sc.legacy[0] + (sc.legacy[1] - sc.legacy[0]) * t;
+        }
+      }
+      return 1;
+    }
+    function sceneProgress(id) {
+      const sc = sceneById[id];
+      if (!sc) return 0;
+      return clamp((renderedScrollPx - sc.startPx) / Math.max(1, sc.lengthPx), 0, 1);
+    }
+    let renderedScrollPx = 0, targetScrollPx = 0, scrollRaw = 0, lastFrameSec = 0;
+    buildSceneLayout();
+    // hero 高度由 scene table 決定(唯一距離來源),不再是寫死的 1750/1400
+    StickyProductStage(ctx, hero, stage, { distanceVh: (totalScrollPx / stableVh) * 100 });   // 加長:騰出白藍圖「單一零件展示」章節(~525vh);組回→翻面→影片→slogan 的 scrollP 不變
 
     // rail 按鈕
     const railBtns = [];
@@ -743,9 +807,33 @@ export function createHomeEngine() {
       try { renderer.dispose(); } catch (e) {}
     });
 
-    let scrollP = 0, smoothP = 0, curBeat = -1, curPhase = -1;
-    let snapFrames = 8;   // 進場/大跳動時不做平滑追隨,直接就位 → 從任何位置進來畫面都一致
-    ScrollChapter(ctx, hero, (p) => { scrollP = p; }, { pinned: true });
+    let scrollP = 0, curBeat = -1, curPhase = -1;
+    let snapFrames = 8;   // 進場時直接就位 → 從任何位置進來畫面都一致
+    ScrollChapter(ctx, hero, (v) => { scrollRaw = v; }, { pinned: true });
+    // viewport 變動:只有寬度/方向/pointer 能力改變才重建 scene layout(手機網址列收合不重建),
+    // 並保留使用者當下所在的 scene 與相對進度,畫面不會跳到別的狀態。
+    let resizeTimer = 0;
+    function onViewportChange() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const w = window.innerWidth || 1, h = window.innerHeight || 1;
+        if (Math.abs(w - stableVw) < 2 && Math.abs(h - stableVh) / Math.max(1, stableVh) < 0.18) return;
+        const before = totalScrollPx > 0 ? renderedScrollPx / totalScrollPx : 0;
+        stableVw = w; stableVh = h;
+        buildSceneLayout();
+        try { hero.style.height = Math.round(totalScrollPx + stableVh) + 'px'; } catch (e) {}
+        renderedScrollPx = before * totalScrollPx;   // 保留相對位置
+        targetScrollPx = renderedScrollPx;
+        snapFrames = Math.max(snapFrames, 2);
+      }, 180);
+    }
+    window.addEventListener('resize', onViewportChange, { passive: true });
+    window.addEventListener('orientationchange', onViewportChange, { passive: true });
+    ctx.add(() => {
+      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('orientationchange', onViewportChange);
+      clearTimeout(resizeTimer);
+    });
     const bound = { inView: true };
     ctx.io(hero, es => { bound.inView = !!(es[0] && es[0].isIntersecting); }, { rootMargin: '10px' });
 
@@ -817,9 +905,24 @@ export function createHomeEngine() {
     ctx.onFrame((now) => {
       if (destroyed || !bound.inView) return;
       const t = (now - t0) / 1000;
-      if (snapFrames > 0) { smoothP = scrollP; snapFrames--; } else smoothP += (scrollP - smoothP) * 0.06;
+      // ── Phase 1:單一 renderedScrollPx 來源 + frame-rate-independent damping ──
+      // 舊寫法 smoothP += (scrollP - smoothP) * 0.06 與 frame rate 相關,且沒有單幀步長上限,
+      // 快速滑動會直接跳過整段。改用 1 - exp(-λ·dt),並限制每秒最多移動幾個 viewport。
+      const nowSec = now / 1000;
+      const dt = Math.min(lastFrameSec ? Math.max(0, nowSec - lastFrameSec) : 1 / 60, 1 / 30);
+      lastFrameSec = nowSec;
+      targetScrollPx = scrollRaw * totalScrollPx;
+      if (snapFrames > 0) { renderedScrollPx = targetScrollPx; snapFrames--; }
+      else {
+        const lambda = isTouch ? 5.5 : 9;
+        const damped = renderedScrollPx + (targetScrollPx - renderedScrollPx) * (1 - Math.exp(-lambda * dt));
+        const maxStep = stableVh * (isTouch ? 2.6 : 4.5) * dt;
+        renderedScrollPx += clamp(damped - renderedScrollPx, -maxStep, maxStep);
+      }
       const snapping = snapFrames > 0;
-      const p = smoothP;
+      // 所有內容(3D / DOM / CSS 變數)都吃同一個來源,不再有 smoothP 與 scrollP 兩套進度
+      const p = legacyFromPx(renderedScrollPx);
+      scrollP = p;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
       const review = p > 0.26;                      // 藍圖/零件展示起,不顯示故事卡
       setBeat(review ? -1 : beat);
@@ -830,9 +933,13 @@ export function createHomeEngine() {
       // (原本 R 同時負責收零件+收線稿+淡出紙面,三件事一起發生 → 看不到「組好的線稿相機」)
       const blueAsmK = ez(sub(p, 0.505, 0.552));   // 在白藍圖內收合成完整相機
       const R = ez(sub(p, 0.578, 0.632));          // U3a 組回實體(紙面淡出、材質回來)
-      const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
-      const flipK = ez(sub(scrollP, 0.67, 0.72)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
-      const summaryK = ez(sub(scrollP, 0.618, 0.652)) * (1 - ez(sub(scrollP, 0.678, 0.705)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
+      // ── Phase 1:owner 唯一化。summary / flip / slogan 各自吃自己的 local progress。
+      // 舊寫法 summaryK 到 global 0.705 才歸零、flipK 從 0.67 就起,重疊 0.035 → 中央大標壓住第一張影片卡。
+      // 現在 summary 在自己的場景內 0.84 前必定歸零,而 video-01 是「下一個」場景,結構上不可能重疊。
+      const summaryP = sceneProgress('summary');
+      const sloganK = ez(sub(sceneProgress('cta'), 0.06, 0.34));   // U5 回機身 + Slogan
+      const flipK = ez(sub(summaryP, 0.68, 1.0)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
+      const summaryK = ez(sub(summaryP, 0.12, 0.28)) * (1 - ez(sub(summaryP, 0.70, 0.84)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
       const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R) * (1 - blueAsmK);   // 前段壓縮;白藍圖收尾時先收合(此時紙面仍在)
       const wireK = ez(sub(p, 0.14, 0.24)) * (1 - R);
       const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
@@ -1175,13 +1282,20 @@ export function createHomeEngine() {
         }
       }
       // U4 螢幕看影片:翻面完成 → 左側業務字卡 + LCD 螢幕亮起播影片 + 快門閃光切換
-      const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // 左側字卡:翻面途中即可進場
+      // 影片段:進場由 video-01 擁有、離場由 video-05 擁有;中間四個場景不參與淡入淡出,
+      // 所以不會有兩個 scene 同時寫 reviewEl 的 opacity。
+      const v1P = sceneProgress('video-01'), v5P = sceneProgress('video-05');
+      const reviewK = ez(sub(v1P, 0.10, 0.30)) * (1 - ez(sub(v5P, 0.80, 0.96)));   // 左側字卡
       // 螢幕影片只在「翻面完成、停在最終角度」後才亮起(不在旋轉途中滑入,避免脫離螢幕)
-      const screenK = ez(sub(scrollP, 0.72, 0.78)) * (1 - ez(sub(scrollP, 0.89, 0.94)));   // 用 scrollP,相機就位後影片即現(淡入交給 shotFadeK)
+      const screenK = ez(sub(v1P, 0.26, 0.52)) * (1 - ez(sub(v5P, 0.80, 0.96)));   // 相機就位後影片才亮(淡入交給 shotFadeK)
       if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
       if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
       if (reviewK > 0.02) {
-        const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
+        let si = 0;
+        for (let vi = 0; vi < vids.length; vi++) {
+          const sc = sceneById['video-0' + (vi + 1)];
+          if (sc && renderedScrollPx >= sc.startPx) si = vi;
+        }
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
       // DOM 影片螢幕:每幀把「螢幕面 mesh(Object_12)」前面圓角控制點投影到畫面像素 → 設定裁切容器 + clip-path
