@@ -165,6 +165,7 @@ export function createHomeEngine() {
     const studyCards = hero ? Array.from(hero.querySelectorAll('.pq-study-card')) : [];
     const scrimEl = document.getElementById('pq-hero-scrim');
     const noiseEl = hero && hero.querySelector('.pq-cine-noise');
+    const inkEl = hero && hero.querySelector('[data-cine-ink]');
     const annotSvg = hero && hero.querySelector('[data-cine-annot]');
     // U4 螢幕看影片
     const reviewEl = hero && hero.querySelector('[data-cine-review]');
@@ -929,7 +930,8 @@ export function createHomeEngine() {
         studyCards[c].style.setProperty('--on', on.toFixed(3));
       }
       if (annotSvg) annotSvg.style.opacity = (paperK > 0.05 && p < 0.58 ? 1 : 0);
-      if (scrimEl) scrimEl.style.opacity = dark.toFixed(3);
+      if (inkEl) inkEl.style.opacity = (sloganK * 0.62).toFixed(3);   // 結尾才出現
+      if (scrimEl) scrimEl.style.opacity = (dark * (1 - sloganK * 0.42)).toFixed(3);   // 結尾收掉暗場,讓彩色透出來
       if (noiseEl) noiseEl.style.opacity = (dark * 0.16).toFixed(3);
       hero.classList.toggle('pq-cine-paper-on', paperK > 0.55);
       // 母:旋轉(有界擺動 → 藍圖俯視 → 翻面螢幕正對)
