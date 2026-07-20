@@ -862,7 +862,7 @@ export function createHomeEngine() {
         const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
         const viewW = viewH * camera.aspect;
         // G 手機:整個展示舞台上移,把畫面下方讓給置底字卡 → 主角與零件都不會被字卡蓋住
-        if (isMobile) _disp.addScaledVector(_up2, viewH * 0.17);
+        if (isMobile) _disp.addScaledVector(_up2, viewH * 0.13);   // 中心約在畫面 37%,與上移後的字卡帶相接,中間不留空洞
         // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移,放到最大也不會壓到標題
         // 注意:STUDY 的 side 指的是「模型在哪一側」(字卡在相反側),所以往 side 的方向偏移才是遠離字卡
         else if (sComp >= 0) _disp.addScaledVector(_rgt, viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17));
@@ -880,7 +880,7 @@ export function createHomeEngine() {
           { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
           { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
         ];
-        const botCut = isMobile ? 0.42 : 0;
+        const botCut = isMobile ? 0.34 : 0;
         const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
         if (_knoll.key !== key) {
           const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
@@ -911,7 +911,7 @@ export function createHomeEngine() {
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * exR);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
             // 寬度上限扣掉字卡區(桌機字卡約佔 30% 寬),確保主角與字卡完全不重疊
-            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.53 : 1) / ph), 1, 60);
+            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.60 : 1) / ph), 1, 60);
           }
         }
       }
@@ -953,7 +953,7 @@ export function createHomeEngine() {
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
       const _posTargetY = isMobile
-        ? (1.85 * dark * (1 - flipK) + 1.15 * paperK * (1 - flipK) + 1.25 * flipK)
+        ? (1.85 * dark * (1 - flipK) + 1.15 * paperK * (1 - flipK) + 0.62 * flipK)
         : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
