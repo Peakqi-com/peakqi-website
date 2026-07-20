@@ -850,6 +850,11 @@ export function createHomeEngine() {
           if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _dispL.sub(_gcOff); }
           dest.lerp(_dispL, sFocusK);
           if (act === 'press') dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);
+        } else if (sFocusK > 0.001 && sPartNode) {
+          // 其他零件:以展示中心為原點往外推開,讓出中央舞台(不擋住放大的主元件)
+          // 純徑向縮放;sFocusK→0 時倍率→1,回位精確不殘留位移
+          _dispL.copy(_disp); part.node.parent.worldToLocal(_dispL);
+          dest.sub(_dispL).multiplyScalar(1 + sFocusK * (isMobile ? 1.05 : 1.45)).add(_dispL);
         }
         if (isShown || Math.abs(part.studyScale - 1) > 0.002) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
         part.node.position.lerp(dest, isShown ? 0.12 : 0.08);
@@ -877,7 +882,10 @@ export function createHomeEngine() {
           if (isFocus) em.color.lerp(PQ_ORANGE, 0.32 * sFocusK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
           const wireLine = wireK * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2);
-          em.opacity = Math.max(wireLine * dark, paperK * 0.85 * (isStudyDim ? 0.28 : 1));
+          // 展示時的線條層次(壓掉雜線):強調零件 1.0 → 同組其餘 0.4 → 被推開的零件最淡;隨 sFocusK 平順過渡
+          const edgeTgt = isFocus ? 1 : (isShown ? 0.4 : 0.24);
+          const paperEdge = sComp >= 0 ? 0.85 + (edgeTgt - 0.85) * sFocusK : 0.85;
+          em.opacity = Math.max(wireLine * dark, paperK * paperEdge);
         }
         // 拆解連接線
         const attr = part.connector.geometry.getAttribute('position');
