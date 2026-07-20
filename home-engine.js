@@ -406,10 +406,10 @@ export function createHomeEngine() {
     const BODY_GRP = ['controls', 'chassis', 'shell'].concat(INT_GRP);
     const STUDY = [
       { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: null },   // 01 對焦環(單件特寫)
-      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: null },   // 02 頂部快門鍵(單件特寫)
-      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: null },   // 03 光圈/鏡片(單件特寫)
-      { action: 'mark',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: null },   // 04 側邊控制鍵(單件特寫)
-      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: null }   // 05 感光元件(單件特寫)
+      { action: 'press', side: 'left',  code: 'REC-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: null },   // 02 錄影/快門鍵(單件特寫)
+      { action: 'iris',  side: 'right', code: 'IRIS-A03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: null },   // 03 光圈(單件特寫)
+      { action: 'mark',  side: 'left',  code: 'LCD-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: null },   // 04 LCD 螢幕(單件特寫)
+      { action: 'scan',  side: 'right', code: 'SD-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: null }   // 05 記憶卡側蓋(單件特寫)
     ];
     // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
@@ -624,11 +624,14 @@ export function createHomeEngine() {
           const ctrls = parts.filter(pp => pp.groupId === 'controls');
           const topBtn = ctrls.slice().sort((a, b) => b.center.y - a.center.y)[0];                              // 02 頂部按鈕≈center.y 最高的 control
           const sideDial = ctrls.slice().sort((a, b) => Math.abs(b.center.x) - Math.abs(a.center.x)).find(pp => pp !== topBtn) || ctrls[1]; // 04 側邊控制鍵≈|x| 最大
-          STUDY[0].part = byName('lenses_low_40') || optics[0];                        // 01 對焦環=最外圈鏡組
-          STUDY[1].part = topBtn;                                                       // 02 快門/頂部按鈕(替代:最頂部 control node,下壓一次)
-          STUDY[2].part = byName('lenses005_low_32') || optics[Math.floor(optics.length / 2)]; // 03 光圈(替代:中段鏡片)
-          STUDY[3].part = sideDial;                                                     // 04 模式轉盤(替代:側邊 control 鍵)
-          STUDY[4].part = parts.find(pp => pp.groupId === 'sensor') || parts.find(pp => pp.groupId === 'chip'); // 05 感光元件/晶片
+          // 依「語意」指定零件(節點名為流水號,以下是逐一比對幾何後判讀出來的):
+          // 對焦環 = 最前端最厚的大環;錄影鍵 = 機身頂部 0.17×0.17×0.02 的扁圓片;
+          // 光圈 = 鏡組內直徑僅 0.47 的小開口;LCD = 尺寸與螢幕 mesh 吻合;記憶卡蓋 = 右側 0.05 厚的門板。
+          STUDY[0].part = byName('lenses_low_40') || optics[0];                          // 01 對焦環
+          STUDY[1].part = byName('body023_low_22') || topBtn;                            // 02 錄影/快門鍵
+          STUDY[2].part = byName('lenses010_low_37') || byName('lenses005_low_32') || optics[Math.floor(optics.length / 2)];  // 03 光圈
+          STUDY[3].part = byName('body004_low_3') || sideDial;                           // 04 LCD 螢幕
+          STUDY[4].part = byName('body020_low_19') || parts.find(pp => pp.groupId === 'sensor');   // 05 記憶卡側蓋
           // 每個零件的「幾何中心」相對其 node 原點的父層 local 偏移(node 原點多有偏移;展示定位要對準幾何中心)
           parts.forEach(pp => {
             pp.node.parent.updateWorldMatrix(true, false);
@@ -939,8 +942,6 @@ export function createHomeEngine() {
       const flipLerp = 0.05 + flipK * flipK * 0.4;
       const _rotTargetY = yawNormal * (1 - flipK) + flipYaw * flipK;
       rig.rotation.y += (_rotTargetY - rig.rotation.y) * (snapping ? 1 : flipLerp);
-      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * (snapping ? 1 : flipLerp);
-      rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
       const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
