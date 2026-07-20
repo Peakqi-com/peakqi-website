@@ -423,8 +423,10 @@ export function createHomeEngine() {
     // 等格網格會讓最大件剛好塞滿、小件只佔格子一角 → 中間全是空隙、看起來像灑出來的碎屑。
     // 這裡大件排前面、小件往後緊密補位,維持真實比例(全部同一個縮放),中央保留給主角特寫。
     // 版面用正規化座標算一次就好:只跟零件數與長寬比有關,與相機距離無關(放進 cache key 會每幀重建 → 當機)。
-    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn) {
-      const Hn = 1 / aspect, gap = 0.014, yTop = Hn / 2, yBot = -Hn / 2;
+    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, zones, botCut) {
+      // zones:字卡禁區(矩形,正規化座標),排版會繞開 → 零件永遠不會壓到字卡
+      // botCut:手機用,砍掉下方一段高度留給置底字卡 → 模型與字卡上下分區,互不遮擋
+      const Hn = 1 / aspect, gap = 0.014, yTop = Hn / 2, yBot = -Hn / 2 + (botCut || 0) * Hn;
       function pack(f) {
         const out = [];
         let x = -0.5, y = yTop, rowH = 0;
@@ -432,12 +434,19 @@ export function createHomeEngine() {
           const w = sizes[i] * f;                      // 正方形佔位(取最長邊)→ 保證不重疊
           if (!(w > 0)) return null;
           for (let tries = 0; ; tries++) {
-            if (tries > 64) return null;
+            if (tries > 96) return null;
             if (x + w > 0.5) { x = -0.5; y -= rowH + gap; rowH = 0; }   // 換行
             if (y - w < yBot) return null;                              // 高度不夠 → 這個 f 太大
             const cy = y - w / 2;
             // 中央淨空:會壓到主角就把 x 跳到洞的右側
             if (Math.abs(cy) < holeRYn && x < holeRXn && x + w > -holeRXn) { x = holeRXn + gap; continue; }
+            // 字卡禁區:壓到就跳到該區右緣
+            let hit = null;
+            for (let z = 0; z < zones.length; z++) {
+              const Z = zones[z];
+              if (cy < Z.y1 && cy > Z.y0 && x < Z.x1 && x + w > Z.x0) { hit = Z; break; }
+            }
+            if (hit) { x = hit.x1 + gap; continue; }
             break;
           }
           out.push({ nx: x + w / 2, ny: y - w / 2 });
@@ -698,6 +707,7 @@ export function createHomeEngine() {
     });
 
     let scrollP = 0, smoothP = 0, curBeat = -1, curPhase = -1;
+    let snapFrames = 8;   // 進場/大跳動時不做平滑追隨,直接就位 → 從任何位置進來畫面都一致
     ScrollChapter(ctx, hero, (p) => { scrollP = p; }, { pinned: true });
     const bound = { inView: true };
     ctx.io(hero, es => { bound.inView = !!(es[0] && es[0].isIntersecting); }, { rootMargin: '10px' });
@@ -770,7 +780,10 @@ export function createHomeEngine() {
     ctx.onFrame((now) => {
       if (destroyed || !bound.inView) return;
       const t = (now - t0) / 1000;
-      smoothP += (scrollP - smoothP) * 0.06;
+      // 大跳動(重新整理落在中段、錨點跳轉)也視為需要吸附,避免「由下往上滑」看到不同的角度
+      if (Math.abs(scrollP - smoothP) > 0.06) snapFrames = Math.max(snapFrames, 6);
+      if (snapFrames > 0) { smoothP = scrollP; snapFrames--; } else smoothP += (scrollP - smoothP) * 0.06;
+      const snapping = snapFrames > 0;
       const p = smoothP;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
       const review = p > 0.26;                      // 藍圖/零件展示起,不顯示故事卡
@@ -810,6 +823,8 @@ export function createHomeEngine() {
         _up2.crossVectors(_rgt, _fwd).normalize();
         const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
         const viewW = viewH * camera.aspect;
+        // G 手機:整個展示舞台上移,把畫面下方讓給置底字卡 → 主角與零件都不會被字卡蓋住
+        if (isMobile) _disp.addScaledVector(_up2, viewH * 0.17);
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
@@ -817,10 +832,17 @@ export function createHomeEngine() {
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
         const holeRXn = (isMobile ? 0.34 : 0.30) / 0.94, holeRYn = (isMobile ? 0.30 : 0.36) / 0.92;
         const aspect = gridW / gridH;
-        // cache key 只放「零件數 + 長寬比」→ 捲動時不會每幀重建網格
-        const key = parts.length + '|' + aspect.toFixed(2);
+        // G 字卡禁區:桌機字卡在左右兩側垂直置中(兩側都保留,版面才不會隨章節左右跳動);
+        //            手機字卡整寬置底 → 改成砍掉下方高度,模型與字卡上下分區。
+        const Hn2 = 1 / aspect;
+        const zones = isMobile ? [] : [
+          { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
+          { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
+        ];
+        const botCut = isMobile ? 0.34 : 0;
+        const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
         if (_knoll.key !== key) {
-          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn);
+          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
           _knoll.items = b.items; _knoll.f = b.f; _knoll.key = key;
         }
         _knoll.gridW = gridW;
@@ -847,7 +869,7 @@ export function createHomeEngine() {
             // 寬度取兩個水平軸的平均直徑,而不是對角線:對角線對扁平零件太保守 → 特寫會偏小
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, exR + exF);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
-            sGroupScale = clamp(Math.min(viewW * (_grp ? 0.62 : 0.50) / pw, viewH * (_grp ? 0.82 : 0.86) / ph), 1, 60);
+            sGroupScale = clamp(Math.min(viewW * (_grp ? 0.62 : 0.50) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.66 : 1) / ph), 1, 60);
           }
         }
       }
@@ -877,14 +899,16 @@ export function createHomeEngine() {
       // 翻面時大幅加快收斂(否則捲動到影片段相機還卡在半途轉、看到鏡頭正面),避免「就位太慢=看起來壞掉」
       const flipLerp = 0.05 + flipK * flipK * 0.4;
       const _rotTargetY = yawNormal * (1 - flipK) + flipYaw * flipK;
-      rig.rotation.y += (_rotTargetY - rig.rotation.y) * flipLerp;
-      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * flipLerp;
+      rig.rotation.y += (_rotTargetY - rig.rotation.y) * (snapping ? 1 : flipLerp);
+      rig.rotation.x += ((xNormal * (1 - flipK) + 0.05 * flipK) - rig.rotation.x) * (snapping ? 1 : flipLerp);
       rig.rotation.z = Math.sin(p * Math.PI * 1.6) * 0.04 * dark * (1 - flipK);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
       const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
-      rig.position.x += (_posTargetX - rig.position.x) * (0.04 + flipK * flipK * 0.35);   // 翻面時相機靠右(前面不變)並快速就位
-      rig.position.y += (((isMobile ? 0.8 : 0) * dark * (1 - flipK)) - rig.position.y) * 0.04;
+      rig.position.x += (_posTargetX - rig.position.x) * (snapping ? 1 : (0.04 + flipK * flipK * 0.35));   // 翻面時相機靠右(前面不變)並快速就位
+      // G 手機:翻面看螢幕時相機也要上移,否則會被置底的影片字卡蓋住(桌機字卡在左側,不需要)
+      const _posTargetY = (isMobile ? 0.8 : 0) * dark * (1 - flipK) + (isMobile ? 1.25 : 0) * flipK;
+      rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
       const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
@@ -912,6 +936,9 @@ export function createHomeEngine() {
         const isFocus = sPartNode === part.node && sFocusK > 0.001;
         const isShown = isFocus || isGroupMember;                   // 展示中(移出放大)的零件
         const isStudyDim = sComp >= 0 && !isShown;
+        // 姿態每幀先歸位:否則離開展示章節後會殘留展示時的旋轉(捲回開頭時內部零件會插出機身外)
+        // lensSpin 的鏡片自己每幀會重算,不能在這裡覆蓋
+        if (!part.lensSpin) part.node.quaternion.copy(part.baseQuat);
         // 子:鏡頭整組繞光學軸原地自轉(展示中的零件停自轉)
         if (part.lensSpin && !isShown) {
           _spinQ.setFromAxisAngle(lensAxis, t * 0.5);
@@ -932,7 +959,7 @@ export function createHomeEngine() {
           tScale = knollBase + (shownTgt - knollBase) * sFocusK;   // 由陳列尺寸放大到主角尺寸
           if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9));
         }
-        part.studyScale += (tScale - part.studyScale) * 0.12;
+        part.studyScale += (tScale - part.studyScale) * (snapping ? 1 : 0.12);
         // 攤平陳列:正對鏡頭的平面上,一件一格排開(先定姿態再定位置,gcOff 才算得準)
         if (sComp >= 0 && _knoll.items.length) {
           part.node.quaternion.copy(part.baseQuat);
@@ -992,8 +1019,10 @@ export function createHomeEngine() {
           dest.lerp(_dispL, sFocusK);
           if (act === 'press') dest.addScaledVector(_up2, -Math.sin(sActionK * Math.PI) * 0.5);
         }
-        if (isShown || Math.abs(part.studyScale - 1) > 0.002) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
-        part.node.position.lerp(dest, isShown ? 0.12 : 0.08);
+        // 一律寫入:先前用「差距 > 0.002 才寫」當最佳化,但吸附時 studyScale 會一次跳到目標,
+        // 那一幀條件不成立就跳過寫入 → 節點縮放永遠卡在跳之前的值(機身被縮小、內部零件露出來 = 破圖)
+        part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
+        part.node.position.lerp(dest, snapping ? 1 : (isShown ? 0.12 : 0.08));
         const hi = focused || isShown || paperK > 0.4;
         // 子:運作脈動(各零件不同節奏 —— 感光掃描 / 晶片閃爍 / 主機板資料流 / 排線傳輸)
         let op2;

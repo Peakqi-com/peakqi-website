@@ -239,6 +239,10 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}
   .pq-cine-lenstitle,.pq-cine-flash{display:none!important}}
 </style>
+<!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)e.preventDefault();if(r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#brands">跳到主要內容</a>
