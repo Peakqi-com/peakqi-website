@@ -89,10 +89,10 @@
 </sc-if>
 <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center">
-    <a href="Demo.dc.html" onClick="{{ ctaClick }}" data-cta style="display:flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;padding:13px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
+    <a href="{{ ctaHref }}" onClick="{{ ctaClick }}" data-cta style="display:flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;padding:13px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
       <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-      用我的場景看 Demo
-      <span style="background:rgba(242,239,232,.16);border-radius:999px;padding:2px 8px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.08em">15 MIN</span>
+      {{ ctaLabel }}
+      <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="background:rgba(242,239,232,.16);border-radius:999px;padding:2px 8px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
     </a>
     <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動 Demo 按鈕" style="margin-left:8px;width:30px;height:30px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 12px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
   </div>
@@ -219,6 +219,11 @@ class Component extends DCLogic {
       toggle: () => { this.state.open ? closeMenu() : openMenu(); },
       close: closeMenu,
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
+      // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
+      ctaHref: active === 'home' ? 'Products.dc.html' : 'Demo.dc.html',
+      ctaLabel: active === 'home' ? '探索旗下產品' : '用我的場景看 Demo',
+      ctaBadge: active !== 'home',
+      ctaBadgeText: '15 MIN',
       navDemoClick: () => this._evt('nav_demo_click'),
       ctaClick: () => this._evt('sticky_demo_click'),
       ctaDismiss: () => {
