@@ -14,3 +14,5 @@
 [2026-07-20T19:50:24.998Z] [warning] [.WebGL-0x20c09751500]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
 [2026-07-20T19:50:34.643Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
 [2026-07-20T19:50:34.643Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
+[2026-07-20T20:01:19.745Z] [warning] An import map rule for specifier 'three' was removed, as it conflicted with an existing rule.
+[2026-07-20T20:01:19.745Z] [warning] An import map rule for specifier 'three/addons/' was removed, as it conflicted with an existing rule.
