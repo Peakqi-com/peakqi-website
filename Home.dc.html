@@ -87,7 +87,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-study-idx b{color:#FF6B2C;font:800 24px 'Space Grotesk',sans-serif;letter-spacing:0}
 .pq-study-card h3{margin:0 0 12px;font:900 clamp(1.5rem,2.9vw,2.5rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
 .pq-study-card p{margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)}
-@media (max-width:820px){.pq-study-card,.pq-study-card[data-side="left"],.pq-study-card[data-side="right"]{left:20px;right:20px;width:auto;top:auto;bottom:8%;transform:rotate(-.3deg);text-align:left}.pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}.pq-study-card h3{font-size:1.4rem}
+@media (max-width:820px){.pq-study-card,.pq-study-card[data-side="left"],.pq-study-card[data-side="right"]{left:6vw;right:6vw;width:auto;top:auto;bottom:5vh;bottom:5svh;max-height:31vh;max-height:31svh;overflow:hidden;transform:rotate(-.3deg);text-align:left}.pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}.pq-study-card h3{font-size:clamp(1.15rem,5.2vw,1.4rem);margin-bottom:8px}
+  .pq-study-card p{font-size:13.5px;line-height:1.7}
+  .pq-study-idx{margin-bottom:10px;padding-bottom:8px}
   /* 手機模型在上、字卡在下 → 指向側邊的引線沒有意義,收掉 */
   .pq-study-card::after{display:none}}
 /* U4 翻面看螢幕:右側大影片 + 左側業務/宗旨字卡 + 快門閃光 */
@@ -170,8 +172,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-slogan-ghost{display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.34);color:#F2EFE8;padding:17px 30px;border-radius:2px;font:600 16px 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;transition:border-color .3s,color .3s,background .3s}
 .pq-slogan-ghost:hover{border-color:#FF6B2C;color:#FF6B2C;background:rgba(255,107,44,.07)}
 /* E 一直拍照的相機:連拍節奏的快門閃光 + 取景框角標 + 拍攝參數列 */
-.pq-slogan-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:pqBurst 4.4s ease-out infinite}
-@keyframes pqBurst{0%{opacity:0}2%{opacity:.20}5%{opacity:0}8%{opacity:.14}11%{opacity:0}52%{opacity:0}54%{opacity:.18}57%{opacity:0}100%{opacity:0}}
+.pq-slogan-flash{position:absolute;inset:0;z-index:23;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:pqBurst 4.4s ease-out infinite}
+/* 亮度乘上 --k(引擎每幀給的結尾進度)→ 只有結尾會閃,且整張畫面一起閃 */
+@keyframes pqBurst{0%{opacity:0}2%{opacity:calc(.20*var(--k,0))}5%{opacity:0}8%{opacity:calc(.14*var(--k,0))}11%{opacity:0}52%{opacity:0}54%{opacity:calc(.18*var(--k,0))}57%{opacity:0}100%{opacity:0}}
 .pq-slogan-marks{position:absolute;inset:clamp(18px,4vw,56px);pointer-events:none;opacity:calc(var(--k,0)*.85)}
 .pq-slogan-marks i{position:absolute;width:clamp(18px,2.2vw,34px);height:clamp(18px,2.2vw,34px);border:2px solid rgba(255,107,44,.75);animation:pqMark 4.4s ease-out infinite}
 .pq-slogan-marks i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
@@ -471,6 +474,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
     <!-- 結尾彩色墨流背景(在 3D 模型底層,canvas 透明會透出來) -->
     <div class="pq-cine-ink" data-cine-ink aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <!-- 快門閃光:放在舞台層覆蓋整個畫面(放在 .pq-slogan 內只會閃到它的 56% 寬) -->
+    <div class="pq-slogan-flash" data-slogan-flash aria-hidden="true"></div>
     <div class="pq-cine-flash" data-cine-flash aria-hidden="true"></div>
 
     <!-- U3c 組裝完成鏡頭正面「章節總結標題」(--k 由捲動驅動;翻面前淡出。這不是品牌 Hero Slogan) -->
@@ -481,8 +486,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
     <!-- U5 回機身 + Slogan(外框字掃描填實 + 逐段浮現;--k 由捲動驅動) -->
     <div class="pq-slogan" data-cine-slogan aria-hidden="true">
-      <!-- E 一直拍照的相機:連拍快門閃光 + 取景框角標(純 CSS,不進每幀迴圈) -->
-      <div class="pq-slogan-flash"></div>
+      <!-- E 一直拍照的相機:取景框角標(快門閃光已移到舞台層,才能整張一起閃) -->
       <div class="pq-slogan-marks"><i></i><i></i><i></i><i></i></div>
       <span class="pq-slogan-eyebrow">OUR MISSION · PEAKQI 2026</span>
       <h2 class="pq-slogan-title" data-accent="6">別讓瑣碎,耽誤真正重要的事</h2>

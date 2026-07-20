@@ -166,6 +166,7 @@ export function createHomeEngine() {
     const scrimEl = document.getElementById('pq-hero-scrim');
     const noiseEl = hero && hero.querySelector('.pq-cine-noise');
     const inkEl = hero && hero.querySelector('[data-cine-ink]');
+    const sFlashEl = hero && hero.querySelector('[data-slogan-flash]');
     const annotSvg = hero && hero.querySelector('[data-cine-annot]');
     // U4 螢幕看影片
     const reviewEl = hero && hero.querySelector('[data-cine-review]');
@@ -879,7 +880,7 @@ export function createHomeEngine() {
           { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
           { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
         ];
-        const botCut = isMobile ? 0.34 : 0;
+        const botCut = isMobile ? 0.42 : 0;
         const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
         if (_knoll.key !== key) {
           const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
@@ -910,7 +911,7 @@ export function createHomeEngine() {
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * exR);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
             // 寬度上限扣掉字卡區(桌機字卡約佔 30% 寬),確保主角與字卡完全不重疊
-            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.66 : 1) / ph), 1, 60);
+            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.53 : 1) / ph), 1, 60);
           }
         }
       }
@@ -949,12 +950,16 @@ export function createHomeEngine() {
       const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
       rig.position.x += (_posTargetX - rig.position.x) * (snapping ? 1 : (0.04 + flipK * flipK * 0.35));   // 翻面時相機靠右(前面不變)並快速就位
       // G 手機:翻面看螢幕時相機也要上移,否則會被置底的影片字卡蓋住(桌機字卡在左側,不需要)
-      const _posTargetY = (isMobile ? 0.8 : 0) * dark * (1 - flipK) + (isMobile ? 1.25 : 0) * flipK;
+      // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
+      // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
+      const _posTargetY = isMobile
+        ? (1.85 * dark * (1 - flipK) + 1.15 * paperK * (1 - flipK) + 1.25 * flipK)
+        : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
       const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
-      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.3 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
+      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
@@ -1213,7 +1218,8 @@ export function createHomeEngine() {
         _ctEls.read.value = 'const SCR_CORNERS_HARD = ' + JSON.stringify(cornerLocal) + ';';
       }
       if (lensTitleEl) lensTitleEl.style.setProperty('--k', summaryK.toFixed(3));   // U3c 組裝完成鏡頭總結標題
-      if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));   // U5 Slogan 進度
+      if (sloganEl) sloganEl.style.setProperty('--k', sloganK.toFixed(3));
+      if (sFlashEl) sFlashEl.style.setProperty('--k', sloganK.toFixed(3));   // 快門閃光亮度跟著結尾進度   // U5 Slogan 進度
       dust.rotation.y = t * 0.016; dust.rotation.z = -t * 0.008;
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
