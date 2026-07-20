@@ -1181,7 +1181,14 @@ export function createHomeEngine() {
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
       const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
-      rig.scale.setScalar((isMobile ? 0.72 * (1 + (1 - mCardK) * 0.34 * paperK) : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
+      // ── Phase 4 構圖校正:依 debug 量測把各場景的物件尺寸拉進規格區間 ──
+      // 基準縮小(黑底相機原本 w52 / 規格 42–45),彩虹線稿與白底組裝則需要放大。
+      const _bump = (x) => ez(sub(x, 0.06, 0.30)) * (1 - ez(sub(x, 0.78, 1.0)));
+      const compScale = (1 + 0.20 * _bump(sceneProgress('chassis-rainbow')))
+                      * (1 + 0.72 * _bump(sceneProgress('reassembly')))
+                      * (1 + 0.20 * _bump(sceneProgress('summary')))
+                      * (1 - 0.14 * _bump(sceneProgress('cta')));
+      rig.scale.setScalar(compScale * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.34 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
@@ -1190,7 +1197,7 @@ export function createHomeEngine() {
         if (fp) { fp.node.getWorldPosition(_tmp2); aimX = _tmp2.x * framingK; aimY = 0.1 * (1 - framingK) + _tmp2.y * framingK; aimZ = _tmp2.z * framingK; }
       }
       camAim.lerp(_tmp2.set(aimX, aimY, aimZ), 0.1);
-      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 2.2 : 3.4) - flipK * (isMobile ? 0.6 : 1.0);
+      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 1.8 : 2.6) - flipK * (isMobile ? 0.6 : 1.0);
       camera.lookAt(camAim);
 
       for (let i = 0; i < parts.length; i++) {
