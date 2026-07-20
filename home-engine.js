@@ -996,14 +996,16 @@ export function createHomeEngine() {
             part.node.quaternion.slerp(_locT, sKnollK);                        // 由 baseQuat 出發 → 回位精確
             // 等待中的零件:微微自轉(被拉到中間的主角走 isFocus 分支,會被覆蓋 → 主角靜止不動)
             _tgtAxis.copy(_fwd).applyQuaternion(_qInv.copy(_qP).invert()).normalize();
-            _spin.setFromAxisAngle(_tgtAxis, Math.sin(t * 0.33 + part.knollIdx * 1.7) * 0.17 * sKnollK);
+            _spin.setFromAxisAngle(_tgtAxis, Math.sin(t * 0.19 + part.knollIdx * 1.7) * 0.07 * (isShown ? 0 : sKnollK));
             part.node.quaternion.premultiply(_spin);
           }
           if (sKnollK > 0.001) {
             const slot = _knoll.items[part.knollIdx % _knoll.items.length];
             // 微微漂浮:幅度取排版尺寸的一小比例,不會讓相鄰零件重疊
-            const _amp = _knoll.f * _knoll.gridW * 0.085 * sKnollK, _ph = part.knollIdx * 1.7;
-            const _fx = Math.sin(t * 0.5 + _ph) * _amp, _fy = Math.cos(t * 0.42 + _ph * 1.3) * _amp;
+            // 只有「等待中」的零件漂浮;主角(被拉到中間的那個)完全不動
+            const _idle = isShown ? 0 : sKnollK;
+            const _amp = _knoll.f * _knoll.gridW * 0.032 * _idle, _ph = part.knollIdx * 1.7;
+            const _fx = Math.sin(t * 0.28 + _ph) * _amp, _fy = Math.cos(t * 0.23 + _ph * 1.3) * _amp;
             _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, slot.ny * _knoll.gridW + _fy);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
