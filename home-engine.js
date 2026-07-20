@@ -401,11 +401,11 @@ export function createHomeEngine() {
     // 機身「主元件」= 整台機身(外殼/控制/機架 + 全部內部零件),移出放大時整台一起跑,不留下零件
     const BODY_GRP = ['controls', 'chassis', 'shell'].concat(INT_GRP);
     const STUDY = [
-      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: ['optics'] },   // 鏡桶(標對焦環)
-      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: BODY_GRP },     // 機身(標頂部按鈕)
-      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: ['optics'] },   // 鏡桶(標內側鏡片/光圈)
-      { action: 'mark',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: BODY_GRP },     // 機身(標側邊控制鍵)
-      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: BODY_GRP }   // 機身+內部(標感光板)
+      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: null },   // 01 對焦環(單件特寫)
+      { action: 'press', side: 'left',  code: 'BODY-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: null },   // 02 頂部快門鍵(單件特寫)
+      { action: 'iris',  side: 'right', code: 'OPT-I03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: null },   // 03 光圈/鏡片(單件特寫)
+      { action: 'mark',  side: 'left',  code: 'CTRL-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: null },   // 04 側邊控制鍵(單件特寫)
+      { action: 'scan',  side: 'right', code: 'CIS-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: null }   // 05 感光元件(單件特寫)
     ];
     // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
@@ -596,6 +596,7 @@ export function createHomeEngine() {
             }
             pp.bbMin = bl.min.clone(); pp.bbMax = bl.max.clone();
             pp.gcLocal = bl.getCenter(new THREE.Vector3());
+            pp.relMin = pp.bbMin.clone().sub(pp.gcLocal); pp.relMax = pp.bbMax.clone().sub(pp.gcLocal);   // 單件特寫縮放用
             const bs = bl.getSize(new THREE.Vector3());
             pp.sizeLocal = Math.max(bs.x, bs.y, bs.z) || 0.001;   // 攤平陳列:縮到格子內用
           });
@@ -810,12 +811,15 @@ export function createHomeEngine() {
         _knoll.gridW = gridW; _knoll.gridH = gridH;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
-          if (cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin) {
+          const _grp = !!(cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin);
+          const _bmn = _grp ? cfg.groupBoxMin : (cfg.part && cfg.part.relMin);
+          const _bmx = _grp ? cfg.groupBoxMax : (cfg.part && cfg.part.relMax);
+          if (_bmn && _bmx) {
             // 依「投影到畫面的尺寸」決定放大倍率(3D bbox 在不同轉角投影差很多,單一係數無法同時服務鏡桶與機身)
             // 但量測必須「與當下轉角無關」,否則:轉盤每幀變角度 → 目標倍率跟著變 → studyScale 永遠在追移動目標 → 畫面持續抖動。
             // 轉盤是繞世界垂直軸轉,因此「垂直高度」與「離垂直軸的水平半徑」都是轉不變量,用它們量測即可穩定。
-            cfg.groupParts[0].node.parent.getWorldQuaternion(_qP);
-            const bmn = cfg.groupBoxMin, bmx = cfg.groupBoxMax;
+            (_grp ? cfg.groupParts[0] : cfg.part).node.parent.getWorldQuaternion(_qP);
+            const bmn = _bmn, bmx = _bmx;
             let mny = Infinity, mxy = -Infinity, rmax = 0;
             for (let cx = 0; cx < 2; cx++) for (let cy = 0; cy < 2; cy++) for (let cz = 0; cz < 2; cz++) {
               _tmpV.set(cx ? bmx.x : bmn.x, cy ? bmx.y : bmn.y, cz ? bmx.z : bmn.z);
@@ -908,7 +912,7 @@ export function createHomeEngine() {
         const knollBase = 1 + (knollFit - 1) * sKnollK;
         let tScale = knollBase;
         if (isShown) {
-          const shownTgt = dg ? sGroupScale : (isMobile ? 1.55 : 1.75);
+          const shownTgt = sGroupScale;   // 群組/單件都用「投影到畫面」量出來的特寫倍率
           tScale = knollBase + (shownTgt - knollBase) * sFocusK;   // 由陳列尺寸放大到主角尺寸
           if (isFocus && !dg && STUDY[sComp].action === 'iris') tScale *= 0.55 + 0.62 * ez(sub(sActionK, 0.0, 0.42)) - 0.18 * ez(sub(sActionK, 0.55, 0.9));
         }

@@ -75,6 +75,33 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-screen{position:absolute;left:0;top:0;width:10px;height:10px;overflow:hidden;opacity:0;pointer-events:none;will-change:left,top,width,height,clip-path,opacity;z-index:5}
 .pq-cine-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
 .pq-cine-vid.is-on{opacity:1}
+/* U4c 影片上的「相機介面」HUD:放在螢幕容器內 → 跟著 clip-path 一起貼在 LCD 上,隨螢幕大小等比縮放(cqw) */
+.pq-cine-screen{container-type:size}
+.pq-cine-hud{position:absolute;inset:0;z-index:3;pointer-events:none;font:700 3.1cqw/1 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.94);text-shadow:0 .3cqw .8cqw rgba(0,0,0,.7)}
+/* 濾鏡:冷調鏡頭色 + 暗角 + 細掃描線 */
+.pq-cine-hud .grade{position:absolute;inset:0;background:radial-gradient(118% 88% at 50% 46%,rgba(0,0,0,0) 52%,rgba(0,0,0,.46) 100%),linear-gradient(rgba(120,180,255,.07),rgba(255,140,60,.05))}
+.pq-cine-hud .scan{position:absolute;inset:0;opacity:.45;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.055) 0 .18cqw,rgba(0,0,0,0) .18cqw .55cqw)}
+/* 四角取景框 */
+.pq-cine-hud .br{position:absolute;width:6.4cqw;height:6.4cqw;border:.62cqw solid rgba(255,255,255,.72);opacity:.7}
+.pq-cine-hud .br.tl{left:7.5cqw;top:7cqw;border-right:0;border-bottom:0}
+.pq-cine-hud .br.tr{right:7.5cqw;top:7cqw;border-left:0;border-bottom:0}
+.pq-cine-hud .br.bl{left:7.5cqw;bottom:7cqw;border-right:0;border-top:0}
+.pq-cine-hud .br.brr{right:7.5cqw;bottom:7cqw;border-left:0;border-top:0}
+.pq-cine-hud .row{position:absolute;left:8.5cqw;right:8.5cqw;display:flex;align-items:center}
+.pq-cine-hud .row.top{top:7.5cqw;justify-content:space-between}
+.pq-cine-hud .row.bot{bottom:7.5cqw;gap:4.4cqw}
+/* REC 紅點閃爍 */
+.pq-cine-hud .rec{display:flex;align-items:center;gap:1.5cqw}
+.pq-cine-hud .rec i{width:2.3cqw;height:2.3cqw;border-radius:50%;background:#ff3b30;box-shadow:0 0 1.8cqw rgba(255,59,48,.95);animation:pqRecBlink 1.35s steps(1,end) infinite}
+@keyframes pqRecBlink{0%,58%{opacity:1}59%,100%{opacity:.12}}
+/* 電池 + 電量 */
+.pq-cine-hud .batt{display:flex;align-items:center;gap:1.5cqw}
+.pq-cine-hud .batt u{position:relative;display:block;width:7.2cqw;height:3.5cqw;border:.55cqw solid rgba(255,255,255,.88);border-radius:.7cqw;text-decoration:none}
+.pq-cine-hud .batt u::after{content:'';position:absolute;right:-1.35cqw;top:50%;transform:translateY(-50%);width:.9cqw;height:1.5cqw;background:rgba(255,255,255,.88);border-radius:0 .3cqw .3cqw 0}
+.pq-cine-hud .batt u b{position:absolute;left:.5cqw;top:.5cqw;bottom:.5cqw;width:calc((100% - 1cqw)*var(--lv,.72));background:#65E0BC;border-radius:.22cqw}
+/* ISO / 快門 / 光圈 */
+.pq-cine-hud .val s{text-decoration:none;margin-right:.9cqw;color:rgba(255,255,255,.62)}
+@media (prefers-reduced-motion:reduce){.pq-cine-hud .rec i{animation:none}}
 /* Debug 對位線:紅=影片裁切多邊形,藍=螢幕外框矩形;reviewEl 加 .debug class 顯示 */
 .pq-cine-dbg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;opacity:0;z-index:8}
 .pq-cine-review.debug .pq-cine-dbg{opacity:1}
@@ -328,6 +355,20 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
         <video class="pq-cine-vid" data-shot="2" muted loop playsinline preload="auto" poster="assets/shots/shot-03.png"><source src="assets/shots/shot-03.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="3" muted loop playsinline preload="auto" poster="assets/shots/shot-04.png"><source src="assets/shots/shot-04.mp4" type="video/mp4"></video>
         <video class="pq-cine-vid" data-shot="4" muted loop playsinline preload="auto" poster="assets/shots/shot-05.png"><source src="assets/shots/shot-05.mp4" type="video/mp4"></video>
+        <!-- 相機介面 HUD:濾鏡(暗角/掃描線)+ REC・電池電量・ISO・快門;純 CSS,不進每幀迴圈 -->
+        <div class="pq-cine-hud" aria-hidden="true">
+          <div class="grade"></div><div class="scan"></div>
+          <div class="br tl"></div><div class="br tr"></div><div class="br bl"></div><div class="br brr"></div>
+          <div class="row top">
+            <span class="rec"><i></i>REC</span>
+            <span class="batt"><u><b style="--lv:.72"></b></u>72%</span>
+          </div>
+          <div class="row bot">
+            <span class="val"><s>ISO</s>800</span>
+            <span class="val"><s>SHUTTER</s>1/50</span>
+            <span class="val"><s>F</s>2.8</span>
+          </div>
+        </div>
       </div>
       <!-- Debug 對位線(reviewEl.debug 顯示):紅=影片裁切多邊形,藍=螢幕外框矩形 -->
       <svg class="pq-cine-dbg" data-cine-dbg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
