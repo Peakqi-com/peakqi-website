@@ -201,6 +201,20 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-slogan{justify-content:flex-end;padding-bottom:14svh}
   .pq-cine-studytitle h2{font-size:clamp(1.2rem,5.4vw,1.55rem);line-height:1.35}
   .pq-cine-studytitle p{font-size:13px;line-height:1.7}
+
+  /* 5) 深色段節拍字卡:手機上原本佔到半個螢幕還壓住相機 → 整體縮小、限高 */
+  .pq-cine-card{left:5vw!important;right:5vw!important;bottom:6vh;bottom:6svh;
+    max-height:44vh;max-height:44svh;overflow:hidden;padding:16px 16px 18px}
+  .pq-cine-card .top{font-size:9.5px;padding-bottom:10px}
+  .pq-cine-card .top b{font-size:19px}
+  .pq-cine-card h2{font-size:clamp(1.1rem,4.8vw,1.38rem);line-height:1.28;margin:12px 0 8px}
+  .pq-cine-card>p{font-size:12.5px;line-height:1.62}
+  .pq-cine-callout{padding:8px 10px;margin:8px 0}
+  .pq-cine-callout span{font-size:9px}
+  .pq-cine-callout b{font-size:12px}
+  /* 標籤列不換行,避免把卡片撐高 */
+  .pq-cine-card ul{margin-top:10px;flex-wrap:nowrap;overflow:hidden;gap:6px}
+  .pq-cine-card ul li{white-space:nowrap;font-size:11px;padding:6px 9px}
   /* 3) 深色段字卡:限高、收斂內容,不再吃掉大半個螢幕把相機蓋住 */
   .pq-cine-vcard{left:5vw;right:5vw;width:auto;top:auto;bottom:4svh;
     max-height:38svh;overflow:hidden;padding:16px 16px 18px}

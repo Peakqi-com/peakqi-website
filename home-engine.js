@@ -422,6 +422,7 @@ export function createHomeEngine() {
     let sGroupScale = 1, sTurn = 0;   // 群組展示:填滿畫面的放大倍率 + 轉盤角度
     // U3s「攤平陳列」(knolling):展示章節期間所有零件排成不重疊的整齊網格,中央留空給主角
     let sKnollK = 0;                  // 章節級進度(整段維持 1,不隨單一零件歸零)
+    let mCardSm = 0;                  // 手機字卡帶保留量(平滑值)
     let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
     let knollSizes = [];              // 依大小遞減排序、以最大件正規化(=1)的尺寸表
     const _knoll = { items: [], f: 0, key: '' };
@@ -851,6 +852,13 @@ export function createHomeEngine() {
         sKnollK = ez(sub(studyP, 0.0, 0.055)) * (1 - ez(sub(studyP, 0.945, 1.0)));
       }
       const sPartNode = (sComp >= 0 && STUDY[sComp].part) ? STUDY[sComp].part.node : null;
+      // 手機字卡帶是「動態」的:sTextK(零件字卡)或 flipK(影片字卡)有值才需要讓出下方;
+      // 沒有字卡的節拍(章節開場、組合完成)就不要留那一大塊空白,模型回到置中並放大。
+      // 用「是否處在某個零件章節」而不是字卡當下的透明度:零件位置是慢速 lerp,
+      // 若等到字卡開始淡入才讓位就來不及,會被壓到。章節一進入就先保留,並平滑過渡避免跳動。
+      const mCardTarget = isMobile ? Math.max(sComp >= 0 ? 1 : 0, flipK) : 0;
+      mCardSm += (mCardTarget - mCardSm) * (snapping ? 1 : 0.10);
+      const mCardK = mCardSm;
       let sGroupTarget = 1;   // 這一幀算出的特寫倍率目標(下面平滑逼近,避免章節交界跳動)
       // 展示舞台:畫面正中央 + 攤平陳列網格(中央淨空給主角);主元件群組放大到「主導畫面」
       if ((sKnollK > 0.001 || sFocusK > 0.001) && parts.length) {
@@ -862,7 +870,7 @@ export function createHomeEngine() {
         const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
         const viewW = viewH * camera.aspect;
         // G 手機:整個展示舞台上移,把畫面下方讓給置底字卡 → 主角與零件都不會被字卡蓋住
-        if (isMobile) _disp.addScaledVector(_up2, viewH * 0.13);   // 中心約在畫面 37%,與上移後的字卡帶相接,中間不留空洞
+        if (isMobile) _disp.addScaledVector(_up2, viewH * 0.07 * mCardK);   // 只有「有字卡」時才上移讓位
         // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移,放到最大也不會壓到標題
         // 注意:STUDY 的 side 指的是「模型在哪一側」(字卡在相反側),所以往 side 的方向偏移才是遠離字卡
         else if (sComp >= 0) _disp.addScaledVector(_rgt, viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17));
@@ -880,13 +888,16 @@ export function createHomeEngine() {
           { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
           { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
         ];
-        const botCut = isMobile ? 0.34 : 0;
+        // 保留量改成每幀後處理(見下方 _cardCut):排版本身永遠用完整網格,快取才命中,零件也不會在格子間跳
+        const botCut = 0;
         const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
         if (_knoll.key !== key) {
           const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
           _knoll.items = b.items; _knoll.f = b.f; _knoll.key = key;
         }
         _knoll.gridW = gridW;
+        _knoll.cut = isMobile ? 0.40 * mCardK : 0;   // 下方要讓給字卡的比例
+        _knoll.Hn = 1 / aspect;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
           const _grp = !!(cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin);
@@ -911,7 +922,7 @@ export function createHomeEngine() {
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * exR);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
             // 寬度上限扣掉字卡區(桌機字卡約佔 30% 寬),確保主角與字卡完全不重疊
-            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? 0.60 : 1) / ph), 1, 60);
+            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? (0.60 + (1 - mCardK) * 0.26) : 1) / ph), 1, 60);
           }
         }
       }
@@ -959,7 +970,7 @@ export function createHomeEngine() {
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
       const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
-      rig.scale.setScalar((isMobile ? 0.72 : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
+      rig.scale.setScalar((isMobile ? 0.72 * (1 + (1 - mCardK) * 0.34 * paperK) : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
@@ -997,7 +1008,7 @@ export function createHomeEngine() {
         let knollFit = 1;
         if (sKnollK > 0.001 && _knoll.f > 0) {
           // 全部零件同一個倍率 → 維持真實比例(大的還是大、小的還是小),不個別亂調
-          knollFit = (_knoll.f * _knoll.gridW) / Math.max(1e-4, knollMaxSize * _knoll.wS);
+          knollFit = (_knoll.f * _knoll.gridW * (1 - (_knoll.cut || 0))) / Math.max(1e-4, knollMaxSize * _knoll.wS);   // 壓縮後同步縮小,不會互相重疊
         }
         const knollBase = 1 + (knollFit - 1) * sKnollK;
         let tScale = knollBase;
@@ -1032,7 +1043,9 @@ export function createHomeEngine() {
             const _idle = isShown ? 0 : sKnollK;
             const _amp = _knoll.f * _knoll.gridW * 0.032 * _idle, _ph = part.knollIdx * 1.7;
             const _fx = Math.sin(t * 0.28 + _ph) * _amp, _fy = Math.cos(t * 0.23 + _ph * 1.3) * _amp;
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, slot.ny * _knoll.gridW + _fy);
+            const _c = _knoll.cut || 0;
+            const _ny = slot.ny * (1 - _c) + _c * (_knoll.Hn || 0) / 2;   // 壓到上方,把下緣讓給字卡
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, _ny * _knoll.gridW + _fy);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
