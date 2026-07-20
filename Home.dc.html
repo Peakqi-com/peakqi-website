@@ -225,6 +225,23 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-cine-vcard ul{margin-top:12px;flex-wrap:nowrap;overflow:hidden;gap:6px}
   .pq-cine-vcard ul li{white-space:nowrap;font-size:11.5px}
 }
+
+/* ── Phase 5 字卡進退場:opacity 0→1、translateY 18px→0、blur 5px→0 ──
+   退場為 opacity 1→0、translateY 0→-12px,且先於主要物件離場(時間軸在引擎端)。
+   規格明訂不使用大幅 scale、不從左右高速飛入。 */
+#hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card{
+  filter:blur(5px);
+  transition:opacity .55s cubic-bezier(0.16,1,0.3,1),transform .55s cubic-bezier(0.16,1,0.3,1),filter .45s ease-out}
+#hero.pq-cine-on .pq-cine-intro:not(.is-active),#hero.pq-cine-on .pq-cine-card:not(.is-active){
+  transform:translateY(calc(-50% - 12px))}
+#hero.pq-cine-on .is-active{filter:blur(0)}
+.pq-cine-vcard{filter:blur(5px);transform:translateY(calc(-50% + 18px))}
+.pq-cine-vcard.is-on{filter:blur(0)}
+.pq-study-card{filter:blur(calc((1 - var(--on,0))*5px))}
+@media (prefers-reduced-motion:reduce){
+  #hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card,
+  .pq-cine-vcard,.pq-study-card{filter:none!important;transform:none!important}
+}
 @media (max-width:820px){.pq-slogan{gap:14px}.pq-slogan-title{font-size:2rem}.pq-slogan-cta{flex-direction:column;width:100%;max-width:320px}.pq-slogan-btn,.pq-slogan-ghost{justify-content:center}}
 @media (max-width:820px){
   .pq-cine-vstage{left:12px;right:12px;width:auto;top:11%;transform:none}

@@ -1160,8 +1160,15 @@ export function createHomeEngine() {
       // 母:旋轉(有界擺動 → 藍圖俯視 → 翻面螢幕正對)
       const spinY = -0.5 + Math.sin(p * Math.PI * 3.0) * 0.5 + pointer.x * 0.06;
       const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
-      const yawNormal = spinY * dark + (-0.5) * paperK;
-      const xNormal = tiltX * dark + (-0.95) * paperK;
+      // ── Phase 5:hold 區只保留呼吸感 ──────────────────────────────
+      // 規格:完整停留時 rotationY 不超過 ±0.025 rad、rotationX ±0.012、scale 呼吸 ≤1.012。
+      // 原本 spinY 是 sin(p*π*3) 的全域擺動,在彩虹/總結/CTA 的停留區會持續大幅轉動。
+      const _hold = (id) => { const q = sceneProgress(id); return ez(sub(q, 0.20, 0.32)) * (1 - ez(sub(q, 0.70, 0.82))); };
+      const holdK = Math.max(_hold('chassis-rainbow'), _hold('summary'), _hold('cta'));
+      const yawNormal = (spinY * dark + (-0.5) * paperK) * (1 - holdK)
+                      + ((-0.5) + Math.sin(t * 0.45) * 0.025) * holdK;
+      const xNormal = (tiltX * dark + (-0.95) * paperK) * (1 - holdK)
+                    + ((-0.14) + Math.sin(t * 0.37) * 0.012) * holdK;
       const flipYaw = (typeof window !== 'undefined' && window.__flipYaw != null) ? window.__flipYaw : FLIP_YAW;
       // 翻面時大幅加快收斂(否則捲動到影片段相機還卡在半途轉、看到鏡頭正面),避免「就位太慢=看起來壞掉」
       const flipLerp = 0.05 + flipK * flipK * 0.4;
@@ -1184,11 +1191,11 @@ export function createHomeEngine() {
       // ── Phase 4 構圖校正:依 debug 量測把各場景的物件尺寸拉進規格區間 ──
       // 基準縮小(黑底相機原本 w52 / 規格 42–45),彩虹線稿與白底組裝則需要放大。
       const _bump = (x) => ez(sub(x, 0.06, 0.30)) * (1 - ez(sub(x, 0.78, 1.0)));
-      const compScale = (1 + 0.20 * _bump(sceneProgress('chassis-rainbow')))
+      const compScale = (1 + 0.12 * _bump(sceneProgress('chassis-rainbow')))
                       * (1 + 0.72 * _bump(sceneProgress('reassembly')))
                       * (1 + 0.20 * _bump(sceneProgress('summary')))
                       * (1 - 0.14 * _bump(sceneProgress('cta')));
-      rig.scale.setScalar(compScale * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.34 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.34 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
@@ -1462,7 +1469,10 @@ export function createHomeEngine() {
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
       orangeL.intensity = (15 + Math.sin(t * 2.7) * 3 + shot * 26) * (0.4 + 0.6 * dark);
-      if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark;
+      // Phase 5:彩虹段 local 0.28–0.40 完成一次柔和光圈脈衝(強度變化約 10%,不加粒子不加旋轉)
+      const _rb = sceneProgress('chassis-rainbow');
+      const irisPulse = ez(sub(_rb, 0.28, 0.34)) * (1 - ez(sub(_rb, 0.34, 0.40)));
+      if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark * (1 + 0.10 * irisPulse);
       if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
       if (DEBUG_LAYOUT) {
         let _actId = sceneLayout.length ? sceneLayout[0].id : '';
