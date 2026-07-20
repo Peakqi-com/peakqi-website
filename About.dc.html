@@ -280,7 +280,7 @@ class Component extends DCLogic {
     const bigNums = [
       { v: '30+', l: '已上線系統與網站案例', slugs: ['wedding', 'expo', 'groupbuy'] },
       { v: '8+', l: '產業別實戰經驗', slugs: ['interior', 'realestate', 'doiiin'] },
-      { v: '10 天', l: '最快上線(工作天)', slugs: ['social', 'linesummary', 'autodraft'] },
+      { v: '10 天', l: '最快上線(工作天)', slugs: ['xintu', 'linesummary', 'autodraft'] },
       { v: '24h', l: '全天候接住詢問(系統服務語境,非 SLA 承諾)', slugs: ['realestate', 'hungmen', 'xintu'] }
     ].map(n => ({ ...n, thumbs: n.slugs.map(s => thumb(s, 128, 78)).filter(Boolean) }));
     // 產業地圖:有案例的節點 → 對應媒體
@@ -288,7 +288,6 @@ class Component extends DCLogic {
       { label: '婚禮婚慶', slug: 'wedding', detail: 'Case.dc.html?slug=wedding' },
       { label: '室內設計', slug: 'interior', detail: 'Case.dc.html?slug=interior' },
       { label: '房仲不動產', slug: 'realestate', detail: 'Case.dc.html?slug=realestate' },
-      { label: '社群經營', slug: 'social', detail: 'Case.dc.html?slug=social' },
       { label: '團購電商', slug: 'groupbuy', detail: 'Cases.dc.html#index' },
       { label: '活動售票', slug: 'labubu', detail: 'Cases.dc.html#index' },
       { label: 'ESG 永續', slug: 'doiiin', detail: 'Cases.dc.html#index' },
@@ -333,11 +332,11 @@ class Component extends DCLogic {
       { n: 'STEP 05', t: '正式上線', d: '正式上線,開始接真實客人。' },
       { n: 'STEP 06', t: '持續優化', d: '上線後專人持續調整話術與流程。' }
     ];
-    const FEAT_SLUGS = ['wedding', 'interior', 'social', 'realestate'];
+    const FEAT_SLUGS = ['wedding', 'interior', 'realestate'];
     const caseHref = (slug) => FEAT_SLUGS.includes(slug) ? 'Case.dc.html?slug=' + slug : 'Cases.dc.html#index';
     // Hero 案例節點:12 張真實截圖(featured 4 + 各產業 8),初始=網路環佈局(no-JS/靜態即完成態)
     const netSlugs = [
-      { slug: 'wedding', clu: 0 }, { slug: 'interior', clu: 1 }, { slug: 'social', clu: 2 }, { slug: 'realestate', clu: 1 },
+      { slug: 'wedding', clu: 0 }, { slug: 'interior', clu: 1 }, { slug: 'sparkspace', clu: 2 }, { slug: 'realestate', clu: 1 },
       { slug: 'expo', clu: 0 }, { slug: 'labubu', clu: 0 }, { slug: 'community', clu: 1 }, { slug: 'groupbuy', clu: 2 },
       { slug: 'rouzhi', clu: 2 }, { slug: 'doiiin', clu: 3 }, { slug: 'ouros', clu: 3 }, { slug: 'xintu', clu: 3 }
     ];

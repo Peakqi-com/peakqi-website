@@ -19,15 +19,6 @@ export const FEATURED_MEDIA = [
      { src: 'assets/cases/interior-g2.webp', fallback: 'assets/works/work-interior.png', w: 820, h: 747, alt: '室內設計 AI 整合平台——設計提案生成介面' },
      { src: 'assets/cases/interior-g3.webp', fallback: 'assets/works/work-interior.png', w: 820, h: 869, alt: '室內設計 AI 整合平台——簡報輸出與專案畫面' }
  ] },
- { slug: 'social', name: 'AI 社群自動經營系統', industry: '社群經營', type: 'AI 系統', sourcePage: 'p26', mediaType: 'screenshot', focalPoint: 'top',
-   cover: { src: 'assets/cases/social.webp', fallback: 'assets/works/work-social.png', w: 1100, h: 490, alt: 'AI 社群自動經營系統畫面:依產業自動產文與排程發布' },
-   thumbnail: { src: 'assets/cases/social.webp', w: 1100, h: 490 },
-   gallery: [
-     { src: 'assets/cases/social.webp', fallback: 'assets/works/work-social.png', w: 1100, h: 490, alt: 'AI 社群自動經營系統畫面:依產業自動產文與排程發布' },
-     { src: 'assets/cases/social-g1.webp', fallback: 'assets/works/work-social.png', w: 820, h: 869, alt: 'AI 社群自動經營系統——AI 產文編輯介面' },
-     { src: 'assets/cases/social-g2.webp', fallback: 'assets/works/work-social.png', w: 820, h: 747, alt: 'AI 社群自動經營系統——排程發布中心' },
-     { src: 'assets/cases/social-g3.webp', fallback: 'assets/works/work-social.png', w: 820, h: 869, alt: 'AI 社群自動經營系統——貼文成效清單畫面' }
- ] },
  { slug: 'realestate', name: '房仲 AI 助手', industry: '房仲不動產', type: 'AI 系統', sourcePage: 'p27', mediaType: 'screenshot', focalPoint: 'top',
    cover: { src: 'assets/cases/realestate.webp', fallback: 'assets/works/work-realestate.png', w: 1100, h: 490, alt: '房仲 AI 助手畫面:串接 LINE 官方帳號自動回物件、排預約帶看' },
    thumbnail: { src: 'assets/cases/realestate.webp', w: 1100, h: 490 },

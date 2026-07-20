@@ -391,6 +391,9 @@ export function createHomeEngine() {
 
     const parts = [];
     const BLACK = new THREE.Color(0x141414), PQ_ORANGE = new THREE.Color(0xFF6B2C);
+    const PAPER = new THREE.Color(0xF2EFE8);   // 白藍圖紙色:零件平塗填色用(遮住後方線條)
+    // 共用的「紙色遮擋面」材質:不吃光的平塗 + 寫深度,並用 polygonOffset 稍微退後,邊線才不會 z-fighting
+    const PAPER_FILL = new THREE.MeshBasicMaterial({ color: PAPER, transparent: true, opacity: 1, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
@@ -500,17 +503,22 @@ export function createHomeEngine() {
       ribbon.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 36, 0.025, 6, false), mkMat(0xFF6B2C, 0xFF6B2C))); asset.add(ribbon);
     }
     function addPartVisuals(node, color) {
-      const materials = [], edges = [];
+      const materials = [], edges = [], fills = [];
       node.traverse(obj => {
         if (!(obj instanceof THREE.Mesh)) return;
         obj.frustumCulled = false;
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });
         obj.material = Array.isArray(obj.material) ? clones : clones[0];
+        // 白藍圖「遮擋面」:同一份幾何、紙色平塗、會寫深度 → 擋掉後方線條(隱線消除),
+        // 讓機身/鏡頭/感光元件各自看起來是一個完整實體,而不是一堆半透明線稿疊在一起。
+        // 用獨立 mesh 而非改原材質:原材質有貼圖與金屬度,改色會變黑/露出貼圖,且切換貼圖會觸發 shader 重編。
+        const fill = new THREE.Mesh(obj.geometry, PAPER_FILL); fill.renderOrder = 3; fill.frustumCulled = false; fill.visible = false;
+        obj.add(fill); fills.push(fill);
         const em = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthTest: true });
         const edge = new THREE.LineSegments(new THREE.EdgesGeometry(obj.geometry, 24), em); edge.renderOrder = 4; obj.add(edge); edges.push(em);
       });
-      return { materials, edges };
+      return { materials, edges, fills };
     }
     function calcOffset(name, center, index) {
       if (name.startsWith('lenses')) return V3(center.x * 0.18, center.y * 0.18, 1.35 + Math.max(0, center.z - 0.75) * 1.35);
@@ -551,7 +559,7 @@ export function createHomeEngine() {
           const lineGeo = new THREE.BufferGeometry().setFromPoints([center.clone(), center.clone()]);
           const lineMat = new THREE.LineBasicMaterial({ color: rule.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
-          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
+          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, fills: vis.fills, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
         });
         // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
         {
@@ -796,22 +804,22 @@ export function createHomeEngine() {
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
           if (cfg.group && cfg.groupParts && cfg.groupParts.length && cfg.groupBoxMin) {
-            // 依「投影到畫面的實際尺寸」決定放大倍率:同一個 3D bbox 在不同轉角投影差很多
-            // (鏡桶端面朝鏡頭 vs 機身正面朝鏡頭),單一係數無法同時服務兩者
+            // 依「投影到畫面的尺寸」決定放大倍率(3D bbox 在不同轉角投影差很多,單一係數無法同時服務鏡桶與機身)
+            // 但量測必須「與當下轉角無關」,否則:轉盤每幀變角度 → 目標倍率跟著變 → studyScale 永遠在追移動目標 → 畫面持續抖動。
+            // 轉盤是繞世界垂直軸轉,因此「垂直高度」與「離垂直軸的水平半徑」都是轉不變量,用它們量測即可穩定。
             cfg.groupParts[0].node.parent.getWorldQuaternion(_qP);
-            _upLocal.set(0, 1, 0).applyQuaternion(_qInv.copy(_qP).invert());
-            _turnQ.setFromAxisAngle(_upLocal, sTurn);
             const bmn = cfg.groupBoxMin, bmx = cfg.groupBoxMax;
-            let mnx = Infinity, mxx = -Infinity, mny = Infinity, mxy = -Infinity;
+            let mny = Infinity, mxy = -Infinity, rmax = 0;
             for (let cx = 0; cx < 2; cx++) for (let cy = 0; cy < 2; cy++) for (let cz = 0; cz < 2; cz++) {
               _tmpV.set(cx ? bmx.x : bmn.x, cy ? bmx.y : bmn.y, cz ? bmx.z : bmn.z);
-              _tmpV.applyQuaternion(_turnQ).applyQuaternion(_qP).multiplyScalar(wS);   // → 世界方向
-              const px = _tmpV.dot(_rgt), py = _tmpV.dot(_up2);                        // → 投影到畫面軸
-              if (px < mnx) mnx = px; if (px > mxx) mxx = px;
+              _tmpV.applyQuaternion(_qP).multiplyScalar(wS);        // → 世界方向(不含 turn)
+              const py = _tmpV.dot(_up2);
               if (py < mny) mny = py; if (py > mxy) mxy = py;
+              const r = Math.hypot(_tmpV.dot(_rgt), _tmpV.dot(_fwd));   // 水平面上離軸半徑(轉不變)
+              if (r > rmax) rmax = r;
             }
-            const pw = Math.max(1e-4, mxx - mnx), ph = Math.max(1e-4, mxy - mny);
-            sGroupScale = clamp(Math.min(viewW * 0.60 / pw, viewH * 0.80 / ph), 1, 16);
+            const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * rmax);
+            sGroupScale = clamp(Math.min(viewW * 0.72 / pw, viewH * 0.88 / ph), 1, 16);
           }
         }
       }
@@ -822,6 +830,7 @@ export function createHomeEngine() {
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
+      PAPER_FILL.opacity = paperK;   // 紙色遮擋面隨白藍圖淡入(彩色線稿階段維持全透明,不影響原本的發光線稿轉場)
       if (studyTitleEl) studyTitleEl.style.setProperty('--k', introK.toFixed(3));   // U3s 零件展示章節標題
       for (let c = 0; c < studyCards.length; c++) {   // U3s 零件文字卡:只顯示當前零件,隨停留淡入淡出
         const on = c === sComp ? sTextK : 0;
@@ -886,10 +895,9 @@ export function createHomeEngine() {
         if (part.studyScale == null) part.studyScale = 1;
         let knollFit = 1;
         if (sKnollK > 0.001 && _knoll.cellMin > 0) {
-          // 壓縮尺寸差距:每件佔格子的 48%~94%,陳列密實不留大空隙,但仍保有大小層次;上限 <1 格 → 保證不重疊
-          const sizeW = Math.max(1e-4, part.sizeLocal * _knoll.wS);
-          const shown = _knoll.cellMin * (0.48 + 0.46 * Math.pow(part.sizeLocal / knollMaxSize, 0.5));
-          knollFit = shown / sizeW;
+          // 全部零件套「同一個」縮放比例 → 維持彼此真實的大小比例(大的還是大、小的還是小),不個別亂調
+          // 比例基準:最大的零件剛好塞進一格 → 其餘都比一格小 → 一格一件,保證不重疊
+          knollFit = (_knoll.cellMin * 0.92) / Math.max(1e-4, knollMaxSize * _knoll.wS);
         }
         const knollBase = 1 + (knollFit - 1) * sKnollK;
         let tScale = knollBase;
@@ -977,6 +985,9 @@ export function createHomeEngine() {
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
           if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused || isShown ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
+        // 白藍圖紙色遮擋面:只在藍圖階段開啟,零件被隱藏時(組回後的內部件)一併關掉
+        const fillOn = paperK > 0.06 && intHide > 0.5;
+        for (let f = 0; f < part.fills.length; f++) part.fills[f].visible = fillOn;
         // 邊線(發光彩色線稿 → 黑白藍圖線):展示時聚焦零件線條較深、其餘變淡;聚焦零件帶少量橘
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];

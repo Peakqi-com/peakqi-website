@@ -324,7 +324,7 @@ class Component extends DCLogic {
     // Featured Stories:媒體 join 內容敘事
     const storyByslug = {};
     (d?.caseStudies ?? []).forEach(c => { storyByslug[c.slug] = c; });
-    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', social: 'AI 社群自動經營系統', realestate: '房仲 AI 助手' };
+    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手' };
     // PROOF IN MOTION 牆:16 張真實截圖(4 featured + 各類 4)+ 類別標籤 + featured 配對數據
     const pickW = ['groupbuy', 'sparkspace', 'palace', 'rental', 'rouzhi', 'ouros', 'doiiin', 'expo', 'xintu', 'tables', 'qiancheng', 'linesummary'];
     const wallList = [...F, ...pickW.map(s2 => W.find(w => w.slug === s2)).filter(Boolean)];

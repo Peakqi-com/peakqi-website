@@ -108,15 +108,6 @@ export const caseStudies = [
     stuck: '物件詢問回覆要花數小時,排程帶看吃掉整週時間。',
     did: 'AI 自動回覆物件資訊、排預約帶看,串接 LINE 官方帳號。',
     metrics: [{ v: '30 秒內', l: '回覆時間,原本數小時(該案例)' }, { v: '約 8hr/週', l: '節省的排程時間' }, { v: '↑約 20%', l: '名單轉化' }]
-  },
-  {
-    slug: 'AI 社群自動經營系統',
-    industry: '社群經營', title: 'AI 社群自動經營系統',
-    img: 'assets/works/work-social.png',
-    alt: 'AI 社群自動經營系統畫面:依產業自動產文與排程發布',
-    stuck: '沒人力養小編,貼文有一搭沒一搭,粉專慢慢冷掉。',
-    did: 'AI 依產業自動產出貼文草稿並排程發布,你潤飾就能發。',
-    metrics: [{ v: '15+ 篇', l: '每週穩定產出(該案例)' }, { v: '約 6hr/週', l: '節省的經營時間' }]
   }
 ];
 export const caseNote = '實際成果依企業流程、資料品質與導入範圍而異。';
@@ -125,7 +116,6 @@ export const caseCta = '把這個流程套用到我的公司';
 export const worksFeatured = [
   { t: '婚禮產業 AI 大禮包', cat: 'AI 系統', img: 'assets/works/work-wedding.png', alt: '婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬、社群影片生成、發文中心與客戶續談 CRM', problem: '新人問不停,試妝試髮只能靠形容。', solution: '婚紗試穿、試妝模擬、場景生成+AI 接客。', results: ['客服人力 ↓約 70%', '成交率 5 倍', '8+ AI 模組'] },
   { t: '室內設計 AI 整合平台', cat: 'AI 系統', img: 'assets/works/work-interior.png', alt: '室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報', problem: '提案、畫圖、渲染、簡報,三天起跳。', solution: '渲染、風格模擬、自動提案,一個平台完成。', results: ['提案效率 ↑約 90%', '3 天工作 3 小時完成', '10+ 風格一鍵切換'] },
-  { t: 'AI 社群自動經營系統', cat: 'AI 系統', img: 'assets/works/work-social.png', alt: 'AI 社群自動經營系統畫面:依產業自動產文與排程發布', problem: '沒人力養小編,貼文有一搭沒一搭。', solution: 'AI 依產業自動產文、排程發布。', results: ['每週穩定產出 15+ 篇', '經營時間每週省約 6 小時'] },
   { t: '房仲 AI 助手', cat: 'AI 系統', img: 'assets/works/work-realestate.png', alt: '房仲 AI 助手畫面:串接 LINE 官方帳號,自動回物件、排預約帶看', problem: '物件詢問回覆要花數小時。', solution: '串 LINE 官方帳號,自動回物件、排帶看。', results: ['回覆縮短至 30 秒內', '每週省約 8 小時排程', '名單轉化 ↑約 20%'] },
   { t: 'AI LINE 群組自動摘要', cat: 'AI 系統', img: 'assets/works/work-linesummary.png', alt: 'AI LINE 群組自動總結摘要工具畫面', problem: '群組訊息太多,重點被洗掉。', solution: 'AI 自動總結群組對話重點。', results: [], url: 'https://line-requirement-bot.vercel.app/' },
   { t: 'AI 自動排桌・排房工具', cat: 'AI 系統', img: 'assets/works/work-tables.png', alt: 'AI 自動排組桌、排房工具畫面', problem: '排桌、排房靠人腦喬,一改再改。', solution: 'AI 自動排組桌、排房。', results: [] },

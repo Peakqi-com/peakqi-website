@@ -156,7 +156,7 @@ class Component extends DCLogic {
     const slug = this.state.slug;
     const F = mm?.FEATURED_MEDIA ?? [];
     const f = F.find(x => x.slug === slug) || F[0] || { gallery: [], cover: {}, name: '', industry: '', type: '', sourcePage: '' };
-    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', social: 'AI 社群自動經營系統', realestate: '房仲 AI 助手' };
+    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手' };
     const narr = (d?.caseStudies ?? []).find(c => c.slug === narrMap[f.slug]) || {};
     const wfMap = {
       wedding: ['新人 LINE 詢問,AI 30 秒接住', '婚紗試穿/試妝模擬,先看成果', '需求整理成客戶卡,轉真人談細節', '成交後排跟進與社群內容'],
