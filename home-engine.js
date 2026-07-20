@@ -392,8 +392,6 @@ export function createHomeEngine() {
     const parts = [];
     const BLACK = new THREE.Color(0x141414), PQ_ORANGE = new THREE.Color(0xFF6B2C);
     const PAPER = new THREE.Color(0xF2EFE8);   // 白藍圖紙色:零件平塗填色用(遮住後方線條)
-    // 共用的「紙色遮擋面」材質:不吃光的平塗 + 寫深度,並用 polygonOffset 稍微退後,邊線才不會 z-fighting
-    const PAPER_FILL = new THREE.MeshBasicMaterial({ color: PAPER, transparent: true, opacity: 1, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
@@ -506,9 +504,9 @@ export function createHomeEngine() {
       ribbon.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 36, 0.025, 6, false), mkMat(0xFF6B2C, 0xFF6B2C))); asset.add(ribbon);
     }
     function addPartVisuals(node, color) {
-      const materials = [], edges = [], fills = [];
-      // 先蒐集,再加子物件:traverse 期間若把「Mesh」掛成子節點,會被同一次走訪再次拜訪 →
-      // 無限遞迴、模型永遠載不完(頁面直接 HUNG)。原本的 edge 是 LineSegments 不是 Mesh 才沒事。
+      const materials = [], edges = [];
+      // 先蒐集再加子物件:traverse 期間掛上「Mesh」子節點會被同一次走訪再次拜訪 → 無限遞迴、模型永遠載不完。
+      // (edge 是 LineSegments 不是 Mesh,所以原本沒事;之後若要再加遮擋面務必沿用這個寫法。)
       const meshes = [];
       node.traverse(obj => { if (obj instanceof THREE.Mesh) meshes.push(obj); });
       meshes.forEach(obj => {
@@ -516,15 +514,10 @@ export function createHomeEngine() {
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });
         obj.material = Array.isArray(obj.material) ? clones : clones[0];
-        // 白藍圖「遮擋面」:同一份幾何、紙色平塗、會寫深度 → 擋掉後方線條(隱線消除),
-        // 讓機身/鏡頭/感光元件各自看起來是一個完整實體,而不是一堆半透明線稿疊在一起。
-        // 用獨立 mesh 而非改原材質:原材質有貼圖與金屬度,改色會變黑/露出貼圖,且切換貼圖會觸發 shader 重編。
-        const fill = new THREE.Mesh(obj.geometry, PAPER_FILL); fill.renderOrder = 3; fill.frustumCulled = false; fill.visible = false;
-        obj.add(fill); fills.push(fill);
         const em = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthTest: true });
         const edge = new THREE.LineSegments(new THREE.EdgesGeometry(obj.geometry, 24), em); edge.renderOrder = 4; obj.add(edge); edges.push(em);
       });
-      return { materials, edges, fills };
+      return { materials, edges };
     }
     function calcOffset(name, center, index) {
       if (name.startsWith('lenses')) return V3(center.x * 0.18, center.y * 0.18, 1.35 + Math.max(0, center.z - 0.75) * 1.35);
@@ -565,7 +558,7 @@ export function createHomeEngine() {
           const lineGeo = new THREE.BufferGeometry().setFromPoints([center.clone(), center.clone()]);
           const lineMat = new THREE.LineBasicMaterial({ color: rule.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
-          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, fills: vis.fills, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
+          parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
         });
         // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
         {
@@ -844,7 +837,6 @@ export function createHomeEngine() {
       const scy = t % 5.2, shot = scy < 0.16 ? (1 - scy / 0.16) : 0;
       // 背景/疊層切換
       if (paperEl) paperEl.style.opacity = paperK.toFixed(3);
-      PAPER_FILL.opacity = paperK;   // 紙色遮擋面隨白藍圖淡入(彩色線稿階段維持全透明,不影響原本的發光線稿轉場)
       if (studyTitleEl) studyTitleEl.style.setProperty('--k', introK.toFixed(3));   // U3s 零件展示章節標題
       for (let c = 0; c < studyCards.length; c++) {   // U3s 零件文字卡:只顯示當前零件,隨停留淡入淡出
         const on = c === sComp ? sTextK : 0;
@@ -999,9 +991,6 @@ export function createHomeEngine() {
           mat.opacity = mo; mat.depthWrite = mo > 0.6;
           if (mat.emissive) mat.emissiveIntensity = (0.05 + op2 * (focused || isShown ? 0.5 : 0.2) + shot * 0.6) * solid;
         }
-        // 白藍圖紙色遮擋面:只在藍圖階段開啟,零件被隱藏時(組回後的內部件)一併關掉
-        const fillOn = paperK > 0.06 && intHide > 0.5;
-        for (let f = 0; f < part.fills.length; f++) part.fills[f].visible = fillOn;
         // 邊線(發光彩色線稿 → 黑白藍圖線):展示時聚焦零件線條較深、其餘變淡;聚焦零件帶少量橘
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];
