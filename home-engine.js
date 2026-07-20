@@ -869,7 +869,7 @@ export function createHomeEngine() {
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
-        const gridW = viewW * 1.04, gridH = viewH * 1.0;   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
+        const gridW = viewW * (isMobile ? 0.90 : 1.04), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
         const holeRXn = (isMobile ? 0.34 : 0.30) / 1.04, holeRYn = (isMobile ? 0.30 : 0.36) / 1.0;
         const aspect = gridW / gridH;
