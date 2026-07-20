@@ -591,6 +591,17 @@ export function createHomeEngine() {
           const connector = new THREE.Line(lineGeo, lineMat); connectorLayer.add(connector);
           parts.push({ node, name: node.name, groupId: rule.id, center, home, offset, delay: Math.min(index * 0.014, 0.5), materials: vis.materials, edges: vis.edges, fills: vis.fills, connector, baseColor: new THREE.Color(rule.color), baseScale: node.scale.clone(), baseQuat: node.quaternion.clone() });
         });
+        // 標記「容器零件」:本身是其他零件的父節點。
+        // 動它會連帶拖動所有子零件;而且它的世界縮放正好被拿來當量測基準(wS)→ 自我回饋、抖動越滾越大。
+        // 保留它的線稿/材質更新,只是不對它做位移・縮放・旋轉。
+        {
+          const _nodeSet = new Set(parts.map(z => z.node));
+          parts.forEach(pp => {
+            let hasChild = false;
+            pp.node.traverse(o => { if (o !== pp.node && _nodeSet.has(o)) hasChild = true; });
+            pp.isContainer = hasChild;
+          });
+        }
         // U1 鏡頭自轉變焦:用「幾何中心」算光學軸+樞紐(繞軸原地自轉,與拆解相容)
         {
           const optics = parts.filter(pp => pp.groupId === 'optics');
@@ -959,7 +970,7 @@ export function createHomeEngine() {
         const isStudyDim = sComp >= 0 && !isShown;
         // 姿態每幀先歸位:否則離開展示章節後會殘留展示時的旋轉(捲回開頭時內部零件會插出機身外)
         // lensSpin 的鏡片自己每幀會重算,不能在這裡覆蓋
-        if (!part.lensSpin) part.node.quaternion.copy(part.baseQuat);
+        if (!part.lensSpin && !part.isContainer) part.node.quaternion.copy(part.baseQuat);
         // 子:鏡頭整組繞光學軸原地自轉(展示中的零件停自轉)
         if (part.lensSpin && !isShown) {
           _spinQ.setFromAxisAngle(lensAxis, t * 0.5);
@@ -982,7 +993,7 @@ export function createHomeEngine() {
         }
         part.studyScale += (tScale - part.studyScale) * (snapping ? 1 : 0.12);
         // 攤平陳列:正對鏡頭的平面上,一件一格排開(先定姿態再定位置,gcOff 才算得準)
-        if (sComp >= 0 && _knoll.items.length) {
+        if (sComp >= 0 && _knoll.items.length && !part.isContainer) {
           part.node.quaternion.copy(part.baseQuat);
           if (sKnollK > 0.001 && part.faceLocal) {
             part.node.parent.getWorldQuaternion(_qP);
@@ -1051,8 +1062,8 @@ export function createHomeEngine() {
         }
         // 一律寫入:先前用「差距 > 0.002 才寫」當最佳化,但吸附時 studyScale 會一次跳到目標,
         // 那一幀條件不成立就跳過寫入 → 節點縮放永遠卡在跳之前的值(機身被縮小、內部零件露出來 = 破圖)
-        part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
-        part.node.position.lerp(dest, snapping ? 1 : (isShown ? 0.12 : 0.08));
+        if (!part.isContainer) part.node.scale.copy(part.baseScale).multiplyScalar(part.studyScale);
+        if (!part.isContainer) part.node.position.lerp(dest, snapping ? 1 : (isShown ? 0.12 : 0.08));
         const hi = focused || isShown || paperK > 0.4;
         // 子:運作脈動(各零件不同節奏 —— 感光掃描 / 晶片閃爍 / 主機板資料流 / 排線傳輸)
         let op2;
