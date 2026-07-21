@@ -437,6 +437,244 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.40)}
 .pq-mod .spec b{font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--ac,#FF6B2C)}
 @media (prefers-reduced-motion:reduce){.pq-mod,.pq-mod::before,.pq-mod .ico,.pq-mod .num{transition:none!important}}
+
+/* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
+   規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
+   改用等效的原生手段:
+   - 視差 → CSS scroll-driven animation(animation-timeline:view()),零 JS、零 rAF,
+            跑在合成執行緒;不支援的瀏覽器自動退化成靜態,不會壞版。
+   - 進場 → IntersectionObserver 加一個 .is-in,其餘交給 transition-delay。
+   - 連線 → SVG stroke-dasharray 描線。
+   全程只動 transform / opacity。 */
+.pq-dt{--card:#11161B;--fg:#F4F1EB;--mut:#92989F;--bd:rgba(255,255,255,.12);
+  position:relative;overflow:hidden;background:#07090B;color:var(--fg);
+  padding:clamp(72px,9vw,128px) 0 clamp(72px,9vw,116px)}
+.pq-dt-wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 clamp(20px,3.2vw,40px)}
+.pq-dt-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.pq-dt-bg .grid{position:absolute;inset:-12% -6%;
+  background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px) 0 0/100% 64px,
+             linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px) 0 0/64px 100%;
+  -webkit-mask-image:radial-gradient(ellipse 76% 60% at 50% 44%,#000 10%,transparent 76%);
+          mask-image:radial-gradient(ellipse 76% 60% at 50% 44%,#000 10%,transparent 76%)}
+.pq-dt-bg .dots{position:absolute;inset:0;opacity:.55;
+  background:radial-gradient(rgba(255,255,255,.17) 1px,transparent 1px) 0 0/26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 56% 46% at 50% 60%,#000 0,transparent 74%);
+          mask-image:radial-gradient(ellipse 56% 46% at 50% 60%,#000 0,transparent 74%)}
+.pq-dt-bg .orb{position:absolute;border-radius:50%;filter:blur(90px)}
+.pq-dt-bg .orb.a{width:46vw;height:46vw;max-width:620px;max-height:620px;left:-10%;top:2%;background:#4A9EFF;opacity:.19}
+.pq-dt-bg .orb.b{width:42vw;height:42vw;max-width:560px;max-height:560px;right:-8%;top:9%;background:#FF652F;opacity:.15}
+.pq-dt-bg .orb.c{width:52vw;height:52vw;max-width:700px;max-height:700px;left:22%;bottom:-18%;background:#62D5B0;opacity:.12}
+.pq-dt-bg .ghost{position:absolute;font:900 clamp(70px,12.5vw,186px)/1 'Space Grotesk',sans-serif;
+  letter-spacing:-.035em;color:#fff;opacity:.03;white-space:nowrap;user-select:none}
+.pq-dt-bg .ghost.g1{left:-2%;top:23%}
+.pq-dt-bg .ghost.g2{right:-3%;top:50%}
+.pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(44px,7.5vw,116px)}
+.pq-dt-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:start}
+.pq-dt-eyebrow{display:flex;align-items:center;gap:12px;
+  font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.6);
+  opacity:0;transform:translateX(-14px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.pq-dt.is-in .pq-dt-eyebrow{opacity:1;transform:none}
+.pq-dt-eyebrow i{width:36px;height:1.5px;background:#FF652F;flex:none;transform-origin:left;
+  transform:scaleX(0);transition:transform .8s cubic-bezier(.16,1,.3,1) .1s}
+.pq-dt.is-in .pq-dt-eyebrow i{transform:scaleX(1)}
+.pq-dt h2{margin:18px 0 0;font:800 clamp(2.1rem,5.2vw,4.4rem)/1.08 'Noto Sans TC',sans-serif;
+  letter-spacing:-.035em;max-width:13em}
+.pq-dt h2 span{display:block;opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.pq-dt.is-in h2 span:nth-child(1){opacity:1;transform:none;transition-delay:.10s}
+.pq-dt.is-in h2 span:nth-child(2){opacity:1;transform:none;transition-delay:.20s}
+.pq-dt h2 em{font-style:normal;color:rgba(244,241,235,.30);transition:color .9s cubic-bezier(.16,1,.3,1) .5s}
+.pq-dt.is-in h2 em{color:#FF652F}
+.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(14.5px,1.05vw,16px)/1.95 'Noto Sans TC',sans-serif;
+  color:var(--mut);opacity:0;transform:translateY(16px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1) .34s,transform .8s cubic-bezier(.16,1,.3,1) .34s}
+.pq-dt.is-in .pq-dt-sub{opacity:1;transform:none}
+.pq-dt-kpi{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:176px}
+.pq-dt-kpi li{display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid var(--bd);border-radius:10px;
+  background:rgba(255,255,255,.026);font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+  color:rgba(244,241,235,.74);opacity:0;transform:translateY(12px);
+  transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.pq-dt.is-in .pq-dt-kpi li{opacity:1;transform:none}
+.pq-dt.is-in .pq-dt-kpi li:nth-child(1){transition-delay:.30s}
+.pq-dt.is-in .pq-dt-kpi li:nth-child(2){transition-delay:.38s}
+.pq-dt.is-in .pq-dt-kpi li:nth-child(3){transition-delay:.46s}
+.pq-dt-kpi li b{width:6px;height:6px;border-radius:50%;flex:none}
+.pq-dt-kpi li:nth-child(1) b{background:#62D5B0}
+.pq-dt-kpi li:nth-child(2) b{background:#4A9EFF}
+.pq-dt-kpi li:nth-child(3) b{background:#FF652F}
+.pq-dt-flow{position:relative;margin-top:clamp(44px,6vw,84px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,32px) clamp(150px,17vw,260px)}
+.pq-dt-wire{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+.pq-dt-wire path{fill:none;stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linecap:round;
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  transition:stroke-dashoffset 1.5s cubic-bezier(.22,1,.36,1) .45s}
+.pq-dt.is-in .pq-dt-wire path{stroke-dashoffset:0}
+.pq-dt-wire .wA{stroke:#4A9EFF;opacity:.72}
+.pq-dt-wire .wB{stroke:#FF652F;opacity:.72}
+.pq-dt-wire .wP{stroke:#62D5B0;opacity:.9;transition-delay:1.15s}
+.pq-dt-card{position:relative;z-index:2;border:1px solid var(--bd);border-radius:20px;
+  background:linear-gradient(168deg,rgba(255,255,255,.055),rgba(255,255,255,.012)),var(--card);
+  padding:clamp(22px,2.3vw,30px);display:flex;flex-direction:column;gap:14px;
+  opacity:0;transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),
+    border-color .25s ease,box-shadow .25s ease}
+.pq-dt-card.tA{transform:translateX(-40px)}
+.pq-dt-card.tB{transform:translateX(40px)}
+.pq-dt.is-in .pq-dt-card.tA,.pq-dt.is-in .pq-dt-card.tB{opacity:1;transform:none;transition-delay:.24s}
+.pq-dt-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.26);
+  box-shadow:0 22px 48px -26px rgba(0,0,0,.9)}
+.pq-dt-tag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;
+  border:1px solid currentColor;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
+.pq-dt-tag u{width:5px;height:5px;border-radius:50%;background:currentColor;text-decoration:none}
+.pq-dt-card h3{margin:0;font:800 clamp(1.25rem,1.8vw,1.6rem) 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pq-dt-card>p{margin:0;font:400 14.5px/1.9 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-nodes{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.pq-dt-nodes li{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;background:rgba(255,255,255,.022);font:600 13px 'Noto Sans TC',sans-serif;
+  color:rgba(244,241,235,.86);transition:transform .25s ease,border-color .25s ease,background .25s ease}
+.pq-dt-nodes li:hover{transform:scale(1.03);border-color:var(--ac);background:rgba(255,255,255,.05)}
+.pq-dt-nodes li svg{width:17px;height:17px;flex:none;color:var(--ac);transition:transform .25s ease}
+.pq-dt-nodes li:hover svg{transform:rotate(3deg) translateX(2px)}
+.pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 10px 'Space Grotesk',sans-serif;
+  letter-spacing:.14em;color:rgba(244,241,235,.34)}
+.pq-dt-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:7px}
+.pq-dt-chips li{padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.028);font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;
+  color:rgba(244,241,235,.6)}
+.pq-dt-plat{grid-column:1/-1;position:relative;z-index:2;justify-self:center;width:min(720px,100%);
+  margin-top:clamp(74px,8vw,116px);border:1px solid rgba(98,213,176,.34);border-radius:24px;
+  background:linear-gradient(168deg,rgba(98,213,176,.09),rgba(255,255,255,.012)),var(--card);
+  padding:clamp(24px,2.6vw,34px);display:flex;flex-direction:column;gap:15px;text-align:center;align-items:center;
+  opacity:0;transform:translateY(34px) scale(.965);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1) .62s,transform .9s cubic-bezier(.16,1,.3,1) .62s,box-shadow .5s ease}
+.pq-dt.is-in .pq-dt-plat{opacity:1;transform:none;box-shadow:0 0 0 1px rgba(98,213,176,.14),0 30px 70px -40px rgba(98,213,176,.4)}
+.pq-dt-plat .ring{position:absolute;inset:-1px;border-radius:24px;padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--pqAng,0deg),transparent 0 62%,rgba(98,213,176,.85) 76%,transparent 90%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .8s ease 1.1s}
+.pq-dt.is-in .pq-dt-plat .ring{opacity:1;animation:pqDtRing 7s linear infinite}
+/* 動的是漸層角度,不是元素本身。先前 rotate() 轉的是整個方框,
+   會在卡片外面畫出一個歪掉的圓角矩形輪廓。 */
+@property --pqAng{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes pqDtRing{to{--pqAng:360deg}}
+.pq-dt-plat>p{margin:0;max-width:46em;font:400 14.5px/1.95 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-plat h3{margin:0;font:800 clamp(1.45rem,2.2vw,2rem) 'Noto Sans TC',sans-serif;letter-spacing:-.015em}
+.pq-dt-shared{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;
+  border:1px solid rgba(98,213,176,.4);background:rgba(98,213,176,.07);
+  font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
+.pq-dt.is-in .pq-dt-shared{animation:pqDtPing 2.4s ease-out 1.5s 2}
+@keyframes pqDtPing{0%,100%{background:rgba(98,213,176,.07)}30%{background:rgba(98,213,176,.2)}}
+.pq-dt-pnodes{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%}
+.pq-dt-pnodes li{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 8px;
+  border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.022);
+  font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.62);
+  opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1),
+    border-color .25s ease,background .25s ease}
+.pq-dt.is-in .pq-dt-pnodes li{opacity:1;transform:none}
+.pq-dt.is-in .pq-dt-pnodes li:nth-child(1){transition-delay:.95s}
+.pq-dt.is-in .pq-dt-pnodes li:nth-child(2){transition-delay:1.05s}
+.pq-dt.is-in .pq-dt-pnodes li:nth-child(3){transition-delay:1.15s}
+.pq-dt.is-in .pq-dt-pnodes li:nth-child(4){transition-delay:1.25s}
+.pq-dt-pnodes li:hover{border-color:rgba(98,213,176,.5);background:rgba(98,213,176,.06)}
+.pq-dt-pnodes li svg{width:19px;height:19px;color:#62D5B0;transition:transform .25s ease}
+.pq-dt-pnodes li:hover svg{transform:rotate(3deg) translateY(-2px)}
+.pq-dt-float{position:absolute;z-index:1;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.13);background:rgba(13,17,21,.82);backdrop-filter:blur(6px);
+  font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(244,241,235,.56);
+  opacity:0;transition:opacity .7s ease}
+.pq-dt.is-in .pq-dt-float{opacity:1}
+.pq-dt-float u{width:5px;height:5px;border-radius:50%;background:var(--ac,#62D5B0);text-decoration:none}
+.pq-dt-fly{margin-top:clamp(64px,7.5vw,108px);position:relative;z-index:2}
+.pq-dt-fly h3{margin:0;font:800 clamp(1.15rem,1.7vw,1.45rem) 'Space Grotesk',sans-serif;letter-spacing:.06em}
+.pq-dt-fly>p{margin:12px 0 0;max-width:640px;font:400 14px/1.9 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-ring{list-style:none;margin:clamp(28px,3.4vw,44px) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative}
+.pq-dt-ring::before{content:'';position:absolute;left:6%;right:6%;top:26px;height:1.5px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 7px,transparent 7px 14px);
+  transform:scaleX(0);transform-origin:left;transition:transform 1.5s cubic-bezier(.22,1,.36,1) .3s}
+.pq-dt.is-in .pq-dt-ring::before{transform:scaleX(1)}
+.pq-dt-ring li{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  opacity:0;transform:translateY(12px) scale(.94);
+  transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.pq-dt.is-in .pq-dt-ring li{opacity:1;transform:none}
+.pq-dt.is-in .pq-dt-ring li:nth-child(1){transition-delay:.45s}
+.pq-dt.is-in .pq-dt-ring li:nth-child(2){transition-delay:.62s}
+.pq-dt.is-in .pq-dt-ring li:nth-child(3){transition-delay:.79s}
+.pq-dt.is-in .pq-dt-ring li:nth-child(4){transition-delay:.96s}
+.pq-dt.is-in .pq-dt-ring li:nth-child(5){transition-delay:1.13s}
+.pq-dt.is-in .pq-dt-ring li:nth-child(6){transition-delay:1.30s}
+.pq-dt-ring li i{width:52px;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.14);
+  background:var(--card);display:flex;align-items:center;justify-content:center;color:#62D5B0;
+  transition:transform .25s ease,border-color .25s ease}
+.pq-dt-ring li:hover i{transform:scale(1.05) rotate(3deg);border-color:rgba(98,213,176,.5)}
+.pq-dt-ring li i svg{width:21px;height:21px}
+.pq-dt-ring li span{font:600 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.74);letter-spacing:.02em}
+.pq-dt-ring li:last-child i{border-color:rgba(98,213,176,.42)}
+.pq-dt-loop{margin:16px 0 0;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+  color:rgba(98,213,176,.72);opacity:0;transition:opacity .7s ease 1.5s}
+.pq-dt.is-in .pq-dt-loop{opacity:1}
+@supports (animation-timeline:view()){
+  .pq-dt-bg .orb.a,.pq-dt-bg .orb.b,.pq-dt-bg .orb.c,.pq-dt-bg .ghost,.pq-dt-bg .dots,.pq-dt-float{
+    animation-timeline:view();animation-range:entry 0% exit 100%;animation-fill-mode:both;animation-timing-function:linear}
+  .pq-dt-bg .orb.a{animation-name:pqPx70}
+  .pq-dt-bg .orb.b{animation-name:pqPxN50}
+  .pq-dt-bg .orb.c{animation-name:pqPx100}
+  .pq-dt-bg .dots{animation-name:pqPx30}
+  .pq-dt-bg .ghost.g1{animation-name:pqPxN40}
+  .pq-dt-bg .ghost.g2{animation-name:pqPx40}
+  .pq-dt-bg .ghost.g3{animation-name:pqPxN26}
+  .pq-dt-float.f1,.pq-dt-float.f4,.pq-dt-float.f6{animation-name:pqPx46}
+  .pq-dt-float.f2,.pq-dt-float.f5{animation-name:pqPxN34}
+  .pq-dt-float.f3,.pq-dt-float.f7{animation-name:pqPx22}
+  @keyframes pqPx22{from{transform:translateY(11px)}to{transform:translateY(-11px)}}
+  @keyframes pqPxN26{from{transform:translateY(-13px)}to{transform:translateY(13px)}}
+  @keyframes pqPx30{from{transform:translateY(15px)}to{transform:translateY(-15px)}}
+  @keyframes pqPx40{from{transform:translateY(20px)}to{transform:translateY(-20px)}}
+  @keyframes pqPxN34{from{transform:translateY(-17px)}to{transform:translateY(17px)}}
+  @keyframes pqPxN40{from{transform:translateY(-20px)}to{transform:translateY(20px)}}
+  @keyframes pqPx46{from{transform:translateY(23px)}to{transform:translateY(-23px)}}
+  @keyframes pqPxN50{from{transform:translateY(-25px)}to{transform:translateY(25px)}}
+  @keyframes pqPx70{from{transform:translateY(35px)}to{transform:translateY(-35px)}}
+  @keyframes pqPx100{from{transform:translateY(50px)}to{transform:translateY(-50px)}}
+}
+@media (max-width:1080px){
+  .pq-dt-head{grid-template-columns:1fr}
+  .pq-dt-kpi{flex-direction:row;flex-wrap:wrap;min-width:0}
+  .pq-dt-flow{gap:clamp(16px,2.4vw,26px) clamp(90px,11vw,150px)}
+  .pq-dt-ring{grid-template-columns:repeat(3,1fr);gap:20px 10px}
+  .pq-dt-ring::before{display:none}
+}
+@media (max-width:760px){
+  .pq-dt{padding:64px 0 68px}
+  .pq-dt-wrap{padding:0 20px}
+  .pq-dt h2{font-size:clamp(2rem,9vw,2.6rem);max-width:none}
+  .pq-dt-flow{grid-template-columns:1fr;gap:44px}
+  .pq-dt-wire{display:none}
+  .pq-dt-card{padding:24px}
+  .pq-dt-card.tA,.pq-dt-card.tB{transform:translateY(24px)}
+  .pq-dt-card.tA::after,.pq-dt-card.tB::after{content:'';position:absolute;left:50%;bottom:-44px;width:1.5px;height:44px;
+    background:repeating-linear-gradient(currentColor 0 6px,transparent 6px 12px);color:var(--ac);opacity:.55}
+  .pq-dt-plat{margin-top:0;width:100%;padding:24px}
+  .pq-dt-pnodes{grid-template-columns:repeat(2,1fr)}
+  .pq-dt-float{display:none}
+  .pq-dt-bg .ghost{font-size:clamp(46px,17vw,80px)}
+  .pq-dt-ring{grid-template-columns:1fr;gap:14px}
+  .pq-dt-ring li{flex-direction:row;text-align:left;gap:14px}
+  .pq-dt-ring li i{width:42px;height:42px;border-radius:13px;flex:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .pq-dt *,.pq-dt *::before,.pq-dt *::after{animation:none!important;transition:none!important}
+  .pq-dt .pq-dt-eyebrow,.pq-dt h2 span,.pq-dt-sub,.pq-dt-kpi li,.pq-dt-card,.pq-dt-plat,
+  .pq-dt-pnodes li,.pq-dt-ring li,.pq-dt-float,.pq-dt-loop{opacity:1!important;transform:none!important}
+  .pq-dt-eyebrow i,.pq-dt-ring::before{transform:scaleX(1)!important}
+  .pq-dt-wire path{stroke-dashoffset:0!important}
+  .pq-dt h2 em{color:#FF652F!important}
+}
+
+/* 六大功能:固定三欄 → 3+3 兩排;auto-fit 在 1200px 左右會排成 4+2,很尷尬 */
+.pq-modgrid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:980px){.pq-modgrid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.pq-modgrid{grid-template-columns:1fr}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -697,7 +935,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">SIX MODULES · 六大功能</span></div>
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">相機的六個零件,<br>就是生意的<span style="color:#FF6B2C">六件事</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">爆炸圖裡的每個零件,對應一件你每天在忙的業務。這裡用白話再說一次——由小到大,想從哪一塊開始都可以。</p>
-    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+    <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
       <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="9.5"/><path d="M17.5 18.5a9 9 0 0 1 6-3.4"/><path d="M24 5.5v3M24 39.5v3M5.5 24h3M39.5 24h3"/></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="28" rx="5"/><rect x="12" y="16" width="10" height="9" rx="2"/><rect x="27" y="22" width="9" height="9" rx="2"/><path d="M22 20h5v2M12 29h6v3h9M31 16v6"/><circle cx="16" cy="32" r="1.6"/></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="11" width="30" height="26" rx="4"/><path d="M19 11v26M29 11v26M9 20h30M9 28h30"/><path d="M5 15V9.5H10M43 15V9.5H38M5 33v5.5H10M43 33v5.5H38"/></svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
@@ -709,16 +947,96 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
-<!-- ============ 雙軌驗證 · 理念 ============ -->
-<section id="dualtrack" class="pq-sec" style="background:#090B0E;color:#F2EFE8">
-  <div class="pq-wrap">
-    <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">DUAL-TRACK VALIDATION</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">奇鋒是平台公司,<span style="color:#FF6B2C">不是接案公司</span></h2>
-    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">同一顆引擎,兩條軌道一起驗證:一邊做自家垂直品牌累積 know-how,一邊把通用工具賣給市場。一套引擎、多個品牌、雙軌驗證。</p>
-    <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
-      <div data-reveal style="border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">TRACK A</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">自家垂直品牌</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">冒泡、AI Wedding Pro、AI Interior Pro 深入產業,累積真實 know-how 與資料飛輪——越用越強。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">TRACK B</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">Peak Ops 外部客戶</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">通用型 AI 業務工具,對外賣給還沒有專門工具的產業——年訂閱制、SaaS ARR 成長。</p></div>
-      <div data-reveal style="border:1px solid rgba(101,224,188,.35);border-radius:12px;background:linear-gradient(160deg,#14171C,#0f1b18);padding:28px;display:flex;flex-direction:column;gap:12px"><span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">PLATFORM</span><h3 style="margin:0;font:800 20px 'Noto Sans TC',sans-serif">AI 營運平台</h3><p style="margin:0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68)">兩條軌道都餵養同一顆引擎與同一份資料飛輪;品牌屋結構下,每個垂直品牌都能獨立分拆或出售。</p></div>
+<!-- ============ 雙軌驗證 · 理念(2D 資訊圖解) ============ -->
+<section id="dualtrack" class="pq-dt" data-inview aria-labelledby="dt-title">
+  <div class="pq-dt-bg" aria-hidden="true">
+    <i class="orb a"></i><i class="orb b"></i><i class="orb c"></i>
+    <i class="grid"></i><i class="dots"></i>
+    <span class="ghost g1">PLATFORM</span><span class="ghost g2">ENGINE</span><span class="ghost g3">DATA FLYWHEEL</span>
+  </div>
+  <div class="pq-dt-wrap">
+    <header class="pq-dt-head">
+      <div>
+        <div class="pq-dt-eyebrow"><i></i>DUAL-TRACK VALIDATION</div>
+        <h2 id="dt-title"><span>奇鋒是平台公司,</span><span><em>不是接案公司</em></span></h2>
+        <p class="pq-dt-sub">同一顆引擎,兩條軌道一起驗證:一邊做自家垂直品牌累積 know-how,一邊把通用工具賣給市場。一套引擎、多個品牌、雙軌驗證。</p>
+      </div>
+      <ul class="pq-dt-kpi">
+        <li><b></b>ONE ENGINE</li>
+        <li><b></b>TWO TRACKS</li>
+        <li><b></b>MULTIPLE BRANDS</li>
+      </ul>
+    </header>
+
+    <div class="pq-dt-flow">
+      <!-- 雙軌匯流線:兩條軌道各自彎曲下行,在平台卡片上緣匯合成青綠色 -->
+      <!-- 座標用 0-100 百分比 + preserveAspectRatio="none",直接對齊實測的卡片幾何:
+           Track 卡下緣 48.1%、平台卡上緣 70.4%、平台卡橫跨 20.2%-79.8%。
+           先前用固定 viewBox(1200x620)搭配非等比縮放,y 會被拉到平台卡下方,
+           畫出一條穿過飛輪區的雜線。 -->
+      <svg class="pq-dt-wire" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="wA" d="M17.1 48.1 C17.1 60 26 62.5 38 70.4"/>
+        <path class="wB" d="M82.9 48.1 C82.9 60 74 62.5 62 70.4"/>
+        <path class="wP" d="M38 70.4 C44 72.8 56 72.8 62 70.4"/>
+      </svg>
+
+      <article class="pq-dt-card tA" style="--ac:#4A9EFF">
+        <span class="pq-dt-tag"><u></u>TRACK A</span>
+        <h3>自家垂直品牌</h3>
+        <p>冒泡、AI Wedding Pro、AI Interior Pro 深入產業、累積真實 know-how,與資料飛輪一起用越強。</p>
+        <ul class="pq-dt-nodes">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5"/><circle cx="16.5" cy="15.5" r="3.5"/></svg>冒泡<em>SOCIAL</em></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-9.5A3.5 3.5 0 0 1 12 8a3.5 3.5 0 0 1 7 2.5C19 15.5 12 20 12 20z"/></svg>AI Wedding Pro<em>WEDDING</em></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 12 4l8 7"/><path d="M6.5 10v9h11v-9"/><path d="M10 19v-5h4v5"/></svg>AI Interior Pro<em>INTERIOR</em></li>
+        </ul>
+        <ul class="pq-dt-chips"><li>Vertical Know-how</li><li>First-party Data</li><li>Brand Assets</li></ul>
+      </article>
+
+      <article class="pq-dt-card tB" style="--ac:#FF652F">
+        <span class="pq-dt-tag"><u></u>TRACK B</span>
+        <h3>Peak Ops 外部客戶</h3>
+        <p>通用型 AI 業務工具,對外賣給還沒有專門工具的產業,一年訂閱制,推動 SaaS ARR 成長。</p>
+        <ul class="pq-dt-nodes">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19"/><circle cx="10" cy="8" r="3.5"/><path d="M17 11.5 19 13.5 22.5 10"/></svg>Sales Teams<em>B2B</em></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-7l8-6 8 6v7"/><path d="M9.5 20v-5h5v5"/></svg>Service Industry<em>SERVICE</em></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M4 12h16"/></svg>SMB Operations<em>SMB</em></li>
+        </ul>
+        <ul class="pq-dt-chips"><li>SaaS ARR</li><li>Repeatable Sales</li><li>Market Validation</li></ul>
+      </article>
+
+      <article class="pq-dt-plat">
+        <i class="ring" aria-hidden="true"></i>
+        <span class="pq-dt-shared">ONE SHARED ENGINE</span>
+        <h3>AI 營運平台</h3>
+        <p>兩條軌道都餵養同一顆引擎與同一份資料飛輪;品牌結構下,每個垂直品牌都能獨立分析或出售。</p>
+        <ul class="pq-dt-pnodes">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8v-11"/><path d="M5 12c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8"/></svg>Shared Data</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M10 7h5.5a2 2 0 0 1 2 2v5"/></svg>AI Workflow</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"/><path d="M7 19v-6M12 19V6M17 19v-9"/></svg>Brand Analytics</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.7 5.7L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg>Repeatable Ops</li>
+        </ul>
+      </article>
+
+      <i class="pq-dt-float f1" style="--ac:#4A9EFF;left:2%;top:6%" aria-hidden="true"><u></u>KNOW-HOW</i>
+      <i class="pq-dt-float f2" style="--ac:#FF652F;right:2%;top:2%" aria-hidden="true"><u></u>ARR</i>
+      <i class="pq-dt-float f3" style="--ac:#62D5B0;left:44%;top:14%" aria-hidden="true"><u></u>SHARED DATA</i>
+      <i class="pq-dt-float f4" style="--ac:#4A9EFF;left:6%;bottom:26%" aria-hidden="true"><u></u>BRAND IP</i>
+      <i class="pq-dt-float f5" style="--ac:#62D5B0;right:5%;bottom:30%" aria-hidden="true"><u></u>AI OPS</i>
+      <i class="pq-dt-float f6" style="--ac:#FF652F;right:16%;top:40%" aria-hidden="true"><u></u>MARKET SIGNAL</i>
+    </div>
+
+    <div class="pq-dt-fly">
+      <h3>ONE ENGINE, COMPOUNDING DATA</h3>
+      <p>每一次品牌營運與客戶導入,都會轉化為可重複使用的資料、流程與產品能力。</p>
+      <ul class="pq-dt-ring">
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8 20 20"/></svg></i><span>Industry Insight</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg></i><span>Structured Data</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M10 7h5.5a2 2 0 0 1 2 2v5"/></svg></i><span>AI Workflow</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8z"/><path d="M4 8l8 4.5L20 8M12 12.5V20.5"/></svg></i><span>Product Capability</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3.2"/><circle cx="5.5" cy="17" r="3"/><circle cx="18.5" cy="17" r="3"/><path d="M10 9.6 7.2 14.4M14 9.6l2.8 4.8"/></svg></i><span>New Brands / External Clients</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.7 5.7L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg></i><span>回到 Industry Insight</span></li>
+      </ul>
+      <p class="pq-dt-loop">LOOP CLOSED · 越用越強</p>
     </div>
   </div>
 </section>
@@ -883,10 +1201,17 @@ class Component extends DCLogic {
     const els = Array.from(document.querySelectorAll('[data-reveal]'));
     if (reduce || !('IntersectionObserver' in window)) {
       els.forEach(e => { e.style.opacity = '1'; e.style.transform = 'none'; });
+      document.querySelectorAll('[data-inview]').forEach(e => e.classList.add('is-in'));
     } else {
       const io = new IntersectionObserver((ens) => {
         ens.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); } });
       }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      // [data-inview]:只加 .is-in,進場序列全部交給 CSS transition-delay(不動 inline style)
+      const io2 = new IntersectionObserver((ens) => {
+        ens.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io2.unobserve(en.target); } });
+      }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('[data-inview]').forEach(e => io2.observe(e));
+      this._io2 = io2;
       els.forEach((e) => {
         const sibs = Array.from(e.parentElement ? e.parentElement.children : []).filter(c => c.hasAttribute && c.hasAttribute('data-reveal'));
         e.style.transitionDelay = (Math.min(5, sibs.indexOf(e)) * 70) + 'ms';
