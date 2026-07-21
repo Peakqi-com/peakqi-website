@@ -1330,6 +1330,62 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes onbSpark{0%,60%{opacity:0;transform:translateY(0)}70%{opacity:1}100%{opacity:0;transform:translateY(16px)}}
 @media (prefers-reduced-motion:reduce){.pq-onb .ic *{animation:none!important}
   .pq-onb .sig,.pq-onb .tick{stroke-dashoffset:0!important}.pq-onb .stamp,.pq-onb .blk{opacity:1!important}}
+
+/* ── 旗下品牌卡:1:1 情節式 Flat 動畫(共用外框) ─────────────────────
+   每張卡上方一個正方形舞台,裡面演一段和該產品實際運作相符的循環短劇。
+   全 CSS keyframes,不新增 rAF;顏色沿用各品牌的 --a。 */
+.pq-brandfilm{position:relative;width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;
+  background:#0E1216;margin-bottom:16px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.pq-brandfilm svg{display:block;width:100%;height:100%}
+.pq-brandfilm .bg{fill:#0E1216}
+.pq-brandfilm .pane{fill:#151A20}
+.pq-brandfilm .line{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pq-brandfilm .mut{fill:#2A323B}
+.pq-brandfilm .txt{fill:#5A6672}
+/* ── 01 Peak Ops:客服接住 → CRM 推進 → 報價送出 → 數據長高,10s 一輪 ── */
+.pf1 .led{animation:pf1Led 1.6s ease-in-out infinite}
+@keyframes pf1Led{0%,100%{opacity:.35}50%{opacity:1}}
+.pf1 .b1,.pf1 .b2,.pf1 .b3{opacity:0;animation:pf1Bub 10s ease-out infinite}
+.pf1 .b1{animation-delay:.3s}.pf1 .b2{animation-delay:1.0s}.pf1 .b3{animation-delay:1.7s}
+@keyframes pf1Bub{0%{opacity:0;transform:translateY(6px) scale(.9)}
+  4%{opacity:1;transform:none}22%{opacity:1;transform:none}26%,100%{opacity:0;transform:translateY(-4px)}}
+.pf1 .typing{opacity:0;animation:pf1Typ 10s ease-out infinite;animation-delay:1.2s}
+@keyframes pf1Typ{0%,2%{opacity:0}4%,16%{opacity:1}18%,100%{opacity:0}}
+.pf1 .typing circle{animation:pf1Dot .9s ease-in-out infinite}
+.pf1 .typing circle:nth-child(2){animation-delay:.15s}
+.pf1 .typing circle:nth-child(3){animation-delay:.3s}
+@keyframes pf1Dot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-1.6px)}}
+/* 第二幕:CRM 卡片從左欄推到右欄 */
+.pf1 .stage2{opacity:0;animation:pf1Act2 10s ease-out infinite}
+@keyframes pf1Act2{0%,24%{opacity:0}28%,46%{opacity:1}50%,100%{opacity:0}}
+.pf1 .crmcard{animation:pf1Push 10s cubic-bezier(.5,0,.2,1) infinite}
+@keyframes pf1Push{0%,28%{transform:translate(0,0)}38%,46%{transform:translate(46px,0)}50%,100%{transform:translate(46px,0)}}
+.pf1 .crmtag{opacity:0;animation:pf1Tag 10s ease-out infinite}
+@keyframes pf1Tag{0%,38%{opacity:0;transform:scale(.7)}42%,46%{opacity:1;transform:none}50%,100%{opacity:0}}
+/* 第三幕:報價單飛出 */
+.pf1 .stage3{opacity:0;animation:pf1Act3 10s ease-out infinite}
+@keyframes pf1Act3{0%,48%{opacity:0}52%,70%{opacity:1}74%,100%{opacity:0}}
+.pf1 .quote{animation:pf1Fly 10s cubic-bezier(.4,0,.3,1) infinite}
+@keyframes pf1Fly{0%,54%{transform:translate(0,0) rotate(0)}
+  66%,70%{transform:translate(44px,-30px) rotate(14deg)}74%,100%{transform:translate(44px,-30px) rotate(14deg)}}
+.pf1 .trail{stroke-dasharray:52;stroke-dashoffset:52;animation:pf1Trail 10s ease-out infinite}
+@keyframes pf1Trail{0%,54%{stroke-dashoffset:52}66%,70%{stroke-dashoffset:0}74%,100%{stroke-dashoffset:0}}
+/* 第四幕:數據長高 + 打勾 */
+.pf1 .stage4{opacity:0;animation:pf1Act4 10s ease-out infinite}
+@keyframes pf1Act4{0%,72%{opacity:0}76%,96%{opacity:1}100%{opacity:0}}
+.pf1 .bar{transform-origin:center bottom;transform:scaleY(.08);animation:pf1Bar 10s cubic-bezier(.3,1.4,.5,1) infinite}
+.pf1 .bar2{animation-delay:.12s}.pf1 .bar3{animation-delay:.24s}.pf1 .bar4{animation-delay:.36s}
+@keyframes pf1Bar{0%,76%{transform:scaleY(.08)}84%,96%{transform:scaleY(1)}100%{transform:scaleY(.08)}}
+.pf1 .okmark{stroke-dasharray:18;stroke-dashoffset:18;animation:pf1Ok 10s ease-out infinite}
+@keyframes pf1Ok{0%,86%{stroke-dashoffset:18}92%,96%{stroke-dashoffset:0}100%{stroke-dashoffset:18}}
+/* 幕次指示:四顆點依序亮起 */
+.pf1 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
+.pf1 .c2{animation-delay:2.5s}.pf1 .c3{animation-delay:5s}.pf1 .c4{animation-delay:7.5s}
+@keyframes pf1Cue{0%,25%{fill:var(--a)}25.01%,100%{fill:#2A323B}}
+@media (prefers-reduced-motion:reduce){.pq-brandfilm *{animation:none!important}
+  .pq-brandfilm .stage2,.pq-brandfilm .stage3,.pq-brandfilm .stage4{opacity:0!important}
+  .pq-brandfilm .b1,.pq-brandfilm .b2,.pq-brandfilm .b3{opacity:1!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -1885,7 +1941,63 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <p style="margin:0;max-width:360px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套底層引擎,換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
     </div>
     <div style="margin-top:clamp(24px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px" id="pq-brand-grid">
-      <a data-reveal data-brand href="PeakOps.dc.html" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+      <a data-reveal data-brand href="PeakOps.dc.html" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf1" aria-hidden="true"><svg viewBox="0 0 200 200">
+<rect class="bg" width="200" height="200"/>
+<g stroke="rgba(255,255,255,.05)" stroke-width="1">
+<path d="M0 40h200M0 80h200M0 120h200M0 160h200M40 0v200M80 0v200M120 0v200M160 0v200"/></g>
+<rect class="pane" x="14" y="14" width="172" height="24" rx="7"/>
+<circle class="led" cx="27" cy="26" r="4" fill="var(--a)"/>
+<rect class="mut" x="38" y="22" width="52" height="7" rx="3.5"/>
+<rect class="mut" x="150" y="22" width="24" height="7" rx="3.5" opacity=".6"/>
+<!-- 第一幕:客服對話 -->
+<g class="act1">
+<g class="b1"><rect x="22" y="52" width="80" height="20" rx="8" fill="#1C232B"/><rect class="txt" x="32" y="59" width="52" height="5" rx="2.5"/></g>
+<g class="b2"><rect x="82" y="80" width="94" height="20" rx="8" fill="var(--a)"/><rect x="92" y="87" width="66" height="5" rx="2.5" fill="#0E1216" opacity=".55"/></g>
+<g class="b3"><rect x="22" y="108" width="66" height="18" rx="8" fill="#1C232B"/><rect class="txt" x="32" y="114" width="40" height="5" rx="2.5"/></g>
+<g class="typing"><rect x="22" y="136" width="34" height="15" rx="7.5" fill="#1C232B"/>
+<circle cx="31" cy="143.5" r="2" fill="#5A6672"/><circle cx="39" cy="143.5" r="2" fill="#5A6672"/><circle cx="47" cy="143.5" r="2" fill="#5A6672"/></g>
+</g>
+<!-- 第二幕:CRM 看板推進 -->
+<g class="stage2">
+<rect class="pane" x="18" y="50" width="52" height="112" rx="8"/>
+<rect class="pane" x="74" y="50" width="52" height="112" rx="8"/>
+<rect class="pane" x="130" y="50" width="52" height="112" rx="8"/>
+<rect class="mut" x="26" y="58" width="26" height="5" rx="2.5"/><rect class="mut" x="82" y="58" width="26" height="5" rx="2.5"/><rect class="mut" x="138" y="58" width="26" height="5" rx="2.5"/>
+<rect x="26" y="96" width="36" height="22" rx="5" fill="#1C232B"/>
+<rect x="26" y="124" width="36" height="22" rx="5" fill="#1C232B" opacity=".6"/>
+<g class="crmcard"><rect x="26" y="70" width="36" height="22" rx="5" fill="var(--a)"/>
+<rect x="32" y="77" width="20" height="4" rx="2" fill="#0E1216" opacity=".5"/>
+<rect x="32" y="84" width="12" height="3" rx="1.5" fill="#0E1216" opacity=".35"/></g>
+<g class="crmtag"><rect x="132" y="150" width="46" height="14" rx="7" fill="rgba(255,255,255,.08)"/>
+<path class="line" d="M139 157l3 3 5-6" stroke="var(--a)" stroke-width="2"/>
+<rect class="txt" x="152" y="155" width="20" height="4" rx="2"/></g>
+</g>
+<!-- 第三幕:報價單送出 -->
+<g class="stage3">
+<rect class="pane" x="26" y="60" width="70" height="92" rx="8"/>
+<rect class="mut" x="36" y="72" width="40" height="5" rx="2.5"/>
+<rect class="mut" x="36" y="84" width="50" height="4" rx="2" opacity=".6"/>
+<rect class="mut" x="36" y="94" width="46" height="4" rx="2" opacity=".6"/>
+<rect x="36" y="112" width="50" height="12" rx="4" fill="rgba(255,255,255,.06)"/>
+<rect x="42" y="116" width="26" height="4" rx="2" fill="var(--a)"/>
+<path class="line trail" d="M104 118C118 112 132 100 146 84" stroke="var(--a)" stroke-width="1.6" stroke-dasharray="4 5" opacity=".7"/>
+<g class="quote"><path d="M104 104l40 14-40 14 8-14z" fill="var(--a)"/>
+<path d="M112 118l32 0" stroke="#0E1216" stroke-width="1.4" opacity=".4"/></g>
+</g>
+<!-- 第四幕:數據 -->
+<g class="stage4">
+<rect class="pane" x="20" y="52" width="160" height="110" rx="9"/>
+<rect class="mut" x="32" y="64" width="44" height="6" rx="3"/>
+<rect class="bar bar1" x="36" y="86" width="22" height="60" rx="4" fill="#2F3945"/>
+<rect class="bar bar2" x="70" y="86" width="22" height="60" rx="4" fill="#3E9BFF"/>
+<rect class="bar bar3" x="104" y="86" width="22" height="60" rx="4" fill="#3FA98C"/>
+<rect class="bar bar4" x="138" y="86" width="22" height="60" rx="4" fill="var(--a)"/>
+<path class="line okmark" d="M140 68l5 5 9-11" stroke="#3FA98C" stroke-width="2.6"/>
+</g>
+<!-- 幕次指示 -->
+<circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
+<circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
+</svg></span>
         <span aria-hidden="true" style="position:absolute;left:0;top:0;width:38%;height:3px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqSweep 3s linear infinite"></span>
         <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">GENERAL SaaS</span></div>
         <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">Peak Ops</h3>
