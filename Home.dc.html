@@ -415,7 +415,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-mod:hover{transform:translateY(-4px) rotate(-.35deg);box-shadow:0 16px 34px -20px rgba(9,11,14,.42)}
 .pq-mod:hover::before{transform:rotate(.7deg) scale(1.012);border-color:var(--ac,#FF6B2C)}
 /* 零件圖示:圓頭線條、微微歪一度,手繪感 */
-.pq-mod .ico{width:58px;height:58px;color:var(--ac,#FF6B2C);transform:rotate(-1.5deg);
+.pq-mod .ico{width:96px;height:96px;color:var(--ac,#FF6B2C);transform:rotate(-1.5deg);
   transition:transform .5s cubic-bezier(.16,1,.3,1)}
 .pq-mod:hover .ico{transform:rotate(3deg) scale(1.06)}
 .pq-mod .ico svg{display:block;width:100%;height:100%}
@@ -675,6 +675,34 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-modgrid{grid-template-columns:repeat(3,1fr)}
 @media (max-width:980px){.pq-modgrid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){.pq-modgrid{grid-template-columns:1fr}}
+
+/* ── 六隻零件怪獸:扁平 SVG,每隻對應一個相機零件 ──────────────────
+   全部走 CSS keyframes(呼吸/眨眼/觸角擺動/光圈開合),不新增 rAF。
+   顏色只用品牌三色 + 米白 + 墨黑,不引入新色相。 */
+.pq-mon{width:100%;height:100%;display:block;overflow:visible;
+  --ink:#11161B;--paper:#F2EFE8;transform-origin:50% 92%}
+.pq-mod:hover .pq-mon{animation-duration:1.1s}
+.pq-mon .body{fill:var(--ac,#FF6B2C)}
+.pq-mon .paper{fill:var(--paper)}
+.pq-mon .ink{fill:var(--ink)}
+.pq-mon .line{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pq-mon .bob{animation:pqMonBob 3.4s ease-in-out infinite;transform-origin:50% 90%}
+.pq-mon .blink{animation:pqMonBlink 4.2s steps(1,end) infinite;transform-origin:center}
+.pq-mon .wig{animation:pqMonWig 2.6s ease-in-out infinite}
+.pq-mon .spin{animation:pqMonSpin 9s linear infinite;transform-origin:center}
+.pq-mon .iris{animation:pqMonIris 3.8s ease-in-out infinite;transform-origin:center}
+.pq-mon .beat{animation:pqMonBeat 2.2s ease-in-out infinite}
+.pq-mon .tw1{animation:pqMonTw 2.4s ease-in-out infinite}
+.pq-mon .tw2{animation:pqMonTw 2.4s ease-in-out .8s infinite}
+.pq-mon .tw3{animation:pqMonTw 2.4s ease-in-out 1.6s infinite}
+@keyframes pqMonBob{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.025)}}
+@keyframes pqMonBlink{0%,92%{transform:scaleY(1)}94%,97%{transform:scaleY(.08)}98%,100%{transform:scaleY(1)}}
+@keyframes pqMonWig{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes pqMonSpin{to{transform:rotate(360deg)}}
+@keyframes pqMonIris{0%,100%{transform:scale(1)}50%{transform:scale(.62)}}
+@keyframes pqMonBeat{0%,100%{stroke-dashoffset:0}50%{stroke-dashoffset:-48}}
+@keyframes pqMonTw{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.pq-mon *{animation:none!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -936,12 +964,61 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">相機的六個零件,<br>就是生意的<span style="color:#FF6B2C">六件事</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">爆炸圖裡的每個零件,對應一件你每天在忙的業務。這裡用白話再說一次——由小到大,想從哪一塊開始都可以。</p>
     <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
-      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="9.5"/><path d="M17.5 18.5a9 9 0 0 1 6-3.4"/><path d="M24 5.5v3M24 39.5v3M5.5 24h3M39.5 24h3"/></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="28" rx="5"/><rect x="12" y="16" width="10" height="9" rx="2"/><rect x="27" y="22" width="9" height="9" rx="2"/><path d="M22 20h5v2M12 29h6v3h9M31 16v6"/><circle cx="16" cy="32" r="1.6"/></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="11" width="30" height="26" rx="4"/><path d="M19 11v26M29 11v26M9 20h30M9 28h30"/><path d="M5 15V9.5H10M43 15V9.5H38M5 33v5.5H10M43 33v5.5H38"/></svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16"/><path d="M24 8L14.5 30.5M40 24L15.5 17.5M32 37.9L32.5 12"/></svg></span><span class="eye"><u></u>SHUTTER · 快門</span><h3>報價</h3><p>線上報價單、自動算稅、當天送出,不再來回喬。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="36" height="22" rx="5"/><path d="M16 14v-3.5h9V14"/><circle cx="30" cy="25" r="5.5"/><path d="M11 21v8"/></svg></span><span class="eye"><u></u>CHASSIS · 機身</span><h3>專案</h3><p>從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="25" rx="4"/><path d="M12 28l7-7 5 4 8-9"/><path d="M18 39h12M24 35v4"/></svg></span><span class="eye"><u></u>DISPLAY · 螢幕</span><h3>數據</h3><p>營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<path class="body" d="M48 12c17 0 30 13 30 30v26c0 10-13 18-30 18S18 78 18 68V42c0-17 13-30 30-30z"/>
+<circle class="paper" cx="48" cy="44" r="20"/><circle class="ink" cx="48" cy="44" r="14"/>
+<g class="blink"><circle class="body" cx="48" cy="44" r="14" opacity=".25"/>
+<g class="iris"><circle class="paper" cx="48" cy="44" r="7"/></g>
+<circle class="paper" cx="42" cy="38" r="2.6" opacity=".9"/></g>
+<path class="line" d="M30 12 34 4M66 12 62 4"/><circle class="ink" cx="33.5" cy="3" r="3"/><circle class="ink" cx="62.5" cy="3" r="3"/>
+<path class="line" d="M34 76h28"/><path class="ink" d="M28 84h8v6h-8zM60 84h8v6h-8z"/></g></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<rect class="body" x="16" y="24" width="64" height="52" rx="12"/>
+<g class="wig" style="transform-origin:48px 24px"><path class="line" d="M34 24V12M62 24V12"/>
+<circle class="ink" cx="34" cy="9" r="3.4"/><circle class="ink" cx="62" cy="9" r="3.4"/></g>
+<rect class="paper" x="26" y="34" width="44" height="20" rx="6"/>
+<g class="blink"><circle class="ink" cx="38" cy="44" r="4.6"/><circle class="ink" cx="58" cy="44" r="4.6"/></g>
+<path class="line" d="M34 64h12M52 64h12" opacity=".8"/>
+<circle class="paper tw1" cx="30" cy="64" r="2.8"/><circle class="paper tw2" cx="48" cy="64" r="2.8"/><circle class="paper tw3" cx="66" cy="64" r="2.8"/>
+<path class="ink" d="M26 76h9v8h-9zM61 76h9v8h-9z"/></g></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<rect class="body" x="14" y="20" width="68" height="56" rx="10"/>
+<g stroke="var(--ink)" stroke-width="2" opacity=".45"><path d="M36 20v56M60 20v56M14 40h68M14 58h68"/></g>
+<rect class="paper tw1" x="16" y="22" width="18" height="16" rx="3"/>
+<rect class="paper tw2" x="62" y="42" width="18" height="14" rx="3"/>
+<rect class="paper tw3" x="38" y="60" width="20" height="14" rx="3"/>
+<g class="blink"><circle class="paper" cx="30" cy="50" r="7"/><circle class="ink" cx="30" cy="50" r="3.4"/>
+<circle class="paper" cx="48" cy="50" r="7"/><circle class="ink" cx="48" cy="50" r="3.4"/>
+<circle class="paper" cx="66" cy="50" r="7"/><circle class="ink" cx="66" cy="50" r="3.4"/></g>
+<path class="line" d="M48 20v-8"/><circle class="ink" cx="48" cy="9" r="3.4"/>
+<path class="ink" d="M24 76h10v8H24zM62 76h10v8H62z"/></g></svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<circle class="body" cx="48" cy="46" r="32"/>
+<g class="blink"><ellipse class="paper" cx="34" cy="32" rx="7" ry="8"/><circle class="ink" cx="34" cy="33" r="3.6"/>
+<ellipse class="paper" cx="62" cy="32" rx="7" ry="8"/><circle class="ink" cx="62" cy="33" r="3.6"/></g>
+<circle class="ink" cx="48" cy="56" r="16"/>
+<g class="spin" style="transform-origin:48px 56px"><g class="iris" style="transform-origin:48px 56px">
+<path class="paper" d="M48 44 62 62 34 62z" opacity=".95"/><path class="body" d="M48 68 34 50h28z" opacity=".9"/></g></g>
+<path class="line" d="M22 24 16 14M74 24 80 14"/><circle class="ink" cx="15" cy="12" r="3.4"/><circle class="ink" cx="81" cy="12" r="3.4"/>
+<path class="ink" d="M28 76h10v9H28zM58 76h10v9H58z"/></g></svg></span><span class="eye"><u></u>SHUTTER · 快門</span><h3>報價</h3><p>線上報價單、自動算稅、當天送出,不再來回喬。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<rect class="body" x="12" y="26" width="72" height="50" rx="14"/>
+<rect class="body" x="34" y="14" width="28" height="14" rx="5"/>
+<g class="blink"><rect class="paper" x="26" y="38" width="20" height="16" rx="6"/><circle class="ink" cx="36" cy="46" r="4.6"/>
+<rect class="paper" x="52" y="38" width="20" height="16" rx="6"/><circle class="ink" cx="62" cy="46" r="4.6"/></g>
+<path class="line" d="M38 64h20"/>
+<g class="wig" style="transform-origin:12px 50px"><rect class="ink" x="2" y="46" width="12" height="9" rx="4"/></g>
+<g class="wig" style="transform-origin:84px 50px"><rect class="ink" x="82" y="46" width="12" height="9" rx="4"/></g>
+<circle class="paper tw1" cx="72" cy="32" r="3"/>
+<path class="ink" d="M26 76h11v9H26zM59 76h11v9H59z"/></g></svg></span><span class="eye"><u></u>CHASSIS · 機身</span><h3>專案</h3><p>從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
+<rect class="body" x="12" y="18" width="72" height="54" rx="12"/>
+<rect class="ink" x="20" y="26" width="56" height="34" rx="6"/>
+<path class="line beat" d="M24 46l10-12 8 16 9-20 8 14 7-8 10 10" stroke="var(--paper)" stroke-dasharray="24 24"/>
+<g class="blink"><circle class="paper" cx="34" cy="38" r="3.4" opacity=".85"/><circle class="paper" cx="62" cy="38" r="3.4" opacity=".85"/></g>
+<path class="line" d="M48 18v-7"/><circle class="ink" cx="48" cy="8" r="3.4"/>
+<circle class="paper tw1" cx="20" cy="66" r="2.6"/><circle class="paper tw2" cx="30" cy="66" r="2.6"/><circle class="paper tw3" cx="40" cy="66" r="2.6"/>
+<path class="ink" d="M26 72h11v10H26zM59 72h11v10H59z"/></g></svg></span><span class="eye"><u></u>DISPLAY · 螢幕</span><h3>數據</h3><p>營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
     </div>
     <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
   </div>
