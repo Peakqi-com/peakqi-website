@@ -1071,7 +1071,9 @@ export function createHomeEngine() {
       else {
         const lambda = isTouch ? 5.5 : 9;
         const damped = renderedScrollPx + (targetScrollPx - renderedScrollPx) * (1 - Math.exp(-lambda * dt));
-        const maxStep = stableVh * (isTouch ? 2.6 : 4.5) * dt;
+        // 追趕上限:太低的話快速滾輪一次捲過好幾個場景,畫面會落後好幾個場景才追上,
+        // 看起來就像「第一次捲相機比較小」(其實是還停在前一個較小的場景)。
+        const maxStep = stableVh * (isTouch ? 4.0 : 8.0) * dt;
         renderedScrollPx += clamp(damped - renderedScrollPx, -maxStep, maxStep);
       }
       const snapping = snapFrames > 0;
@@ -1148,7 +1150,7 @@ export function createHomeEngine() {
         // _hx/_hy = 主角在畫面上佔的半寬/半高(viewW/viewH 的比例)。
         // 排版座標 x、y **都以 gridW 為單位**(y 的範圍是 ±Hn/2,Hn = gridH/gridW),
         // 所以 holeRYn 必須除以 gridW;先前除以 gridH → 洞比實際高 1.6 倍,主角上下整片排不進零件。
-        const _hx = isMobile ? 0.30 : 0.32, _hy = isMobile ? 0.17 : 0.42;
+        const _hx = isMobile ? 0.36 : 0.32, _hy = isMobile ? 0.28 : 0.42;
         const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridW;
         const holeCXn = sideOff / gridW;   // 洞的中心(正規化)= 主角實際所在的位置
         const aspect = gridW / gridH;
@@ -1244,7 +1246,7 @@ export function createHomeEngine() {
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
       const _posTargetY = isMobile
-        ? (1.68 * dark * (1 - flipK)                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
+        ? (2.00 * dark * (1 - flipK)                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
            + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
            + 0.45 * flipK                                   // 翻面看螢幕
            - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
@@ -1263,7 +1265,7 @@ export function createHomeEngine() {
                       * (1 + 0.72 * _bump(sceneProgress('reassembly')))
                       * (1 + 0.20 * _bump(sceneProgress('summary')))
                       * (1 - 0.14 * _bump(sceneProgress('cta')));
-      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.36 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.70 * (1 + (1 - mCardK) * 0.36 * paperK) : 1.12) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.34 : 0.30)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
