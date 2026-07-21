@@ -448,6 +448,25 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-mod{padding:24px 4px 22px}
 }
 @media (prefers-reduced-motion:reduce){.pq-mod,.pq-mod .ico,.pq-mod .num{transition:none!important}}
+/* ── Step 2:01 鏡頭怪破格 —— 坐在格線頂端、把 hairline 壓彎、雙腳懸在格子裡晃 ── */
+.pq-modgrid,.pq-mod{overflow:visible}
+.pqbrk1 .ico{position:absolute;top:-55px;right:14px;width:120px;height:160px;z-index:4;transform:none}
+.pqbrk1:hover .ico{transform:none}
+.pqmB1{display:block;width:100%;height:100%;overflow:visible}
+.pqmB1 .sit{animation:pqb1Sit 3.2s cubic-bezier(.37,0,.4,1) infinite;transform-origin:60px 54px}
+@keyframes pqb1Sit{0%,100%{transform:translateY(0)}46%{transform:translateY(2.4px)}70%{transform:translateY(.6px)}}
+.pqmB1 .legA{animation:pqb1LegA 2.1s ease-in-out infinite;transform-origin:52px 54px}
+.pqmB1 .legB{animation:pqb1LegB 2.1s ease-in-out infinite;transform-origin:70px 54px}
+@keyframes pqb1LegA{0%,100%{transform:rotate(11deg)}50%{transform:rotate(-13deg)}}
+@keyframes pqb1LegB{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+.pqmB1 .ant{animation:pqb1Ant 2.6s ease-in-out infinite;transform-origin:61px 16px}
+@keyframes pqb1Ant{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.pqmB1 .iris{animation:pqb1Iris 3.8s ease-in-out infinite;transform-origin:61px 34px}
+@keyframes pqb1Iris{0%,100%{transform:scale(1)}44%{transform:scale(.6)}60%{transform:scale(.82)}}
+.pqmB1 .lid{transform-origin:61px 34px;transform:scaleY(0);animation:pqb1Blink 4.4s steps(1,end) infinite}
+@keyframes pqb1Blink{0%,92%{transform:scaleY(0)}94%,97%{transform:scaleY(1)}98%,100%{transform:scaleY(0)}}
+@media (max-width:640px){.pqbrk1 .ico{width:104px;height:139px;top:-48px;right:8px}}
+@media (prefers-reduced-motion:reduce){.pqmB1 *{animation:none!important}.pqmB1 .lid{transform:scaleY(0)!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -1656,14 +1675,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">相機的六個零件,<br>就是生意的<span style="color:#FF6B2C">六件事</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">爆炸圖裡的每個零件,對應一件你每天在忙的業務。這裡用白話再說一次——由小到大,想從哪一塊開始都可以。</p>
     <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
-      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
-<path class="body" d="M48 12c17 0 30 13 30 30v26c0 10-13 18-30 18S18 78 18 68V42c0-17 13-30 30-30z"/>
-<circle class="paper" cx="48" cy="44" r="20"/><circle class="ink" cx="48" cy="44" r="14"/>
-<g class="blink"><circle class="body" cx="48" cy="44" r="14" opacity=".25"/>
-<g class="iris"><circle class="paper" cx="48" cy="44" r="7"/></g>
-<circle class="paper" cx="42" cy="38" r="2.6" opacity=".9"/></g>
-<path class="line" d="M30 12 34 4M66 12 62 4"/><circle class="ink" cx="33.5" cy="3" r="3"/><circle class="ink" cx="62.5" cy="3" r="3"/>
-<path class="line" d="M34 76h28"/><path class="ink" d="M28 84h8v6h-8zM60 84h8v6h-8z"/></g></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk1" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pqmB1" viewBox="0 0 120 160"><rect x="12" y="49" width="96" height="10" fill="#F2EFE8"/><g class="sit"><path class="sag" d="M12 54 Q60 67 108 54" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="ant"><path d="M50 16V4" stroke="#11161B" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="50" cy="3" r="3" fill="#11161B"/><path d="M72 16V3" stroke="#11161B" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="72" cy="2" r="3" fill="#11161B"/></g><rect x="33" y="14" width="56" height="42" rx="13" fill="#FF6B2C"/><circle cx="61" cy="34" r="15" fill="#F2EFE8"/><circle class="iris" cx="61" cy="34" r="10" fill="#11161B"/><circle class="iris" cx="61" cy="34" r="4.6" fill="#FF6B2C"/><circle cx="55" cy="29" r="2.4" fill="#F2EFE8"/><path class="lid" d="M46 34a15 15 0 0 1 30 0z" fill="#FF6B2C"/><path class="arm armL" d="M35 40C24 44 18 50 15 54" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="14" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/><path class="arm armR" d="M87 40C98 44 104 50 107 54" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="108" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/><g class="leg legA"><path d="M52 54V72" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M52 72h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="leg legB"><path d="M70 54V70" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M70 70h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <rect class="body" x="16" y="24" width="64" height="52" rx="12"/>
 <g class="wig" style="transform-origin:48px 24px"><path class="line" d="M34 24V12M62 24V12"/>
