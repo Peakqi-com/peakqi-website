@@ -1240,7 +1240,8 @@ export function createHomeEngine() {
       rig.rotation.y += (_rotTargetY - rig.rotation.y) * (snapping ? 1 : flipLerp);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
-      const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
+      // 章節開場(黑白藍圖「拆開來看」):桌機標題在左,模型往右讓開並放大,不再壓到標題
+      const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1) + introK * (isMobile ? 0 : 1.8);
       rig.position.x += (_posTargetX - rig.position.x) * (snapping ? 1 : (0.04 + flipK * flipK * 0.35));   // 翻面時相機靠右(前面不變)並快速就位
       // G 手機:翻面看螢幕時相機也要上移,否則會被置底的影片字卡蓋住(桌機字卡在左側,不需要)
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
@@ -1265,7 +1266,7 @@ export function createHomeEngine() {
                       * (1 + 0.72 * _bump(sceneProgress('reassembly')))
                       * (1 + 0.20 * _bump(sceneProgress('summary')))
                       * (1 - 0.14 * _bump(sceneProgress('cta')));
-      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.70 * (1 + (1 - mCardK) * 0.36 * paperK) : 1.12) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.34 : 0.30)));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.70 * (1 + (1 - mCardK) * 0.36 * paperK) : 1.12) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.34 : 0.75)) * (1 + introK * (isMobile ? 0 : 0.34)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
