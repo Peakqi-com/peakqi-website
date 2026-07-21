@@ -490,38 +490,81 @@ export function createHomeEngine() {
     let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
     let knollSizes = [];              // 依大小遞減排序、以最大件正規化(=1)的尺寸表
     const _knoll = { items: [], f: 0, key: '' };
+    if (typeof window !== 'undefined') window.__knoll = _knoll;   // 排版除錯用
     // A1 攤平陳列版面:改成「依尺寸緊密排版」(shelf packing),不是每件都給一樣大的格子。
     // 等格網格會讓最大件剛好塞滿、小件只佔格子一角 → 中間全是空隙、看起來像灑出來的碎屑。
     // 這裡大件排前面、小件往後緊密補位,維持真實比例(全部同一個縮放),中央保留給主角特寫。
     // 版面用正規化座標算一次就好:只跟零件數與長寬比有關,與相機距離無關(放進 cache key 會每幀重建 → 當機)。
-    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, zones, botCut) {
-      // zones:字卡禁區(矩形,正規化座標),排版會繞開 → 零件永遠不會壓到字卡
-      // botCut:手機用,砍掉下方一段高度留給置底字卡 → 模型與字卡上下分區,互不遮擋
+    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, holeCXn, zones, botCut) {
+      // 逐列(row)對齊排版:每列高度 = 該列最大零件(sizes 已由大到小排序 → 列內尺寸相近)
+      // 每列先扣掉「中央淨空 + 字卡禁區」算出可用區段,零件在區段內均勻攤開(justify)、並對齊列中線
+      // → 讀起來是整齊的陣列,而不是被洞切碎的散排;同時維持所有零件同一縮放(真實比例)
       const Hn = 1 / aspect, gap = 0.009, yTop = Hn / 2, yBot = -Hn / 2 + (botCut || 0) * Hn;
-      function pack(f) {
-        const out = [];
-        let x = -0.5, y = yTop, rowH = 0;
-        for (let i = 0; i < sizes.length; i++) {
-          const w = sizes[i] * f;                      // 正方形佔位(取最長邊)→ 保證不重疊
-          if (!(w > 0)) return null;
-          for (let tries = 0; ; tries++) {
-            if (tries > 96) return null;
-            if (x + w > 0.5) { x = -0.5; y -= rowH + gap; rowH = 0; }   // 換行
-            if (y - w < yBot) return null;                              // 高度不夠 → 這個 f 太大
-            const cy = y - w / 2;
-            // 中央淨空:會壓到主角就把 x 跳到洞的右側
-            if (Math.abs(cy) < holeRYn && x < holeRXn && x + w > -holeRXn) { x = holeRXn + gap; continue; }
-            // 字卡禁區:壓到就跳到該區右緣
-            let hit = null;
-            for (let z = 0; z < zones.length; z++) {
-              const Z = zones[z];
-              if (cy < Z.y1 && cy > Z.y0 && x < Z.x1 && x + w > Z.x0) { hit = Z; break; }
-            }
-            if (hit) { x = hit.x1 + gap; continue; }
-            break;
+      // 回傳這一列可用的 x 區段(已扣除洞與禁區)
+      function freeSpans(cy) {
+        let spans = [[-0.5, 0.5]];
+        const blocks = [];
+        if (Math.abs(cy) < holeRYn) blocks.push([holeCXn - holeRXn, holeCXn + holeRXn]);
+        for (let z = 0; z < zones.length; z++) {
+          const Z = zones[z];
+          if (cy < Z.y1 && cy > Z.y0) blocks.push([Z.x0, Z.x1]);
+        }
+        for (let b = 0; b < blocks.length; b++) {
+          const B = blocks[b], next = [];
+          for (let s = 0; s < spans.length; s++) {
+            const S = spans[s];
+            if (B[1] <= S[0] || B[0] >= S[1]) { next.push(S); continue; }
+            if (B[0] > S[0]) next.push([S[0], B[0]]);
+            if (B[1] < S[1]) next.push([B[1], S[1]]);
           }
-          out.push({ nx: x + w / 2, ny: y - w / 2 });
-          x += w + gap; if (w > rowH) rowH = w;
+          spans = next;
+        }
+        return spans;
+      }
+      function pack(f) {
+        const out = new Array(sizes.length);
+        let i = 0, y = yTop, guard = 0;
+        while (i < sizes.length) {
+          if (guard++ > 400) return null;
+          const rowH = sizes[i] * f;                    // 正方形佔位(取最長邊)→ 保證不重疊
+          if (!(rowH > 0)) return null;
+          if (y - rowH < yBot) return null;             // 高度不夠 → 這個 f 太大
+          const cy = y - rowH / 2;
+          const spans = freeSpans(cy);
+          let placedInRow = 0;
+          for (let s = 0; s < spans.length && i < sizes.length; s++) {
+            const a = spans[s][0], W = spans[s][1] - a;
+            // 貪婪裝填這個區段
+            const run = [];
+            let total = 0;
+            while (i + run.length < sizes.length) {
+              const w = sizes[i + run.length] * f;
+              const need = total + (run.length ? gap : 0) + w;
+              if (need > W) break;
+              total = need; run.push(w);
+            }
+            if (!run.length) continue;
+            // 均勻攤開:剩餘空間平均分給間隙,單一間隙最多脹到 2.6 倍,其餘留給左右外緣
+            const slack = W - total;
+            const inner = run.length - 1;
+            const extra = inner > 0 ? Math.min(slack / inner, gap * 1.6) : 0;
+            const x0 = a + (slack - extra * inner) / 2;
+            let x = x0;
+            for (let k = 0; k < run.length; k++) {
+              out[i + k] = { nx: x + run[k] / 2, ny: cy };   // 對齊列中線
+              x += run[k] + gap + extra;
+            }
+            i += run.length; placedInRow += run.length;
+          }
+          if (!placedInRow) {
+            // 整列被「中央淨空 + 字卡禁區」吃光(桌機中間那條帶)→ 留白跳過,繼續往下排,
+            // 不能判失敗,否則二分搜尋會把縮放壓到「全部塞在中間帶以上」→ 零件擠成一角
+            let freeW = 0;
+            for (let s2 = 0; s2 < spans.length; s2++) freeW += spans[s2][1] - spans[s2][0];
+            if (freeW <= sizes[i] * f) { y -= rowH * 0.34 + gap; continue; }
+            return null;                                // 有空間卻放不下 → f 太大
+          }
+          y -= rowH + gap;
         }
         return out;
       }
@@ -542,6 +585,9 @@ export function createHomeEngine() {
     const SCR_CORNERS_HARD = [[0.6342, 0.4508, -0.2926], [-0.6555, 0.461, -0.2912], [-0.6517, -0.4537, -0.4193], [0.6299, -0.4491, -0.4186]];
     const screenLocalPts = [];                    // 圓角多邊形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
+    let screenQuadLocal = null;                   // 螢幕平面四角(local,TL,TR,BR,BL)→ 每幀算 homography
+    let scrBaseW = 760, scrBaseH = 535;           // DOM 基準尺寸(未變形);HUD 的 cqw 以此為準 → 不隨透視抖動
+    const _q4 = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
     let _ctOn = false, _ctEls = null, _ctDrag = -1;   // 互動式四角拖曳工具狀態
     // 4 個角(mesh-local,順序 TL,TR,BR,BL);由 __setCorners 用畫面像素反投影設定 → 影片精準貼 4 點且隨相機轉;null=用 bbox
     let cornerLocal = SCR_CORNERS_HARD;
@@ -561,6 +607,11 @@ export function createHomeEngine() {
         const L = b.min.x + ix, R = b.max.x - ix, Bt = b.min.y + iy, TP = b.max.y - iy;
         C4 = [tf(L, TP), tf(R, TP), tf(R, Bt), tf(L, Bt)];   // TL,TR,BR,BL
       }
+      // 螢幕是曲面機殼上的一個平面 → 記下這個平面的四角,每幀用它算透視矩陣,HUD 才會跟影片同一個角度
+      screenQuadLocal = C4.map(v => v.clone());
+      { const wq = (C4[1].distanceTo(C4[0]) + C4[2].distanceTo(C4[3])) / 2;
+        const hq = (C4[3].distanceTo(C4[0]) + C4[2].distanceTo(C4[1])) / 2;
+        scrBaseW = 760; scrBaseH = Math.max(80, Math.round(760 * (hq / Math.max(1e-6, wq)))); }
       screenLocalPts.length = 0; _scrPx.length = 0;
       const n = C4.length;
       for (let i = 0; i < n; i++) {
@@ -1081,19 +1132,25 @@ export function createHomeEngine() {
         const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
         const viewW = viewH * camera.aspect;
         // G 手機:整個展示舞台上移,把畫面下方讓給置底字卡 → 主角與零件都不會被字卡蓋住
+        // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移(side 指的是「模型在哪一側」)。
+        // 但**攤平網格仍以畫面中心對齊**——網格若跟著主角平移,右半會被帶出畫面,零件就擠成一角。
+        // 只有「中央淨空的洞」跟著主角走 → 主角在視覺中央放大,小零件整齊填滿其餘畫面。
+        const sideOff = (!isMobile && sComp >= 0) ? viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17) : 0;
         if (isMobile) _disp.addScaledVector(_up2, viewH * 0.07 * mCardK);   // 只有「有字卡」時才上移讓位
-        // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移,放到最大也不會壓到標題
-        // 注意:STUDY 的 side 指的是「模型在哪一側」(字卡在相反側),所以往 side 的方向偏移才是遠離字卡
-        else if (sComp >= 0) _disp.addScaledVector(_rgt, viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17));
+        else if (sideOff) _disp.addScaledVector(_rgt, sideOff);
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
-        const gridW = viewW * (isMobile ? 0.90 : 1.04), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
+        const gridW = viewW * (isMobile ? 0.90 : 0.99), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
         // 中央淨空必須用「實際網格寬高」正規化。先前手機網格是 viewW*0.90 卻仍除以 1.04,
         // 正規化後的洞比預期小 → 等待中的零件會壓到中央放大的主角。
-        const _hx = isMobile ? 0.46 : 0.32, _hy = isMobile ? 0.40 : 0.38;
-        const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridH;
+        // _hx/_hy = 主角在畫面上佔的半寬/半高(viewW/viewH 的比例)。
+        // 排版座標 x、y **都以 gridW 為單位**(y 的範圍是 ±Hn/2,Hn = gridH/gridW),
+        // 所以 holeRYn 必須除以 gridW;先前除以 gridH → 洞比實際高 1.6 倍,主角上下整片排不進零件。
+        const _hx = isMobile ? 0.30 : 0.32, _hy = isMobile ? 0.17 : 0.42;
+        const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridW;
+        const holeCXn = sideOff / gridW;   // 洞的中心(正規化)= 主角實際所在的位置
         const aspect = gridW / gridH;
         // G 字卡禁區:桌機字卡在左右兩側垂直置中(兩側都保留,版面才不會隨章節左右跳動);
         //            手機字卡整寬置底 → 改成砍掉下方高度,模型與字卡上下分區。
@@ -1102,15 +1159,17 @@ export function createHomeEngine() {
           { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
           { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
         ];
-        // 保留量改成每幀後處理(見下方 _cardCut):排版本身永遠用完整網格,快取才命中,零件也不會在格子間跳
-        const botCut = 0;
-        const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
+        // 手機置底字卡的讓位量必須「算進排版」,不能排完再壓縮 y——中央淨空的洞不會跟著壓縮,
+        // 壓縮後洞下方那幾列就會被推到主角身上。量化成 0/1 兩種版面,快取仍然只有兩把 key。
+        const botCut = (isMobile && mCardK > 0.5) ? 0.40 : 0;
+        const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd') + '|' + holeCXn.toFixed(2) + '|' + botCut;
         if (_knoll.key !== key) {
-          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
+          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, holeCXn, zones, botCut);
           _knoll.items = b.items; _knoll.f = b.f; _knoll.key = key;
         }
         _knoll.gridW = gridW;
-        _knoll.cut = isMobile ? 0.40 * mCardK : 0;   // 下方要讓給字卡的比例
+        _knoll.sideOff = sideOff;   // 擺位時把網格中心從「主角位置」推回畫面中心
+        _knoll.cut = 0;   // 讓位已算進排版(botCut),不再做排版後壓縮
         _knoll.Hn = 1 / aspect;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
@@ -1279,7 +1338,7 @@ export function createHomeEngine() {
             const _fx = Math.sin(t * 0.28 + _ph) * _amp, _fy = Math.cos(t * 0.23 + _ph * 1.3) * _amp;
             const _c = _knoll.cut || 0;
             const _ny = slot.ny * (1 - _c) + _c * (_knoll.Hn || 0) / 2;   // 壓到上方,把下緣讓給字卡
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, _ny * _knoll.gridW + _fy);
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx - (_knoll.sideOff || 0)).addScaledVector(_up2, _ny * _knoll.gridW + _fy);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
@@ -1442,13 +1501,46 @@ export function createHomeEngine() {
             _scrPx[i].x = x; _scrPx[i].y = y;
             if (x < minX) minX = x; if (y < minY) minY = y; if (x > maxX) maxX = x; if (y > maxY) maxY = y;
           }
-          const bw = Math.max(1, maxX - minX), bh = Math.max(1, maxY - minY);
-          screenEl.style.left = minX.toFixed(1) + 'px'; screenEl.style.top = minY.toFixed(1) + 'px';
-          screenEl.style.width = bw.toFixed(1) + 'px'; screenEl.style.height = bh.toFixed(1) + 'px';
-          let poly = '';
-          for (let i = 0; i < N; i++) poly += (_scrPx[i].x - minX).toFixed(1) + 'px ' + (_scrPx[i].y - minY).toFixed(1) + 'px' + (i < N - 1 ? ', ' : '');
-          screenEl.style.clipPath = 'polygon(' + poly + ')';
-          screenEl.style.opacity = vidK.toFixed(3);
+          // 相機機殼是曲面的,LCD 是它上面的一個「有角度的平面」。
+          // 這裡把螢幕平面四角投影到畫面,解出「單位方形 → 該四邊形」的 homography,轉成 CSS matrix3d。
+          // → 影片與 HUD(REC/電量/ISO/快門/取景框)都是這個容器的子元素,會一起被同一個透視矩陣帶著走,
+          //   等於直接貼在 LCD 平面上、與影片共平面,而不是平貼在螢幕座標的矩形上。
+          if (screenQuadLocal) {
+            for (let i = 0; i < 4; i++) {
+              _wp.copy(screenQuadLocal[i]).applyMatrix4(screenMesh.matrixWorld).project(camera);
+              _q4[i].x = (_wp.x * 0.5 + 0.5) * SW; _q4[i].y = (-_wp.y * 0.5 + 0.5) * SH;
+            }
+            const x0 = _q4[0].x, y0 = _q4[0].y, x1 = _q4[1].x, y1 = _q4[1].y;
+            const x2 = _q4[2].x, y2 = _q4[2].y, x3 = _q4[3].x, y3 = _q4[3].y;
+            const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+            const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+            let ha, hb, hc, hd, he, hf, hg, hh, okH = true;
+            if (Math.abs(dx3) < 1e-7 && Math.abs(dy3) < 1e-7) {   // 正對鏡頭 → 退化成仿射
+              ha = x1 - x0; hb = x3 - x0; hc = x0; hd = y1 - y0; he = y3 - y0; hf = y0; hg = 0; hh = 0;
+            } else {
+              const den = dx1 * dy2 - dx2 * dy1;
+              if (Math.abs(den) < 1e-9) { okH = false; ha = hb = hc = hd = he = hf = hg = hh = 0; }
+              else {
+                hg = (dx3 * dy2 - dx2 * dy3) / den; hh = (dx1 * dy3 - dx3 * dy1) / den;
+                ha = x1 - x0 + hg * x1; hb = x3 - x0 + hh * x3; hc = x0;
+                hd = y1 - y0 + hg * y1; he = y3 - y0 + hh * y3; hf = y0;
+              }
+            }
+            if (okH) {
+              const bW = scrBaseW, bH = scrBaseH;   // 來源是 bW×bH 的 DOM 方框 → 前兩欄各除以基準尺寸
+              screenEl.style.left = '0px'; screenEl.style.top = '0px';
+              screenEl.style.width = bW + 'px'; screenEl.style.height = bH + 'px';
+              screenEl.style.transform = 'matrix3d(' + [
+                ha / bW, hd / bW, 0, hg / bW,
+                hb / bH, he / bH, 0, hh / bH,
+                0, 0, 1, 0,
+                hc, hf, 0, 1
+              ].map(v => v.toFixed(6)).join(',') + ')';
+              // 圓角改在「未變形的本地座標」做 → 透視會自動把圓角一起帶斜,不需要每幀重算多邊形
+              screenEl.style.clipPath = 'inset(0 round ' + (SCR_R * (bW + bH) / 2).toFixed(1) + 'px)';
+              screenEl.style.opacity = vidK.toFixed(3);
+            } else { screenEl.style.opacity = '0'; }
+          } else { screenEl.style.opacity = '0'; }
           if (dbgRedEl) dbgRedEl.setAttribute('points', _scrPx.map(pp => pp.x.toFixed(1) + ',' + pp.y.toFixed(1)).join(' '));
           if (dbgBlueEl) {   // 藍=螢幕 mesh bounding box 前面矩形(未斜切),當開口參考
             const b = screenMesh.geometry.boundingBox, z = b.min.z;
