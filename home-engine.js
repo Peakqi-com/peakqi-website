@@ -1280,6 +1280,10 @@ export function createHomeEngine() {
       if (framingK > 0.01) {
         const fp = parts.find(pp => focusSet.has(pp.groupId));
         if (fp) { fp.node.getWorldPosition(_tmp2); aimX = _tmp2.x * framingK; aimY = 0.1 * (1 - framingK) + _tmp2.y * framingK; aimZ = _tmp2.z * framingK; }
+        // 推近的兩顆(感光元件 / 控制與螢幕)在手機會被置底字卡切掉下緣。
+        // 這裡不能靠抬 rig——相機是追焦的,rig 往上、鏡頭也跟著往上看,螢幕上等於沒動。
+        // 改成把追焦點往下偏移,物件才會真的往畫面上方移。
+        if (isMobile && (beat === 3 || beat === 4)) aimY -= 1.05 * framingK;
       }
       camAim.lerp(_tmp2.set(aimX, aimY, aimZ), 0.1);
       camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 1.8 : 2.6) - flipK * (isMobile ? 0.6 : 1.0);
