@@ -1185,7 +1185,7 @@ export function createHomeEngine() {
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
       const _posTargetY = isMobile
-        ? (0.72 * dark * (1 - flipK)                       // 首頁/拆解:相機中心落在畫面 34–40%
+        ? (1.68 * dark * (1 - flipK)                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
            + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
            + 0.45 * flipK                                   // 翻面看螢幕
            - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
@@ -1196,12 +1196,15 @@ export function createHomeEngine() {
       // 開場放大;拆解縮小;翻面看螢幕再放大
       // ── Phase 4 構圖校正:依 debug 量測把各場景的物件尺寸拉進規格區間 ──
       // 基準縮小(黑底相機原本 w52 / 規格 42–45),彩虹線稿與白底組裝則需要放大。
-      const _bump = (x) => ez(sub(x, 0.06, 0.30)) * (1 - ez(sub(x, 0.78, 1.0)));
+      // 場景級加成在手機要大幅減弱:直式畫面較窄,同樣的放大會讓物件溢出
+      // (組裝段實測 w204% → 僅約一半留在畫面內,違反「主要物件至少 70% 可見」)
+      const _bAmp = isMobile ? 0.28 : 1;
+      const _bump = (x) => _bAmp * ez(sub(x, 0.06, 0.30)) * (1 - ez(sub(x, 0.78, 1.0)));
       const compScale = (1 + 0.12 * _bump(sceneProgress('chassis-rainbow')))
                       * (1 + 0.72 * _bump(sceneProgress('reassembly')))
                       * (1 + 0.20 * _bump(sceneProgress('summary')))
                       * (1 - 0.14 * _bump(sceneProgress('cta')));
-      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.58 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.36 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
