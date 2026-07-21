@@ -1090,7 +1090,10 @@ export function createHomeEngine() {
         _knoll.wS = wS;
         const gridW = viewW * (isMobile ? 0.90 : 1.04), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
-        const holeRXn = (isMobile ? 0.34 : 0.30) / 1.04, holeRYn = (isMobile ? 0.30 : 0.36) / 1.0;
+        // 中央淨空必須用「實際網格寬高」正規化。先前手機網格是 viewW*0.90 卻仍除以 1.04,
+        // 正規化後的洞比預期小 → 等待中的零件會壓到中央放大的主角。
+        const _hx = isMobile ? 0.46 : 0.32, _hy = isMobile ? 0.40 : 0.38;
+        const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridH;
         const aspect = gridW / gridH;
         // G 字卡禁區:桌機字卡在左右兩側垂直置中(兩側都保留,版面才不會隨章節左右跳動);
         //            手機字卡整寬置底 → 改成砍掉下方高度,模型與字卡上下分區。
@@ -1182,7 +1185,10 @@ export function createHomeEngine() {
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
       const _posTargetY = isMobile
-        ? (1.85 * dark * (1 - flipK) + 1.15 * paperK * (1 - flipK) + 0.62 * flipK)
+        ? (0.72 * dark * (1 - flipK)                       // 首頁/拆解:相機中心落在畫面 34–40%
+           + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
+           + 0.45 * flipK                                   // 翻面看螢幕
+           - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
         : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
@@ -1195,7 +1201,7 @@ export function createHomeEngine() {
                       * (1 + 0.72 * _bump(sceneProgress('reassembly')))
                       * (1 + 0.20 * _bump(sceneProgress('summary')))
                       * (1 - 0.14 * _bump(sceneProgress('cta')));
-      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.34 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.62 * (1 + (1 - mCardK) * 0.58 * paperK) : 0.97) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.16 : 0.10)));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
