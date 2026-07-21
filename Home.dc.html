@@ -1286,6 +1286,50 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-dt-ring::before,.pq-dt-ring::after,.pq-dt-ring li i,.pq-dt-fly h3::before{animation:none!important}
   .pq-dt-ring::after{opacity:0!important}
 }
+
+/* ── 導入流程五步:每步一個「和該步驟實際在做的事」相符的 SVG 動畫 ────────
+   簽約=筆真的把簽名寫出來;建置=積木一塊塊疊起來;測試=清單逐項打勾;
+   校準=指針左右擺後停在刻度;上線=火箭升空。全 CSS keyframes,不新增 rAF。 */
+.pq-onb{display:flex;flex-direction:column;gap:8px;padding:18px 4px 0}
+.pq-onb .ic{width:64px;height:64px;margin-bottom:2px;overflow:visible}
+.pq-onb .ic .st{fill:none;stroke:var(--c);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pq-onb .ic .fl{fill:var(--c)}
+.pq-onb .ic .dim{stroke:rgba(9,11,14,.22)}
+/* 1 簽約:簽名筆畫被寫出來,筆尖跟著跑,寫完蓋章 */
+.pq-onb .sig{stroke-dasharray:74;stroke-dashoffset:74;animation:onbSign 4.2s ease-in-out infinite}
+.pq-onb .pen{animation:onbPen 4.2s ease-in-out infinite;transform-origin:center}
+.pq-onb .stamp{opacity:0;transform-origin:44px 20px;animation:onbStamp 4.2s ease-out infinite}
+@keyframes onbSign{0%,8%{stroke-dashoffset:74}55%,88%{stroke-dashoffset:0}100%{stroke-dashoffset:74}}
+@keyframes onbPen{0%,8%{transform:translate(-13px,3px)}55%,88%{transform:translate(11px,-2px)}100%{transform:translate(-13px,3px)}}
+@keyframes onbStamp{0%,58%{opacity:0;transform:scale(1.9) rotate(-14deg)}66%,88%{opacity:1;transform:scale(1) rotate(-14deg)}100%{opacity:0;transform:scale(1.9) rotate(-14deg)}}
+/* 2 建置:三塊積木由下往上依序落位 */
+.pq-onb .blk{opacity:0;animation:onbBlk 3.6s ease-out infinite}
+.pq-onb .b1{animation-delay:0s}.pq-onb .b2{animation-delay:.42s}.pq-onb .b3{animation-delay:.84s}
+@keyframes onbBlk{0%{opacity:0;transform:translateY(-16px)}14%{opacity:1;transform:translateY(0)}
+  20%{transform:translateY(-2px)}26%,86%{transform:translateY(0);opacity:1}100%{opacity:0;transform:translateY(-16px)}}
+/* 3 測試:三條清單逐項打勾 */
+.pq-onb .tick{stroke-dasharray:16;stroke-dashoffset:16;animation:onbTick 3.6s ease-out infinite}
+.pq-onb .t1{animation-delay:.15s}.pq-onb .t2{animation-delay:.75s}.pq-onb .t3{animation-delay:1.35s}
+@keyframes onbTick{0%{stroke-dashoffset:16}18%,86%{stroke-dashoffset:0}100%{stroke-dashoffset:16}}
+.pq-onb .glass{animation:onbGlass 3.6s ease-in-out infinite;transform-origin:center}
+@keyframes onbGlass{0%,100%{transform:translate(0,0)}33%{transform:translate(2px,10px)}66%{transform:translate(-1px,20px)}}
+/* 4 校準:指針擺動後停在刻度,滑桿同步移動 */
+.pq-onb .ndl{animation:onbNdl 3.4s cubic-bezier(.34,1.4,.5,1) infinite;transform-origin:32px 44px}
+@keyframes onbNdl{0%{transform:rotate(-52deg)}30%{transform:rotate(38deg)}52%{transform:rotate(-16deg)}
+  70%,86%{transform:rotate(12deg)}100%{transform:rotate(-52deg)}}
+.pq-onb .knob{animation:onbKnob 3.4s cubic-bezier(.34,1.4,.5,1) infinite}
+@keyframes onbKnob{0%{transform:translateX(-11px)}30%{transform:translateX(12px)}52%{transform:translateX(-3px)}
+  70%,86%{transform:translateX(6px)}100%{transform:translateX(-11px)}}
+/* 5 上線:火箭升空,尾焰閃爍,離場後回到起點 */
+.pq-onb .rkt{animation:onbRkt 3.2s cubic-bezier(.5,0,.7,.2) infinite}
+@keyframes onbRkt{0%,14%{transform:translateY(0)}70%{transform:translateY(-40px)}72%{opacity:0}
+  73%{transform:translateY(16px);opacity:0}86%{opacity:1;transform:translateY(0)}100%{transform:translateY(0)}}
+.pq-onb .fire{animation:onbFire .22s steps(2,end) infinite;transform-origin:32px 46px}
+@keyframes onbFire{0%{transform:scaleY(1) scaleX(1)}100%{transform:scaleY(.62) scaleX(1.18)}}
+.pq-onb .spark{animation:onbSpark 3.2s ease-out infinite}
+@keyframes onbSpark{0%,60%{opacity:0;transform:translateY(0)}70%{opacity:1}100%{opacity:0;transform:translateY(16px)}}
+@media (prefers-reduced-motion:reduce){.pq-onb .ic *{animation:none!important}
+  .pq-onb .sig,.pq-onb .tick{stroke-dashoffset:0!important}.pq-onb .stamp,.pq-onb .blk{opacity:1!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -1783,11 +1827,31 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">最快 <span style="color:#FF6B2C">10 個工作天</span>,系統上線</h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">不用等半年。從簽約到上線,一條清楚的時間軸,專人陪你走完。</p>
     <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px">
-      <div data-reveal style="border-top:2px solid #FF6B2C;padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">DAY 0</span><b style="font:800 16px 'Noto Sans TC',sans-serif">簽約啟動</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">確認場景與目標,建立專案</span></div>
-      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 1–4</span><b style="font:800 16px 'Noto Sans TC',sans-serif">建置</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">建知識庫、設定話術、功能模組建置</span></div>
-      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 5–7</span><b style="font:800 16px 'Noto Sans TC',sans-serif">測試</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">實際情境測試,調整 AI 回應</span></div>
-      <div data-reveal style="border-top:2px solid rgba(9,11,14,.2);padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 7–10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">校準</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">依回饋校準,人員教育訓練</span></div>
-      <div data-reveal style="border-top:2px solid #65E0BC;padding:18px 4px 0;display:flex;flex-direction:column;gap:6px"><span style="font:700 13px 'Space Grotesk',sans-serif;color:#1e9a72">DAY 10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">正式上線</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">系統上線,持續協助優化</span></div>
+      <div data-reveal class="pq-onb" style="--c:#FF6B2C;border-top:2px solid #FF6B2C"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><rect class="st dim" x="12" y="10" width="40" height="44" rx="5"/>
+<path class="st dim" d="M20 20h18M20 27h24"/>
+<path class="st sig" d="M20 42c4-8 6 6 9-1s5 5 8 0 4 3 7-2"/>
+<g class="pen"><path class="st" d="M40 36l7-7 4 4-7 7-5 1z"/><path class="fl" d="M35 41l5-1 1 4z" opacity=".85"/></g>
+<g class="stamp"><circle class="st" cx="44" cy="20" r="9" stroke-width="2.6"/><path class="st" d="M39.5 20.5l3.2 3.2 6-6.6"/></g></svg><span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">DAY 0</span><b style="font:800 16px 'Noto Sans TC',sans-serif">簽約啟動</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">確認場景與目標,建立專案</span></div>
+      <div data-reveal class="pq-onb" style="--c:#3E9BFF;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M10 54h44"/>
+<rect class="fl blk b1" x="14" y="42" width="16" height="11" rx="2.5"/>
+<rect class="fl blk b2" x="33" y="42" width="17" height="11" rx="2.5" opacity=".72"/>
+<rect class="fl blk b3" x="21" y="29" width="22" height="11" rx="2.5" opacity=".55"/>
+<rect class="st blk b3" x="26" y="16" width="12" height="11" rx="2.5"/></svg><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 1–4</span><b style="font:800 16px 'Noto Sans TC',sans-serif">建置</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">建知識庫、設定話術、功能模組建置</span></div>
+      <div data-reveal class="pq-onb" style="--c:#3FA98C;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><rect class="st dim" x="11" y="10" width="42" height="44" rx="5"/>
+<path class="st dim" d="M31 21h14M31 32h14M31 43h14"/>
+<path class="st tick t1" d="M17 21l3 3 5.5-6"/><path class="st tick t2" d="M17 32l3 3 5.5-6"/>
+<path class="st tick t3" d="M17 43l3 3 5.5-6"/>
+<g class="glass"><circle class="st" cx="47" cy="16" r="7"/><path class="st" d="M52 21l5 5"/></g></svg><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 5–7</span><b style="font:800 16px 'Noto Sans TC',sans-serif">測試</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">實際情境測試,調整 AI 回應</span></div>
+      <div data-reveal class="pq-onb" style="--c:#FF6B2C;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M12 44a20 20 0 0 1 40 0"/>
+<path class="st dim" d="M16 33l3 2M32 24v3M48 33l-3 2"/>
+<g class="ndl"><path class="st" d="M32 44V26"/></g><circle class="fl" cx="32" cy="44" r="3.6"/>
+<path class="st dim" d="M14 54h36"/><g class="knob"><rect class="fl" x="28" y="50" width="9" height="8" rx="2.5"/></g></svg><span style="font:700 13px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.55)">DAY 7–10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">校準</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">依回饋校準,人員教育訓練</span></div>
+      <div data-reveal class="pq-onb" style="--c:#1e9a72;border-top:2px solid #65E0BC"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M14 56h36"/>
+<g class="rkt"><path class="st" d="M32 8c6 6 9 13 9 21v9H23v-9c0-8 3-15 9-21z"/>
+<circle class="fl" cx="32" cy="24" r="4"/>
+<path class="fl" d="M23 30l-6 8h6zM41 30l6 8h-6z" opacity=".75"/>
+<g class="fire"><path class="fl" d="M27 39h10l-5 11z" opacity=".9"/></g></g>
+<circle class="fl spark" cx="22" cy="46" r="2"/><circle class="fl spark" cx="42" cy="48" r="1.6" opacity=".7"/></svg><span style="font:700 13px 'Space Grotesk',sans-serif;color:#1e9a72">DAY 10</span><b style="font:800 16px 'Noto Sans TC',sans-serif">正式上線</b><span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">系統上線,持續協助優化</span></div>
     </div>
     <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">完整垂直平台或大型客製系統,參考時程約六週。</p>
   </div>
