@@ -724,6 +724,67 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqMonBeat{to{stroke-dashoffset:-96}}
 @keyframes pqMonTw{0%,100%{opacity:.18;transform:scale(.72)}50%{opacity:1;transform:scale(1.25)}}
 @media (prefers-reduced-motion:reduce){.pq-mon *{animation:none!important}}
+
+/* ══ 幾何拼貼過場:米白的六大功能 → 深黑的雙軌驗證,中間的視覺換氣 ══════
+   純 CSS 圖形(border-radius / clip-path / conic-gradient),沒有圖片、沒有 canvas。
+   進場依對角線波浪展開;少數色塊持續緩慢旋轉。色相只用品牌三色 + 米白 + 墨黑。 */
+.pq-mos{position:relative;background:#07090B;overflow:hidden;
+  --o:#FF6B2C;--b:#3E9BFF;--g:#3FA98C;--p:#F2EFE8;--d:#0D1115}
+.pq-mos-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(0,1fr);
+  aspect-ratio:12/5;width:100%}
+.pq-mos-grid i{position:relative;display:block;overflow:hidden;
+  opacity:0;transform:scale(.55);
+  transition:opacity .62s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1)}
+.pq-mos.is-in .pq-mos-grid i{opacity:1;transform:none}
+/* 形狀 */
+.pq-mos-grid i.sq{border-radius:0}
+.pq-mos-grid i.ci{border-radius:50%}
+.pq-mos-grid i.q1{border-radius:100% 0 0 0}
+.pq-mos-grid i.q2{border-radius:0 100% 0 0}
+.pq-mos-grid i.q3{border-radius:0 0 100% 0}
+.pq-mos-grid i.q4{border-radius:0 0 0 100%}
+.pq-mos-grid i.h1{border-radius:100% 100% 0 0}
+.pq-mos-grid i.h2{border-radius:0 0 100% 100%}
+.pq-mos-grid i.h3{border-radius:100% 0 0 100%}
+.pq-mos-grid i.h4{border-radius:0 100% 100% 0}
+.pq-mos-grid i.dm{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.pq-mos-grid i.t1{clip-path:polygon(0 0,100% 0,0 100%)}
+.pq-mos-grid i.t2{clip-path:polygon(0 0,100% 0,100% 100%)}
+.pq-mos-grid i.t3{clip-path:polygon(100% 0,100% 100%,0 100%)}
+.pq-mos-grid i.t4{clip-path:polygon(0 0,100% 100%,0 100%)}
+/* 內嵌小圖形:用 ::after 疊第二層,拼貼才有層次而不是單色格 */
+.pq-mos-grid i::after{content:'';position:absolute;inset:26%;background:var(--in,transparent)}
+.pq-mos-grid i.iC::after{border-radius:50%}
+.pq-mos-grid i.iD::after{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.pq-mos-grid i.iS::after{inset:30%}
+.pq-mos-grid i.iR::after{inset:18%;background:none;border:8px solid var(--in);border-radius:50%}
+/* 少數色塊持續旋轉 */
+.pq-mos-grid i.rot::after{animation:pqMosSpin 22s linear infinite}
+.pq-mos-grid i.rot2::after{animation:pqMosSpin 30s linear reverse infinite}
+@keyframes pqMosSpin{to{transform:rotate(360deg)}}
+/* 中央標語:壓在拼貼上,底下墊一層暗罩保證對比 */
+.pq-mos-say{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:14px;text-align:center;padding:0 24px;pointer-events:none;
+  background:radial-gradient(ellipse 62% 74% at 50% 50%,rgba(7,9,11,.9) 0%,rgba(7,9,11,.66) 46%,rgba(7,9,11,0) 78%)}
+.pq-mos-say span{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;
+  opacity:0;transform:translateY(12px);transition:opacity .8s cubic-bezier(.16,1,.3,1) .5s,transform .8s cubic-bezier(.16,1,.3,1) .5s}
+.pq-mos-say h2{margin:0;max-width:16em;
+  font:800 clamp(1.55rem,3.6vw,3.1rem)/1.24 'Noto Sans TC',sans-serif;letter-spacing:-.03em;color:#F4F1EB;
+  opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .62s,transform .9s cubic-bezier(.16,1,.3,1) .62s}
+.pq-mos-say h2 em{font-style:normal;color:#FF6B2C}
+.pq-mos-say p{margin:0;max-width:34em;font:400 clamp(14px,1.05vw,15.5px)/1.9 'Noto Sans TC',sans-serif;
+  color:rgba(244,241,235,.72);
+  opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .76s,transform .9s cubic-bezier(.16,1,.3,1) .76s}
+.pq-mos.is-in .pq-mos-say span,.pq-mos.is-in .pq-mos-say h2,.pq-mos.is-in .pq-mos-say p{opacity:1;transform:none}
+@media (max-width:900px){
+  .pq-mos-grid{grid-template-columns:repeat(6,1fr);aspect-ratio:6/7}
+  .pq-mos-grid i.rot::after,.pq-mos-grid i.rot2::after{animation-duration:40s}
+}
+@media (prefers-reduced-motion:reduce){
+  .pq-mos-grid i,.pq-mos-say span,.pq-mos-say h2,.pq-mos-say p{
+    opacity:1!important;transform:none!important;transition:none!important}
+  .pq-mos-grid i::after{animation:none!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -1042,6 +1103,77 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <path class="ink" d="M26 72h11v10H26zM59 72h11v10H59z"/></g></svg></span><span class="eye"><u></u>DISPLAY · 螢幕</span><h3>數據</h3><p>營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
     </div>
     <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
+  </div>
+</section>
+
+<!-- ============ 幾何拼貼過場 ============ -->
+<section class="pq-mos" data-inview aria-labelledby="mos-title">
+  <div class="pq-mos-grid" aria-hidden="true">
+    <i class="q3" style="background:var(--g);transition-delay:0ms"></i>
+    <i class="sq iC rot2" style="background:var(--d);--in:var(--o);transition-delay:40ms"></i>
+    <i class="h2" style="background:var(--p);transition-delay:80ms"></i>
+    <i class="t1" style="background:var(--o);transition-delay:120ms"></i>
+    <i class="ci iS" style="background:var(--b);--in:var(--p);transition-delay:160ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:200ms"></i>
+    <i class="dm rot" style="background:var(--o);transition-delay:240ms"></i>
+    <i class="h4" style="background:var(--b);transition-delay:280ms"></i>
+    <i class="sq iD" style="background:var(--g);--in:var(--p);transition-delay:320ms"></i>
+    <i class="t2" style="background:var(--p);transition-delay:360ms"></i>
+    <i class="q4" style="background:var(--o);transition-delay:400ms"></i>
+    <i class="sq iC" style="background:var(--d);--in:var(--b);transition-delay:440ms"></i>
+    <i class="sq iC" style="background:var(--p);--in:var(--o);transition-delay:40ms"></i>
+    <i class="h4" style="background:var(--b);transition-delay:80ms"></i>
+    <i class="t3" style="background:var(--g);transition-delay:120ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:160ms"></i>
+    <i class="q1" style="background:var(--p);transition-delay:200ms"></i>
+    <i class="dm rot" style="background:var(--b);transition-delay:240ms"></i>
+    <i class="sq iR" style="background:var(--d);--in:var(--g);transition-delay:280ms"></i>
+    <i class="h1" style="background:var(--o);transition-delay:320ms"></i>
+    <i class="t4" style="background:var(--b);transition-delay:360ms"></i>
+    <i class="ci iS" style="background:var(--p);--in:var(--o);transition-delay:400ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:440ms"></i>
+    <i class="q2" style="background:var(--g);transition-delay:480ms"></i>
+    <i class="h3" style="background:var(--o);transition-delay:80ms"></i>
+    <i class="sq iD" style="background:var(--d);--in:var(--p);transition-delay:120ms"></i>
+    <i class="ci" style="background:var(--g);transition-delay:160ms"></i>
+    <i class="t2" style="background:var(--b);transition-delay:200ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:240ms"></i>
+    <i class="q3" style="background:var(--p);transition-delay:280ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:320ms"></i>
+    <i class="dm" style="background:var(--g);transition-delay:360ms"></i>
+    <i class="sq iR rot" style="background:var(--d);--in:var(--o);transition-delay:400ms"></i>
+    <i class="h2" style="background:var(--b);transition-delay:440ms"></i>
+    <i class="t1" style="background:var(--p);transition-delay:480ms"></i>
+    <i class="sq iC rot2" style="background:var(--o);--in:var(--p);transition-delay:520ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:120ms"></i>
+    <i class="q4" style="background:var(--g);transition-delay:160ms"></i>
+    <i class="h1" style="background:var(--p);transition-delay:200ms"></i>
+    <i class="sq iC" style="background:var(--d);--in:var(--b);transition-delay:240ms"></i>
+    <i class="dm rot2" style="background:var(--o);transition-delay:280ms"></i>
+    <i class="t4" style="background:var(--g);transition-delay:320ms"></i>
+    <i class="ci iS" style="background:var(--b);--in:var(--p);transition-delay:360ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:400ms"></i>
+    <i class="q2" style="background:var(--p);transition-delay:440ms"></i>
+    <i class="sq iD" style="background:var(--d);--in:var(--g);transition-delay:480ms"></i>
+    <i class="h3" style="background:var(--o);transition-delay:520ms"></i>
+    <i class="t3" style="background:var(--b);transition-delay:560ms"></i>
+    <i class="t2" style="background:var(--b);transition-delay:160ms"></i>
+    <i class="sq iC" style="background:var(--p);--in:var(--g);transition-delay:200ms"></i>
+    <i class="q1" style="background:var(--o);transition-delay:240ms"></i>
+    <i class="h4" style="background:var(--g);transition-delay:280ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:320ms"></i>
+    <i class="ci" style="background:var(--p);transition-delay:360ms"></i>
+    <i class="dm rot" style="background:var(--b);transition-delay:400ms"></i>
+    <i class="t1" style="background:var(--o);transition-delay:440ms"></i>
+    <i class="sq iR rot" style="background:var(--d);--in:var(--p);transition-delay:480ms"></i>
+    <i class="q3" style="background:var(--b);transition-delay:520ms"></i>
+    <i class="sq" style="background:#0A0D10;transition-delay:560ms"></i>
+    <i class="h2" style="background:var(--g);transition-delay:600ms"></i>
+  </div>
+  <div class="pq-mos-say">
+    <span>ONE ENGINE / MANY SHAPES</span>
+    <h2 id="mos-title">同一套零件,<em>拼得出每一種生意</em></h2>
+    <p>每個產業的形狀都不一樣。我們不做一套通用範本硬套在你身上,而是用同一顆引擎,拼出你這一行真正需要的樣子。</p>
   </div>
 </section>
 
