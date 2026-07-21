@@ -447,7 +447,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
    - 連線 → SVG stroke-dasharray 描線。
    全程只動 transform / opacity。 */
 .pq-dt{--card:#11161B;--fg:#F4F1EB;--mut:#92989F;--bd:rgba(255,255,255,.12);
-  position:relative;overflow:hidden;background:#07090B;color:var(--fg);
+  position:relative;overflow:clip;/* 不能用 hidden:會建立捲動容器,內部的 position:sticky 直接失效 */background:#07090B;color:var(--fg);
   padding:clamp(72px,9vw,128px) 0 clamp(72px,9vw,116px)}
 .pq-dt-wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 clamp(20px,3.2vw,40px)}
 .pq-dt-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
@@ -725,6 +725,68 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqMonTw{0%,100%{opacity:.18;transform:scale(.72)}50%{opacity:1;transform:scale(1.25)}}
 @media (prefers-reduced-motion:reduce){.pq-mon *{animation:none!important}}
 
+
+/* ── COVER:標題 + 雙軌圖釘成一屏,捲動驅動內部動作;飛輪維持獨立區塊接在後面 ──
+   捲動時間軸用 CSS view-timeline(具名),由 .pq-dt-cover 提供給子元素使用。
+   零 JS、零 rAF。不支援的瀏覽器(目前 Firefox)會退化成「靜態一屏」,版面仍然正確。 */
+.pq-dt-cover{position:relative;view-timeline-name:--dtc;view-timeline-axis:block}
+/* 註:原本想用 height:250svh + sticky 釘住一屏,但 sticky 在此始終沒有生效
+   (實測 stage.top 一路跟著頁面走到 -772)。留著 250svh 會在下方留一大塊空白,
+   所以改成:stage 本身就是一屏高(min-height:100svh)、不釘住,
+   捲動動畫改掛在區塊通過視窗的 cover 區間上 —— 視覺效果一樣是「捲動時左邊會動」。 */
+.pq-dt-stage{box-sizing:border-box;position:relative;min-height:100svh;display:grid;
+  grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  gap:clamp(20px,2.4vw,44px);align-items:center;padding:clamp(24px,3.5vh,52px) 0}
+.pq-dt-stage>.pq-dt-head{display:block;align-self:center}
+.pq-dt-stage>.pq-dt-flow{margin-top:0;align-self:center}
+/* 釘住期間:左欄標題視差上移並淡出,把注意力讓給右邊的雙軌圖 */
+.pq-dt-head{animation:dtHeadUp linear both;animation-timeline:--dtc;animation-range:cover 12% cover 88%}
+@keyframes dtHeadUp{from{transform:translateY(26px);opacity:1}to{transform:translateY(-58px);opacity:.42}}
+/* 兩張 Track 卡在釘住期間往中央的平台核心靠攏 */
+.pq-dt.is-in .pq-dt-card.tA{animation:dtDriftA linear both;animation-timeline:--dtc;animation-range:cover 8% cover 92%}
+.pq-dt.is-in .pq-dt-card.tB{animation:dtDriftB linear both;animation-timeline:--dtc;animation-range:cover 8% cover 92%}
+@keyframes dtDriftA{from{transform:translate(-46px,-14px)}to{transform:translate(24px,10px)}}
+@keyframes dtDriftB{from{transform:translate(46px,-14px)}to{transform:translate(-24px,10px)}}
+/* 平台核心在後半段才完全亮起 */
+.pq-dt.is-in .pq-dt-plat{animation:dtPlatUp linear both;animation-timeline:--dtc;animation-range:cover 34% cover 88%}
+@keyframes dtPlatUp{from{transform:translateY(30px) scale(.965);filter:brightness(.72)}
+  to{transform:none;filter:brightness(1)}}
+/* KPI 移到標題下方(右欄要留給圖) */
+.pq-dt-stage .pq-dt-head{grid-template-columns:none}
+.pq-dt-stage .pq-dt-kpi{flex-direction:row;flex-wrap:wrap;min-width:0;margin-top:26px}
+/* 一屏內要塞得下 → 整體收緊 */
+.pq-dt-stage .pq-dt-flow{gap:clamp(12px,1.4vw,20px) clamp(60px,7vw,110px)}
+.pq-dt-stage .pq-dt-card{padding:clamp(16px,1.5vw,22px);gap:10px;border-radius:18px}
+.pq-dt-stage .pq-dt-card>p{font-size:clamp(13.5px,.95vw,14.8px);line-height:1.8}
+.pq-dt-stage .pq-dt-nodes{gap:6px}
+.pq-dt-stage .pq-dt-nodes li{padding:7px 11px;font-size:13px;border-radius:10px}
+.pq-dt-stage .pq-dt-chips li{padding:4px 9px;font-size:10.5px}
+.pq-dt-stage .pq-dt-card h3{font-size:clamp(1.1rem,1.5vw,1.35rem)}
+.pq-dt-stage .pq-dt-plat{margin-top:clamp(24px,3.4vh,48px);padding:clamp(16px,1.7vw,24px);gap:10px;border-radius:20px}
+.pq-dt-stage .pq-dt-plat h3{font-size:clamp(1.2rem,1.7vw,1.6rem)}
+.pq-dt-stage .pq-dt-plat>p{font-size:clamp(13.5px,.95vw,14.8px);line-height:1.85;max-width:40em}
+.pq-dt-stage .pq-dt-pnodes{gap:7px}
+.pq-dt-stage .pq-dt-pnodes li{padding:9px 6px;font-size:10.5px;gap:5px;border-radius:11px}
+.pq-dt-stage .pq-dt-pnodes li svg{width:18px;height:18px}
+.pq-dt-stage h2{font-size:clamp(1.9rem,3.4vw,3.4rem);max-width:none}
+.pq-dt-stage .pq-dt-sub{font-size:clamp(14px,1vw,15.5px);line-height:1.85;max-width:none}
+/* 沒有捲動時間軸的瀏覽器:退化成靜態一屏,不做視差,版面仍然正確 */
+@supports not (animation-timeline:view()){
+  .pq-dt-cover{height:auto}
+  .pq-dt-stage{position:static;height:auto}
+  .pq-dt-head,.pq-dt.is-in .pq-dt-card.tA,.pq-dt.is-in .pq-dt-card.tB,.pq-dt.is-in .pq-dt-plat{animation:none}
+}
+@media (max-width:1080px){
+  .pq-dt-cover{height:auto}
+  .pq-dt-stage{position:static;height:auto;grid-template-columns:1fr;padding:0}
+  .pq-dt-stage>.pq-dt-flow{margin-top:clamp(36px,5vw,64px)}
+  .pq-dt-head,.pq-dt.is-in .pq-dt-card.tA,.pq-dt.is-in .pq-dt-card.tB,.pq-dt.is-in .pq-dt-plat{animation:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .pq-dt-cover{height:auto}
+  .pq-dt-stage{position:static;height:auto}
+  .pq-dt-head,.pq-dt.is-in .pq-dt-card.tA,.pq-dt.is-in .pq-dt-card.tB,.pq-dt.is-in .pq-dt-plat{animation:none!important}
+}
 /* ══ 幾何拼貼過場:米白的六大功能 → 深黑的雙軌驗證,中間的視覺換氣 ══════
    每一格是三層:底色 + ::before + ::after,兩層各自有動作,
    而且都被格子的 overflow:hidden 裁切 → 圖騰是「在方框裡面動」,不會溢出破版。
@@ -1553,6 +1615,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <span class="ghost g1">PLATFORM</span><span class="ghost g2">ENGINE</span><span class="ghost g3">DATA FLYWHEEL</span>
   </div>
   <div class="pq-dt-wrap">
+    <div class="pq-dt-cover">
+      <div class="pq-dt-stage">
     <header class="pq-dt-head">
       <div>
         <div class="pq-dt-eyebrow"><i></i>DUAL-TRACK VALIDATION</div>
@@ -1623,6 +1687,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <i class="pq-dt-float f6" style="--ac:#FF652F;right:16%;top:40%" aria-hidden="true"><u></u>MARKET SIGNAL</i>
     </div>
 
+      </div>
+    </div>
     <div class="pq-dt-fly">
       <h3>ONE ENGINE, COMPOUNDING DATA</h3>
       <p>每一次品牌營運與客戶導入,都會轉化為可重複使用的資料、流程與產品能力。</p>
