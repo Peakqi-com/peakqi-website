@@ -300,7 +300,9 @@ export function createHomeEngine() {
     try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' }); }
     catch (e) { return; }
     const isMobile = ctx.mobile;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.3 : 1.65));
+    // UnrealBloom 會另外配置數層 render target,記憶體隨解析度平方成長。
+    // 高 DPI 螢幕上 1.65 倍會讓後製鏈吃掉大量顯示記憶體 → 降到 1.35 / 手機 1.1。
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.1 : 1.35));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1005,6 +1007,9 @@ export function createHomeEngine() {
       if (s >= 0) shotFadeStart = now;   // 每次換片 → 影片在原地淡入
       vids.forEach((v, i) => {
         const on = i === s; v.classList.toggle('is-on', on);
+        // 只讓「目前這支 + 下一支」保持可解碼。五支同時 preload=auto 會讓五個解碼器同時存在,
+        // 加上 WebGL 後製的 render target,在共用顯示記憶體的機器上足以把分頁/GPU 行程壓垮。
+        v.preload = on ? 'auto' : (i === s + 1 ? 'metadata' : 'none');
         if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
         else { try { v.pause(); } catch (e) {} }
       });
