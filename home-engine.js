@@ -1253,8 +1253,11 @@ export function createHomeEngine() {
       // G 手機:翻面看螢幕時相機也要上移,否則會被置底的影片字卡蓋住(桌機字卡在左側,不需要)
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
+      // 組回實體(summary)在手機沒有置底字卡,卻仍套用黑底章節的抬升 → 相機頂在畫面上方、下半整片空。
+      const _sumQ = sceneProgress('summary');
+      const summaryHold = ez(sub(_sumQ, 0.05, 0.25)) * (1 - ez(sub(_sumQ, 0.78, 1.00)));
       const _posTargetY = isMobile
-        ? (2.35 * dark * (1 - flipK)                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
+        ? (2.35 * dark * (1 - flipK) - 0.95 * summaryHold                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
            + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
            + 0.45 * flipK                                   // 翻面看螢幕
            - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
