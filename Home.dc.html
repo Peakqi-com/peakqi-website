@@ -471,7 +471,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(44px,7.5vw,116px)}
 .pq-dt-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:start}
 .pq-dt-eyebrow{display:flex;align-items:center;gap:12px;
-  font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.6);
+  font:700 12.5px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.66);
   opacity:0;transform:translateX(-14px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-eyebrow{opacity:1;transform:none}
 .pq-dt-eyebrow i{width:36px;height:1.5px;background:#FF652F;flex:none;transform-origin:left;
@@ -485,14 +485,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in h2 span:nth-child(2){opacity:1;transform:none;transition-delay:.20s}
 .pq-dt h2 em{font-style:normal;color:rgba(244,241,235,.30);transition:color .9s cubic-bezier(.16,1,.3,1) .5s}
 .pq-dt.is-in h2 em{color:#FF652F}
-.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(14.5px,1.05vw,16px)/1.95 'Noto Sans TC',sans-serif;
-  color:var(--mut);opacity:0;transform:translateY(16px);
+.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(15.5px,1.2vw,17.5px)/1.95 'Noto Sans TC',sans-serif;
+  color:#A6ACB3;opacity:0;transform:translateY(16px);
   transition:opacity .8s cubic-bezier(.16,1,.3,1) .34s,transform .8s cubic-bezier(.16,1,.3,1) .34s}
 .pq-dt.is-in .pq-dt-sub{opacity:1;transform:none}
 .pq-dt-kpi{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:176px}
 .pq-dt-kpi li{display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid var(--bd);border-radius:10px;
-  background:rgba(255,255,255,.026);font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
-  color:rgba(244,241,235,.74);opacity:0;transform:translateY(12px);
+  background:rgba(255,255,255,.026);font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+  color:rgba(244,241,235,.8);opacity:0;transform:translateY(12px);
   transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-kpi li{opacity:1;transform:none}
 .pq-dt.is-in .pq-dt-kpi li:nth-child(1){transition-delay:.30s}
@@ -523,23 +523,23 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.26);
   box-shadow:0 22px 48px -26px rgba(0,0,0,.9)}
 .pq-dt-tag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;
-  border:1px solid currentColor;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
+  border:1px solid currentColor;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
 .pq-dt-tag u{width:5px;height:5px;border-radius:50%;background:currentColor;text-decoration:none}
 .pq-dt-card h3{margin:0;font:800 clamp(1.25rem,1.8vw,1.6rem) 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
-.pq-dt-card>p{margin:0;font:400 14.5px/1.9 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-card>p{margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-nodes{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .pq-dt-nodes li{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid rgba(255,255,255,.09);
-  border-radius:12px;background:rgba(255,255,255,.022);font:600 13px 'Noto Sans TC',sans-serif;
-  color:rgba(244,241,235,.86);transition:transform .25s ease,border-color .25s ease,background .25s ease}
+  border-radius:12px;background:rgba(255,255,255,.022);font:600 14.5px 'Noto Sans TC',sans-serif;
+  color:rgba(244,241,235,.9);transition:transform .25s ease,border-color .25s ease,background .25s ease}
 .pq-dt-nodes li:hover{transform:scale(1.03);border-color:var(--ac);background:rgba(255,255,255,.05)}
-.pq-dt-nodes li svg{width:17px;height:17px;flex:none;color:var(--ac);transition:transform .25s ease}
+.pq-dt-nodes li svg{width:19px;height:19px;flex:none;color:var(--ac);transition:transform .25s ease}
 .pq-dt-nodes li:hover svg{transform:rotate(3deg) translateX(2px)}
 .pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 10px 'Space Grotesk',sans-serif;
-  letter-spacing:.14em;color:rgba(244,241,235,.34)}
+  letter-spacing:.14em;color:rgba(244,241,235,.42);font-size:11px}
 .pq-dt-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:7px}
 .pq-dt-chips li{padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.028);font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;
-  color:rgba(244,241,235,.6)}
+  background:rgba(255,255,255,.028);font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;
+  color:rgba(244,241,235,.68)}
 .pq-dt-plat{grid-column:1/-1;position:relative;z-index:2;justify-self:center;width:min(720px,100%);
   margin-top:clamp(74px,8vw,116px);border:1px solid rgba(98,213,176,.34);border-radius:24px;
   background:linear-gradient(168deg,rgba(98,213,176,.09),rgba(255,255,255,.012)),var(--card);
@@ -557,17 +557,17 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
    會在卡片外面畫出一個歪掉的圓角矩形輪廓。 */
 @property --pqAng{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes pqDtRing{to{--pqAng:360deg}}
-.pq-dt-plat>p{margin:0;max-width:46em;font:400 14.5px/1.95 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-plat>p{margin:0;max-width:44em;font:400 clamp(15px,1.15vw,16.5px)/1.95 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-plat h3{margin:0;font:800 clamp(1.45rem,2.2vw,2rem) 'Noto Sans TC',sans-serif;letter-spacing:-.015em}
 .pq-dt-shared{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;
   border:1px solid rgba(98,213,176,.4);background:rgba(98,213,176,.07);
-  font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
+  font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
 .pq-dt.is-in .pq-dt-shared{animation:pqDtPing 2.4s ease-out 1.5s 2}
 @keyframes pqDtPing{0%,100%{background:rgba(98,213,176,.07)}30%{background:rgba(98,213,176,.2)}}
 .pq-dt-pnodes{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%}
 .pq-dt-pnodes li{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 8px;
   border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.022);
-  font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.62);
+  font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.72);
   opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1),
     border-color .25s ease,background .25s ease}
 .pq-dt.is-in .pq-dt-pnodes li{opacity:1;transform:none}
@@ -576,7 +576,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in .pq-dt-pnodes li:nth-child(3){transition-delay:1.15s}
 .pq-dt.is-in .pq-dt-pnodes li:nth-child(4){transition-delay:1.25s}
 .pq-dt-pnodes li:hover{border-color:rgba(98,213,176,.5);background:rgba(98,213,176,.06)}
-.pq-dt-pnodes li svg{width:19px;height:19px;color:#62D5B0;transition:transform .25s ease}
+.pq-dt-pnodes li svg{width:22px;height:22px;color:#62D5B0;transition:transform .25s ease}
 .pq-dt-pnodes li:hover svg{transform:rotate(3deg) translateY(-2px)}
 .pq-dt-float{position:absolute;z-index:1;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;
   border:1px solid rgba(255,255,255,.13);background:rgba(13,17,21,.82);backdrop-filter:blur(6px);
@@ -585,11 +585,11 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in .pq-dt-float{opacity:1}
 .pq-dt-float u{width:5px;height:5px;border-radius:50%;background:var(--ac,#62D5B0);text-decoration:none}
 .pq-dt-fly{margin-top:clamp(64px,7.5vw,108px);position:relative;z-index:2}
-.pq-dt-fly h3{margin:0;font:800 clamp(1.15rem,1.7vw,1.45rem) 'Space Grotesk',sans-serif;letter-spacing:.06em}
-.pq-dt-fly>p{margin:12px 0 0;max-width:640px;font:400 14px/1.9 'Noto Sans TC',sans-serif;color:var(--mut)}
+.pq-dt-fly h3{margin:0;font:800 clamp(1.3rem,1.95vw,1.72rem) 'Space Grotesk',sans-serif;letter-spacing:.06em}
+.pq-dt-fly>p{margin:12px 0 0;max-width:660px;font:400 clamp(14.5px,1.1vw,16px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-ring{list-style:none;margin:clamp(28px,3.4vw,44px) 0 0;padding:0;
   display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative}
-.pq-dt-ring::before{content:'';position:absolute;left:6%;right:6%;top:26px;height:1.5px;
+.pq-dt-ring::before{content:'';position:absolute;left:6%;right:6%;top:30px;height:1.5px;
   background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 7px,transparent 7px 14px);
   transform:scaleX(0);transform-origin:left;transition:transform 1.5s cubic-bezier(.22,1,.36,1) .3s}
 .pq-dt.is-in .pq-dt-ring::before{transform:scaleX(1)}
@@ -603,14 +603,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in .pq-dt-ring li:nth-child(4){transition-delay:.96s}
 .pq-dt.is-in .pq-dt-ring li:nth-child(5){transition-delay:1.13s}
 .pq-dt.is-in .pq-dt-ring li:nth-child(6){transition-delay:1.30s}
-.pq-dt-ring li i{width:52px;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.14);
+.pq-dt-ring li i{width:60px;height:60px;border-radius:16px;border:1px solid rgba(255,255,255,.14);
   background:var(--card);display:flex;align-items:center;justify-content:center;color:#62D5B0;
   transition:transform .25s ease,border-color .25s ease}
 .pq-dt-ring li:hover i{transform:scale(1.05) rotate(3deg);border-color:rgba(98,213,176,.5)}
-.pq-dt-ring li i svg{width:21px;height:21px}
-.pq-dt-ring li span{font:600 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.74);letter-spacing:.02em}
+.pq-dt-ring li i svg{width:24px;height:24px}
+.pq-dt-ring li span{font:600 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.82);letter-spacing:.02em}
 .pq-dt-ring li:last-child i{border-color:rgba(98,213,176,.42)}
-.pq-dt-loop{margin:16px 0 0;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+.pq-dt-loop{margin:18px 0 0;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
   color:rgba(98,213,176,.72);opacity:0;transition:opacity .7s ease 1.5s}
 .pq-dt.is-in .pq-dt-loop{opacity:1}
 @supports (animation-timeline:view()){
