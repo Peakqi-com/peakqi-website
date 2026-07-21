@@ -467,6 +467,24 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqb1Blink{0%,92%{transform:scaleY(0)}94%,97%{transform:scaleY(1)}98%,100%{transform:scaleY(0)}}
 @media (max-width:640px){.pqbrk1 .ico{width:104px;height:139px;top:-48px;right:8px}}
 @media (prefers-reduced-motion:reduce){.pqmB1 *{animation:none!important}.pqmB1 .lid{transform:scaleY(0)!important}}
+/* ── Step 3:02 主機板怪破格 —— 雙手吊在格頂橫線做引體向上、雙腳懸空踢(和 01 的坐姿對比)── */
+.pqbrk2 .ico{position:absolute;top:-46px;right:22px;width:110px;height:150px;z-index:4;transform:none}
+.pqbrk2:hover .ico{transform:none}
+.pqmB2{display:block;width:100%;height:100%;overflow:visible}
+.pqmB2 .hang{animation:pqb2Pull 2.6s cubic-bezier(.4,0,.4,1) infinite;transform-origin:55px 46px}
+@keyframes pqb2Pull{0%,100%{transform:translateY(0)}42%{transform:translateY(-7px)}66%{transform:translateY(-1.5px)}}
+.pqmB2 .bar{animation:pqb2Bar 2.6s cubic-bezier(.4,0,.4,1) infinite}
+@keyframes pqb2Bar{0%,100%{transform:translateY(0)}42%{transform:translateY(2.2px)}66%{transform:translateY(.5px)}}
+.pqmB2 .legA2{animation:pqb2LegA 1.5s ease-in-out infinite;transform-origin:48px 92px}
+.pqmB2 .legB2{animation:pqb2LegB 1.5s ease-in-out infinite;transform-origin:62px 92px}
+@keyframes pqb2LegA{0%,100%{transform:rotate(14deg)}50%{transform:rotate(-16deg)}}
+@keyframes pqb2LegB{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+.pqmB2 .eyes{animation:pqb2Look 3.4s ease-in-out infinite}
+@keyframes pqb2Look{0%,100%{transform:translateX(0)}30%{transform:translateX(2.4px)}60%{transform:translateX(-2.4px)}}
+.pqmB2 .lid2{transform-origin:55px 73px;transform:scaleY(0);animation:pqb2Blink 4s steps(1,end) infinite}
+@keyframes pqb2Blink{0%,90%{transform:scaleY(0)}92%,95%{transform:scaleY(1)}96%,100%{transform:scaleY(0)}}
+@media (max-width:640px){.pqbrk2 .ico{width:96px;height:131px;top:-40px;right:10px}}
+@media (prefers-reduced-motion:reduce){.pqmB2 *{animation:none!important}.pqmB2 .lid2{transform:scaleY(0)!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -1676,15 +1694,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">爆炸圖裡的每個零件,對應一件你每天在忙的業務。這裡用白話再說一次——由小到大,想從哪一塊開始都可以。</p>
     <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
       <div data-reveal class="pq-mod pqbrk1" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pqmB1" viewBox="0 0 120 160"><rect x="12" y="49" width="96" height="10" fill="#F2EFE8"/><g class="sit"><path class="sag" d="M12 54 Q60 67 108 54" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="ant"><path d="M50 16V4" stroke="#11161B" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="50" cy="3" r="3" fill="#11161B"/><path d="M72 16V3" stroke="#11161B" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="72" cy="2" r="3" fill="#11161B"/></g><rect x="33" y="14" width="56" height="42" rx="13" fill="#FF6B2C"/><circle cx="61" cy="34" r="15" fill="#F2EFE8"/><circle class="iris" cx="61" cy="34" r="10" fill="#11161B"/><circle class="iris" cx="61" cy="34" r="4.6" fill="#FF6B2C"/><circle cx="55" cy="29" r="2.4" fill="#F2EFE8"/><path class="lid" d="M46 34a15 15 0 0 1 30 0z" fill="#FF6B2C"/><path class="arm armL" d="M35 40C24 44 18 50 15 54" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="14" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/><path class="arm armR" d="M87 40C98 44 104 50 107 54" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="108" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/><g class="leg legA"><path d="M52 54V72" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M52 72h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="leg legB"><path d="M70 54V70" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M70 70h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
-<rect class="body" x="16" y="24" width="64" height="52" rx="12"/>
-<g class="wig" style="transform-origin:48px 24px"><path class="line" d="M34 24V12M62 24V12"/>
-<circle class="ink" cx="34" cy="9" r="3.4"/><circle class="ink" cx="62" cy="9" r="3.4"/></g>
-<rect class="paper" x="26" y="34" width="44" height="20" rx="6"/>
-<g class="blink"><circle class="ink" cx="38" cy="44" r="4.6"/><circle class="ink" cx="58" cy="44" r="4.6"/></g>
-<path class="line" d="M34 64h12M52 64h12" opacity=".8"/>
-<circle class="paper tw1" cx="30" cy="64" r="2.8"/><circle class="paper tw2" cx="48" cy="64" r="2.8"/><circle class="paper tw3" cx="66" cy="64" r="2.8"/>
-<path class="ink" d="M26 76h9v8h-9zM61 76h9v8h-9z"/></g></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk2" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pqmB2" viewBox="0 0 110 150"><rect x="20" y="41" width="70" height="9" fill="#F2EFE8"/><path class="bar" d="M20 45 Q55 56 90 45" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="hang"><path class="arm" d="M46 60L42 47" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><path class="arm" d="M64 60L68 47" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="42" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/><circle cx="68" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/><path d="M40 60L30 54" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="29" cy="53" r="2.6" fill="#11161B"/><path d="M70 60L80 54" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="81" cy="53" r="2.6" fill="#11161B"/><rect x="38" y="58" width="34" height="34" rx="9" fill="#3E9BFF"/><rect x="44" y="66" width="22" height="15" rx="4" fill="#11161B"/><g class="eyes"><circle cx="51" cy="73.5" r="2.8" fill="#F2EFE8"/><circle cx="60" cy="73.5" r="2.8" fill="#F2EFE8"/></g><path class="lid2" d="M44 66h22v15H44z" fill="#3E9BFF"/><circle cx="46" cy="87" r="1.6" fill="#F2EFE8"/><circle cx="55" cy="87" r="1.6" fill="#F2EFE8"/><circle cx="64" cy="87" r="1.6" fill="#F2EFE8"/><g class="legA2"><path d="M48 92V108" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M48 108h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="legB2"><path d="M62 92V106" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M62 106h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <rect class="body" x="14" y="20" width="68" height="56" rx="10"/>
 <g stroke="var(--ink)" stroke-width="2" opacity=".45"><path d="M36 20v56M60 20v56M14 40h68M14 58h68"/></g>
