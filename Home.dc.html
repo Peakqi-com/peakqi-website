@@ -719,6 +719,42 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @media (max-width:640px){.pqbrk5 .ico{width:104px;height:130px;top:-48px;margin-left:-52px}}
 @media (prefers-reduced-motion:reduce){.pqmB5 *{animation:none!important}
   .pqmB5 .lid5{transform:scaleY(0)!important}.pqmB5 .tick5{opacity:0!important}}
+/* ── Step 7:06 螢幕怪 —— 倒掛在線下(第六種姿態:腳勾線、頭朝下)。
+   心電圖倒著照跑;11.7s 想仰臥起坐 → 顫抖兩下撐不住 → 過衝垂回去。
+   天線因重力往「下」垂(牠的下=畫面下方),第二列淺 hairline 線色固定淺。 ── */
+.pqbrk6 .ico{position:absolute;top:-55px;right:14px;width:120px;height:150px;z-index:4;transform:none}
+.pqbrk6:hover .ico{transform:none}
+.pqmB6{display:block;width:100%;height:100%;overflow:visible}
+.pqmB6 *{transform-box:view-box}
+/* 鐘擺 3.8s 以勾點為軸;線的下凹在擺到兩端時微減、過中點微增 */
+.pqmB6 .sway6{transform-origin:62px 54px;animation:pqb6Sway 3.8s cubic-bezier(.44,.05,.5,.95) infinite}
+@keyframes pqb6Sway{0%{transform:rotate(4.5deg)}50%{transform:rotate(-4.5deg)}100%{transform:rotate(4.5deg)}}
+.pqmB6 .sag6{transform-origin:62px 54px;animation:pqb6Sag 3.8s cubic-bezier(.44,.05,.5,.95) infinite}
+@keyframes pqb6Sag{0%{transform:scaleY(.88)}25%{transform:scaleY(1.14)}50%{transform:scaleY(.88)}75%{transform:scaleY(1.14)}100%{transform:scaleY(.88)}}
+/* 仰臥起坐 11.7s:60% 捲腹上抬 38 度 → 64-69% 顫抖兩下 → 72% 撐不住過衝垂下 → 回穩;
+   同窗勾點兩側浮現應力短線 */
+.pqmB6 .crunch6{transform-origin:62px 54px;animation:pqb6Crunch 11.7s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb6Crunch{0%,58%{transform:rotate(0)}62%{transform:rotate(-36deg)}64.5%{transform:rotate(-33deg)}67%{transform:rotate(-37deg)}69%{transform:rotate(-34deg)}73%{transform:rotate(7deg)}77%{transform:rotate(-2.5deg)}81%,100%{transform:rotate(0)}}
+.pqmB6 .tick6{opacity:0}
+.pqmB6 .t6L{transform-origin:48px 58px;animation:pqb6Tick 11.7s ease-out infinite}
+.pqmB6 .t6R{transform-origin:76px 58px;animation:pqb6Tick 11.7s ease-out .09s infinite}
+@keyframes pqb6Tick{0%,58%{opacity:0;transform:scale(.5)}62%,72%{opacity:.55;transform:scale(1)}78%,100%{opacity:0;transform:scale(.5)}}
+/* 手臂因重力下垂,2.5/3.2s 非整數比晃;天線 3.0s 小鐘擺 */
+.pqmB6 .armL6{transform-origin:42px 88px;animation:pqb6ArmL 2.5s cubic-bezier(.45,.02,.35,1) infinite}
+.pqmB6 .armR6{transform-origin:82px 88px;animation:pqb6ArmR 3.2s cubic-bezier(.45,.02,.35,1) -1.35s infinite}
+@keyframes pqb6ArmL{0%{transform:rotate(7deg)}42%{transform:rotate(-9deg)}58%{transform:rotate(-6.5deg)}100%{transform:rotate(7deg)}}
+@keyframes pqb6ArmR{0%{transform:rotate(-8deg)}46%{transform:rotate(9deg)}62%{transform:rotate(6.5deg)}100%{transform:rotate(-8deg)}}
+.pqmB6 .ant6{transform-origin:62px 95px;animation:pqb6Ant 3s ease-in-out infinite}
+@keyframes pqb6Ant{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+/* 心電圖 1.3s 持續跑(倒掛也照跑,螢幕很敬業);眼睛 6.3s 連眨(倒掛眨眼,眼皮由下往上) */
+.pqmB6 .beat6{animation:pqb6Beat 1.3s linear infinite}
+@keyframes pqb6Beat{to{stroke-dashoffset:-52}}
+.pqmB6 .lid6a{transform-origin:53px 91px;transform:scaleY(0);animation:pqb6Blink 6.3s steps(1,end) infinite}
+.pqmB6 .lid6b{transform-origin:66px 91px;transform:scaleY(0);animation:pqb6Blink 6.3s steps(1,end) infinite}
+@keyframes pqb6Blink{0%,66%{transform:scaleY(0)}68%,71%{transform:scaleY(1)}73%,78%{transform:scaleY(0)}80%,83%{transform:scaleY(1)}85%,100%{transform:scaleY(0)}}
+@media (max-width:640px){.pqbrk6 .ico{width:104px;height:130px;top:-48px;right:8px}}
+@media (prefers-reduced-motion:reduce){.pqmB6 *{animation:none!important}
+  .pqmB6 .lid6a,.pqmB6 .lid6b{transform:scaleY(0)!important}.pqmB6 .tick6{opacity:0!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -2066,14 +2102,30 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <path d="M76 44l6 1.5" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g>
 </g></g>
 </svg></span><span class="eye"><u></u>CHASSIS · 機身</span><h3>專案</h3><p>從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
-<rect class="body" x="12" y="18" width="72" height="54" rx="12"/>
-<rect class="ink" x="20" y="26" width="56" height="34" rx="6"/>
-<path class="line beat" d="M24 46l10-12 8 16 9-20 8 14 7-8 10 10" stroke="var(--paper)" stroke-dasharray="24 24"/>
-<g class="blink"><circle class="paper" cx="34" cy="38" r="3.4" opacity=".85"/><circle class="paper" cx="62" cy="38" r="3.4" opacity=".85"/></g>
-<path class="line" d="M48 18v-7"/><circle class="ink" cx="48" cy="8" r="3.4"/>
-<circle class="paper tw1" cx="20" cy="66" r="2.6"/><circle class="paper tw2" cx="30" cy="66" r="2.6"/><circle class="paper tw3" cx="40" cy="66" r="2.6"/>
-<path class="ink" d="M26 72h11v10H26zM59 72h11v10H59z"/></g></svg></span><span class="eye"><u></u>DISPLAY · 螢幕</span><h3>數據</h3><p>營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk6" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg class="pqmB6" viewBox="0 0 120 150">
+<rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
+<path class="sag6" d="M12 54 Q62 61 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
+<path class="tick6 t6L" d="M48 58l-4 4" stroke="rgba(17,22,27,.4)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<path class="tick6 t6R" d="M76 58l4 4" stroke="rgba(17,22,27,.4)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<g class="sway6">
+<rect x="51" y="49.5" width="9" height="5" rx="2.5" fill="#11161B"/>
+<rect x="64" y="49.5" width="9" height="5" rx="2.5" fill="#11161B"/>
+<g class="crunch6">
+<path d="M55.5 54V63" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M68.5 54V63" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
+<rect x="40" y="61" width="44" height="34" rx="10" fill="#3FA98C"/>
+<rect x="46" y="68" width="32" height="19" rx="4" fill="#11161B"/>
+<path class="beat6" d="M49 78l5-5 4 8 5-11 4 7 3-4 5 5" fill="none" stroke="#F2EFE8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="26 26"/>
+<g class="pupg6"><circle cx="53" cy="91" r="2.6" fill="#F2EFE8"/><circle cx="66" cy="91" r="2.6" fill="#F2EFE8"/></g>
+<path class="lid6a" d="M50.4 91a2.6 2.6 0 0 0 5.2 0z" fill="#3FA98C"/>
+<path class="lid6b" d="M63.4 91a2.6 2.6 0 0 0 5.2 0z" fill="#3FA98C"/>
+<g class="armL6"><path d="M42 88q-4 7-3 13" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="38.6" cy="103" r="4.2" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
+<g class="armR6"><path d="M82 88q4 7 3 13" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="85.4" cy="103" r="4.2" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
+<g class="ant6"><path d="M62 95v9" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="62" cy="106" r="2.6" fill="#11161B"/></g>
+</g></g>
+</svg></span><span class="eye"><u></u>DISPLAY · 螢幕</span><h3>數據</h3><p>營運儀表板、來源分析、AI 月報自動生成——決策靠數字,不靠感覺。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
     </div>
     <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
   </div>
