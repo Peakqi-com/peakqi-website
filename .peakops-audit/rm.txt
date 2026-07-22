@@ -1,0 +1,130 @@
+{
+ "consoleErrors": [
+  "log: Error: <line> attribute x2: Expected length, \"{{ orbX }}\".",
+  "log: Error: <line> attribute y2: Expected length, \"{{ orbY }}\".",
+  "log: Failed to load resource: the server responded with a status of 404 (File not found)"
+ ],
+ "probeError": null
+}
+{
+ "reduced": false,
+ "docH": 25504,
+ "overflowX": "ok",
+ "ctaCount": 14,
+ "sections": [
+  {
+   "id": "hero",
+   "h": 3240,
+   "txt": 80,
+   "ratio": 24.7
+  },
+  {
+   "id": "hero-stats",
+   "h": 235,
+   "txt": 174,
+   "ratio": 740.4
+  },
+  {
+   "id": "handoff",
+   "h": 1305,
+   "txt": 153,
+   "ratio": 117.2
+  },
+  {
+   "id": "diagnostic",
+   "h": 2426,
+   "txt": 578,
+   "ratio": 238.3
+  },
+  {
+   "id": "pain",
+   "h": 1117,
+   "txt": 384,
+   "ratio": 343.8
+  },
+  {
+   "id": "loss",
+   "h": 888,
+   "txt": 231,
+   "ratio": 260.1
+  },
+  {
+   "id": "flow",
+   "h": 1668,
+   "txt": 844,
+   "ratio": 506
+  },
+  {
+   "id": "liveops",
+   "h": 2520,
+   "txt": 799,
+   "ratio": 317.1
+  },
+  {
+   "id": "relay",
+   "h": 1980,
+   "txt": 274,
+   "ratio": 138.4
+  },
+  {
+   "id": "features",
+   "h": 1219,
+   "txt": 370,
+   "ratio": 303.5
+  },
+  {
+   "id": "cases",
+   "h": 1319,
+   "txt": 586,
+   "ratio": 444.3
+  },
+  {
+   "id": "portfolio",
+   "h": 824,
+   "txt": 479,
+   "ratio": 581.3
+  },
+  {
+   "id": "compare",
+   "h": 859,
+   "txt": 237,
+   "ratio": 275.9
+  },
+  {
+   "id": "pricing",
+   "h": 1386,
+   "txt": 557,
+   "ratio": 401.9
+  },
+  {
+   "id": "usage",
+   "h": 564,
+   "txt": 178,
+   "ratio": 315.6
+  },
+  {
+   "id": "timeline",
+   "h": 609,
+   "txt": 186,
+   "ratio": 305.4
+  },
+  {
+   "id": "risk",
+   "h": 715,
+   "txt": 190,
+   "ratio": 265.7
+  },
+  {
+   "id": "faq",
+   "h": 840,
+   "txt": 130,
+   "ratio": 154.8
+  },
+  {
+   "id": "demo-cta",
+   "h": 808,
+   "txt": 244,
+   "ratio": 302
+  }
+ ]
+}

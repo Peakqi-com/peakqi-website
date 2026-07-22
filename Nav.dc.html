@@ -88,13 +88,13 @@
   </div>
 </sc-if>
 <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center">
-    <a href="{{ ctaHref }}" onClick="{{ ctaClick }}" data-cta style="display:flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;padding:13px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
+  <div style="position:fixed;right:18px;left:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center;justify-content:flex-end;pointer-events:none">
+    <a href="{{ ctaHref }}" onClick="{{ ctaClick }}" data-cta aria-label="{{ ctaLabel }}" style="pointer-events:auto;display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;max-width:100%;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
       <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
       {{ ctaLabel }}
-      <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="background:rgba(242,239,232,.16);border-radius:999px;padding:2px 8px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
+      <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;background:rgba(242,239,232,.16);border-radius:999px;padding:3px 9px;font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
     </a>
-    <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動 Demo 按鈕" style="margin-left:8px;width:30px;height:30px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 12px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
+    <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動按鈕" style="pointer-events:auto;margin-left:8px;width:44px;height:44px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 14px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
   </div>
 </sc-if>
 </x-dc>
@@ -156,11 +156,14 @@ class Component extends DCLogic {
     ];
     const childStyle = {
       display: 'flex', flexDirection: 'column', gap: '2px', textDecoration: 'none',
-      padding: '10px 14px', borderRadius: '7px', color: '#F2EFE8'
+      padding: '10px 14px', minHeight: '44px', justifyContent: 'center',
+      borderRadius: '7px', color: '#F2EFE8'
     };
     const mChildStyle = {
       display: 'flex', flexDirection: 'column', gap: '1px', textDecoration: 'none',
-      padding: '11px 0', color: 'rgba(242,239,232,.82)'
+      // 觸控區至少 44px:原本 padding 11px 上下只有約 20px 可點範圍
+      padding: '11px 0', minHeight: '44px', justifyContent: 'center',
+      color: 'rgba(242,239,232,.82)'
     };
     const links = items.map((l, i) => {
       const isGroup = Array.isArray(l.children) && l.children.length > 0;

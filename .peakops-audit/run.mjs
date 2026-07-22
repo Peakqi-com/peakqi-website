@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
-const [, , url, out, wS, hS, pStr, probeFile] = process.argv;
+const [, , url, out, wS, hS, pStr, probeFile, mediaFlag] = process.argv;
 const W = +wS || 1440, H = +hS || 900, P = parseFloat(pStr || '0');
 const mobile = W < 900;
 // 每次獨立的 port 與 profile:前一輪的 Chrome 可能還沒完全退出,
@@ -62,6 +62,12 @@ await send('Emulation.setDeviceMetricsOverride', {
   ...(mobile ? { screenOrientation: { angle: 0, type: 'portraitPrimary' } } : {})
 });
 if (mobile) await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+// 第 8 個參數傳 "reduced" 時模擬 prefers-reduced-motion: reduce
+if (mediaFlag === 'reduced') {
+  await send('Emulation.setEmulatedMedia', {
+    features: [{ name: 'prefers-reduced-motion', value: 'reduce' }]
+  });
+}
 await send('Page.reload', { ignoreCache: true });
 await sleep(6000);
 
