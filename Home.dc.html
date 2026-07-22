@@ -635,6 +635,52 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @media (max-width:640px){.pqbrk3 .ico{width:112px;height:129px;top:-50px;right:8px}}
 @media (prefers-reduced-motion:reduce){.pqmB3 *{animation:none!important}
   .pqmB3 .lid3a,.pqmB3 .lid3b{transform:scaleY(0)!important}.pqmB3 .brows{transform:translateY(2px)!important}}
+/* ── Step 5:04 快門怪 —— 單手吊線盪鞦韆(第四種姿態);9.5s 按自己的快門鍵 → 光圈縮起 + 過曝閃光。
+   04 在第二列,頭上那條在所有斷點都是淺 hairline → 壓彎線固定淺色,無需切換。 ── */
+.pqbrk4 .ico{position:absolute;top:-55px;right:14px;width:120px;height:160px;z-index:4;transform:none}
+.pqbrk4:hover .ico{transform:none}
+.pqmB4{display:block;width:100%;height:100%;overflow:visible}
+.pqmB4 *{transform-box:view-box}
+/* 鐘擺 3.4s:整隻以握點為軸盪;線的下凹在過中點時最深(張力最大),端點釘死 y=54 */
+.pqmB4 .swing4{transform-origin:64px 54px;animation:pqb4Swing 3.4s cubic-bezier(.45,.05,.55,.95) infinite}
+@keyframes pqb4Swing{0%{transform:rotate(6.5deg)}50%{transform:rotate(-6.5deg)}100%{transform:rotate(6.5deg)}}
+.pqmB4 .sag4{transform-origin:64px 54px;animation:pqb4Sag 3.4s cubic-bezier(.45,.05,.55,.95) infinite}
+@keyframes pqb4Sag{0%{transform:scaleY(.82)}25%{transform:scaleY(1.28)}50%{transform:scaleY(.82)}75%{transform:scaleY(1.28)}100%{transform:scaleY(.82)}}
+/* 腿束以慢半拍反向拖(overlapping),內層兩腿 2.1/2.7s 非整數比自由擺,腳掌再晚一步 */
+.pqmB4 .trail4{transform-origin:52px 96px;animation:pqb4Trail 3.4s cubic-bezier(.45,.05,.55,.95) -.5s infinite}
+@keyframes pqb4Trail{0%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}100%{transform:rotate(-3.5deg)}}
+.pqmB4 .legC4{transform-origin:46px 106px;animation:pqb4LegC 2.1s cubic-bezier(.45,.02,.35,1) infinite}
+.pqmB4 .legD4{transform-origin:58px 106px;animation:pqb4LegD 2.7s cubic-bezier(.45,.02,.35,1) -1.15s infinite}
+@keyframes pqb4LegC{0%{transform:rotate(9deg)}40%{transform:rotate(-12deg)}56%{transform:rotate(-9deg)}100%{transform:rotate(9deg)}}
+@keyframes pqb4LegD{0%{transform:rotate(-10deg)}44%{transform:rotate(11deg)}60%{transform:rotate(8deg)}100%{transform:rotate(-10deg)}}
+.pqmB4 .ftC4{transform-origin:46px 121px;animation:pqb4FtC 2.1s cubic-bezier(.5,0,.5,1) infinite}
+.pqmB4 .ftD4{transform-origin:58px 123px;animation:pqb4FtD 2.7s cubic-bezier(.5,0,.5,1) -1.15s infinite}
+@keyframes pqb4FtC{0%{transform:rotate(-6deg)}46%{transform:rotate(9deg)}62%{transform:rotate(6deg)}100%{transform:rotate(-6deg)}}
+@keyframes pqb4FtD{0%{transform:rotate(5deg)}50%{transform:rotate(-8deg)}66%{transform:rotate(-5deg)}100%{transform:rotate(5deg)}}
+/* 自由手臂:內層 2.6s 晃;外層 9.5s 表演——68% 預備後甩、74-79% 舉到左上按住快門鍵、84% 過衝放下 */
+.pqmB4 .armD4{transform-origin:33px 88px;animation:pqb4ArmD 2.6s ease-in-out infinite}
+@keyframes pqb4ArmD{0%,100%{transform:rotate(5deg)}50%{transform:rotate(-6deg)}}
+.pqmB4 .armP4{transform-origin:33px 88px;animation:pqb4Press 9.5s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb4Press{0%,64%{transform:rotate(0)}68%{transform:rotate(12deg)}74%,79%{transform:rotate(-165deg)}84%{transform:rotate(10deg)}89%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
+/* 光圈:7.9s 慢轉;按鍵瞬間(9.5s 的 76-79%)啪一聲縮到 .15,再過衝張開 —— 與按壓同窗,有因果 */
+.pqmB4 .aprR4{transform-origin:52px 93px;animation:pqb4Spin 7.9s linear infinite}
+@keyframes pqb4Spin{to{transform:rotate(360deg)}}
+.pqmB4 .aprS4{transform-origin:52px 93px;animation:pqb4Snap 9.5s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb4Snap{0%,73%{transform:scale(1)}76%,79%{transform:scale(.15)}83%{transform:scale(1.12)}87%,100%{transform:scale(1)}}
+.pqmB4 .flash4{animation:pqb4Flash 9.5s linear infinite}
+@keyframes pqb4Flash{0%,75.5%{opacity:0}77%{opacity:.95}81%,100%{opacity:0}}
+/* 眼睛 4.7s 張望、5.3s 連眨;觸角 2.9s 反相擺 */
+.pqmB4 .pup4{animation:pqb4Look 4.7s ease-in-out infinite}
+@keyframes pqb4Look{0%,100%{transform:translateX(0)}30%{transform:translateX(2px)}62%{transform:translateX(-1.8px)}}
+.pqmB4 .lid4a{transform-origin:44px 78px;transform:scaleY(0);animation:pqb4Blink 5.3s steps(1,end) infinite}
+.pqmB4 .lid4b{transform-origin:60px 78px;transform:scaleY(0);animation:pqb4Blink 5.3s steps(1,end) infinite}
+@keyframes pqb4Blink{0%,60%{transform:scaleY(0)}62%,65%{transform:scaleY(1)}67%,72%{transform:scaleY(0)}74%,77%{transform:scaleY(1)}79%,100%{transform:scaleY(0)}}
+.pqmB4 .aL4{transform-origin:46px 66px;animation:pqb4Ant 2.9s ease-in-out infinite}
+.pqmB4 .aR4{transform-origin:58px 65px;animation:pqb4Ant 2.9s ease-in-out -1.2s infinite reverse}
+@keyframes pqb4Ant{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@media (max-width:640px){.pqbrk4 .ico{width:104px;height:139px;top:-48px;right:8px}}
+@media (prefers-reduced-motion:reduce){.pqmB4 *{animation:none!important}
+  .pqmB4 .lid4a,.pqmB4 .lid4b{transform:scaleY(0)!important}.pqmB4 .flash4{opacity:0!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -1925,15 +1971,39 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle cx="57.6" cy="84" r="4.4" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
 </g>
 </svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
-<circle class="body" cx="48" cy="46" r="32"/>
-<g class="blink"><ellipse class="paper" cx="34" cy="32" rx="7" ry="8"/><circle class="ink" cx="34" cy="33" r="3.6"/>
-<ellipse class="paper" cx="62" cy="32" rx="7" ry="8"/><circle class="ink" cx="62" cy="33" r="3.6"/></g>
-<circle class="ink" cx="48" cy="56" r="16"/>
-<g class="spin" style="transform-origin:48px 56px"><g class="iris" style="transform-origin:48px 56px">
-<path class="paper" d="M48 44 62 62 34 62z" opacity=".95"/><path class="body" d="M48 68 34 50h28z" opacity=".9"/></g></g>
-<path class="line" d="M22 24 16 14M74 24 80 14"/><circle class="ink" cx="15" cy="12" r="3.4"/><circle class="ink" cx="81" cy="12" r="3.4"/>
-<path class="ink" d="M28 76h10v9H28zM58 76h10v9H58z"/></g></svg></span><span class="eye"><u></u>SHUTTER · 快門</span><h3>報價</h3><p>線上報價單、自動算稅、當天送出,不再來回喬。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk4" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pqmB4" viewBox="0 0 120 160">
+<rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
+<path class="sag4" d="M12 54 Q64 62 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
+<g class="swing4">
+<circle cx="64" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/>
+<path d="M64 58C63 63 60 66 57 69" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<g class="antW4 aL4"><path d="M46 66L41 56" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="40.5" cy="55" r="2.6" fill="#11161B"/></g>
+<g class="antW4 aR4"><path d="M58 65L63 55" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="63.5" cy="54" r="2.6" fill="#11161B"/></g>
+<circle cx="52" cy="86" r="22" fill="#FF6B2C"/>
+<rect class="btn4" x="27.5" y="73" width="9" height="5" rx="2.2" fill="#11161B" transform="rotate(-30 32 75.5)"/>
+<g class="pup4"><circle cx="44" cy="78" r="4.2" fill="#F2EFE8"/><circle cx="44.4" cy="79" r="2" fill="#11161B"/>
+<circle cx="60" cy="78" r="4.2" fill="#F2EFE8"/><circle cx="60.4" cy="79" r="2" fill="#11161B"/></g>
+<path class="lid4a" d="M39.8 78a4.2 4.2 0 0 1 8.4 0z" fill="#FF6B2C"/>
+<path class="lid4b" d="M55.8 78a4.2 4.2 0 0 1 8.4 0z" fill="#FF6B2C"/>
+<circle cx="52" cy="93" r="9.5" fill="#11161B"/>
+<g class="aprS4"><g class="aprR4">
+<path d="M55.9 93 53.95 96.4 50.05 96.4 48.1 93 50.05 89.6 53.95 89.6Z" fill="#FF6B2C"/>
+<path d="M55.9 93 58.4 97.3" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+<path d="M55.9 93 58.4 97.3" transform="rotate(60 52 93)" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+<path d="M55.9 93 58.4 97.3" transform="rotate(120 52 93)" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+<path d="M55.9 93 58.4 97.3" transform="rotate(180 52 93)" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+<path d="M55.9 93 58.4 97.3" transform="rotate(240 52 93)" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+<path d="M55.9 93 58.4 97.3" transform="rotate(300 52 93)" stroke="rgba(242,239,232,.85)" stroke-width="1" stroke-linecap="round" fill="none"/>
+</g></g>
+<circle class="flash4" cx="52" cy="93" r="9.5" fill="#F2EFE8" opacity="0"/>
+<g class="armP4"><g class="armD4"><path d="M33 88q-4 8-2 14" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="32" cy="104" r="4.6" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/></g></g>
+<g class="trail4">
+<g class="legC4"><path d="M46 106V121" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftC4"><path d="M46 121h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g>
+<g class="legD4"><path d="M58 106V123" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftD4"><path d="M58 123h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g>
+</g>
+</g>
+</svg></span><span class="eye"><u></u>SHUTTER · 快門</span><h3>報價</h3><p>線上報價單、自動算稅、當天送出,不再來回喬。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <rect class="body" x="12" y="26" width="72" height="50" rx="14"/>
 <rect class="body" x="34" y="14" width="28" height="14" rx="5"/>
