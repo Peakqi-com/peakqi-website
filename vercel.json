@@ -1,9 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "source": "/",
-      "destination": "/Home.dc.html"
-    }
+    { "source": "/", "destination": "/Home.dc.html" },
+    { "source": "/solutions", "destination": "/Solutions.dc.html" },
+    { "source": "/method", "destination": "/Method.dc.html" },
+    { "source": "/cases", "destination": "/Cases.dc.html" },
+    { "source": "/case", "destination": "/Case.dc.html" },
+    { "source": "/pricing", "destination": "/Pricing.dc.html" },
+    { "source": "/about", "destination": "/About.dc.html" },
+    { "source": "/demo", "destination": "/Demo.dc.html" },
+    { "source": "/peakops", "destination": "/PeakOps.dc.html" }
   ]
 }

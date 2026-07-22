@@ -33,7 +33,7 @@
             <button type="button" style="{{ l.btnStyle }}" aria-haspopup="true" style-hover="color:#FF6B2C">{{ l.label }} <span style="font-size:9px;opacity:.7">▼</span></button>
             <div class="pq-dd-panel" style="position:absolute;left:0;top:calc(100% + 10px);min-width:234px;background:#090B0E;border:1px solid rgba(242,239,232,.14);border-radius:12px;padding:8px;box-shadow:0 22px 48px rgba(9,11,14,.32);z-index:120">
               <sc-for list="{{ l.children }}" as="c" hint-placeholder-count="4">
-                <a href="{{ c.href }}" style="{{ c.style }}">
+                <a href="{{ c.href }}" target="{{ c.target }}" rel="{{ c.rel }}" style="{{ c.style }}">
                   <span style="font:700 13.5px 'Noto Sans TC',sans-serif">{{ c.label }}</span>
                   <span style="font:400 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">{{ c.desc }}</span>
                 </a>
@@ -42,7 +42,7 @@
           </div>
         </sc-if>
       </sc-for>
-      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#F2EFE8;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" style-hover="background:#090B0E;color:#F2EFE8">預約 15 分鐘 Demo</a>
+      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="預約 AI 導入評估" style-hover="background:#090B0E;color:#F2EFE8">預約 AI 導入評估</a>
     </nav>
     <button id="pq-burger" ref="{{ burgerRef }}" onClick="{{ toggle }}" aria-label="開啟選單" aria-expanded="{{ menuExpanded }}" style="flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:1px solid rgba(9,11,14,.2);border-radius:2px;cursor:pointer;padding:0 10px">
       <span style="display:block;height:2px;background:#090B0E"></span>
@@ -72,7 +72,7 @@
             </div>
             <div style="display:flex;flex-direction:column;margin-top:8px;padding-left:34px">
               <sc-for list="{{ l.children }}" as="c" hint-placeholder-count="4">
-                <a href="{{ c.href }}" style="{{ c.mStyle }}" style-hover="color:#FF6B2C">{{ c.label }} <span style="font-weight:400;color:rgba(242,239,232,.45);font-size:12px">· {{ c.desc }}</span></a>
+                <a href="{{ c.href }}" target="{{ c.target }}" rel="{{ c.rel }}" style="{{ c.mStyle }}" style-hover="color:#FF6B2C">{{ c.label }} <span style="font-weight:400;color:rgba(242,239,232,.45);font-size:12px">· {{ c.desc }}</span></a>
               </sc-for>
             </div>
           </div>
@@ -88,13 +88,13 @@
   </div>
 </sc-if>
 <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center">
-    <a href="Demo.dc.html" onClick="{{ ctaClick }}" data-cta style="display:flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;padding:13px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
+  <div style="position:fixed;right:18px;left:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center;justify-content:flex-end;pointer-events:none">
+    <a href="{{ ctaHref }}" onClick="{{ ctaClick }}" data-cta aria-label="{{ ctaLabel }}" style="pointer-events:auto;display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;max-width:100%;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
       <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-      用我的場景看 Demo
-      <span style="background:rgba(242,239,232,.16);border-radius:999px;padding:2px 8px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.08em">15 MIN</span>
+      {{ ctaLabel }}
+      <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;background:rgba(242,239,232,.16);border-radius:999px;padding:3px 9px;font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
     </a>
-    <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動 Demo 按鈕" style="margin-left:8px;width:30px;height:30px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 12px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
+    <button onClick="{{ ctaDismiss }}" aria-label="關閉浮動按鈕" style="pointer-events:auto;margin-left:8px;width:44px;height:44px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 14px 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
   </div>
 </sc-if>
 </x-dc>
@@ -148,18 +148,22 @@ class Component extends DCLogic {
       padding: '4px 2px', transition: 'color .15s'
     };
     const items = this.state.nav ?? [
-      { href: 'Home.dc.html', key: 'home', label: '首頁' },
+      { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+      { href: 'Method.dc.html', key: 'method', label: '導入方法' },
+      { href: 'Cases.dc.html', key: 'cases', label: '案例' },
       { href: 'PeakOps.dc.html', key: 'product', label: '產品' },
-      { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
-      { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' }
+      { href: 'About.dc.html', key: 'about', label: '關於我們' }
     ];
     const childStyle = {
       display: 'flex', flexDirection: 'column', gap: '2px', textDecoration: 'none',
-      padding: '10px 14px', borderRadius: '7px', color: '#F2EFE8'
+      padding: '10px 14px', minHeight: '44px', justifyContent: 'center',
+      borderRadius: '7px', color: '#F2EFE8'
     };
     const mChildStyle = {
       display: 'flex', flexDirection: 'column', gap: '1px', textDecoration: 'none',
-      padding: '11px 0', color: 'rgba(242,239,232,.82)'
+      // 觸控區至少 44px:原本 padding 11px 上下只有約 20px 可點範圍
+      padding: '11px 0', minHeight: '44px', justifyContent: 'center',
+      color: 'rgba(242,239,232,.82)'
     };
     const links = items.map((l, i) => {
       const isGroup = Array.isArray(l.children) && l.children.length > 0;
@@ -168,7 +172,7 @@ class Component extends DCLogic {
         idx: '0' + (i + 1),
         isGroup, isLink: !isGroup,
         href: l.href || '#',
-        children: isGroup ? l.children.map(c => ({ ...c, style: childStyle, mStyle: mChildStyle })) : [],
+        children: isGroup ? l.children.map(c => ({ ...c, style: childStyle, mStyle: mChildStyle, target: c.ext ? '_blank' : '_self', rel: c.ext ? 'noopener noreferrer' : '' })) : [],
         style: {
           ...base,
           color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
@@ -177,7 +181,10 @@ class Component extends DCLogic {
         },
         btnStyle: {
           ...base, display: 'inline-flex', alignItems: 'center', gap: '5px',
+          // borderBottom 與一般連結一致(2px):border:none 會讓盒高矮 2px,
+          // 在 align-items:center 的列裡整顆「產品」看起來往下掉
           background: 'none', border: 'none', cursor: 'pointer',
+          borderBottom: l.key === active ? '2px solid #FF6B2C' : '2px solid transparent',
           color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
           fontWeight: l.key === active ? 700 : 500
         },
@@ -219,6 +226,16 @@ class Component extends DCLogic {
       toggle: () => { this.state.open ? closeMenu() : openMenu(); },
       close: closeMenu,
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
+      // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
+      // 母品牌首頁主要下一步 = 預約 AI 導入評估;其他頁維持產品導向的 Demo 入口
+      ctaHref: active === 'home' ? 'Demo.dc.html' : 'Demo.dc.html',
+      // 產品頁(PeakOps)的浮動 CTA 與該頁全部主 CTA 統一為「用我的流程跑一次」;
+      // 首頁維持「預約 AI 導入評估」,其餘頁面維持原文案,避免單頁需求外溢到全站
+      ctaLabel: active === 'home' || active === 'about' ? '預約 AI 導入評估'
+        : active === 'product' || active === 'solutions' ? '用我的流程跑一次'
+        : '用我的場景看 Demo',
+      ctaBadge: active !== 'home',
+      ctaBadgeText: '15 MIN',
       navDemoClick: () => this._evt('nav_demo_click'),
       ctaClick: () => this._evt('sticky_demo_click'),
       ctaDismiss: () => {

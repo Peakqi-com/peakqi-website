@@ -23,20 +23,20 @@ export const HERO_SHARED = {
 export const heroConfig = {
   solutions: {
     key: 'solutions', paint: 'solutions',
-    story: 'ONE SYSTEM, THREE OPERATIONS:散落工具 → 三層成形 → 接住 → 跟進 → 加溫 → 接通組裝 → 控制台',
+    story: 'FROM INQUIRY TO OPERATION:一筆詢問 → 辨識回應 → 建檔 → 跟進 → 延續 → 接通 → 營運視圖',
     totalVh: { desktop: 380, tablet: 280, mobile: 190 },
     scenes: [
-      { id: 'sig',     label: '各做各的',   kicker: 'SCENE 01 · SCATTERED',    line: '散落的 LINE、Excel、表單、報價與工作視窗,漂在三個深度層。',        d: [0, .12],   m: [0, .18] },
-      { id: 'layers',  label: '三個系統層', kicker: 'SCENE 02 · THREE LAYERS', line: 'CAPTURE、FOLLOW、NURTURE 各自成形,但層與層之間資料還是斷的。',      d: [.12, .28], m: null },
-      { id: 'cap',     label: '詢問被接住', kicker: 'SCENE 03 · CAPTURE',      line: 'LINE 詢問進入 CAPTURE:AI 辨識需求、服務、聯絡時間、是否轉真人。',  d: [.28, .43], m: [.18, .42] },
-      { id: 'fol',     label: '跟進節奏',   kicker: 'SCENE 04 · FOLLOW',       line: '客戶卡進入 FOLLOW:DAY 1、3、5、7 跟進節奏、提醒與訊息草稿。',      d: [.43, .58], m: [.42, .64] },
-      { id: 'nur',     label: '持續加溫',   kicker: 'SCENE 05 · NURTURE',      line: '內容、案例與優惠進入 NURTURE:標籤分群、內容排程。',                d: [.58, .72], m: null },
-      { id: 'align',   label: '資料線接通', kicker: 'SCENE 06 · ALIGN',        line: '三層對齊,橘藍資料線接通;六個模組在後方組裝。',                     d: [.72, .88], m: [.64, .85] },
-      { id: 'console', label: '營運控制台', kicker: 'SCENE 07 · CONSOLE',      line: '完整的 PeakQi AI 營運控制台成形。換你的流程跑一次。',               d: [.88, 1],   m: [.85, 1] }
+      { id: 'sig',     label: '詢問進來',   kicker: '階段 01 · 進入',    line: '一筆詢問從 LINE、網站或表單進來——原本它會停在聊天室裡等人處理。',        d: [0, .12],   m: [0, .18] },
+      { id: 'layers',  label: '辨識需求',   kicker: '階段 02 · 辨識', line: 'AI 辨識需求、補齊欄位;價格與敏感內容標記為待人工確認。',      d: [.12, .28], m: null },
+      { id: 'cap',     label: '回應與建檔', kicker: '階段 03 · 建檔',      line: '對話結束的同時,客戶、案件與下一步已寫進 CRM,並指定負責人。',  d: [.28, .43], m: [.18, .42] },
+      { id: 'fol',     label: '安排下一步', kicker: '階段 04 · 跟進',       line: '系統依案件狀態提醒負責人;訊息由 AI 擬好,人確認才送出。',      d: [.43, .58], m: [.42, .64] },
+      { id: 'nur',     label: '延續脈絡',   kicker: '階段 05 · 延續',      line: '報價、案例與後續服務沿用同一份客戶脈絡,不用重新整理。',                d: [.58, .72], m: null },
+      { id: 'align',   label: '流程接通',   kicker: '階段 06 · 接通',        line: '既有工具保留;模組依流程斷點加入,資料線在後方接通。',                     d: [.72, .88], m: [.64, .85] },
+      { id: 'console', label: '營運視圖',   kicker: '階段 07 · 管理',      line: '每一筆詢問在哪個階段、由誰負責、下一步是什麼——一個視圖看完。',               d: [.88, 1],   m: [.85, 1] }
     ],
     reduced: ['sig', 'layers', 'cap', 'fol', 'console'],
     ctas: [
-      { kind: 'primary', label: '用我的流程跑一次 Demo', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' },
+      { kind: 'primary', label: '用我的流程跑一次', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' },
       { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
     ],
     flags: {}
@@ -63,16 +63,16 @@ export const heroConfig = {
   },
   pricing: {
     key: 'pricing', paint: 'pricing',
-    story: 'CONFIGURE YOUR OPERATING SYSTEM:空機架 → 接客組裝 → 業務助理 → 營運平台 → 並列比價 → 雙計費通道 → 穩定運作',
+    story: 'PLAN YOUR FIRST PHASE:三種起步 → 接住詢問 → 推進案件 → 整合營運 → 並列比較 → 費用三部分通道 → 穩定運作',
     totalVh: { desktop: 380, tablet: 290, mobile: 190 },
     scenes: [
-      { id: 'racks',  label: '三個機架',   kicker: 'SCENE 01 · EMPTY RACKS',    line: '三個空的系統機架進場:接客、業務助理、營運平台。',                        d: [0, .12],   m: [0, .2] },
-      { id: 'cap',    label: 'AI 接客組裝', kicker: 'SCENE 02 · CAPTURE UNIT',   line: 'AI 自動回覆、需求了解、預約、轉真人裝進第一座。', d: [.12, .26], m: null },
-      { id: 'assist', label: '業務助理擴充', kicker: 'SCENE 03 · ASSISTANT UNIT', line: 'CRM、追蹤、跟進序列與分析加入。',               d: [.26, .4],  m: null },
-      { id: 'plat',   label: '營運平台成形', kicker: 'SCENE 04 · PLATFORM UNIT',  line: '行銷、報價、專案、數據補齊。',                 d: [.4, .57],  m: [.2, .45] },
-      { id: 'cmp',    label: '三方案並列',  kicker: 'SCENE 05 · SIDE BY SIDE',   line: '三種規劃並列比較,實際範圍與費用依你的場景評估。',   d: [.57, .72], m: [.45, .68] },
-      { id: 'use',    label: '兩條計費通道', kicker: 'SCENE 06 · TWO CHANNELS',   line: '文字類 AI 走 Included 不限量;圖片/影片走 Usage-based,用多少算多少。',     d: [.72, .88], m: [.68, .88] },
-      { id: 'run',    label: '系統穩定運作', kicker: 'SCENE 07 · RUNNING',        line: '選定方案,系統上線。用你的需求比較方案,或 15 分鐘 Demo。',                 d: [.88, 1],   m: [.88, 1] }
+      { id: 'racks',  label: '三種起步',   kicker: '起步 01 · 三種範圍',    line: '接住詢問、推進案件、整合營運——三個起步範圍等你選。',                        d: [0, .12],   m: [0, .2] },
+      { id: 'cap',    label: 'A 接住詢問', kicker: '起步 02 · A 方案',   line: '裝入知識查詢、回覆草稿、預約與人工轉接——先把詢問接住。', d: [.12, .26], m: null },
+      { id: 'assist', label: 'B 推進案件', kicker: '起步 03 · B 方案', line: '新增 CRM、負責人與跟進——現在每一筆詢問都有下一步。',               d: [.26, .4],  m: null },
+      { id: 'plat',   label: 'C 整合營運', kicker: '起步 04 · C 方案',  line: '加入行銷、報價、專案與數據——前台詢問接到後台交付。',                 d: [.4, .57],  m: [.2, .45] },
+      { id: 'cmp',    label: '並列比較',  kicker: '起步 05 · 比較',   line: '三種起步範圍並列比較,實際範圍與費用依你的場景評估。',   d: [.57, .72], m: [.45, .68] },
+      { id: 'use',    label: '費用三部分', kicker: '起步 06 · 計費',   line: '導入費(一次性)+ 平台月費 + 高成本 AI 用量,依實際使用計。',     d: [.72, .88], m: [.68, .88] },
+      { id: 'run',    label: '開始運作', kicker: '起步 07 · 上線',        line: '選定起步範圍,第一階段上線。找出適合你的方案。',                 d: [.88, 1],   m: [.88, 1] }
     ],
     reduced: ['racks', 'plat', 'cmp', 'use', 'run'],
     ctas: [
@@ -83,38 +83,53 @@ export const heroConfig = {
   },
   about: {
     key: 'about', paint: 'about',
-    story: 'BUILT FROM REAL WORKFLOWS:流程碎片 → 30+ 連線 → 8+ 產業分群 → 導入流程 → DAY 0–10 → 案例網路 → 品牌核心',
-    totalVh: { desktop: 360, tablet: 280, mobile: 190 },
+    // 原本 7 幕(frag/link/group/pipe/days/net/core)有兩個問題:幕數過多、且 pipe/days
+    // 與頁面下方的六步驟方法區重複講同一件事。收斂為 4 幕,對應四段敘事:
+    // 看見碎片 → 找出斷點 → 建立流程 → 開始運作。
+    // 沿用 about-hero.js 既有的 L.frag / L.link / L.group / L.net 佈局,引擎不動。
+    story: 'BUILT FROM REAL WORKFLOWS:看見碎片 → 找出斷點 → 建立流程 → 開始運作',
+    totalVh: { desktop: 250, tablet: 205, mobile: 160 },
     scenes: [
-      { id: 'frag',  label: '流程碎片',   kicker: 'SCENE 01 · FRAGMENTS',   line: 'LINE、CRM、報價、專案與網站畫面的細小局部——每一片都來自實際系統。', d: [0, .13],   m: [0, .2] },
-      { id: 'link',  label: '30+ 連線',   kicker: 'SCENE 02 · CONNECTED',   line: '案例畫面沿資料線連起來:30+ 支已上線系統與網站。',                    d: [.13, .27], m: [.2, .42] },
-      { id: 'group', label: '8+ 產業',    kicker: 'SCENE 03 · BY INDUSTRY', line: '依產業重新分群:8+ 個產業別實戰經驗。',                              d: [.27, .42], m: null },
-      { id: 'pipe',  label: '導入流程',   kicker: 'SCENE 04 · WORKFLOW',    line: '理解場景 → 整理資料 → 建置模組 → 測試校準 → 上線。',                 d: [.42, .57], m: [.42, .62] },
-      { id: 'days',  label: '10 個工作天', kicker: 'SCENE 05 · TEN DAYS',    line: 'DAY 0 到 DAY 10,節點克制地排開——最快 10 個工作天上線。',            d: [.57, .71], m: null },
-      { id: 'net',   label: '案例網路',   kicker: 'SCENE 06 · THE NETWORK', line: '真實案例互相連成一張營運系統網;點節點可進對應案例。',               d: [.71, .88], m: [.62, .88] },
-      { id: 'core',  label: '收束成核心', kicker: 'SCENE 07 · THE CORE',    line: '網路收束成 PeakQi 營運核心。讓我們先看你的流程。',                   d: [.88, 1],   m: [.88, 1] }
+      { id: 'frag',  label: '看見碎片', kicker: '場景 01 / 04', line: '一次詢問,要在聊天、表單、試算表與內部訊息之間反覆搬運。', d: [0, .26],   m: [0, .28] },
+      { id: 'link',  label: '找出斷點', kicker: '場景 02 / 04', line: '找出重複輸入、容易漏追、責任不清與資料無法流動的節點。',   d: [.26, .52], m: [.28, .55] },
+      { id: 'group', label: '建立流程', kicker: '場景 03 / 04', line: 'AI 協助分類、摘要與草稿;重要判斷、敏感內容與例外仍由人確認。', d: [.52, .78], m: [.55, .8] },
+      { id: 'net',   label: '開始運作', kicker: '場景 04 / 04', line: '完成第一階段驗證後,再依成效逐步擴大。',                     d: [.78, 1],   m: [.8, 1] }
     ],
-    reduced: ['frag', 'link', 'pipe', 'net', 'core'],
+    reduced: ['frag', 'link', 'group', 'net'],
     ctas: [
-      { kind: 'primary', label: '讓我們先看你的流程', href: 'Demo.dc.html', track: 'hero_demo_click' },
-      { kind: 'ghost', label: '查看案例與作品', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'primary', label: '看我們如何合作', href: '#a-method', track: 'about_method_click' },
+      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+    ],
+    flags: {}
+  },
+  method: {
+    key: 'method', paint: 'method',
+    story: 'HOW WE DELIVER:盤點現況 → 定義第一階段 → 建立驗證 → 上線與持續改善',
+    totalVh: { desktop: 300, tablet: 235, mobile: 165 },
+    scenes: [
+      { id: 'map',   label: '盤點現況',     kicker: '階段 1 / 4', line: '找出詢問從哪進來、資料在哪重複、案件停在哪裡——產出問題清單。', d: [0, .26],   m: [0, .28] },
+      { id: 'goal',  label: '定義第一階段', kicker: '階段 2 / 4', line: '框出第一階段的目標、範圍與人工確認邊界,先做最有價值的一段。', d: [.26, .5],  m: [.28, .55] },
+      { id: 'pilot', label: '建立驗證',     kicker: '階段 3 / 4', line: '接出可操作的流程,讓實際使用者測試;人工確認閘門就在流程裡。', d: [.5, .76],  m: [.55, .8] },
+      { id: 'live',  label: '上線與改善',   kicker: '階段 4 / 4', line: '標準模組最快 10 個工作天完成第一階段,上線後依使用持續調整。', d: [.76, 1],   m: [.8, 1] }
+    ],
+    reduced: ['map', 'goal', 'pilot', 'live'],
+    ctas: [
+      { kind: 'primary', label: '預約 AI 導入評估', href: 'Demo.dc.html', track: 'hero_demo_click' },
+      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
     ],
     flags: {}
   },
   demo: {
     key: 'demo', paint: 'demo',
-    story: 'BUILD YOUR DEMO SCENE:空白控制台 → 產業節點 → 流程節點 → 你來組裝 → 相似案例 → 準備摘要 → 導向表單',
+    story: 'BUILD YOUR FIRST AI FLOW:選擇情境 → 找出卡點 → 組合第一階段 → 確認並送出',
     totalVh: { desktop: 340, tablet: 260, mobile: 175 },
     scenes: [
-      { id: 'wait',  label: '等待你的場景', kicker: 'SCENE 01 · WAITING',    line: '一條未完成的資料線、一座空白控制台——等待輸入你的場景。',            d: [0, .12],   m: [0, .15] },
-      { id: 'ind',   label: '產業節點',     kicker: 'SCENE 02 · INDUSTRY',   line: '婚禮、室內設計、房仲、美業、電商、活動、ESG、社區、教育、品牌、其他。', d: [.12, .27], m: [.15, .4] },
-      { id: 'flow',  label: '流程問題',     kicker: 'SCENE 03 · FRICTION',   line: 'LINE 客服、名單追蹤、報價提案、行銷內容、專案管理、數據報表、客製流程。', d: [.27, .42], m: [.4, .65] },
-      { id: 'build', label: '你來組裝',     kicker: 'SCENE 04 · ASSEMBLE',   line: '在右側控制台選一個產業、一個流程——鍵盤與觸控都可以。',              d: [.42, .57], m: null },
-      { id: 'match', label: '相似場景',     kicker: 'SCENE 05 · SIMILAR',    line: '有對應案例就直接看真實截圖;沒有就用通用流程 UI,不虛構客戶。',       d: [.57, .72], m: null },
-      { id: 'sum',   label: '準備摘要',     kicker: 'SCENE 06 · SUMMARY',    line: '產業、問題、可能展示的模組、希望聯絡時間——不做成果保證。',           d: [.72, .88], m: [.65, .88] },
-      { id: 'go',    label: '導向表單',     kicker: 'SCENE 07 · TO FORM',    line: '資料流接到表單,兩分鐘填完。',                                        d: [.88, 1],   m: [.88, 1] }
+      { id: 'ind',   label: '選擇情境',     kicker: '任務 1 / 4', line: '選產業或使用情境——案例、用語與流程示意會跟著更新。', d: [0, .25],   m: [0, .28] },
+      { id: 'flow',  label: '找出卡點',     kicker: '任務 2 / 4', line: '勾選目前最卡的流程,右側草稿即時加入對應節點。',     d: [.25, .5],  m: [.28, .55] },
+      { id: 'build', label: '組合第一階段', kicker: '任務 3 / 4', line: '確認建議能力與人工確認邊界,組成第一版導入草稿。',   d: [.5, .78],  m: [.55, .8] },
+      { id: 'go',    label: '確認並送出',   kicker: '任務 4 / 4', line: '草稿自動帶入表單,補上聯絡方式就能送出討論。',       d: [.78, 1],   m: [.8, 1] }
     ],
-    reduced: ['wait', 'ind', 'flow', 'sum', 'go'],
+    reduced: ['ind', 'flow', 'build', 'go'],
     ctas: [
       { kind: 'primary', label: '開始填寫需求', href: '#pq-demo-grid', track: 'hero_demo_click' },
       { kind: 'ghost', label: '先查看相似案例', href: 'Cases.dc.html', track: 'hero_case_click' }

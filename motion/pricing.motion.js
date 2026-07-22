@@ -11,5 +11,6 @@ export default {
     { id: 'p-faq', label: 'FAQ' }
   ],
   intro: null,
-  flags: { rail: true, pageIntro: false, dividers: false }
+  // rail 圓點導航在本頁像簡報,改用頁內文字錨點(模板裡的 #pq-anchors)
+  flags: { rail: false, pageIntro: false, dividers: false }
 };

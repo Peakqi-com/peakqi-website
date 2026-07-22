@@ -1,0 +1,108 @@
+# PeakOps 改版安全邊界(每次改動前必讀)
+
+動畫引擎全部靠 **ref 名稱 + data-* 屬性 + 固定 DOM 巢狀**抓元素。
+下列任一被刪除/改名/搬層,動畫會**靜默失效**(不報錯)。
+
+- c:/Users/User/Documents/GitHub/peakqi-website/PeakOps.dc.html
+- c:/Users/User/Documents/GitHub/peakqi-website/home2-engine.js
+- c:/Users/User/Documents/GitHub/peakqi-website/gl-engine.js
+- c:/Users/User/Documents/GitHub/peakqi-website/interactions-engine.js
+- c:/Users/User/Documents/GitHub/peakqi-website/sections-engine.js
+- c:/Users/User/Documents/GitHub/peakqi-website/hero-engine.js
+- c:/Users/User/Documents/GitHub/peakqi-website/motion-kit.js
+- c:/Users/User/Documents/GitHub/peakqi-website/motion-config.js
+- c:/Users/User/Documents/GitHub/peakqi-website/motion/home.motion.js
+- c:/Users/User/Documents/GitHub/peakqi-website/content.js
+- 本次為唯讀盤點,以上檔案一律不得修改
+- PeakOps.dc.html:70 `height:360vh` 與 :71 `position:sticky;top:0;height:100vh` — hero-engine.js:576/:628 直接讀 wrap.offsetHeight 換算進度,改高度=改整段 hero 動畫時序
+- PeakOps.dc.html:172,222,562,729 的 `<div data-wrap>` 與 :173,223,563,730 的 `<div data-stage>` 這層巢狀結構 — home2-engine.js 用 `#handoff [data-wrap]` / `#diagnostic [data-wrap]` / `#liveops [data-wrap]` / `#relay [data-wrap]` 精確查詢,少一層就整段 pin 失效
+- PeakOps.dc.html:370-371 lossWrap/lossStage 與 :449-450 flowWrap/flowStage 的 ref 名稱與巢狀關係 — sections-engine.js:90,122 依賴
+- PeakOps.dc.html:905-908 galWrap/galStage/galScroller/galTrack 四層巢狀 — interactions-engine.js:80,109-121 依賴,且 :907 的 `max-width:1360px` 同時是 scroller 量測基準(clientWidth 決定 runway)
+- `#flow > div` 這個選擇器路徑 — gl-engine.js:284 `document.querySelector('#flow > div')`,#flow 內第一層 div 不能多包一層
+- PeakOps.dc.html:465-466,486,510,532 的 `[data-deck]` / `[data-layer="0|1|2"]` / `[data-layer="m"]` / `[data-mcap]` — sections-engine.js:125-159 會覆寫其 position/left/top/width/margin
+- PeakOps.dc.html:161,201,263,294 等 `<sc-for>` 與 `{{ }}` 綁定語法 — DC 框架語法,不可當普通 HTML 改
+- engine 檔本身(home2-engine.js / gl-engine.js / interactions-engine.js / sections-engine.js / hero-engine.js / motion-kit.js / motion-config.js / motion/home.motion.js / sequence/manifest.js)— 本次為唯讀盤點,一律不動
+- c:/Users/User/Documents/GitHub/peakqi-website/support.js —— 檔頭第 1 行明示 GENERATED、來源 dc-runtime/ 不在 repo,改了無法重建且會被下次產生覆蓋
+- c:/Users/User/Documents/GitHub/peakqi-website/peakqi-vision-architecture/** 與 peakqi-vision-architecture_V2/** —— 獨立 Next.js 專案,與 PeakOps.dc.html 無關
+- C:/tmp/*.py(b1-b8.py、onb.py、mosaic.py、mos2.py、mon.py、cover.py)—— 是直接改寫 Home.dc.html 的補丁腳本,本次不得執行、不得改
+- C:/tmp/shot.mjs、C:/tmp/shot2.mjs、C:/tmp/probe*.js、C:/tmp/mem.js、C:/tmp/bhprobe.js —— 共用驗證工具,本次唯讀盤點不改;要客製請另存新 probe 檔
+- PeakOps.dc.html 的 x-dc 結構界線:第 9 行 <x-dc>、第 1254 行 </x-dc>、第 1255 行 <script type="text/x-dc" data-dc-script data-props="..."> —— 這三行的位置關係與唯一性是 parser 前提(support.js:38-43 lastIndexOf),不可增減或搬動
+- PeakOps.dc.html:10 <helmet> 與 :65 </helmet> 的開閉寫法 —— support.js:377-378 是正規式改寫,不可改成自我閉合
+- PeakOps.dc.html:6 <script src="./support.js"></script> —— 必須留在 <x-dc> 之前的 <head>,整頁 runtime 靠它
+- PeakOps.dc.html:67 <dc-import name="Nav"> 與 :1249 <dc-import name="Footer"> 的 name 屬性 —— name 決定 sibling fetch 的檔名(support.js:597-598、1520-1541),改名即 404
+- 模板端 {{ }} 只寫純路徑的既有慣例 —— support.js:205-293 的 resolve() 不支援函式呼叫/運算/三元/邏輯運算子,改成表達式會靜默變空白
+- PeakOps 五個 sc-for 的資料來源變數:cases(:841)、compareRows(:950)、compareCards(:961)、customs(:1056)、faqs(:1169) —— 變成非陣列會整區無聲消失(support.js:553-567)
+- C:\Users\User\Documents\GitHub\peakqi-website\home2-engine.js(依賴 #diagnostic [data-dtool]/[data-dmeter]/[data-dcount]/[data-dtake]/[data-dclose]/[data-dscan]、#liveops [data-live-panel]/[data-live-item]/[data-live-link]/[data-live-name] 選擇器)
+- C:\Users\User\Documents\GitHub\peakqi-website\sections-engine.js(依賴 #loss [data-lossv] 與其 data-t 屬性,sections-engine.js:94 讀 parseInt(data-t))
+- C:\Users\User\Documents\GitHub\peakqi-website\interactions-engine.js(依賴 #cases [data-count] 做數字滾動,interactions-engine.js:25-32 會覆寫 textContent;在 #cases 數字外加註腳可以,改 data-count 元素內文會被引擎蓋掉)
+- C:\Users\User\Documents\GitHub\peakqi-website\hero-engine.js + sequence/manifest.js(依賴 ref t1~t5、heroWrap/heroStage/heroCanvas/heroHint;Hero 148 行那句退費文案位於 heroT5 容器內,可改字但不可動容器結構)
+- C:\Users\User\Documents\GitHub\peakqi-website\gl-engine.js、motion-kit.js、motion/home.motion.js(綁 data-cta / data-arrow / data-echo / data-spot / data-tilt / data-divider 等屬性)
+- PeakOps.dc.html:1255 的 data-props JSON 與 1256 起的 class Component extends DCLogic 結構(改內容不需動這裡)
+- content.js 的 export 名稱與物件欄位名(stats/lossYear/caseStudies.metrics/plans/risk/usage/faq/compare 皆被多頁共用:Home、Cases、Pricing、Solutions、About、Demo 也 import,改欄位會連帶影響其他頁)
+- #diagnostic 的 data-max / data-u 屬性名(home2-engine.js:100-103 直接讀取)
+- #pq-live-grid / #pq-live-console / #pq-live-items / #pq-cmp-desk / #pq-cmp-mob / #pq-tl / #pq-orbit / #pq-orbitrow 這些 id(第 55-62 行 RWD media query 直接綁 id)
+- c:/Users/User/Documents/GitHub/peakqi-website/hero-engine.js(animation-only)
+- c:/Users/User/Documents/GitHub/peakqi-website/home2-engine.js(animation-only)
+- c:/Users/User/Documents/GitHub/peakqi-website/gl-engine.js(animation-only,WebGL)
+- c:/Users/User/Documents/GitHub/peakqi-website/interactions-engine.js(animation-only)
+- c:/Users/User/Documents/GitHub/peakqi-website/sections-engine.js(animation-only)
+- c:/Users/User/Documents/GitHub/peakqi-website/motion-kit.js(animation-only,共用元件庫,多頁共用)
+- c:/Users/User/Documents/GitHub/peakqi-website/motion-config.js(animation tokens,多頁共用)
+- c:/Users/User/Documents/GitHub/peakqi-website/motion/home.motion.js(本頁章節設定,唯一該動的動畫檔)
+- c:/Users/User/Documents/GitHub/peakqi-website/sequence/manifest.js(hero 影格 manifest,enabled:false 但簽名被依賴)
+- c:/Users/User/Documents/GitHub/peakqi-website/micro-engine.js(由 Nav.dc.html 間接載入)
+- section id:#hero #handoff #diagnostic #flow #liveops #relay #cases #pricing #demo-cta(motion/home.motion.js 的 chapters 靠 getElementById)
+- id:#pq-orbit #pq-orbitrow #pq-tl #pq-live-grid #pq-live-console #pq-live-items
+- DOM 巢狀:section#hero > div[ref=heroWrap;height:360vh] > div[ref=heroStage;position:sticky;top:0;height:100vh] > canvas[ref=heroCanvas]
+- DOM 巢狀:section#handoff|#diagnostic|#liveops|#relay > div[data-wrap] > div[data-stage](三層缺一不可)
+- DOM 巢狀:div[ref=galWrap] > div[ref=galStage] > div[ref=galScroller] > div[ref=galTrack](四層,不可插層/合併)
+- DOM 順序:#flow 的第一個直接子 div 必須是 flowWrap(gl-engine.js:284 '#flow > div')
+- DOM 順序:#pq-orbit 的 firstElementChild 必須是 role=tablist 的軌道盤(gl-engine.js:151)
+- DOM 順序:[data-dmeter] 的 firstElementChild 必須是進度條 fill(home2-engine.js:87)
+- DOM 順序:[data-rail] 的 firstElementChild 必須是圓點 span(sections-engine.js:217)
+- ref 名(與 renderVals 對應):wrap stage canvas t1 t2 t3 t4 t5 hint pain lossWrap lossStage flowWrap flowStage orbitBox orbitCore galWrap galStage galScroller galTrack
+- hero 屬性:data-scrim data-st data-chip
+- pain 屬性:data-win data-dep data-rot data-badge data-break data-gap data-leak data-cursor data-ba
+- loss 屬性:data-lossv data-t data-lgap data-drop
+- flow 屬性:data-deck data-layer("0"/"1"/"2"/"m") data-mcap data-rail data-noise
+- handoff 屬性:data-hpath(必須是 <path>) data-hpack data-hnum data-hnote
+- diagnostic 屬性:data-dtool data-rot data-dmeter data-dcount data-max data-u data-dtake data-dclose data-dscan
+- liveops 屬性:data-live-panel(0..5) data-live-item data-name data-live-link data-live-name(panel 數必須等於 item 數)
+- relay 屬性:data-rstation data-rchip data-rfill data-rpack
+- cases/portfolio 屬性:data-caseimg data-src data-count data-bg data-tilt
+- compare/timeline 屬性:data-sweeper data-tline data-dot data-tstep
+- demo-cta 屬性:data-console data-echo data-spot
+- divider 屬性:data-divider(line/shutter/aperture) data-line data-label data-shut-l data-shut-r data-ap
+- orbit 座標系:SVG viewBox="0 0 600 460" 與 ellipse rx=238 ry=164(gl-engine.js:155,160 與 PeakOps.dc.html:1492 orbPts 三處同步)
+- 全域把手:window.__pqHero(.cons) __pqGL __pqInteractions(.galNav) __pqSections __pqHome2 __pqMicro
+- keyframes 名稱(PeakOps.dc.html:25-57):pqFloat pqPulse pqDash pqJitter pqSweep pqScan pqBarFlow pqTypeDot pqGenSweep pqCapGrow pqSeqLit pqBarBreath pqAdvract pqHeart pqCountFlash pqAnxious pqBreakPulse pqBlink pqPktA pqStationLit pqPageIn
+- CSS media query(PeakOps.dc.html:55, 62):#pq-live-* / #pq-cmp-desk / #pq-tl / #demo-cta [data-echo] 那兩條與引擎邏輯耦合
+- 各區塊 HTML 的『初始 inline style』本身即 reduced-motion/mobile 的完成態,不可視為隨意可調的預設值
+- C:/Users/User/Documents/GitHub/peakqi-website/PeakOps.dc.html 的 section id:#hero #hero-stats #handoff #diagnostic #pain #loss #flow #liveops #relay #features #cases #portfolio #compare #pricing #usage #timeline #risk #faq #demo-cta —— 引擎以 '#cases'、'#flow > div'、'#flow [data-deck]'、'#compare [data-sweeper]'、'#demo-cta [data-console]'、'#timeline' 直接選取
+- #pq-orbit / #pq-orbitrow / #pq-live-console / #pq-live-items / #pq-cmp-desk / #pq-cmp-mob / #pq-tl 這些 id(PeakOps.dc.html:767/801/573/711/944/960/1119),引擎 querySelector 依賴
+- 所有 data-* 鉤子,尤其:[data-lossv] 與其 data-t 值(:383/392/401/410/435,count-up 動畫來源)、[data-caseimg][data-src]、[data-count]、[data-layer]、[data-deck]、[data-rail]、[data-st]、[data-chip]、[data-echo]、[data-hpath]、[data-hnote]、[data-scrim]、[data-console]、[data-sweeper]、[data-tline]、[data-orbcard]、[data-live-item]/[data-live-name]/[data-live-panel]/[data-live-link]、[data-rstation]/[data-rchip]/[data-rfill]、[data-drop]/[data-lgap]/[data-leak]、[data-tilt]、[data-cta]、[data-arrow]
+- ref="{{ ... }}" 綁的節點與其巢狀層級:heroWrap/heroStage/heroCanvas/heroT1–heroT5/heroHint(:70-152)、lossWrap/lossStage(:370-371)、flowWrap/flowStage(:449-450)、pain(:上方)、orbitBox/orbitCore、galWrap/galStage/galScroller/galTrack —— hero-engine.js / sections-engine.js 會直接改 style.position 等
+- Nav.dc.html 的 showSticky 條件鏈(:222)與 sessionStorage key 'pqCtaDismissed'(:113/232):改動會影響全站每一頁的浮動 CTA,不是 PeakOps 單頁範圍
+- PeakOps.dc.html:1255 的 data-props JSON(stickyCta / grain)與 :1554 stickyVal 對應關係
+- analytics 選擇器契約:PeakOps.dc.html:1284-1289 依賴 href 精確等於 'Demo.dc.html' / 'Cases.dc.html' 與前綴 'Demo.dc.html?case=' —— 改 href 寫法(例如加 utm)會靜默弄壞埋點
+- content.js 既有 export 名稱:多頁共用(Nav 用 navigation、Demo/Cases 頁用 demoIndustries/contactTimes/portfolioAI/portfolioWeb/solutionsScenarios 等),不可在只改 PeakOps 的情況下重新命名或刪除
+- c:/Users/User/Documents/GitHub/peakqi-website/home2-engine.js(本次唯讀盤點,未修改)
+- c:/Users/User/Documents/GitHub/peakqi-website/motion-kit.js / motion/home.motion.js / sequence/manifest.js
+- id 選擇器(被 PeakOps.dc.html:55-62 的 @media 與 sections-engine 綁定):#pq-live-grid、#pq-live-console、#pq-live-items、#pq-cmp-desk、#pq-cmp-mob、#pq-orbit、#pq-orbitrow、#pq-tl、#relay、#demo-cta、#pq-skip
+- home2-engine 依賴的 data-*:data-wrap、data-stage、data-dtake、data-dtool、data-dscan、data-dmeter、data-dcount、data-dclose、data-hpath、data-hpack、data-hnum、data-hnote、data-rfill、data-rpack、data-rchip、data-rstation、data-live、data-name、data-max、data-u、data-rot、data-wgrid、data-wmeta
+- sections-engine 依賴的 data-*:data-layer、data-deck、data-mcap、data-rail、data-lossv、data-lgap、data-drop、data-gap、data-leak、data-orbcard、data-t、data-badge、data-break、data-ba、data-dep、data-noise、data-cursor、data-win
+- interactions/gl/motion 依賴的 data-*:data-count、data-dot、data-tline、data-tstep、data-sweeper、data-bg、data-caseimg、data-src、data-console、data-tilt、data-cta、data-arrow、data-echo、data-spot、data-divider、data-label、data-line、data-ap、data-parallax、data-maskreveal、data-shut、data-intro、data-dataline、data-chip、data-scrim、data-st
+- DC 框架語法:<x-dc>、<helmet>、<dc-import>、sc-for / sc-if 及其 as / hint-placeholder-count / hint-placeholder-val 屬性、ref="{{ }}"、style="{{ }}"、style-hover、onClick/onKeyDown 綁定
+- PeakOps.dc.html:52-53 的 prefers-reduced-motion 規則,其中用 [style*="pqTypeDot"] 等字串比對 inline style —— 任何改 style 屬性的動作都不可刪掉這些 animation 名稱
+- PeakOps.dc.html:920 附近 portfolio 卡的 min-width:300px/max-width:300px 與 scroll-snap 設定(galScroller 寬度計算依賴)
+- PeakOps.dc.html:1010-1035 方案卡模板所引用的 property 名(p.codeStyle/p.nameStyle/p.smallLabelStyle/p.quote/p.baseStyle/p.itemStyle/p.btnStyle/p.btnHover/p.cardStyle/p.setupBoxStyle)—— 改 JS 樣式值可以,改 key 名會斷
+- PeakOps.dc.html:55 這一整條 @media (max-width:899px) 是全頁唯一的手機佈局規則,任何 responsive 修正必須「加在裡面」,不可重寫或拆散
+- 選擇器 #pq-live-grid / #pq-live-console / #pq-live-items / [data-live-item] / [data-live-panel] — home2-engine.js:140-172 依這些 id 與屬性做情境切換與 aria-current
+- 選擇器 #pq-cmp-desk 與 #pq-cmp-mob 的成對關係(55 行隱藏桌面版、56 行隱藏手機版),拿掉任一邊會導致某個寬度區間兩份都出現或兩份都消失
+- 選擇器 #pq-orbit 與 #pq-orbitrow 的成對關係(60/61 行),且 #pq-orbitrow [data-orbcard] 被 sections-engine.js:276 拿來做手機視差
+- #pq-tl 與其子節點 [data-tstep] / [data-dot] / [data-tline] 的 DOM 結構 — interactions-engine.js:178 用 getComputedStyle(#pq-tl).flexDirection 判斷橫直軸
+- PeakOps.dc.html:70-71 heroWrap(height:360vh)與 heroStage(position:sticky;top:0)的巢狀關係 — hero-engine 的捲動進度全靠這個結構,且任何祖先加 overflow:hidden 都會讓 sticky 失效
+- PeakOps.dc.html:53 那條用 [style*="pqXxx"] 屬性選擇器關動畫的 reduced-motion 規則 — 它依賴 inline style 內的 animation 名稱字串,改寫 inline style 會靜默失效
+- Nav.dc.html:91 浮動 CTA 的 position:fixed 容器與 <sc-if value="{{ showSticky }}"> 包裹關係(Nav.dc.html:90、222)
+- 所有 data-* 鉤子:data-wrap / data-stage / data-win / data-dep / data-rot / data-leak / data-gap / data-badge / data-hpath / data-hpack / data-hnum / data-rstation / data-rchip / data-rfill / data-rpack / data-tstep / data-cta / data-arrow / data-tilt / data-spot / data-echo / data-count / data-sweeper — 分散在 sections-engine、home2-engine、interactions-engine、micro-engine
+- engines 本身(home2-engine.js / gl-engine.js / interactions-engine.js / sections-engine.js / hero-engine.js / motion-kit.js / micro-engine.js)— 本次為唯讀盤點,未做行為驗證,不應在同一次改動中一併修改

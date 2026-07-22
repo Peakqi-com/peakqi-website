@@ -7,4 +7,6 @@
   <url><loc>https://peakqi.com/pricing</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://peakqi.com/about</loc><priority>0.6</priority><changefreq>yearly</changefreq></url>
   <url><loc>https://peakqi.com/demo</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://peakqi.com/method</loc></url>
+  <url><loc>https://peakqi.com/peakops</loc></url>
 </urlset>

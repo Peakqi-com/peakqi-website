@@ -259,20 +259,21 @@ function paintSolutions(g, e) {
     d.label(dayK > 0 ? 'FOLLOWING' : 'CRM CARD', cx + 8, cy + chh - 7 * s, 7.5 * s, '#D14E12', 1);
     g.restore();
   }
-  // S4 FOLLOW:DAY 1/3/5/7 節奏
+  // S4 FOLLOW:狀態導向四步(補齊需求→提供案例→確認反應→決定下一步)
   if (kF > 0) {
     const a = ez(kF), l1x = colX + off(1), l1y = ly(1);
     const ty = l1y + lh * .78;
     g.save(); g.globalAlpha = a;
-    ['DAY 1', 'DAY 3', 'DAY 5', 'DAY 7'].forEach((tx, j) => {
+    ['補齊需求', '提供案例', '確認反應', '決定下一步'].forEach((tx, j) => {
       const nx = l1x + 24 + (colW - 60) * j / 3;
       const on = kF * 4 - .4 > j;
       d.node(nx, ty, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', 1, !on);
       d.label(tx, nx - 14 * s, ty + 14 * s, 8.5 * s, on ? C.blue : 'rgba(242,239,232,.4)', 1);
       if (j < 3) d.line(nx + 5, ty, l1x + 24 + (colW - 60) * (j + 1) / 3 - 5, ty, clamp(kF * 4 - .5 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
     });
-    const hint = ['提醒已擬', '補上案例', '限時優惠', '最後關心'][clamp(Math.floor(kF * 4), 0, 3)];
-    if (kF > .2 && !mobile) d.chip(l1x + colW - 86 * s, l1y + 8, hint, true, 9 * s);
+    const hint = ['補齊需求', '提供案例', '確認反應', '決定下一步'][clamp(Math.floor(kF * 4), 0, 3)];
+    // kF < .85:王小姐卡滑到右端後不再畫 chip,避免兩者疊字(1280 寬實測會撞)
+    if (kF > .2 && kF < .85 && !mobile) d.chip(l1x + colW - 86 * s, l1y + 8, hint, true, 9 * s);
     g.restore();
   }
   // S5 NURTURE:分群標籤 + 內容排程
@@ -719,10 +720,133 @@ function paintDemo(g, e) {
   }
 }
 
+
+// ---------- METHOD:導入方法(盤點 → 定義 → 驗證 → 上線與改善) ----------
+function paintMethod(g, e) {
+  const { zone: z, k, C, d, mobile, t } = e;
+  const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
+  const s = clamp(Math.min(z.w / 520, z.h / 420), .5, 1.15);
+  const kM = k('map'), kG = k('goal'), kP = k('pilot'), kL = k('live');
+  const cx = z.x + z.w * .5;
+  // S1 盤點:散落的來源面板被掃描線�во掃過,問題清單逐列成形
+  if (kM > 0) {
+    // d.panel/head/chip 內部會覆寫 globalAlpha,整幕淡出必須摺進每個 alpha 參數
+    const fd = 1 - ez(sb(kG, .12, .55)) * .93;
+    const a = ez(kM) * fd;
+    g.save(); g.globalAlpha = a;
+    const srcs = [['LINE', .06, .06], ['表單', .58, .02], ['試算表', .1, .4], ['CRM', .62, .34]];
+    srcs.forEach(([tx, fx, fy], i) => {
+      const bx = z.x + z.w * fx, by = z.y + z.h * fy;
+      const bw = z.w * .3, bh = 46 * s;
+      const ka = ez(sb(kM, i * .1, .45 + i * .1));
+      d.panel(bx, by, bw, bh, ka * .95 * fd, false);
+      g.globalAlpha = ka * fd;
+      if (ka > .3) d.han(tx, bx + 12, by + 20 * s + 6, 11 * s, 'rgba(242,239,232,.8)', 700);
+      if (ka > .5) d.node(bx + bw - 14, by + bh / 2, 3, C.orange, ka * fd, false);
+    });
+    const scanY = z.y + z.h * (.06 + .5 * (0.5 + 0.5 * Math.sin(t * 1.1)));
+    if (fd > .3) d.line(z.x, scanY, z.x + z.w * .92, scanY, ez(sb(kM, .15, .5)) * fd, 'rgba(255,107,44,' + (.35 * fd).toFixed(2) + ')', 1.2, [5, 7]);
+    const lw = z.w * .5, lx = cx - lw * .18, ly0 = z.y + z.h * .58;
+    d.panel(lx, ly0, lw, z.h * .34, ez(sb(kM, .3, .7)) * fd, true);
+    d.head(lx, ly0, lw, 'PROBLEM LIST — 問題清單', ez(sb(kM, .35, .75)) * fd, C.orange);
+    ['重複輸入 ×3', '漏追節點 ×2', '責任不清 ×1'].forEach((tx, i) => {
+      const kr = ez(sb(kM, .45 + i * .12, .75 + i * .12));
+      if (kr <= 0) return;
+      const ry = ly0 + 40 * s + i * 26 * s;
+      d.node(lx + 14, ry - 4, 2.6, C.orange, kr * a, false);
+      g.globalAlpha = a * kr;
+      d.han(tx, lx + 26, ry, 11 * s, 'rgba(242,239,232,.75)', 500);
+    });
+    g.restore();
+  }
+  // S2 定義:第一階段範圍框收攏,目標與邊界 chips 鎖定
+  if (kG > 0) {
+    const fd = 1 - ez(sb(kP, .08, .5)) * .93;
+    const a = ez(kG) * fd;
+    g.save(); g.globalAlpha = a;
+    const bw = z.w * .62, bh = z.h * .5;
+    const bx = cx - bw / 2, by = z.y + z.h * .2;
+    const kk = ez(sb(kG, .05, .5));
+    g.strokeStyle = C.orange; g.lineWidth = 1.6; g.setLineDash([8, 6]);
+    g.strokeRect(bx + (1 - kk) * bw * .18, by + (1 - kk) * bh * .18, bw - (1 - kk) * bw * .36, bh - (1 - kk) * bh * .36);
+    g.setLineDash([]);
+    d.label('PHASE 1 SCOPE', bx + 4, by - 10, 9.5 * s, C.orange, 1.6);
+    const chips = [['目標:回覆不漏', .1], ['範圍:LINE 客服', .26], ['邊界:價格由人確認', .42]];
+    chips.forEach(([tx, dk], i) => {
+      const kc = ez(sb(kG, .25 + dk, .6 + dk));
+      if (kc > 0) { g.globalAlpha = a * kc; d.chip(bx + 18, by + 20 + i * 34 * s, tx, i === 2, 10 * s); }
+    });
+    g.globalAlpha = a * ez(sb(kG, .6, .9));
+    d.tick(bx + bw - 26, by + bh - 20, 9 * s, C.green, a);
+    g.restore();
+  }
+  // S3 驗證:迷你流程接線(詢問→辨識→AI/人工→下一步)+ 人工確認閘門
+  if (kP > 0) {
+    const fd = 1 - ez(sb(kL, .08, .5)) * .92;
+    const a = ez(kP) * fd;
+    g.save(); g.globalAlpha = a;
+    const y = z.y + z.h * .42;
+    const xs = [z.x + z.w * .08, z.x + z.w * .36, z.x + z.w * .64, z.x + z.w * .92];
+    const names = ['詢問', '辨識', 'AI/人工', '下一步'];
+    xs.forEach((x, i) => {
+      const kn = ez(sb(kP, i * .14, .4 + i * .14));
+      d.node(x, y, kn > 0 ? 4.2 : 2.4, i === 2 ? C.green : C.orange, Math.max(.25, kn) * fd, kn <= 0);
+      g.globalAlpha = a;
+      if (kn > .3) d.han(names[i], x - 16 * s, y + 22 * s, 10.5 * s, 'rgba(242,239,232,.75)', 600);
+      if (i < 3) d.line(xs[i] + 6, y, xs[i + 1] - 6, y, ez(sb(kP, .12 + i * .16, .5 + i * .16)), 'rgba(255,107,44,.6)', 1.4);
+    });
+    const kg = ez(sb(kP, .55, .85));
+    if (kg > 0) {
+      g.globalAlpha = a * kg;
+      const gx = xs[2], gy = y - 34 * s;
+      d.panel(gx - 52 * s, gy - 16 * s, 104 * s, 24 * s, kg * fd, true);
+      g.globalAlpha = a * kg;
+      d.han('人工確認', gx - 24 * s, gy + 1, 10 * s, C.green, 700);
+      d.line(gx, gy + 8 * s, gx, y - 8, kg, 'rgba(101,224,188,.7)', 1.2, [3, 4]);
+    }
+    const kt = ez(sb(kP, .7, 1));
+    if (kt > 0) { g.globalAlpha = a * kt; d.chip(z.x + z.w * .3, z.y + z.h * .74, '實際使用者測試中', true, 10 * s); }
+    g.restore();
+  }
+  // S4 上線與改善:DAY 0→10 節點亮起 + 交付物 + 持續改善迴圈
+  if (kL > 0) {
+    const a = ez(kL);
+    g.save(); g.globalAlpha = a;
+    const y = z.y + z.h * .34;
+    const days = ['DAY 0', 'DAY 4', 'DAY 7', 'DAY 10'];
+    const xs2 = days.map((_, i) => z.x + z.w * (.08 + .82 * i / 3));
+    xs2.forEach((x, i) => {
+      const kn = ez(sb(kL, i * .12, .35 + i * .12));
+      d.node(x, y, kn > .5 ? 4 : 2.6, kn > .5 ? C.orange : 'rgba(242,239,232,.35)', Math.max(.3, kn) * a, kn <= .5);
+      g.globalAlpha = a;
+      d.label(days[i], x - 16 * s, y - 14 * s, 8.5 * s, kn > .5 ? C.orange : 'rgba(242,239,232,.4)', 1);
+      if (i < 3) d.line(xs2[i] + 6, y, xs2[i + 1] - 6, y, ez(sb(kL, .08 + i * .14, .42 + i * .14)), 'rgba(255,107,44,.55)', 1.3);
+    });
+    const dl = [['上線版本', .45], ['操作文件', .58]];
+    dl.forEach(([tx, dk], i) => {
+      const kc = ez(sb(kL, dk, dk + .3));
+      if (kc > 0) { g.globalAlpha = a * kc; d.chip(z.x + z.w * (.12 + i * .3), y + 26 * s, tx, false, 10 * s); }
+    });
+    const kloop = ez(sb(kL, .6, 1));
+    if (kloop > 0) {
+      const lx = cx, lyy = z.y + z.h * .74, r = 26 * s;
+      g.globalAlpha = a * kloop;
+      g.strokeStyle = C.green; g.lineWidth = 1.6;
+      g.beginPath(); g.arc(lx, lyy, r, -Math.PI * .5, -Math.PI * .5 + Math.PI * 1.7 * kloop); g.stroke();
+      const pulse = .6 + .4 * Math.sin(t * 2.2);
+      d.node(lx, lyy - r, 3.4, C.green, pulse * a, false);
+      g.globalAlpha = a * kloop;
+      d.han('持續改善', lx - 22 * s, lyy + 5, 10.5 * s, 'rgba(242,239,232,.8)', 700);
+    }
+    g.restore();
+  }
+}
+
 export const painters = {
   solutions: paintSolutions,
   cases: paintCases,
   pricing: paintPricing,
   about: paintAbout,
-  demo: paintDemo
+  demo: paintDemo,
+  method: paintMethod
 };

@@ -26,6 +26,7 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
 @media (max-width:899px){[data-story] [data-sgrid]{grid-template-columns:1fr!important}[data-story] [data-shotbox]{min-height:240px!important}}
+nav[aria-label="breadcrumb"]{align-items:center}
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
@@ -69,14 +70,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           </nav>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PROOF IN MOTION</span>
           <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.25 'Noto Sans TC',sans-serif">不是概念圖,<br>是<span style="color:#FF6B2C">已經運作過</span>的系統。</h1>
-          <div style="display:flex;gap:36px">
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <span style="font:700 clamp(1.8rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
-              <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">已上線系統與網站</span>
+          <div style="display:flex;gap:clamp(32px,5vw,56px)">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <span style="font:700 clamp(1.9rem,3.1vw,2.7rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
+              <span style="font:600 15px/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">完成專案與系統實作</span>
             </div>
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <span style="font:700 clamp(1.8rem,3vw,2.6rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">8+</span>
-              <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">產業別實戰經驗</span>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <span style="font:700 clamp(1.9rem,3.1vw,2.7rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">8+</span>
+              <span style="font:600 15px/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">產業與營運應用情境</span>
             </div>
           </div>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
@@ -122,13 +123,36 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_case_click" href="#index" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看所有案例</a>
-            <a data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">把這個流程套用到我的公司</a>
+            <a data-hero-primary data-track="hero_case_click" href="#stories" aria-label="查看精選案例" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看精選案例</a>
+            <a data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" aria-label="討論我的營運流程" style-hover="border-color:#FF6B2C;color:#FF6B2C">討論我的營運流程</a>
           </div>
           <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">牆上每一格都是實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:5;display:none;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 品牌屋 3D 導覽(Steampunk 視差滾動,以父頁捲動驅動 iframe)============ -->
+<section id="brandhouse" data-screen-label="品牌屋 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px) clamp(20px,3vw,32px)">
+    <div style="display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)">
+      <span style="width:34px;height:1.5px;background:#FF6B2C"></span>BRAND HOUSE · 品牌屋
+    </div>
+    <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
+    <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
+      六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
+  </div>
+  <!-- 捲動跑道(手機與桌機共用):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景。
+       節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
+       跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、
+       5 張卡(含實績卡)的章節每張約 34vh,足夠讀完再換卡,不會一滑就過。 -->
+  <div id="pq-bh-runway" style="height:2200vh;position:relative;margin-top:clamp(24px,4vw,40px)">
+    <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
+      <iframe id="pq-bh-frame" src="Steampunk/peakqi-story.html" title="PeakQi 品牌屋 3D 導覽"
+        scrolling="no"
+        style="display:block;width:100%;height:100%;border:0;pointer-events:none"></iframe>
     </div>
   </div>
 </section>
@@ -140,8 +164,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
     </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">四個產業,四種接法</h2>
-    <p style="margin:14px 0 0;font:400 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">捲動閱讀 BEFORE → SYSTEM → RESULT;畫面皆為該案實際系統截圖。</p>
+    <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,<br>三種把 AI 接進流程的方法</h2>
+    <p style="margin:14px 0 0;font:400 clamp(16px,1.3vw,18px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">每個案例都從原本的工作方式開始,說明導入了哪些系統、AI 與人如何分工,以及最後改善了什麼。</p>
   </div>
   <sc-for list="{{ stories }}" as="st" hint-placeholder-count="4">
     <div data-story style="border-top:1px solid rgba(9,11,14,.12);margin-top:clamp(28px,4vw,44px)">
@@ -163,21 +187,22 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             </div>
             <div style="display:flex;flex-direction:column;gap:14px">
               <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.4)">{{ st.no }}</span>
                 <span style="border:1px solid rgba(9,11,14,.25);border-radius:999px;padding:5px 13px;font:500 12px 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(9,11,14,.65)">{{ st.industry }}</span>
                 <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ st.type }}</span>
               </div>
-              <h3 style="margin:0;font:800 clamp(1.4rem,2.4vw,1.9rem)/1.35 'Noto Sans TC',sans-serif">{{ st.title }}</h3>
+              <h3 style="margin:0;font:800 clamp(1.65rem,2.9vw,2.35rem)/1.25 'Noto Sans TC',sans-serif">{{ st.title }}</h3>
               <div style="position:relative;min-height:190px">
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本卡在</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本問題</span>
                   <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.78)">{{ st.stuck }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 我們做了</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 導入內容</span>
                   <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ st.did }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 該案例成果</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 實際結果</span>
                   <sc-for list="{{ st.metrics }}" as="m" hint-placeholder-count="3">
                     <div style="display:flex;align-items:baseline;gap:12px;border-bottom:1px dashed rgba(9,11,14,.18);padding-bottom:7px">
                       <span data-count style="font:700 20px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:100px;font-variant-numeric:tabular-nums">{{ m.v }}</span>
@@ -187,9 +212,13 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                   <span style="font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">※ 該案例成果,依導入範圍而異。</span>
                 </div>
               </div>
+              <div style="margin:2px 0 2px;padding:12px 14px;border-left:2px solid #FF6B2C;background:rgba(255,107,44,.05);display:flex;flex-direction:column;gap:5px">
+                <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">HUMAN —— AI 與人分工</span>
+                <p style="margin:0;font:500 15px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ st.human }}</p>
+              </div>
               <div style="display:flex;gap:14px;flex-wrap:wrap">
-                <a href="{{ st.detailHref }}" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">看完整案例 →</a>
-                <a href="{{ st.demoHref }}" style="font:500 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" style-hover="color:#FF6B2C">套用到我的公司</a>
+                <a href="{{ st.detailHref }}" aria-label="查看完整案例" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">查看完整案例 →</a>
+                <a href="{{ st.demoHref }}" style="font:500 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" aria-label="討論相似導入情境" style-hover="color:#FF6B2C">討論相似導入情境</a>
               </div>
             </div>
           </div>
@@ -207,8 +236,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">WORK INDEX — 全部實績</span>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">25+ 件,每一件都有畫面</h2>
-      <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">點卡片可放大截圖(Esc 關閉、← → 切換)</span>
+      <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">25+ 件,<br>不只看成品,也看系統怎麼運作</h2>
+      <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">點卡片放大截圖;點背景或關閉鈕關閉,左右可切換</span>
     </div>
     <div role="group" aria-label="類別篩選" style="margin-top:clamp(22px,3vw,32px);display:flex;flex-wrap:wrap;gap:10px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
@@ -226,8 +255,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <span style="{{ w.catStyle }}">{{ w.type }}</span>
               <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.35)">{{ w.sourcePage }}</span>
             </div>
-            <span style="font:800 15.5px/1.4 'Noto Sans TC',sans-serif">{{ w.name }}</span>
-            <span style="font:400 12.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ w.d }}</span>
+            <span style="font:800 16.5px/1.4 'Noto Sans TC',sans-serif">{{ w.name }}</span>
+            <span style="font:400 13.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">{{ w.d }}</span>
+            <span style="align-self:flex-start;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.55);border:1px solid rgba(242,239,232,.2);border-radius:999px;padding:2px 9px">{{ w.status }}</span>
             <div style="margin-top:auto;display:flex;gap:12px;padding-top:6px">
               <button onClick="{{ w.zoom }}" style="background:none;border:none;padding:0;cursor:pointer;font:700 12.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">放大截圖</button>
               <sc-if value="{{ w.hasUrl }}" hint-placeholder-val="{{ false }}">
@@ -260,7 +290,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CUSTOM BUILD</span>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">整套客製系統,我們也做</h2>
+      <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">從單一流程,<br>到整套企業系統</h2>
       <p style="margin:0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);max-width:340px">{{ customNote }}</p>
     </div>
     <p style="margin:20px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:640px">{{ customCred }}</p>
@@ -277,8 +307,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 
 <section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
-    <h2 style="margin:0;font:900 clamp(1.8rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看你產業的版本?<br>15 分鐘 Demo 直接跑給你看。</h2>
-    <a href="Demo.dc.html" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘場景 Demo <span data-arrow>→</span></a>
+    <h2 style="margin:0;font:900 clamp(1.8rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 如何接進你的流程?</h2>
+    <a href="Demo.dc.html" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
+    <a href="#stories" aria-label="查看相近產業案例" style="display:inline-flex;align-items:center;gap:8px;margin-left:14px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看相近產業案例</a>
   </div>
 </section>
 
@@ -294,6 +325,34 @@ class Component extends DCLogic {
       try { this._missing = val.devReport(mm); } catch (e) {}
     });
     import('./seo.js').then(m => m.applySEO('cases')).catch(() => {});
+    // 品牌屋 3D:用父頁在該區塊的捲動進度,程式化捲動 iframe → 完整重用原本的視差引擎,零改動
+    this._bhInit = () => {
+      const run = document.getElementById('pq-bh-runway');
+      const fr = document.getElementById('pq-bh-frame');
+      // DC 為非同步渲染:掛載當下元素可能還沒進 DOM → 重試直到出現
+      if (!run || !fr) { if ((this._bhTry = (this._bhTry || 0) + 1) < 60) setTimeout(this._bhInit, 100); return null; }
+      let ticking = false;
+      const apply = () => {
+        ticking = false;
+        const r = run.getBoundingClientRect();
+        const total = run.offsetHeight - window.innerHeight;
+        if (total <= 0) return;
+        const p = Math.min(1, Math.max(0, -r.top / total));
+        try {
+          const w = fr.contentWindow, d = fr.contentDocument;
+          if (!w || !d || !d.documentElement) return;
+          const sh = d.documentElement.scrollHeight - w.innerHeight;
+          if (sh > 0) w.scrollTo(0, p * sh);
+        } catch (e) {}
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      fr.addEventListener('load', apply);
+      apply();
+      return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+    };
+    this._bh = this._bhInit();
     Promise.all([import('./motion-kit.js'), import('./motion/cases.motion.js')])
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});
@@ -362,11 +421,12 @@ class Component extends DCLogic {
         statStyle: { position: 'absolute', zIndex: 7, left: 'calc(' + FOCPOS[i].x + '% + 10px)', top: 'calc(' + FOCPOS[i].y + '% + 108px)', display: 'flex', flexDirection: 'column', gap: '3px', background: 'rgba(9,11,14,.9)', border: '1px solid rgba(255,107,44,.5)', borderRadius: '6px', padding: '10px 14px', opacity: 0, transition: 'opacity .5s', pointerEvents: 'none' }
       };
     });
-    const stories = F.map(f => {
+    const stories = F.map((f, si) => {
       const narr = storyByslug[narrMap[f.slug]] ?? {};
       return {
+        no: String(si + 1).padStart(2, '0') + ' / ' + String(F.length).padStart(2, '0'),
         slug: f.slug, industry: f.industry, type: f.type, title: narr.title ?? f.name,
-        stuck: narr.stuck ?? '', did: narr.did ?? '', metrics: narr.metrics ?? [],
+        stuck: narr.stuck ?? '', did: narr.did ?? '', human: narr.human ?? '', metrics: narr.metrics ?? [],
         sourcePage: (f.sourcePage || '').toUpperCase(),
         detailHref: 'Case.dc.html?slug=' + f.slug,
         demoHref: 'Demo.dc.html?case=' + encodeURIComponent(narrMap[f.slug]),
@@ -386,11 +446,12 @@ class Component extends DCLogic {
     const list = filter === '全部' ? W : W.filter(w => w.type === filter);
     const lbItems = list.map(w => ({
       src: w.cover.src, fallback: w.cover.fallback, alt: w.cover.alt,
-      cap: w.name + '・' + w.d + '(' + (w.sourcePage || '').toUpperCase() + ')',
+      cap: w.name + '｜' + w.type + '・' + w.d,
       url: w.url || null, detail: null
     }));
     const worksAll = list.map((w, i) => ({
       ...w,
+      status: w.url ? '線上可看' : '已交付專案',
       thumbStyle: {
         width: '100%', height: '136px', display: 'block', borderBottom: '1px solid rgba(242,239,232,.1)',
         backgroundImage: 'url("' + w.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', backgroundColor: '#090B0E'

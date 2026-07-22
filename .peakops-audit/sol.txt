@@ -1,0 +1,13 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: the server responded with a status of 404 (File not found) <http://127.0.0.1:8000/favicon.ico>"
+ ],
+ "probeError": null
+}
+{
+ "vw": 390,
+ "sw": 390,
+ "over": false,
+ "docH": 16533,
+ "culprits": []
+}

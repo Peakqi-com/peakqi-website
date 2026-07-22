@@ -1,0 +1,14 @@
+node:fs:440
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'C:\Users\User\Documents\GitHub\peakqi-website\.peakops-audit\mshot.js'
+    at Object.readFileSync (node:fs:440:20)
+    at file:///C:/Users/User/Documents/GitHub/peakqi-website/.peakops-audit/run.mjs:74:18 {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\User\\Documents\\GitHub\\peakqi-website\\.peakops-audit\\mshot.js'
+}
+
+Node.js v24.14.1

@@ -300,7 +300,9 @@ export function createHomeEngine() {
     try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' }); }
     catch (e) { return; }
     const isMobile = ctx.mobile;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.3 : 1.65));
+    // UnrealBloom 會另外配置數層 render target,記憶體隨解析度平方成長。
+    // 高 DPI 螢幕上 1.65 倍會讓後製鏈吃掉大量顯示記憶體 → 降到 1.35 / 手機 1.1。
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.1 : 1.35));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -309,7 +311,71 @@ export function createHomeEngine() {
     hero.classList.add('pq-cine-on');
     canvas.style.opacity = '1';
     // 更長的視差行程
-    StickyProductStage(ctx, hero, stage, { distanceVh: isMobile ? 1400 : 1750 });   // 加長:騰出白藍圖「單一零件展示」章節(~525vh);組回→翻面→影片→slogan 的 scrollP 不變
+    // ── Phase 1:虛擬場景表(scene table)──────────────────────────────
+    // 這是「距離的唯一來源」。legacy 是該場景在舊 global p 軸上的區間,
+    // 用來把 renderedScrollPx 分段線性映射回舊軸 → 既有的 sub(p,…) 全部原樣可用,
+    // 但每個場景的實際捲動距離改由本表決定(舊軸是等比切割,這才是跳段的根因)。
+    const CINEMA_SCENES = [
+      { id: 'hero',            group: 'intro',       legacy: [0.000, 0.040], desktopVh: 165, touchVh: 210 },
+      { id: 'lens',            group: 'camera-part', legacy: [0.040, 0.080], desktopVh: 140, touchVh: 200 },
+      { id: 'mainboard',       group: 'camera-part', legacy: [0.080, 0.120], desktopVh: 140, touchVh: 200 },
+      { id: 'sensor',          group: 'camera-part', legacy: [0.120, 0.160], desktopVh: 140, touchVh: 200 },
+      { id: 'shutter',         group: 'camera-part', legacy: [0.160, 0.200], desktopVh: 140, touchVh: 200 },
+      { id: 'chassis-rainbow', group: 'camera-part', legacy: [0.200, 0.240], desktopVh: 300, touchVh: 390 },
+      { id: 'blueprint-intro', group: 'white',       legacy: [0.240, 0.290], desktopVh: 180, touchVh: 240 },
+      { id: 'study-01',        group: 'white-part',  legacy: [0.290, 0.332], desktopVh: 135, touchVh: 190 },
+      { id: 'study-02',        group: 'white-part',  legacy: [0.332, 0.374], desktopVh: 135, touchVh: 190 },
+      { id: 'study-03',        group: 'white-part',  legacy: [0.374, 0.416], desktopVh: 135, touchVh: 190 },
+      { id: 'study-04',        group: 'white-part',  legacy: [0.416, 0.458], desktopVh: 135, touchVh: 190 },
+      { id: 'study-05',        group: 'white-part',  legacy: [0.458, 0.500], desktopVh: 135, touchVh: 190 },
+      { id: 'reassembly',      group: 'white',       legacy: [0.500, 0.578], desktopVh: 250, touchVh: 320 },
+      { id: 'summary',         group: 'transition',  legacy: [0.578, 0.700], desktopVh: 160, touchVh: 220 },
+      { id: 'video-01',        group: 'video',       legacy: [0.700, 0.744], desktopVh: 135, touchVh: 190 },
+      { id: 'video-02',        group: 'video',       legacy: [0.744, 0.788], desktopVh: 135, touchVh: 190 },
+      { id: 'video-03',        group: 'video',       legacy: [0.788, 0.832], desktopVh: 135, touchVh: 190 },
+      { id: 'video-04',        group: 'video',       legacy: [0.832, 0.876], desktopVh: 135, touchVh: 190 },
+      { id: 'video-05',        group: 'video',       legacy: [0.876, 0.920], desktopVh: 162, touchVh: 228 },
+      { id: 'cta',             group: 'outro',       legacy: [0.920, 1.000], desktopVh: 145, touchVh: 180 }
+    ];
+    const isTouch = (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) || (navigator.maxTouchPoints || 0) > 0;
+    let sceneLayout = [], sceneById = Object.create(null), totalScrollPx = 0;
+    let stableVh = window.innerHeight || 1;      // 手機網址列收合造成的小幅變動不重建
+    let stableVw = window.innerWidth || 1;
+    function buildSceneLayout() {
+      let cursor = 0;
+      sceneLayout = CINEMA_SCENES.map(sc => {
+        const lengthPx = stableVh * (isTouch ? sc.touchVh : sc.desktopVh) / 100;
+        const r = { id: sc.id, group: sc.group, legacy: sc.legacy, startPx: cursor, endPx: cursor + lengthPx, lengthPx };
+        cursor += lengthPx;
+        return r;
+      });
+      totalScrollPx = cursor;
+      sceneById = Object.create(null);
+      sceneLayout.forEach(sc => { sceneById[sc.id] = sc; });
+      return totalScrollPx;
+    }
+    // renderedScrollPx → 舊 global p(分段線性,保持既有視覺不變)
+    function legacyFromPx(px) {
+      const L = sceneLayout, n = L.length;
+      if (!n) return 0;
+      for (let i = 0; i < n; i++) {
+        const sc = L[i];
+        if (px < sc.endPx || i === n - 1) {
+          const t = clamp((px - sc.startPx) / Math.max(1, sc.lengthPx), 0, 1);
+          return sc.legacy[0] + (sc.legacy[1] - sc.legacy[0]) * t;
+        }
+      }
+      return 1;
+    }
+    function sceneProgress(id) {
+      const sc = sceneById[id];
+      if (!sc) return 0;
+      return clamp((renderedScrollPx - sc.startPx) / Math.max(1, sc.lengthPx), 0, 1);
+    }
+    let renderedScrollPx = 0, targetScrollPx = 0, scrollRaw = 0, lastFrameSec = 0;
+    buildSceneLayout();
+    // hero 高度由 scene table 決定(唯一距離來源),不再是寫死的 1750/1400
+    StickyProductStage(ctx, hero, stage, { distanceVh: (totalScrollPx / stableVh) * 100 });   // 加長:騰出白藍圖「單一零件展示」章節(~525vh);組回→翻面→影片→slogan 的 scrollP 不變
 
     // rail 按鈕
     const railBtns = [];
@@ -426,38 +492,81 @@ export function createHomeEngine() {
     let knollMaxSize = 1;             // 最大零件尺寸(壓縮大小差距用,避免小零件小到看不見)
     let knollSizes = [];              // 依大小遞減排序、以最大件正規化(=1)的尺寸表
     const _knoll = { items: [], f: 0, key: '' };
+    if (typeof window !== 'undefined') window.__knoll = _knoll;   // 排版除錯用
     // A1 攤平陳列版面:改成「依尺寸緊密排版」(shelf packing),不是每件都給一樣大的格子。
     // 等格網格會讓最大件剛好塞滿、小件只佔格子一角 → 中間全是空隙、看起來像灑出來的碎屑。
     // 這裡大件排前面、小件往後緊密補位,維持真實比例(全部同一個縮放),中央保留給主角特寫。
     // 版面用正規化座標算一次就好:只跟零件數與長寬比有關,與相機距離無關(放進 cache key 會每幀重建 → 當機)。
-    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, zones, botCut) {
-      // zones:字卡禁區(矩形,正規化座標),排版會繞開 → 零件永遠不會壓到字卡
-      // botCut:手機用,砍掉下方一段高度留給置底字卡 → 模型與字卡上下分區,互不遮擋
+    function buildKnollLayout(sizes, aspect, holeRXn, holeRYn, holeCXn, zones, botCut) {
+      // 逐列(row)對齊排版:每列高度 = 該列最大零件(sizes 已由大到小排序 → 列內尺寸相近)
+      // 每列先扣掉「中央淨空 + 字卡禁區」算出可用區段,零件在區段內均勻攤開(justify)、並對齊列中線
+      // → 讀起來是整齊的陣列,而不是被洞切碎的散排;同時維持所有零件同一縮放(真實比例)
       const Hn = 1 / aspect, gap = 0.009, yTop = Hn / 2, yBot = -Hn / 2 + (botCut || 0) * Hn;
-      function pack(f) {
-        const out = [];
-        let x = -0.5, y = yTop, rowH = 0;
-        for (let i = 0; i < sizes.length; i++) {
-          const w = sizes[i] * f;                      // 正方形佔位(取最長邊)→ 保證不重疊
-          if (!(w > 0)) return null;
-          for (let tries = 0; ; tries++) {
-            if (tries > 96) return null;
-            if (x + w > 0.5) { x = -0.5; y -= rowH + gap; rowH = 0; }   // 換行
-            if (y - w < yBot) return null;                              // 高度不夠 → 這個 f 太大
-            const cy = y - w / 2;
-            // 中央淨空:會壓到主角就把 x 跳到洞的右側
-            if (Math.abs(cy) < holeRYn && x < holeRXn && x + w > -holeRXn) { x = holeRXn + gap; continue; }
-            // 字卡禁區:壓到就跳到該區右緣
-            let hit = null;
-            for (let z = 0; z < zones.length; z++) {
-              const Z = zones[z];
-              if (cy < Z.y1 && cy > Z.y0 && x < Z.x1 && x + w > Z.x0) { hit = Z; break; }
-            }
-            if (hit) { x = hit.x1 + gap; continue; }
-            break;
+      // 回傳這一列可用的 x 區段(已扣除洞與禁區)
+      function freeSpans(cy) {
+        let spans = [[-0.5, 0.5]];
+        const blocks = [];
+        if (Math.abs(cy) < holeRYn) blocks.push([holeCXn - holeRXn, holeCXn + holeRXn]);
+        for (let z = 0; z < zones.length; z++) {
+          const Z = zones[z];
+          if (cy < Z.y1 && cy > Z.y0) blocks.push([Z.x0, Z.x1]);
+        }
+        for (let b = 0; b < blocks.length; b++) {
+          const B = blocks[b], next = [];
+          for (let s = 0; s < spans.length; s++) {
+            const S = spans[s];
+            if (B[1] <= S[0] || B[0] >= S[1]) { next.push(S); continue; }
+            if (B[0] > S[0]) next.push([S[0], B[0]]);
+            if (B[1] < S[1]) next.push([B[1], S[1]]);
           }
-          out.push({ nx: x + w / 2, ny: y - w / 2 });
-          x += w + gap; if (w > rowH) rowH = w;
+          spans = next;
+        }
+        return spans;
+      }
+      function pack(f) {
+        const out = new Array(sizes.length);
+        let i = 0, y = yTop, guard = 0;
+        while (i < sizes.length) {
+          if (guard++ > 400) return null;
+          const rowH = sizes[i] * f;                    // 正方形佔位(取最長邊)→ 保證不重疊
+          if (!(rowH > 0)) return null;
+          if (y - rowH < yBot) return null;             // 高度不夠 → 這個 f 太大
+          const cy = y - rowH / 2;
+          const spans = freeSpans(cy);
+          let placedInRow = 0;
+          for (let s = 0; s < spans.length && i < sizes.length; s++) {
+            const a = spans[s][0], W = spans[s][1] - a;
+            // 貪婪裝填這個區段
+            const run = [];
+            let total = 0;
+            while (i + run.length < sizes.length) {
+              const w = sizes[i + run.length] * f;
+              const need = total + (run.length ? gap : 0) + w;
+              if (need > W) break;
+              total = need; run.push(w);
+            }
+            if (!run.length) continue;
+            // 均勻攤開:剩餘空間平均分給間隙,單一間隙最多脹到 2.6 倍,其餘留給左右外緣
+            const slack = W - total;
+            const inner = run.length - 1;
+            const extra = inner > 0 ? Math.min(slack / inner, gap * 1.6) : 0;
+            const x0 = a + (slack - extra * inner) / 2;
+            let x = x0;
+            for (let k = 0; k < run.length; k++) {
+              out[i + k] = { nx: x + run[k] / 2, ny: cy };   // 對齊列中線
+              x += run[k] + gap + extra;
+            }
+            i += run.length; placedInRow += run.length;
+          }
+          if (!placedInRow) {
+            // 整列被「中央淨空 + 字卡禁區」吃光(桌機中間那條帶)→ 留白跳過,繼續往下排,
+            // 不能判失敗,否則二分搜尋會把縮放壓到「全部塞在中間帶以上」→ 零件擠成一角
+            let freeW = 0;
+            for (let s2 = 0; s2 < spans.length; s2++) freeW += spans[s2][1] - spans[s2][0];
+            if (freeW <= sizes[i] * f) { y -= rowH * 0.34 + gap; continue; }
+            return null;                                // 有空間卻放不下 → f 太大
+          }
+          y -= rowH + gap;
         }
         return out;
       }
@@ -478,6 +587,9 @@ export function createHomeEngine() {
     const SCR_CORNERS_HARD = [[0.6342, 0.4508, -0.2926], [-0.6555, 0.461, -0.2912], [-0.6517, -0.4537, -0.4193], [0.6299, -0.4491, -0.4186]];
     const screenLocalPts = [];                    // 圓角多邊形控制點(Object_12 幾何 local 座標)
     const _scrPx = [];                            // 投影後畫面像素(數量隨 screenLocalPts)
+    let screenQuadLocal = null;                   // 螢幕平面四角(local,TL,TR,BR,BL)→ 每幀算 homography
+    let scrBaseW = 760, scrBaseH = 535;           // DOM 基準尺寸(未變形);HUD 的 cqw 以此為準 → 不隨透視抖動
+    const _q4 = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
     let _ctOn = false, _ctEls = null, _ctDrag = -1;   // 互動式四角拖曳工具狀態
     // 4 個角(mesh-local,順序 TL,TR,BR,BL);由 __setCorners 用畫面像素反投影設定 → 影片精準貼 4 點且隨相機轉;null=用 bbox
     let cornerLocal = SCR_CORNERS_HARD;
@@ -497,6 +609,11 @@ export function createHomeEngine() {
         const L = b.min.x + ix, R = b.max.x - ix, Bt = b.min.y + iy, TP = b.max.y - iy;
         C4 = [tf(L, TP), tf(R, TP), tf(R, Bt), tf(L, Bt)];   // TL,TR,BR,BL
       }
+      // 螢幕是曲面機殼上的一個平面 → 記下這個平面的四角,每幀用它算透視矩陣,HUD 才會跟影片同一個角度
+      screenQuadLocal = C4.map(v => v.clone());
+      { const wq = (C4[1].distanceTo(C4[0]) + C4[2].distanceTo(C4[3])) / 2;
+        const hq = (C4[3].distanceTo(C4[0]) + C4[2].distanceTo(C4[1])) / 2;
+        scrBaseW = 760; scrBaseH = Math.max(80, Math.round(760 * (hq / Math.max(1e-6, wq)))); }
       screenLocalPts.length = 0; _scrPx.length = 0;
       const n = C4.length;
       for (let i = 0; i < n; i++) {
@@ -743,9 +860,132 @@ export function createHomeEngine() {
       try { renderer.dispose(); } catch (e) {}
     });
 
-    let scrollP = 0, smoothP = 0, curBeat = -1, curPhase = -1;
-    let snapFrames = 8;   // 進場/大跳動時不做平滑追隨,直接就位 → 從任何位置進來畫面都一致
-    ScrollChapter(ctx, hero, (p) => { scrollP = p; }, { pinned: true });
+    // ── Phase 2:?debugSceneLayout=1 場景版面除錯疊層 ────────────────────
+    // production 完全不建立元素、不寫 console;所有向量/Box3 預先配置,不在每幀 new。
+    const DEBUG_LAYOUT = (function () {
+      try { return new URLSearchParams(location.search).get('debugSceneLayout') === '1'; } catch (e) { return false; }
+    })();
+    const _dbg = DEBUG_LAYOUT ? {
+      box: new THREE.Box3(), v: new THREE.Vector3(),
+      corners: Array.from({ length: 8 }, () => new THREE.Vector3()),
+      vel: 0, lastPx: 0
+    } : null;
+    let dbgRoot = null, dbgPanel = null, dbgObjBox = null, dbgCardBoxes = [];
+    function buildDebugOverlay() {
+      if (!DEBUG_LAYOUT || dbgRoot) return;
+      dbgRoot = document.createElement('div');
+      dbgRoot.setAttribute('data-debug-scene-layout', '');
+      dbgRoot.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;font:11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace';
+      const line = (css) => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;' + css; dbgRoot.appendChild(d); return d; };
+      // safe zone:左右 4vw、上 11vh、下 12vh
+      line('left:4vw;top:0;bottom:0;width:1px;background:rgba(0,229,255,.55)');
+      line('right:4vw;top:0;bottom:0;width:1px;background:rgba(0,229,255,.55)');
+      line('left:0;right:0;top:11vh;height:1px;background:rgba(255,193,7,.55)');
+      line('left:0;right:0;bottom:12vh;height:1px;background:rgba(255,193,7,.55)');
+      // viewport 中心線
+      line('left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22)');
+      line('left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.22)');
+      // Three.js 主物件 screen-space bounding box
+      dbgObjBox = line('border:1.5px solid #ff2d55;left:0;top:0;width:0;height:0');
+      dbgPanel = document.createElement('div');
+      dbgPanel.style.cssText = 'position:absolute;left:8px;top:8px;padding:8px 10px;background:rgba(0,0,0,.82);color:#c8facc;white-space:pre;border:1px solid rgba(255,255,255,.18);border-radius:4px;max-width:46vw';
+      dbgRoot.appendChild(dbgPanel);
+      document.body.appendChild(dbgRoot);
+      ctx.add(() => { if (dbgRoot && dbgRoot.parentNode) dbgRoot.parentNode.removeChild(dbgRoot); dbgRoot = null; });
+    }
+    function debugCardBox(el, label, i) {
+      if (!dbgCardBoxes[i]) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:absolute;border:1.5px solid #38d9a9;color:#38d9a9;font:10px ui-monospace,monospace;padding:1px 3px';
+        dbgRoot.appendChild(d); dbgCardBoxes[i] = d;
+      }
+      const b = dbgCardBoxes[i];
+      if (!el || +getComputedStyle(el).opacity < 0.05) { b.style.display = 'none'; return; }
+      const r = el.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) { b.style.display = 'none'; return; }
+      const W = window.innerWidth || 1, H = window.innerHeight || 1;
+      b.style.display = 'block';
+      b.style.left = r.left + 'px'; b.style.top = r.top + 'px';
+      b.style.width = r.width + 'px'; b.style.height = r.height + 'px';
+      b.textContent = label + ' x' + Math.round((r.left + r.width / 2) / W * 100) + '% y' + Math.round((r.top + r.height / 2) / H * 100) +
+        '% w' + Math.round(r.width / W * 100) + '% h' + Math.round(r.height / H * 100) + '%';
+    }
+    function updateDebugOverlay(activeScene, localP, dt) {
+      if (!DEBUG_LAYOUT) return;
+      buildDebugOverlay();
+      const W = window.innerWidth || 1, H = window.innerHeight || 1;
+      // Three.js 主物件:rig 的 world Box3 投影 8 個角 → screen-space
+      let ox = 0, oy = 0, ow = 0, oh = 0;
+      if (rig && modelReady) {
+        _dbg.box.setFromObject(rig);
+        if (!_dbg.box.isEmpty()) {
+          const mn = _dbg.box.min, mx = _dbg.box.max;
+          let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, k = 0;
+          for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) for (let c = 0; c < 2; c++) {
+            const v = _dbg.corners[k++].set(a ? mx.x : mn.x, b ? mx.y : mn.y, c ? mx.z : mn.z).project(camera);
+            const sx = (v.x * 0.5 + 0.5) * W, sy = (-v.y * 0.5 + 0.5) * H;
+            if (sx < x0) x0 = sx; if (sx > x1) x1 = sx;
+            if (sy < y0) y0 = sy; if (sy > y1) y1 = sy;
+          }
+          ox = (x0 + x1) / 2 / W * 100; oy = (y0 + y1) / 2 / H * 100;
+          ow = (x1 - x0) / W * 100; oh = (y1 - y0) / H * 100;
+          dbgObjBox.style.left = x0 + 'px'; dbgObjBox.style.top = y0 + 'px';
+          dbgObjBox.style.width = Math.max(0, x1 - x0) + 'px'; dbgObjBox.style.height = Math.max(0, y1 - y0) + 'px';
+        }
+      }
+      // 字卡 bounding box(只畫目前可見的)
+      let bi = 0;
+      studyCards.forEach((c, i) => debugCardBox(c, 'study-0' + (i + 1), bi++));
+      vcards.forEach((c, i) => debugCardBox(c, 'video-0' + (i + 1), bi++));
+      cards.forEach((c, i) => debugCardBox(c, 'beat-' + i, bi++));
+      debugCardBox(sloganEl, 'cta', bi++);
+      debugCardBox(lensTitleEl, 'summary', bi++);
+      debugCardBox(studyTitleEl, 'bp-intro', bi++);
+      const sc = sceneById[activeScene] || { startPx: 0, endPx: 0, lengthPx: 0, group: '-' };
+      _dbg.vel = Math.abs(renderedScrollPx - _dbg.lastPx) / Math.max(1e-4, dt);
+      _dbg.lastPx = renderedScrollPx;
+      dbgPanel.textContent = [
+        'scene      ' + activeScene + '  (' + sc.group + ')',
+        'localP     ' + localP.toFixed(4),
+        'scene px   ' + Math.round(sc.startPx) + ' -> ' + Math.round(sc.endPx) + '  (len ' + Math.round(sc.lengthPx) + ')',
+        'raw        ' + scrollRaw.toFixed(4),
+        'target px  ' + Math.round(targetScrollPx),
+        'rendered   ' + Math.round(renderedScrollPx) + ' / ' + Math.round(totalScrollPx),
+        'legacy p   ' + legacyFromPx(renderedScrollPx).toFixed(4),
+        'velocity   ' + Math.round(_dbg.vel) + ' px/s',
+        'dt         ' + (dt * 1000).toFixed(1) + ' ms',
+        'isTouch    ' + isTouch,
+        'viewport   ' + W + ' x ' + H + '  (stable ' + Math.round(stableVw) + ' x ' + Math.round(stableVh) + ')',
+        'object     x' + ox.toFixed(1) + '% y' + oy.toFixed(1) + '% w' + ow.toFixed(1) + '% h' + oh.toFixed(1) + '%'
+      ].join(String.fromCharCode(10));
+    }
+    let scrollP = 0, curBeat = -1, curPhase = -1;
+    let snapFrames = 8;   // 進場時直接就位 → 從任何位置進來畫面都一致
+    ScrollChapter(ctx, hero, (v) => { scrollRaw = v; }, { pinned: true });
+    // viewport 變動:只有寬度/方向/pointer 能力改變才重建 scene layout(手機網址列收合不重建),
+    // 並保留使用者當下所在的 scene 與相對進度,畫面不會跳到別的狀態。
+    let resizeTimer = 0;
+    function onViewportChange() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const w = window.innerWidth || 1, h = window.innerHeight || 1;
+        if (Math.abs(w - stableVw) < 2 && Math.abs(h - stableVh) / Math.max(1, stableVh) < 0.18) return;
+        const before = totalScrollPx > 0 ? renderedScrollPx / totalScrollPx : 0;
+        stableVw = w; stableVh = h;
+        buildSceneLayout();
+        try { hero.style.height = Math.round(totalScrollPx + stableVh) + 'px'; } catch (e) {}
+        renderedScrollPx = before * totalScrollPx;   // 保留相對位置
+        targetScrollPx = renderedScrollPx;
+        snapFrames = Math.max(snapFrames, 2);
+      }, 180);
+    }
+    window.addEventListener('resize', onViewportChange, { passive: true });
+    window.addEventListener('orientationchange', onViewportChange, { passive: true });
+    ctx.add(() => {
+      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('orientationchange', onViewportChange);
+      clearTimeout(resizeTimer);
+    });
     const bound = { inView: true };
     ctx.io(hero, es => { bound.inView = !!(es[0] && es[0].isIntersecting); }, { rootMargin: '10px' });
 
@@ -767,6 +1007,9 @@ export function createHomeEngine() {
       if (s >= 0) shotFadeStart = now;   // 每次換片 → 影片在原地淡入
       vids.forEach((v, i) => {
         const on = i === s; v.classList.toggle('is-on', on);
+        // 只讓「目前這支 + 下一支」保持可解碼。五支同時 preload=auto 會讓五個解碼器同時存在,
+        // 加上 WebGL 後製的 render target,在共用顯示記憶體的機器上足以把分頁/GPU 行程壓垮。
+        v.preload = on ? 'auto' : (i === s + 1 ? 'metadata' : 'none');
         if (on) { try { v.currentTime = 0; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} }
         else { try { v.pause(); } catch (e) {} }
       });
@@ -817,9 +1060,31 @@ export function createHomeEngine() {
     ctx.onFrame((now) => {
       if (destroyed || !bound.inView) return;
       const t = (now - t0) / 1000;
-      if (snapFrames > 0) { smoothP = scrollP; snapFrames--; } else smoothP += (scrollP - smoothP) * 0.06;
+      // ── Phase 1:單一 renderedScrollPx 來源 + frame-rate-independent damping ──
+      // 舊寫法 smoothP += (scrollP - smoothP) * 0.06 與 frame rate 相關,且沒有單幀步長上限,
+      // 快速滑動會直接跳過整段。改用 1 - exp(-λ·dt),並限制每秒最多移動幾個 viewport。
+      const nowSec = now / 1000;
+      const dt = Math.min(lastFrameSec ? Math.max(0, nowSec - lastFrameSec) : 1 / 60, 1 / 30);
+      lastFrameSec = nowSec;
+      const prevTarget = targetScrollPx;
+      targetScrollPx = scrollRaw * totalScrollPx;
+      // 不連續跳躍(錨點跳轉、rail 按鈕、瀏覽器還原位置)才吸附。
+      // 判斷依據是「目標值自己這一幀跳了多少」,不是目標與當前的差距 ——
+      // 後者在連續快速捲動時會反覆跨過門檻,造成吸附/平滑來回切換而抖動。
+      if (Math.abs(targetScrollPx - prevTarget) > stableVh * 1.5) snapFrames = Math.max(snapFrames, 1);
+      if (snapFrames > 0) { renderedScrollPx = targetScrollPx; snapFrames--; }
+      else {
+        const lambda = isTouch ? 5.5 : 9;
+        const damped = renderedScrollPx + (targetScrollPx - renderedScrollPx) * (1 - Math.exp(-lambda * dt));
+        // 追趕上限:太低的話快速滾輪一次捲過好幾個場景,畫面會落後好幾個場景才追上,
+        // 看起來就像「第一次捲相機比較小」(其實是還停在前一個較小的場景)。
+        const maxStep = stableVh * (isTouch ? 4.0 : 8.0) * dt;
+        renderedScrollPx += clamp(damped - renderedScrollPx, -maxStep, maxStep);
+      }
       const snapping = snapFrames > 0;
-      const p = smoothP;
+      // 所有內容(3D / DOM / CSS 變數)都吃同一個來源,不再有 smoothP 與 scrollP 兩套進度
+      const p = legacyFromPx(renderedScrollPx);
+      scrollP = p;
       const beat = Math.max(0, Math.min(BEATS - 1, Math.floor((scrollP / CONTENT_END) * BEATS)));
       const review = p > 0.26;                      // 藍圖/零件展示起,不顯示故事卡
       setBeat(review ? -1 : beat);
@@ -830,9 +1095,13 @@ export function createHomeEngine() {
       // (原本 R 同時負責收零件+收線稿+淡出紙面,三件事一起發生 → 看不到「組好的線稿相機」)
       const blueAsmK = ez(sub(p, 0.505, 0.552));   // 在白藍圖內收合成完整相機
       const R = ez(sub(p, 0.578, 0.632));          // U3a 組回實體(紙面淡出、材質回來)
-      const sloganK = ez(sub(p, 0.92, 0.99));       // U5 回機身 + Slogan
-      const flipK = ez(sub(scrollP, 0.67, 0.72)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
-      const summaryK = ez(sub(scrollP, 0.618, 0.652)) * (1 - ez(sub(scrollP, 0.678, 0.705)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
+      // ── Phase 1:owner 唯一化。summary / flip / slogan 各自吃自己的 local progress。
+      // 舊寫法 summaryK 到 global 0.705 才歸零、flipK 從 0.67 就起,重疊 0.035 → 中央大標壓住第一張影片卡。
+      // 現在 summary 在自己的場景內 0.84 前必定歸零,而 video-01 是「下一個」場景,結構上不可能重疊。
+      const summaryP = sceneProgress('summary');
+      const sloganK = ez(sub(sceneProgress('cta'), 0.06, 0.34));   // U5 回機身 + Slogan
+      const flipK = ez(sub(summaryP, 0.68, 1.0)) * (1 - sloganK);  // U3b 翻面:0.67 起(讓 0.62–0.67 停在鏡頭正面顯示總結標題);用 scrollP + 快 lerp 迅速就位。影片/slogan(0.72+)時間軸不變
+      const summaryK = ez(sub(summaryP, 0.12, 0.28)) * (1 - ez(sub(summaryP, 0.70, 0.84)));   // U3c 組裝完成鏡頭正面「章節總結標題」(用 scrollP,0.652–0.678 停留,翻面 0.67 起淡出)
       const disasK = ez(sub(p, 0.05, 0.20)) * (1 - R) * (1 - blueAsmK);   // 前段壓縮;白藍圖收尾時先收合(此時紙面仍在)
       const wireK = ez(sub(p, 0.14, 0.24)) * (1 - R);
       const paperK = ez(sub(p, 0.22, 0.28)) * (1 - R);   // 白藍圖:0.28 起完全展開,一路持有到組回
@@ -870,16 +1139,25 @@ export function createHomeEngine() {
         const viewH = 2 * dist * Math.tan(camera.fov * Math.PI / 360);     // 展示距離下的畫面世界尺寸
         const viewW = viewH * camera.aspect;
         // G 手機:整個展示舞台上移,把畫面下方讓給置底字卡 → 主角與零件都不會被字卡蓋住
+        // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移(side 指的是「模型在哪一側」)。
+        // 但**攤平網格仍以畫面中心對齊**——網格若跟著主角平移,右半會被帶出畫面,零件就擠成一角。
+        // 只有「中央淨空的洞」跟著主角走 → 主角在視覺中央放大,小零件整齊填滿其餘畫面。
+        const sideOff = (!isMobile && sComp >= 0) ? viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17) : 0;
         if (isMobile) _disp.addScaledVector(_up2, viewH * 0.07 * mCardK);   // 只有「有字卡」時才上移讓位
-        // 桌機:字卡固定在左或右,主角往「沒有字卡的那一側」偏移,放到最大也不會壓到標題
-        // 注意:STUDY 的 side 指的是「模型在哪一側」(字卡在相反側),所以往 side 的方向偏移才是遠離字卡
-        else if (sComp >= 0) _disp.addScaledVector(_rgt, viewW * (STUDY[sComp].side === 'left' ? -0.17 : 0.17));
+        else if (sideOff) _disp.addScaledVector(_rgt, sideOff);
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
-        const gridW = viewW * (isMobile ? 0.90 : 1.04), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
+        const gridW = viewW * (isMobile ? 0.90 : 0.99), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
-        const holeRXn = (isMobile ? 0.34 : 0.30) / 1.04, holeRYn = (isMobile ? 0.30 : 0.36) / 1.0;
+        // 中央淨空必須用「實際網格寬高」正規化。先前手機網格是 viewW*0.90 卻仍除以 1.04,
+        // 正規化後的洞比預期小 → 等待中的零件會壓到中央放大的主角。
+        // _hx/_hy = 主角在畫面上佔的半寬/半高(viewW/viewH 的比例)。
+        // 排版座標 x、y **都以 gridW 為單位**(y 的範圍是 ±Hn/2,Hn = gridH/gridW),
+        // 所以 holeRYn 必須除以 gridW;先前除以 gridH → 洞比實際高 1.6 倍,主角上下整片排不進零件。
+        const _hx = isMobile ? 0.36 : 0.32, _hy = isMobile ? 0.28 : 0.42;
+        const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridW;
+        const holeCXn = sideOff / gridW;   // 洞的中心(正規化)= 主角實際所在的位置
         const aspect = gridW / gridH;
         // G 字卡禁區:桌機字卡在左右兩側垂直置中(兩側都保留,版面才不會隨章節左右跳動);
         //            手機字卡整寬置底 → 改成砍掉下方高度,模型與字卡上下分區。
@@ -888,15 +1166,17 @@ export function createHomeEngine() {
           { x0: -0.5, x1: -0.5 + 0.30, y0: -0.22 * Hn2, y1: 0.22 * Hn2 },
           { x0: 0.5 - 0.30, x1: 0.5, y0: -0.22 * Hn2, y1: 0.22 * Hn2 }
         ];
-        // 保留量改成每幀後處理(見下方 _cardCut):排版本身永遠用完整網格,快取才命中,零件也不會在格子間跳
-        const botCut = 0;
-        const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd');
+        // 手機置底字卡的讓位量必須「算進排版」,不能排完再壓縮 y——中央淨空的洞不會跟著壓縮,
+        // 壓縮後洞下方那幾列就會被推到主角身上。量化成 0/1 兩種版面,快取仍然只有兩把 key。
+        const botCut = (isMobile && mCardK > 0.5) ? 0.40 : 0;
+        const key = parts.length + '|' + aspect.toFixed(2) + '|' + (isMobile ? 'm' : 'd') + '|' + holeCXn.toFixed(2) + '|' + botCut;
         if (_knoll.key !== key) {
-          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, zones, botCut);
+          const b = buildKnollLayout(knollSizes, aspect, holeRXn, holeRYn, holeCXn, zones, botCut);
           _knoll.items = b.items; _knoll.f = b.f; _knoll.key = key;
         }
         _knoll.gridW = gridW;
-        _knoll.cut = isMobile ? 0.40 * mCardK : 0;   // 下方要讓給字卡的比例
+        _knoll.sideOff = sideOff;   // 擺位時把網格中心從「主角位置」推回畫面中心
+        _knoll.cut = 0;   // 讓位已算進排版(botCut),不再做排版後壓縮
         _knoll.Hn = 1 / aspect;
         if (sFocusK > 0.001 && sPartNode) {
           const cfg = STUDY[sComp];
@@ -949,8 +1229,15 @@ export function createHomeEngine() {
       // 母:旋轉(有界擺動 → 藍圖俯視 → 翻面螢幕正對)
       const spinY = -0.5 + Math.sin(p * Math.PI * 3.0) * 0.5 + pointer.x * 0.06;
       const tiltX = -0.14 + Math.sin(p * Math.PI * 1.8) * 0.14 - pointer.y * 0.04;
-      const yawNormal = spinY * dark + (-0.5) * paperK;
-      const xNormal = tiltX * dark + (-0.95) * paperK;
+      // ── Phase 5:hold 區只保留呼吸感 ──────────────────────────────
+      // 規格:完整停留時 rotationY 不超過 ±0.025 rad、rotationX ±0.012、scale 呼吸 ≤1.012。
+      // 原本 spinY 是 sin(p*π*3) 的全域擺動,在彩虹/總結/CTA 的停留區會持續大幅轉動。
+      const _hold = (id) => { const q = sceneProgress(id); return ez(sub(q, 0.20, 0.32)) * (1 - ez(sub(q, 0.70, 0.82))); };
+      const holdK = Math.max(_hold('chassis-rainbow'), _hold('summary'), _hold('cta'));
+      const yawNormal = (spinY * dark + (-0.5) * paperK) * (1 - holdK)
+                      + ((-0.5) + Math.sin(t * 0.45) * 0.025) * holdK;
+      const xNormal = (tiltX * dark + (-0.95) * paperK) * (1 - holdK)
+                    + ((-0.14) + Math.sin(t * 0.37) * 0.012) * holdK;
       const flipYaw = (typeof window !== 'undefined' && window.__flipYaw != null) ? window.__flipYaw : FLIP_YAW;
       // 翻面時大幅加快收斂(否則捲動到影片段相機還卡在半途轉、看到鏡頭正面),避免「就位太慢=看起來壞掉」
       const flipLerp = 0.05 + flipK * flipK * 0.4;
@@ -958,28 +1245,51 @@ export function createHomeEngine() {
       rig.rotation.y += (_rotTargetY - rig.rotation.y) * (snapping ? 1 : flipLerp);
       const align = cards[beat] && cards[beat].getAttribute('data-align');
       const targetX = (isMobile ? 0 : (align === 'right' ? -0.8 : 0.8)) * dark * (1 - flipK);
-      const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1);
+      // 章節開場(黑白藍圖「拆開來看」):桌機標題在左,模型往右讓開並放大,不再壓到標題
+      // 首頁 hero:桌機文字在左,相機再往右挪一點並放大(離開 hero 場景時淡出;手機是上下構圖不需要)
+      const heroHold = isMobile ? 0 : (1 - ez(sub(sceneProgress('hero'), 0.50, 1.00)));
+      const _posTargetX = targetX + flipK * (isMobile ? 0 : 1.1) + introK * (isMobile ? 0 : 1.8) + heroHold * 0.55;
       rig.position.x += (_posTargetX - rig.position.x) * (snapping ? 1 : (0.04 + flipK * flipK * 0.35));   // 翻面時相機靠右(前面不變)並快速就位
       // G 手機:翻面看螢幕時相機也要上移,否則會被置底的影片字卡蓋住(桌機字卡在左側,不需要)
       // 手機直式:文字是整塊 DOM 疊在下半部,相機必須抬到文字帶之上,否則會被完全蓋住。
       // dark 段(首頁/拆解)抬 1.85;白藍圖段抬 1.15(該段文字在上方,模型要往下靠一點,避免中間空一大塊)。
+      // 組回實體(summary)在手機沒有置底字卡,卻仍套用黑底章節的抬升 → 相機頂在畫面上方、下半整片空。
+      const _sumQ = sceneProgress('summary');
+      const summaryHold = ez(sub(_sumQ, 0.05, 0.25)) * (1 - ez(sub(_sumQ, 0.78, 1.00)));
       const _posTargetY = isMobile
-        ? (1.85 * dark * (1 - flipK) + 1.15 * paperK * (1 - flipK) + 0.62 * flipK)
+        ? (2.35 * dark * (1 - flipK) - 0.95 * summaryHold                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
+           + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
+           + 0.45 * flipK                                   // 翻面看螢幕
+           - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
         : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
       // 相機是否已停在最終翻面姿態(寬鬆判定:只擋大幅移動,避免正常捲動時影片不出現)
       const settleK = clamp(1 - (Math.abs(rig.rotation.y - _rotTargetY) / 0.5 + Math.abs(rig.position.x - _posTargetX) / 0.7), 0, 1);
       // 開場放大;拆解縮小;翻面看螢幕再放大
-      rig.scale.setScalar((isMobile ? 0.72 * (1 + (1 - mCardK) * 0.34 * paperK) : 1.18) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.5 : 0.6)));
+      // ── Phase 4 構圖校正:依 debug 量測把各場景的物件尺寸拉進規格區間 ──
+      // 基準縮小(黑底相機原本 w52 / 規格 42–45),彩虹線稿與白底組裝則需要放大。
+      // 場景級加成在手機要大幅減弱:直式畫面較窄,同樣的放大會讓物件溢出
+      // (組裝段實測 w204% → 僅約一半留在畫面內,違反「主要物件至少 70% 可見」)
+      const _bAmp = isMobile ? 0.28 : 1;
+      const _bump = (x) => _bAmp * ez(sub(x, 0.06, 0.30)) * (1 - ez(sub(x, 0.78, 1.0)));
+      const compScale = (1 + 0.12 * _bump(sceneProgress('chassis-rainbow')))
+                      * (1 + 0.72 * _bump(sceneProgress('reassembly')))
+                      * (1 + 0.20 * _bump(sceneProgress('summary')))
+                      * (1 - 0.14 * _bump(sceneProgress('cta')));
+      rig.scale.setScalar(compScale * (1 + Math.sin(t * 0.6) * 0.012 * holdK) * (isMobile ? 0.70 * (1 + (1 - mCardK) * 0.36 * paperK) : 1.12) * (1 - disasK * 0.32) * (1 - paperK * (isMobile ? 0.1 : 0.22)) * (1 + flipK * (isMobile ? 0.70 : 0.75)) * (1 + introK * (isMobile ? 0 : 0.34)) * (1 + heroHold * 0.13));
       // U2 放大細拆:拆解/線稿階段推近並框住聚焦零件,camAim 平順追焦(切換=甩鏡)
       const framingK = ez(sub(p, 0.08, 0.14)) * (1 - ez(sub(p, 0.18, 0.24)));
       let aimX = 0, aimY = 0.1, aimZ = 0;
       if (framingK > 0.01) {
         const fp = parts.find(pp => focusSet.has(pp.groupId));
         if (fp) { fp.node.getWorldPosition(_tmp2); aimX = _tmp2.x * framingK; aimY = 0.1 * (1 - framingK) + _tmp2.y * framingK; aimZ = _tmp2.z * framingK; }
+        // 推近的兩顆(感光元件 / 控制與螢幕)在手機會被置底字卡切掉下緣。
+        // 這裡不能靠抬 rig——相機是追焦的,rig 往上、鏡頭也跟著往上看,螢幕上等於沒動。
+        // 改成把追焦點往下偏移,物件才會真的往畫面上方移。
+        if (isMobile && (beat === 3 || beat === 4)) aimY -= 1.05 * framingK;
       }
       camAim.lerp(_tmp2.set(aimX, aimY, aimZ), 0.1);
-      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 2.2 : 3.4) - flipK * (isMobile ? 0.6 : 1.0);
+      camera.position.z = (isMobile ? 13.4 : 11.8) + disasK * 0.8 + paperK * 2.2 - framingK * (isMobile ? 1.8 : 2.6) - flipK * (isMobile ? 0.6 : 1.0);
       camera.lookAt(camAim);
 
       for (let i = 0; i < parts.length; i++) {
@@ -1045,7 +1355,7 @@ export function createHomeEngine() {
             const _fx = Math.sin(t * 0.28 + _ph) * _amp, _fy = Math.cos(t * 0.23 + _ph * 1.3) * _amp;
             const _c = _knoll.cut || 0;
             const _ny = slot.ny * (1 - _c) + _c * (_knoll.Hn || 0) / 2;   // 壓到上方,把下緣讓給字卡
-            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx).addScaledVector(_up2, _ny * _knoll.gridW + _fy);
+            _knollW.copy(_disp).addScaledVector(_rgt, slot.nx * _knoll.gridW + _fx - (_knoll.sideOff || 0)).addScaledVector(_up2, _ny * _knoll.gridW + _fy);
             _knollL.copy(_knollW); part.node.parent.worldToLocal(_knollL);
             if (part.gcNode) { _gcOff.copy(part.gcNode).applyQuaternion(part.node.quaternion).multiplyScalar(part.studyScale); _knollL.sub(_gcOff); }
             dest.lerp(_knollL, sKnollK);
@@ -1175,13 +1485,20 @@ export function createHomeEngine() {
         }
       }
       // U4 螢幕看影片:翻面完成 → 左側業務字卡 + LCD 螢幕亮起播影片 + 快門閃光切換
-      const reviewK = ez(sub(p, 0.66, 0.74)) * (1 - ez(sub(p, 0.89, 0.94)));   // 左側字卡:翻面途中即可進場
+      // 影片段:進場由 video-01 擁有、離場由 video-05 擁有;中間四個場景不參與淡入淡出,
+      // 所以不會有兩個 scene 同時寫 reviewEl 的 opacity。
+      const v1P = sceneProgress('video-01'), v5P = sceneProgress('video-05');
+      const reviewK = ez(sub(v1P, 0.10, 0.30)) * (1 - ez(sub(v5P, 0.80, 0.96)));   // 左側字卡
       // 螢幕影片只在「翻面完成、停在最終角度」後才亮起(不在旋轉途中滑入,避免脫離螢幕)
-      const screenK = ez(sub(scrollP, 0.72, 0.78)) * (1 - ez(sub(scrollP, 0.89, 0.94)));   // 用 scrollP,相機就位後影片即現(淡入交給 shotFadeK)
+      const screenK = ez(sub(v1P, 0.26, 0.52)) * (1 - ez(sub(v5P, 0.80, 0.96)));   // 相機就位後影片才亮(淡入交給 shotFadeK)
       if (reviewEl) { reviewEl.style.opacity = reviewK.toFixed(3); reviewEl.style.pointerEvents = reviewK > 0.5 ? 'auto' : 'none'; }
       if (canvas) canvas.style.opacity = (1 - reviewK * 0.4).toFixed(3);   // 影片時把 3D 相機壓暗當背景
       if (reviewK > 0.02) {
-        const si = Math.max(0, Math.min(vids.length - 1, Math.floor((scrollP - 0.72) / ((0.92 - 0.72) / Math.max(1, vids.length)))));
+        let si = 0;
+        for (let vi = 0; vi < vids.length; vi++) {
+          const sc = sceneById['video-0' + (vi + 1)];
+          if (sc && renderedScrollPx >= sc.startPx) si = vi;
+        }
         setShot(si, now);
       } else if (curShot !== -2) { setShot(-1, now); }
       // DOM 影片螢幕:每幀把「螢幕面 mesh(Object_12)」前面圓角控制點投影到畫面像素 → 設定裁切容器 + clip-path
@@ -1201,13 +1518,46 @@ export function createHomeEngine() {
             _scrPx[i].x = x; _scrPx[i].y = y;
             if (x < minX) minX = x; if (y < minY) minY = y; if (x > maxX) maxX = x; if (y > maxY) maxY = y;
           }
-          const bw = Math.max(1, maxX - minX), bh = Math.max(1, maxY - minY);
-          screenEl.style.left = minX.toFixed(1) + 'px'; screenEl.style.top = minY.toFixed(1) + 'px';
-          screenEl.style.width = bw.toFixed(1) + 'px'; screenEl.style.height = bh.toFixed(1) + 'px';
-          let poly = '';
-          for (let i = 0; i < N; i++) poly += (_scrPx[i].x - minX).toFixed(1) + 'px ' + (_scrPx[i].y - minY).toFixed(1) + 'px' + (i < N - 1 ? ', ' : '');
-          screenEl.style.clipPath = 'polygon(' + poly + ')';
-          screenEl.style.opacity = vidK.toFixed(3);
+          // 相機機殼是曲面的,LCD 是它上面的一個「有角度的平面」。
+          // 這裡把螢幕平面四角投影到畫面,解出「單位方形 → 該四邊形」的 homography,轉成 CSS matrix3d。
+          // → 影片與 HUD(REC/電量/ISO/快門/取景框)都是這個容器的子元素,會一起被同一個透視矩陣帶著走,
+          //   等於直接貼在 LCD 平面上、與影片共平面,而不是平貼在螢幕座標的矩形上。
+          if (screenQuadLocal) {
+            for (let i = 0; i < 4; i++) {
+              _wp.copy(screenQuadLocal[i]).applyMatrix4(screenMesh.matrixWorld).project(camera);
+              _q4[i].x = (_wp.x * 0.5 + 0.5) * SW; _q4[i].y = (-_wp.y * 0.5 + 0.5) * SH;
+            }
+            const x0 = _q4[0].x, y0 = _q4[0].y, x1 = _q4[1].x, y1 = _q4[1].y;
+            const x2 = _q4[2].x, y2 = _q4[2].y, x3 = _q4[3].x, y3 = _q4[3].y;
+            const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+            const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+            let ha, hb, hc, hd, he, hf, hg, hh, okH = true;
+            if (Math.abs(dx3) < 1e-7 && Math.abs(dy3) < 1e-7) {   // 正對鏡頭 → 退化成仿射
+              ha = x1 - x0; hb = x3 - x0; hc = x0; hd = y1 - y0; he = y3 - y0; hf = y0; hg = 0; hh = 0;
+            } else {
+              const den = dx1 * dy2 - dx2 * dy1;
+              if (Math.abs(den) < 1e-9) { okH = false; ha = hb = hc = hd = he = hf = hg = hh = 0; }
+              else {
+                hg = (dx3 * dy2 - dx2 * dy3) / den; hh = (dx1 * dy3 - dx3 * dy1) / den;
+                ha = x1 - x0 + hg * x1; hb = x3 - x0 + hh * x3; hc = x0;
+                hd = y1 - y0 + hg * y1; he = y3 - y0 + hh * y3; hf = y0;
+              }
+            }
+            if (okH) {
+              const bW = scrBaseW, bH = scrBaseH;   // 來源是 bW×bH 的 DOM 方框 → 前兩欄各除以基準尺寸
+              screenEl.style.left = '0px'; screenEl.style.top = '0px';
+              screenEl.style.width = bW + 'px'; screenEl.style.height = bH + 'px';
+              screenEl.style.transform = 'matrix3d(' + [
+                ha / bW, hd / bW, 0, hg / bW,
+                hb / bH, he / bH, 0, hh / bH,
+                0, 0, 1, 0,
+                hc, hf, 0, 1
+              ].map(v => v.toFixed(6)).join(',') + ')';
+              // 圓角改在「未變形的本地座標」做 → 透視會自動把圓角一起帶斜,不需要每幀重算多邊形
+              screenEl.style.clipPath = 'inset(0 round ' + (SCR_R * (bW + bH) / 2).toFixed(1) + 'px)';
+              screenEl.style.opacity = vidK.toFixed(3);
+            } else { screenEl.style.opacity = '0'; }
+          } else { screenEl.style.opacity = '0'; }
           if (dbgRedEl) dbgRedEl.setAttribute('points', _scrPx.map(pp => pp.x.toFixed(1) + ',' + pp.y.toFixed(1)).join(' '));
           if (dbgBlueEl) {   // 藍=螢幕 mesh bounding box 前面矩形(未斜切),當開口參考
             const b = screenMesh.geometry.boundingBox, z = b.min.z;
@@ -1237,8 +1587,16 @@ export function createHomeEngine() {
       dust.material.opacity = 0.32 * dark * wireK;
       grid.material.transparent = true; grid.material.opacity = dark;
       orangeL.intensity = (15 + Math.sin(t * 2.7) * 3 + shot * 26) * (0.4 + 0.6 * dark);
-      if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark;
+      // Phase 5:彩虹段 local 0.28–0.40 完成一次柔和光圈脈衝(強度變化約 10%,不加粒子不加旋轉)
+      const _rb = sceneProgress('chassis-rainbow');
+      const irisPulse = ez(sub(_rb, 0.28, 0.34)) * (1 - ez(sub(_rb, 0.34, 0.40)));
+      if (bloomPass) bloomPass.strength = (0.32 + wireK * 0.28 + shot * 1.4) * dark * (1 + 0.10 * irisPulse);
       if (composer && paperK < 0.6) composer.render(); else renderer.render(scene, camera);
+      if (DEBUG_LAYOUT) {
+        let _actId = sceneLayout.length ? sceneLayout[0].id : '';
+        for (let _i = 0; _i < sceneLayout.length; _i++) if (renderedScrollPx >= sceneLayout[_i].startPx) _actId = sceneLayout[_i].id;
+        updateDebugOverlay(_actId, sceneProgress(_actId), dt);
+      }
     });
   }
 

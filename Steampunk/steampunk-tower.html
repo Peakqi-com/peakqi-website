@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>六業移動城砦 MK-VI — 蒸汽龐克建築怪獸</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  three-d-stage:not(:defined) { visibility: hidden; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body { font-family: 'Noto Serif TC', Georgia, serif; background: #241f19; }
+  a { color: #d9b36c; } a:hover { color: #f0d192; }
+  three-d-stage { position: absolute; inset: 0; height: 100%; }
+
+  #plate {
+    position: absolute; top: 20px; left: 20px; z-index: 5; pointer-events: none;
+    color: #e8d9b8; text-shadow: 0 1px 8px rgba(0,0,0,.55);
+  }
+  #plate .kicker { font: 700 11px/1 'Cinzel', serif; letter-spacing: .42em; color: #c99a4e; text-transform: uppercase; }
+  #plate h1 { margin: 8px 0 4px; font: 700 26px/1.2 'Noto Serif TC', serif; letter-spacing: .06em; }
+  #plate .sub { font: 400 12.5px/1.6 'Noto Serif TC', serif; color: rgba(232,217,184,.75); max-width: 340px; }
+
+  #panel {
+    position: absolute; top: 16px; right: 16px; z-index: 6; width: 288px;
+    max-height: calc(100% - 32px); overflow: auto; scrollbar-width: thin;
+    background: linear-gradient(160deg, #2e241b, #241c15 55%, #201812);
+    border: 1px solid #6b5335; border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(240,209,146,.08), inset 0 14px 30px rgba(0,0,0,.35), 0 12px 40px rgba(0,0,0,.5);
+    color: #e8d9b8; padding: 16px 16px 14px;
+  }
+  #panel h2 { margin: 0 0 2px; font: 700 13px/1.3 'Cinzel', 'Noto Serif TC', serif; letter-spacing: .2em; color: #d9b36c; }
+  #panel .hint { font-size: 11px; line-height: 1.6; color: rgba(232,217,184,.55); margin: 0 0 12px; }
+  .row { margin: 12px 0; }
+  .row label.t { display: block; font-size: 11px; letter-spacing: .18em; color: #b9a37b; margin-bottom: 7px; }
+  .seg { display: flex; gap: 0; border: 1px solid #6b5335; border-radius: 7px; overflow: hidden; }
+  .seg button {
+    flex: 1; padding: 8px 6px; font: 600 12.5px/1 'Noto Serif TC', serif; letter-spacing: .1em;
+    background: transparent; color: #b9a37b; border: 0; cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid #6b5335; }
+  .seg button.on { background: linear-gradient(180deg, #c99a4e, #a87b34); color: #241c12; }
+  input[type=range] { width: 100%; appearance: none; height: 4px; border-radius: 2px; background: #55432c; outline: none; }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f0d192, #c99a4e 55%, #7d5a24);
+    border: 1px solid #55432c; cursor: pointer;
+  }
+  .switchrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 10px 0; }
+  .switchrow span { font-size: 13px; }
+  .sw { position: relative; width: 40px; height: 22px; border-radius: 11px; background: #55432c; border: 1px solid #6b5335; cursor: pointer; flex: none; transition: background .2s; }
+  .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #f0d192, #c99a4e 60%, #7d5a24); transition: left .2s; }
+  .sw.on { background: #7d5a24; }
+  .sw.on::after { left: 20px; }
+
+  .floors { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+  .floors button {
+    display: flex; align-items: center; gap: 10px; text-align: left; width: 100%;
+    background: rgba(240,209,146,.04); border: 1px solid rgba(107,83,53,.55); border-radius: 7px;
+    color: #e8d9b8; padding: 7px 9px; cursor: pointer; font: 400 12.5px/1.35 'Noto Serif TC', serif;
+  }
+  .floors button:hover { background: rgba(240,209,146,.1); }
+  .floors .no {
+    flex: none; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font: 700 10.5px/1 'Cinzel', serif; color: #241c12;
+    background: radial-gradient(circle at 35% 30%, #f0d192, #c99a4e 60%, #8a6528);
+  }
+  .floors small { display: block; color: rgba(232,217,184,.5); font-size: 10.5px; }
+  details { margin-top: 12px; border-top: 1px dashed #55432c; padding-top: 10px; }
+  summary { cursor: pointer; font-size: 12px; letter-spacing: .12em; color: #b9a37b; }
+  details code { font: 11px/1.9 ui-monospace, Menlo, monospace; color: #c9b992; display: block; white-space: pre-wrap; margin-top: 8px; }
+  .exportnote { margin-top: 12px; padding: 9px 10px; border: 1px solid rgba(107,83,53,.6); border-radius: 7px; background: rgba(0,0,0,.22); font-size: 11px; line-height: 1.7; color: rgba(232,217,184,.72); }
+
+  #labels { position: absolute; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+  #labels .lbl {
+    position: absolute; transform: translate(-50%, -130%); white-space: nowrap;
+    font: 600 11px/1 'Noto Serif TC', serif; letter-spacing: .12em;
+    color: #f0e2c0; background: rgba(26,20,14,.78); border: 1px solid rgba(201,154,78,.55);
+    padding: 5px 9px; border-radius: 4px; text-shadow: none;
+  }
+  #labels .lbl::after {
+    content: ''; position: absolute; left: 50%; top: 100%; width: 1px; height: 10px;
+    background: rgba(201,154,78,.55);
+  }
+  @media (max-width: 720px) {
+    #panel { width: 240px; }
+    #plate h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<three-d-stage name="steampunk_tower" background="#241f19" autorotate></three-d-stage>
+<div id="labels"></div>
+
+<div id="plate">
+  <div class="kicker">Ambulatory Edifice · MK-VI</div>
+  <h1>六業移動城砦</h1>
+  <div class="sub">蒸汽龐克建築怪獸 — 六個房間、六門生意，由鍋爐與齒輪驅動，以四足行走。拖曳環視、滾輪縮放。</div>
+</div>
+
+<div id="panel">
+  <h2>機關操作台</h2>
+  <p class="hint">CONTROL CONSOLE</p>
+  <div class="row">
+    <label class="t">檢視模式</label>
+    <div class="seg" id="modeSeg">
+      <button data-mode="mat" class="on">材質</button>
+      <button data-mode="wire">藍圖線稿</button>
+    </div>
+  </div>
+  <div class="row">
+    <label class="t">拆解 <span id="exv" style="float:right;color:#d9b36c">0%</span></label>
+    <input type="range" id="explode" min="0" max="100" value="0">
+  </div>
+  <div class="switchrow"><span>怠速動畫（齒輪·蒸汽·吊鐘）</span><div class="sw on" id="swAnim"></div></div>
+  <div class="switchrow"><span>樓層標籤</span><div class="sw on" id="swLbl"></div></div>
+  <div class="row">
+    <label class="t">樓層清單（點擊定位）</label>
+    <div class="floors" id="floorList"></div>
+  </div>
+  <div class="exportnote">
+    右下角按鈕會匯出<b>目前檢視模式</b>：<br>
+    材質模式 → 材質檔（OBJ+MTL / GLB）<br>
+    藍圖模式 → 線稿檔（線段 OBJ / GLB）<br>
+    拆解滑桿位置會一併寫入匯出檔。
+  </div>
+  <details>
+    <summary>動畫節點命名（three.js 用）</summary>
+    <code id="nodeList"></code>
+  </details>
+</div>
+
+<script src="three-d-stage.js"></script>
+<script type="module">
+import { buildTower, buildWire } from './tower.js';
+
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+
+// 環境反射(金屬質感)——簡易棚內 HDR
+{
+  const pm = new THREE.PMREMGenerator(stage._renderer);
+  const es = new THREE.Scene();
+  es.background = new THREE.Color(0x0e0c09);
+  const card = (w, h, c, i, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(i) }));
+    m.position.set(x, y, z);
+    m.lookAt(0, 0, 0);
+    es.add(m);
+  };
+  card(14, 10, 0xfff1dc, 3.2, 8, 6, 6);
+  card(12, 9, 0xbcd3e8, 1.5, -9, 4, -5);
+  card(18, 14, 0xfff7ea, 1.1, 0, 12, 0);
+  card(16, 4, 0x8a5a2e, 0.8, 0, -6, 2);
+  stage._scene.environment = pm.fromScene(es, 0.035).texture;
+  stage._scene.environmentIntensity = 0.55;
+  pm.dispose();
+}
+
+const { root, anim } = buildTower();
+const wireRoot = buildWire(root);
+
+// ---- 拆解資料（兩棵樹同步） ----
+const partSets = [];
+for (const tree of [root, wireRoot]) {
+  const set = [];
+  for (const child of tree.children) {
+    if (child.userData.explode) {
+      set.push({ node: child, base: child.position.clone(), vec: new THREE.Vector3(...child.userData.explode) });
+    }
+  }
+  partSets.push(set);
+}
+let explodeT = 0;
+function applyExplode(t) {
+  explodeT = t;
+  const e = t * t * (3 - 2 * t); // smoothstep
+  for (const set of partSets) for (const p of set) {
+    p.node.position.copy(p.base).addScaledVector(p.vec, e);
+  }
+}
+
+// ---- 模式切換 ----
+let mode = 'mat';
+function fixShadows(tree) {
+  tree.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+}
+function setMode(m, first) {
+  mode = m;
+  const cam = stage._camera.position.clone(), tgt = stage._controls.target.clone();
+  stage.setAttribute('name', m === 'wire' ? 'steampunk_tower_lineart' : 'steampunk_tower');
+  stage.setObject(m === 'wire' ? wireRoot : root);
+  fixShadows(m === 'wire' ? wireRoot : root);
+  if (!first) {
+    stage._camera.position.copy(cam);
+    stage._controls.target.copy(tgt);
+    stage._controls.update();
+  }
+  const bg = m === 'wire' ? '#122a40' : '#241f19';
+  stage.style.setProperty('--stage-bg', bg);
+  document.body.style.background = bg;
+  document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+}
+setMode('mat', true);
+
+document.getElementById('modeSeg').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (b && b.dataset.mode !== mode) setMode(b.dataset.mode);
+});
+
+// ---- 拆解滑桿 ----
+const slider = document.getElementById('explode');
+slider.addEventListener('input', () => {
+  document.getElementById('exv').textContent = slider.value + '%';
+  applyExplode(slider.value / 100);
+});
+
+// ---- 開關 ----
+let animOn = true, lblOn = true;
+const swAnim = document.getElementById('swAnim'), swLbl = document.getElementById('swLbl');
+swAnim.addEventListener('click', () => {
+  animOn = !animOn;
+  swAnim.classList.toggle('on', animOn);
+  anim.steamGroup.visible = animOn;
+  anim.beam.visible = animOn;
+  if (!animOn) {
+    for (const f of anim.swayFloors) { f.rotation.x = 0; f.rotation.z = 0; }
+    for (const r of [root, wireRoot]) { r.rotation.x = 0; r.rotation.y = 0; r.rotation.z = 0; }
+  } else { wobT0 = performance.now() / 1000; }
+});
+let wobT0 = performance.now() / 1000;
+swLbl.addEventListener('click', () => {
+  lblOn = !lblOn;
+  swLbl.classList.toggle('on', lblOn);
+  labelWrap.style.display = lblOn ? 'block' : 'none';
+});
+
+// ---- 樓層清單 ----
+const FLOORS = [
+  ['floor6_wedding', '6F', '婚禮廳', '剖面禮堂・玫瑰拱門・吊燈・新人與賓席'],
+  ['floor5_interior', '5F', '室內設計', '剖面工作室・繪圖桌・沙發・色票板'],
+  ['floor4_realestate', '4F', '房仲業務系統', '螢幕牆・業務桌・樓盤模型・側掛招牌'],
+  ['floor3_funeral_ai', '3F', '殯葬 · AI 影片', '追思祭壇・蓮花燭台・AI 工作站・伺服器'],
+  ['floor2_film', '2F', '影像製作 · 劇本', '試片室・打字機・劇本疊・放映機砲塔'],
+  ['floor1_gov', '1F', '政府標案 · 補助', '公文山辦公桌・保險箱・圖筒・死線大鐘'],
+];
+const bounces = [];
+const floorList = document.getElementById('floorList');
+for (const [name, no, title, desc] of FLOORS) {
+  const b = document.createElement('button');
+  b.innerHTML = '<span class="no">' + no + '</span><span>' + title + '<small>' + desc + '</small></span>';
+  b.addEventListener('click', () => {
+    const n = (mode === 'wire' ? wireRoot : root).getObjectByName(name);
+    if (n) bounces.push({ node: n, t0: performance.now() / 1000 });
+  });
+  floorList.appendChild(b);
+}
+
+// ---- 標籤 ----
+const labelWrap = document.getElementById('labels');
+const LABELS = [
+  ['floor6_wedding', [0, 4.3, 0], '6F 婚禮'],
+  ['floor5_interior', [0, 1.0, 2.1], '5F 室內設計'],
+  ['floor4_realestate', [0, 1.0, 1.75], '4F 房仲系統'],
+  ['floor3_funeral_ai', [0, 1.15, 2.0], '3F 殯葬 · AI'],
+  ['floor2_film', [0, 1.1, 1.9], '2F 影像 · 劇本'],
+  ['floor1_gov', [0, 2.5, 2.9], '1F 標案 · 補助'],
+  ['engine_boiler', [-3.2, 1.9, 0.9], '引擎室'],
+  ['legs', [2.9, 1.1, 2.9], '行走足'],
+];
+const lblEls = LABELS.map(([name, off, text]) => {
+  const el = document.createElement('div');
+  el.className = 'lbl';
+  el.textContent = text;
+  labelWrap.appendChild(el);
+  return { name, off: new THREE.Vector3(...off), el, v: new THREE.Vector3() };
+});
+function updateLabels() {
+  if (!lblOn) return;
+  const tree = mode === 'wire' ? wireRoot : root;
+  const w = stage.clientWidth, h = stage.clientHeight;
+  for (const L of lblEls) {
+    const part = tree.getObjectByName(L.name);
+    if (!part) { L.el.style.display = 'none'; continue; }
+    L.v.copy(L.off);
+    part.localToWorld(L.v);
+    L.v.project(stage._camera);
+    if (L.v.z > 1 || L.v.z < -1) { L.el.style.display = 'none'; continue; }
+    L.el.style.display = 'block';
+    L.el.style.left = ((L.v.x * 0.5 + 0.5) * w) + 'px';
+    L.el.style.top = ((-L.v.y * 0.5 + 0.5) * h) + 'px';
+  }
+}
+
+// ---- 動畫節點清單 ----
+document.getElementById('nodeList').textContent = [
+  'anim_gear_main / _mid / _small / _tower / _stack',
+  'clock_hand_min · clock_hand_hour',
+  'anim_reel_a · anim_reel_b · anim_reel_wall',
+  'anim_projector · projector_beam',
+  'anim_radar · bell_swing · wedding_ring',
+  'anim_eye_iris · steam_puff_0…4',
+  'wedding_chandelier · lamp_pendant',
+  '室內光源 wedding/interior/estate/funeral_ai/film/gov_light',
+  'lamp_pendant · lantern_a/b_swing',
+  'leg_FL/FR/BL/BR（髖）＋ leg_*_knee（膝）',
+  'floor1_gov … floor6_wedding · spire_ring',
+  '拆解向量存於 userData.explode（GLB extras）',
+].join('\n');
+
+// ---- 怠速動畫 ----
+let last = performance.now() / 1000;
+function tick() {
+  requestAnimationFrame(tick);
+  const t = performance.now() / 1000;
+  const dt = Math.min(t - last, 0.05);
+  last = t;
+  if (animOn) {
+    for (const g of anim.gears) g.node.rotation.z += g.speed * dt;
+    for (const s of anim.spinners) s.node.rotation[s.axis] += s.speed * dt;
+    anim.clockMin.rotation.z -= 0.22 * dt;
+    anim.clockHour.rotation.z -= 0.018 * dt;
+    anim.bell.rotation.z = Math.sin(t * 2.0) * 0.2;
+    anim.ring.rotation.y += 0.55 * dt;
+    // 整棟微微搖頭晃腦，像有生命
+    const wob = Math.min(1, (t - wobT0) / 2);
+    root.rotation.z = wireRoot.rotation.z = Math.sin(t * 0.5) * 0.006 * wob;
+    root.rotation.x = wireRoot.rotation.x = Math.cos(t * 0.37) * 0.0045 * wob;
+    root.rotation.y = wireRoot.rotation.y = Math.sin(t * 0.23) * 0.009 * wob;
+    anim.iris.position.x = Math.sin(t * 0.4) * 0.05;
+    anim.beam.material.opacity = 0.1 + 0.035 * (0.5 + 0.5 * Math.sin(t * 11) * Math.sin(t * 6.3));
+    for (const p of anim.puffs) {
+      const ph = (t * 0.17 + p.userData.phase) % 1;
+      p.position.y = ph * 2.3;
+      p.position.x = Math.sin(ph * 5 + p.userData.phase * 9) * 0.14;
+      const s = 0.5 + ph * 1.15;
+      p.scale.setScalar(s);
+      p.material.opacity = Math.min(ph * 5, 1) * (1 - ph) * 0.55;
+    }
+    // 樓層保持靜止(不抖動)；吊燈、燈籠保留微擺
+    for (const L of anim.lanterns) L.rotation.x = Math.sin(t * 1.3 + L.position.x * 3) * 0.07;
+  }
+  for (let i = bounces.length - 1; i >= 0; i--) {
+    const b = bounces[i], u = (t - b.t0) / 0.55;
+    if (u >= 1) { b.node.scale.setScalar(1); bounces.splice(i, 1); continue; }
+    b.node.scale.setScalar(1 + Math.sin(u * Math.PI) * 0.06);
+  }
+  updateLabels();
+}
+tick();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+*.png
+out-*.txt
+base-*.json
+t.js
