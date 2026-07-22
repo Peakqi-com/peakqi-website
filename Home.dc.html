@@ -583,26 +583,58 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pqmB2 .tickL,.pqmB2 .tickR{stroke:rgba(17,22,27,.35)}
 }
 @media (prefers-reduced-motion:reduce){.pqmB2 *{animation:none!important}.pqmB2 .lid2{transform:scaleY(0)!important}.pqmB2 .tick{opacity:0!important}}
-/* ── Step 4:03 感光元件怪破格 —— 整隻趴在格頂橫線上,頭與手往下垂進格子、雙腳往上翹(第三種姿態:趴)── */
+/* ── Step 4 v2:03 感光元件怪 —— 趴在線上(剪影重畫:大頭雙眼在左、雙臂垂線下、雙腳右後翹起)
+   像素格依序掃描亮起(感光身分),10.7s 探頭看下方的大編號。
+   桌機三欄時 03 在第一列(深頂線);≤980px 起它落到第二列/單欄(淺 hairline)→ 線色同步切換。 ── */
 .pqbrk3 .ico{position:absolute;top:-58px;right:16px;width:130px;height:150px;z-index:4;transform:none}
 .pqbrk3:hover .ico{transform:none}
 .pqmB3{display:block;width:100%;height:100%;overflow:visible}
-.pqmB3 .drape{animation:pqb3Drape 3.4s cubic-bezier(.37,0,.4,1) infinite;transform-origin:65px 55px}
-@keyframes pqb3Drape{0%,100%{transform:translateY(0)}48%{transform:translateY(2px) rotate(.6deg)}}
-.pqmB3 .bar3{animation:pqb3Bar 3.4s cubic-bezier(.37,0,.4,1) infinite}
-@keyframes pqb3Bar{0%,100%{transform:translateY(0)}48%{transform:translateY(1.8px)}}
-.pqmB3 .head{animation:pqb3Head 3s ease-in-out infinite;transform-origin:100px 62px}
-@keyframes pqb3Head{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(9deg)}}
-.pqmB3 .legU1{animation:pqb3LegA 1.9s ease-in-out infinite;transform-origin:44px 46px}
-.pqmB3 .legU2{animation:pqb3LegB 1.9s ease-in-out infinite;transform-origin:56px 46px}
-@keyframes pqb3LegA{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
-@keyframes pqb3LegB{0%,100%{transform:rotate(13deg)}50%{transform:rotate(-11deg)}}
-.pqmB3 .arm3{animation:pqb3Arm 2.4s ease-in-out infinite;transform-origin:50px 68px}
-@keyframes pqb3Arm{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(10deg)}}
-.pqmB3 .lid3{transform-origin:103px 84px;transform:scaleY(0);animation:pqb3Blink 4.6s steps(1,end) infinite}
-@keyframes pqb3Blink{0%,91%{transform:scaleY(0)}93%,96%{transform:scaleY(1)}97%,100%{transform:scaleY(0)}}
+.pqmB3 *{transform-box:view-box}
+/* 呼吸 3.9s 與線的下凹同相位(scaleY=(4.5+ty)/4.5,端點釘死 y=57) */
+.pqmB3 .lie{transform-origin:68px 57px;animation:pqb3Breath 3.9s cubic-bezier(.42,0,.3,1) infinite}
+@keyframes pqb3Breath{0%{transform:translateY(0)}30%{transform:translateY(-1.4px)}46%{transform:translateY(1.6px)}60%{transform:translateY(-.3px)}72%{transform:translateY(.4px)}100%{transform:translateY(0)}}
+.pqmB3 .sag3{transform-origin:68px 57px;animation:pqb3Flex 3.9s cubic-bezier(.42,0,.3,1) infinite}
+@keyframes pqb3Flex{0%{transform:scaleY(1)}30%{transform:scaleY(.69)}46%{transform:scaleY(1.36)}60%{transform:scaleY(.93)}72%{transform:scaleY(1.09)}100%{transform:scaleY(1)}}
+/* 頭:內層 3.3s 慵懶側傾;外層 10.7s 探頭事件——伸長脖子往左下看大編號,眉毛同窗抬起 */
+.pqmB3 .headI{transform-origin:44px 55px;animation:pqb3HeadI 3.3s ease-in-out infinite}
+@keyframes pqb3HeadI{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(3deg)}}
+.pqmB3 .peek{transform-origin:44px 55px;animation:pqb3Peek 10.7s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb3Peek{0%,56%{transform:rotate(0) translate(0,0)}61%,72%{transform:rotate(13deg) translate(-2.5px,3px)}78%{transform:rotate(-3deg)}83%,100%{transform:rotate(0) translate(0,0)}}
+.pqmB3 .brows{animation:pqb3Brow 10.7s ease-out infinite}
+@keyframes pqb3Brow{0%,56%{transform:translateY(2px)}60%,74%{transform:translateY(-.5px)}80%,100%{transform:translateY(2px)}}
+/* 前臂在探頭時往前指;內層 2.2s 自由擺,另一臂 2.8s 非整數比 */
+.pqmB3 .armF{transform-origin:48px 68px;animation:pqb3Point 10.7s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb3Point{0%,56%{transform:rotate(0)}62%,72%{transform:rotate(-22deg)}80%,100%{transform:rotate(0)}}
+.pqmB3 .armFi{transform-origin:48px 68px;animation:pqb3ArmA 2.2s cubic-bezier(.45,.02,.35,1) infinite}
+.pqmB3 .armN{transform-origin:57px 69px;animation:pqb3ArmB 2.8s cubic-bezier(.45,.02,.35,1) -1.15s infinite}
+@keyframes pqb3ArmA{0%{transform:rotate(6deg)}40%{transform:rotate(-8deg)}56%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
+@keyframes pqb3ArmB{0%{transform:rotate(-7deg)}44%{transform:rotate(8deg)}60%{transform:rotate(6deg)}100%{transform:rotate(-7deg)}}
+/* 後腳交替踢:2.45/3.05s 非整數比,腳掌反向拖曳 */
+.pqmB3 .legU1{transform-origin:88px 46px;animation:pqb3Leg1 2.45s cubic-bezier(.45,.02,.35,1) infinite}
+.pqmB3 .legU2{transform-origin:96px 50px;animation:pqb3Leg2 3.05s cubic-bezier(.45,.02,.35,1) -1.3s infinite}
+@keyframes pqb3Leg1{0%{transform:rotate(-12deg)}42%{transform:rotate(15deg)}58%{transform:rotate(11deg)}100%{transform:rotate(-12deg)}}
+@keyframes pqb3Leg2{0%{transform:rotate(13deg)}46%{transform:rotate(-12deg)}62%{transform:rotate(-9deg)}100%{transform:rotate(13deg)}}
+.pqmB3 .ftU1{transform-origin:88px 30px;animation:pqb3Ft1 2.45s cubic-bezier(.5,0,.5,1) infinite}
+.pqmB3 .ftU2{transform-origin:96px 36px;animation:pqb3Ft2 3.05s cubic-bezier(.5,0,.5,1) -1.3s infinite}
+@keyframes pqb3Ft1{0%{transform:rotate(6deg)}48%{transform:rotate(-9deg)}64%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
+@keyframes pqb3Ft2{0%{transform:rotate(-5deg)}52%{transform:rotate(8deg)}68%{transform:rotate(5.5deg)}100%{transform:rotate(-5deg)}}
+/* 眼睛:4.3s 東張西望;5.1s 連眨兩下 */
+.pqmB3 .pup3{animation:pqb3Look 4.3s ease-in-out infinite}
+@keyframes pqb3Look{0%,100%{transform:translateX(0)}28%{transform:translateX(1.8px)}58%{transform:translateX(-1.6px)}}
+.pqmB3 .lid3a{transform-origin:29px 52px;transform:scaleY(0);animation:pqb3Blink 5.1s steps(1,end) infinite}
+.pqmB3 .lid3b{transform-origin:38.5px 52px;transform:scaleY(0);animation:pqb3Blink 5.1s steps(1,end) infinite}
+@keyframes pqb3Blink{0%,62%{transform:scaleY(0)}64%,67%{transform:scaleY(1)}69%,74%{transform:scaleY(0)}76%,79%{transform:scaleY(1)}81%,100%{transform:scaleY(0)}}
+/* 像素格掃描:3.35s 依序亮起 */
+.pqmB3 .cell{animation:pqb3Cell 3.35s ease-in-out infinite}
+.pqmB3 .c2{animation-delay:.45s}.pqmB3 .c3{animation-delay:.9s}
+@keyframes pqb3Cell{0%,12%{opacity:.2}26%,40%{opacity:.85}56%,100%{opacity:.2}}
+@media (max-width:980px){
+  /* 兩欄起 03 落到第二列:上方是淺 hairline → 壓彎線同步變淺 */
+  .pqmB3 .sag3{stroke:rgba(17,22,27,.32);stroke-width:1.1}
+}
 @media (max-width:640px){.pqbrk3 .ico{width:112px;height:129px;top:-50px;right:8px}}
-@media (prefers-reduced-motion:reduce){.pqmB3 *{animation:none!important}.pqmB3 .lid3{transform:scaleY(0)!important}}
+@media (prefers-reduced-motion:reduce){.pqmB3 *{animation:none!important}
+  .pqmB3 .lid3a,.pqmB3 .lid3b{transform:scaleY(0)!important}.pqmB3 .brows{transform:translateY(2px)!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -1868,7 +1900,31 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="tuckB"><g class="dangB"><path d="M62 92V105" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftB"><path d="M62 105h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></g>
 </g></g>
 </svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
-      <div data-reveal class="pq-mod pqbrk3" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pqmB3" viewBox="0 0 130 150"><rect x="22" y="53" width="92" height="9" fill="#F2EFE8"/><path class="bar3" d="M22 57 Q66 69 112 57" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="drape"><g class="legU1"><path d="M44 46V30" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M44 30h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="legU2"><path d="M56 46V26" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M56 26h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><rect x="34" y="40" width="62" height="30" rx="12" fill="#3FA98C"/><g stroke="rgba(9,11,14,.28)" stroke-width="1.4"><path d="M54 40v30M74 40v30M34 55h62"/></g><g class="head"><path d="M92 60q14 2 12 16" stroke="#11161B" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="103" cy="82" r="11" fill="#3FA98C" stroke="#11161B" stroke-width="2"/><circle class="eye3" cx="103" cy="84" r="5" fill="#F2EFE8"/><circle class="eye3" cx="103" cy="85" r="2.4" fill="#11161B"/><path class="lid3" d="M92 84a11 11 0 0 1 22 0z" fill="#3FA98C"/></g><g class="arm3"><path d="M50 68q-6 8-3 18" stroke="#11161B" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="48" cy="88" r="4.6" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g></g></svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk3" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pqmB3" viewBox="0 0 130 150">
+<rect x="22" y="53" width="92" height="8" fill="#F2EFE8"/>
+<path class="sag3" d="M22 57 Q68 66 112 57" fill="none" stroke="rgba(17,22,27,.9)" stroke-width="1.6" stroke-linecap="round"/>
+<g class="lie">
+<rect x="44" y="44" width="52" height="26" rx="11" fill="#3FA98C"/>
+<g stroke="rgba(17,22,27,.28)" stroke-width="1.3"><path d="M61 44v26M78 44v26M44 57h52"/></g>
+<rect class="cell c1" x="47" y="47" width="11" height="7" rx="2" fill="#F2EFE8" opacity=".2"/>
+<rect class="cell c2" x="64" y="60" width="11" height="7" rx="2" fill="#F2EFE8" opacity=".2"/>
+<rect class="cell c3" x="81" y="47" width="12" height="7" rx="2" fill="#F2EFE8" opacity=".2"/>
+<g class="legU1"><path d="M88 46V30" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftU1"><path d="M88 30h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g>
+<g class="legU2"><path d="M96 50V36" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftU2"><path d="M96 36h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g>
+<g class="peek"><g class="headI">
+<circle cx="34" cy="52" r="12.5" fill="#3FA98C" stroke="#11161B" stroke-width="2"/>
+<g class="brows"><path d="M25 43l6-2M42 41l-6-2" stroke="#11161B" stroke-width="2" stroke-linecap="round" fill="none" transform="translate(0 2)"/></g>
+<g class="pup3"><circle cx="29" cy="52" r="4" fill="#F2EFE8"/><circle cx="29.4" cy="53" r="1.9" fill="#11161B"/>
+<circle cx="38.5" cy="52" r="4" fill="#F2EFE8"/><circle cx="38.9" cy="53" r="1.9" fill="#11161B"/></g>
+<path class="lid3a" d="M25 52a4 4 0 0 1 8 0z" fill="#3FA98C"/>
+<path class="lid3b" d="M34.5 52a4 4 0 0 1 8 0z" fill="#3FA98C"/>
+</g></g>
+<g class="armF"><g class="armFi"><path d="M48 68q-3 8-2 15" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="46.5" cy="85" r="4.4" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g></g>
+<g class="armN"><path d="M57 69q2 7 1 13" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="57.6" cy="84" r="4.4" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
+</g>
+</svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <circle class="body" cx="48" cy="46" r="32"/>
 <g class="blink"><ellipse class="paper" cx="34" cy="32" rx="7" ry="8"/><circle class="ink" cx="34" cy="33" r="3.6"/>
