@@ -273,7 +273,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     </div>
     <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
       <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
-        <h2 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">留下你的場景,我們來安排</h2>
+        <h2 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">先了解你想改善的流程</h2>
         <p style="margin:-6px 0 0;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。上面選好的流程與產業已自動帶入。</p>
         <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
@@ -341,7 +341,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <path d="M556 20 L559 23 L565 16" stroke="#65E0BC" stroke-width="2" fill="none"></path>
             </svg>
           </div>
-          <h2 style="margin:0;font:900 21px/1.5 'Noto Sans TC',sans-serif">已收到需求,我們將使用你的實際場景準備 Demo。</h2>
+          <h2 style="margin:0;font:900 21px/1.5 'Noto Sans TC',sans-serif">我們會先閱讀你的需求,再安排適合的討論方式。</h2>
           <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
             <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;background:#090B0E;color:#F2EFE8;padding:13px 20px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#FF6B2C;color:#090B0E">同步用 Email 寄出需求 →</a>
@@ -659,13 +659,13 @@ class Component extends DCLogic {
         : '我們會在一個工作天內與你聯繫,安排 15 分鐘場景 Demo。',
       mailtoHref: this._mailto(),
       submitting: s.submitting,
-      submitLabel: s.submitting ? '送出中⋯' : '送出,預約 15 分鐘 Demo →',
+      submitLabel: s.submitting ? '送出中⋯' : '送出導入需求 →',
       submitStyle: {
         background: s.submitting ? 'rgba(9,11,14,.35)' : '#FF6B2C', border: 'none', color: '#090B0E',
         padding: '15px', borderRadius: '2px', font: "700 16px 'Noto Sans TC',sans-serif", letterSpacing: '.04em',
         cursor: s.submitting ? 'wait' : 'pointer'
       },
-      statusMsg: s.failMsg || (s.done ? '已收到需求,我們將使用你的實際場景準備 Demo。' : ''),
+      statusMsg: s.failMsg || (s.done ? '我們會先閱讀你的需求,再安排適合的討論方式。' : ''),
       statusStyle: { font: "500 13.5px/1.7 'Noto Sans TC',sans-serif", color: s.failMsg ? '#D14E12' : '#1e9a72', minHeight: '1px', margin: 0 },
       submit: async () => {
         if (s.submitting || s.done) return;
