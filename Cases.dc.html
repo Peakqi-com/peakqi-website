@@ -215,30 +215,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
       六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
   </div>
-  <style>
-    /* 手機/平板不吃 3D:實測 <=900px 視窗內 iframe 的 WebGL 不會啟動(canvas 建不出來),
-       直接隱藏跑道,改給海報卡 + 開新分頁看全螢幕 3D → 手機不會看到空白區塊。 */
-    @media (max-width:900px){ #pq-bh-runway{display:none} #pq-bh-mobile{display:block} }
-    @media (min-width:901px){ #pq-bh-mobile{display:none} }
-  </style>
-  <div id="pq-bh-mobile" style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px) clamp(48px,7vw,72px)">
-    <a href="Steampunk/peakqi-story.html" target="_blank" rel="noopener"
-       aria-label="開啟品牌屋 3D 導覽(另開視窗)"
-       style="display:block;border:1px solid rgba(242,239,232,.16);border-radius:14px;overflow:hidden;text-decoration:none;color:#F2EFE8;background:#12171D">
-      <span style="display:block;padding:clamp(22px,5vw,30px)">
-        <span style="display:block;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">3D BRAND HOUSE</span>
-        <span style="display:block;margin-top:10px;font:800 clamp(1.15rem,5vw,1.5rem)/1.35 'Noto Sans TC',sans-serif">走進品牌屋 3D 導覽</span>
-        <span style="display:block;margin-top:8px;font:400 clamp(13.5px,3.6vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">
-          引擎室、1F 標案、2F 影像、3F AI 影片、4F 冒泡、5F 室內設計、6F 婚禮——六層樓一次看完。3D 場景較吃效能,手機建議全螢幕開啟。</span>
-        <span style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:11px 18px;border-radius:999px;border:1px solid #FF6B2C;color:#FF6B2C;font:700 13.5px 'Noto Sans TC',sans-serif;min-height:44px;box-sizing:border-box">開啟 3D 導覽 ↗</span>
-      </span>
-    </a>
-  </div>
-  <!-- 捲動跑道(桌機):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景 -->
-  <div id="pq-bh-runway" style="height:560vh;position:relative">
+  <!-- 捲動跑道(手機與桌機共用):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景。
+       節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
+       跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、
+       5 張卡(含實績卡)的章節每張約 34vh,足夠讀完再換卡,不會一滑就過。 -->
+  <div id="pq-bh-runway" style="height:2200vh;position:relative;margin-top:clamp(24px,4vw,40px)">
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
       <iframe id="pq-bh-frame" src="Steampunk/peakqi-story.html" title="PeakQi 品牌屋 3D 導覽"
-        loading="lazy" scrolling="no"
+        scrolling="no"
         style="display:block;width:100%;height:100%;border:0;pointer-events:none"></iframe>
     </div>
   </div>

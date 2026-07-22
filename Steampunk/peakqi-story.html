@@ -78,6 +78,14 @@
   .card h3 { margin: 0 0 8px; font-size: 21px; font-weight: 900; letter-spacing: .03em; }
   .card p { margin: 0; font-size: 14px; line-height: 1.85; color: rgba(255,255,255,.7); }
   .card p b { color: #ffe4d3; font-weight: 700; }
+  .card { max-height: 86vh; overflow: hidden; }
+  .card--case .shot { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left;
+    border-radius: 8px; border: 1px solid rgba(255,255,255,.12); margin: 0 0 12px; background: #100e0d; }
+  .card--case p { font-size: 13px; line-height: 1.72; }
+  .card--case .lbl { display: block; font-size: 10px; font-weight: 700; letter-spacing: .22em; color: #fe6a2d; margin: 11px 0 1px; }
+  .card--case .lbl.first { margin-top: 0; }
+  .card--case .tag { display: inline-block; font-size: 10px; letter-spacing: .14em; color: rgba(255,255,255,.62);
+    border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 2px 9px; margin: 10px 0 0; }
   .dots { position: absolute; right: 2px; top: calc(50% - 138px); display: flex; gap: 8px; }
   .dots i { width: 24px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.18); transition: background .25s; }
   .dots i.on { background: #fe6a2d; }
@@ -93,16 +101,21 @@
     #rail { display: none; }
     #secHead { top: 9vh; left: 6vw; max-width: 70vw; }
     #cards { right: 4vw; left: 4vw; width: auto; }
-    .card { top: auto; bottom: 5vh; transform: none; padding: 15px 17px; }
+    /* bottom 抬到 12vh:嵌在案例頁時,父頁底部有浮動「看 Demo」列,5vh 會被蓋住 */
+    .card { top: auto; bottom: 12vh; transform: none; padding: 15px 17px; }
     .card h3 { font-size: 17px; }
     .card p { font-size: 12.5px; }
+    .card { max-height: 58vh; }
+    .card--case .shot { aspect-ratio: 16 / 9; margin-bottom: 9px; }
+    .card--case p { font-size: 11.5px; line-height: 1.62; }
+    .card--case .lbl { font-size: 9px; margin: 8px 0 1px; }
     .dots { top: auto; bottom: 2vh; right: 4vw; }
     #hero { padding-left: 7vw; padding-right: 7vw; }
   }
 </style>
 </head>
 <body>
-<three-d-stage name="peakqi_tower" background="
+<three-d-stage name="peakqi_tower" chrome="off" background="
   radial-gradient(1.6px 1.6px at 12% 18%, rgba(255,238,200,.55), transparent 65%),
   radial-gradient(1.4px 1.4px at 78% 12%, rgba(255,238,200,.4), transparent 65%),
   radial-gradient(1.8px 1.8px at 88% 42%, rgba(255,224,178,.5), transparent 65%),
@@ -127,7 +140,6 @@
 <div id="progress"></div>
 <div id="topbar">
   <div class="logo">奇鋒國際 <b>PeakQi</b><small>AI OPERATING PLATFORM</small></div>
-  <a class="viewer" href="steampunk-tower.html">開啟 3D 檢視器 →</a>
 </div>
 <div id="rail"></div>
 <div id="hero">
@@ -142,7 +154,7 @@
 <div id="finale">
   <div class="big">別讓瑣碎，<em>耽誤真正重要的事</em>。</div>
   <div class="en">MADE FOR WHAT MATTERS.</div>
-  <a class="cta" href="steampunk-tower.html">拆解這棟品牌屋 — 3D 檢視器</a>
+  <a class="cta" href="../Demo.dc.html" target="_top">預約 AI 導入評估 →</a>
 </div>
 
 <script src="three-d-stage.js"></script>
@@ -552,38 +564,53 @@ const SECS = [
   },
   {
     id: 'estate', rail: '4F 房仲', vh: 170, cam: [0.55, 11.15, 3.6], tgt: [0.4, 10.6, -0.2], inside: [0.5, 10.85, 2.9], tgtIn: [0.4, 10.6, -0.2],
-    stands: [[0.5, 10.85, 2.9], [-0.5, 10.8, -0.15], [0.75, 10.52, 1.1], [0.85, 10.85, 0.9]],
-    looks: [[0.4, 10.6, -0.2], [1.55, 10.85, 0.15], [-0.95, 10.5, 0.02], [-0.22, 10.85, -0.86]],
+    stands: [[0.5, 10.85, 2.9], [-0.5, 10.8, -0.15], [0.75, 10.52, 1.1], [0.85, 10.85, 0.9], [0.85, 10.85, 0.9]],
+    looks: [[0.4, 10.6, -0.2], [1.55, 10.85, 0.15], [-0.95, 10.5, 0.02], [-0.22, 10.85, -0.86], [-0.22, 10.85, -0.86]],
     no: '05 / 4F', title: '房仲業務系統「冒泡」', sub: 'bubble.tw — 房仲版垂直品牌。獨立名字、獨立官網、獨立定價、獨立客群。',
     cards: [
       ['品牌', '冒泡 bubble.tw', '房仲版垂直品牌——<b>獨立品牌、獨立定價</b>，頁尾一行小字連回奇鋒。'],
       ['主打', '賣成果，不賣客服', '房型渲染這種<b>看得見的成果</b>，加上 24 小時自動接客、追蹤、養客到成交。'],
       ['原則', '不打自己人', 'Peak Ops 不主動接房仲客——這個產業留給冒泡吃，詢問一律導流。'],
       ['深度', '垂直做得更深', '知識庫、話術、Demo 場景全為房仲重做，比通用版更懂這一行。'],
+      ['實績 · 房仲不動產', '房仲 AI 助手(串 LINE 官方帳號)',
+        '<span class="lbl first">BEFORE　原本問題</span>物件、格局、價格與帶看時間的詢問散在 LINE，業務要一則則回，再人工安排帶看。'
+        + '<span class="lbl">AI 與人分工</span>物件資訊與帶看時段由 <b>AI 自動回覆與預約</b>；議價、屋況說明與成交交由業務處理。'
+        + '<span class="tag">完整案例見「案例」頁 03 / 03</span>',
+        { img: '../assets/works/work-realestate.png', alt: '房仲 AI 助手畫面:串接 LINE 官方帳號自動回物件、排預約帶看' }],
     ],
   },
   {
     id: 'interior', rail: '5F 室內設計', vh: 170, cam: [-0.1, 13.15, 3.9], tgt: [-0.15, 12.5, -0.3], inside: [-0.15, 12.6, 0.75], tgtIn: [-0.15, 12.5, -0.35],
-    stands: [[-0.1, 12.7, 2.85], [-0.4, 12.65, 0.95], [-0.55, 12.6, 0.35], [0.32, 12.5, 0.95]],
-    looks: [[-0.15, 12.5, -0.35], [0.67, 12.52, -0.62], [1.02, 12.62, 0.05], [-0.43, 12.32, 0.32]],
+    stands: [[-0.1, 12.7, 2.85], [-0.4, 12.65, 0.95], [-0.55, 12.6, 0.35], [0.32, 12.5, 0.95], [0.32, 12.5, 0.95]],
+    looks: [[-0.15, 12.5, -0.35], [0.67, 12.52, -0.62], [1.02, 12.62, 0.05], [-0.43, 12.32, 0.32], [-0.43, 12.32, 0.32]],
     no: '06 / 5F', title: 'AI Interior Pro', sub: 'aiinteriorpro.com — 室內設計版垂直品牌。讓客戶下訂前，就看到完工的樣子。',
     cards: [
       ['品牌', 'AI Interior Pro', '室內設計版垂直品牌——同一顆引擎，換上設計產業的臉。'],
       ['主打', '完工模擬', '客戶還沒下訂，就先看到<b>完工的樣子</b>——這是設計師最有力的一張圖。'],
       ['導入', '換上你的樣子', '灌入你的服務項目、FAQ、話術；UI 換上你的 Logo 與色系。'],
       ['節奏', '一步一步', '從你最痛的那個點開始用，有感了再接下一步——<b>帳號始終同一個</b>。'],
+      ['實績 · 室內設計裝修', '室內設計 AI 整合平台',
+        '<span class="lbl first">BEFORE　原本問題</span>客戶改一次風格，就要重畫、重渲染、重做簡報；設計師把時間花在來回修改，而不是設計本身。'
+        + '<span class="lbl">AI 與人分工</span>風格生成與提案排版由 <b>AI 準備草稿</b>；材質、報價與最終簡報由設計師確認後送出。'
+        + '<span class="tag">完整案例見「案例」頁 02 / 03</span>',
+        { img: '../assets/works/work-interior.png', alt: '室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報' }],
     ],
   },
   {
     id: 'wedding', rail: '6F 婚禮', vh: 170, cam: [0.1, 15.0, 3.8], tgt: [0, 14.6, 0], inside: [0.05, 14.9, 0.85], tgtIn: [0, 14.45, -0.15],
-    stands: [[0.15, 15.05, 2.6], [0.05, 14.9, 0.85], [0.05, 14.9, 0.85], [0.0, 14.22, 0.95]],
-    looks: [[0, 14.45, -0.15], [0.93, 14.12, -0.09], [-0.9, 14.5, -0.65], [0, 14.02, -0.36]],
+    stands: [[0.15, 15.05, 2.6], [0.05, 14.9, 0.85], [0.05, 14.9, 0.85], [0.0, 14.22, 0.95], [0.0, 14.22, 0.95]],
+    looks: [[0, 14.45, -0.15], [0.93, 14.12, -0.09], [-0.9, 14.5, -0.65], [0, 14.02, -0.36], [0, 14.02, -0.36]],
     no: '07 / 6F', title: 'AI Wedding Pro', sub: 'aiweddingpro.com — 婚慶版垂直品牌，樓頂那枚婚戒就是招牌。',
     cards: [
       ['品牌', 'AI Wedding Pro', '婚慶版垂直品牌——<b>婚紗與場地模擬</b>額度直接內建在方案裡。'],
       ['場景', '半夜也接得住', '新人凌晨兩點傳訊詢價？AI 自動回覆、追蹤、養客到成交。'],
       ['保障', '年訂閱＋三重保障', '30 天全額退款、NT$3,000 體驗月、年繳送兩個月。'],
       ['承諾', '感覺得到，才叫做到', '不做隱形的技術後台——<b>今天用、今天有感</b>。'],
+      ['實績 · 婚禮婚慶', '婚禮產業 AI 大禮包',
+        '<span class="lbl first">BEFORE　原本問題</span>婚紗款式、檔期、試妝與方案問題集中在 LINE，由客服重複回覆，再人工整理到不同表單與群組。'
+        + '<span class="lbl">AI 與人分工</span>常見問題與試妝試髮預覽由 <b>AI 先處理</b>；價格、檔期與特殊需求交由專人確認。'
+        + '<span class="tag">完整案例見「案例」頁 01 / 03</span>',
+        { img: '../assets/works/work-wedding.png', alt: '婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬與 AI 接客' }],
     ],
   },
   { id: 'finale', rail: '尾聲', vh: 150, cam: [26, 17.5, 28], tgt: [-3.8, 9.8, 0] },
@@ -624,10 +651,12 @@ function mountSection(i) {
       dotEls.push(ii);
     }
     cardsEl.appendChild(dots);
-    for (const [k, h, p] of s.cards) {
+    for (const [k, h, p, media] of s.cards) {
       const c = document.createElement('div');
-      c.className = 'card';
-      c.innerHTML = '<div class="k">' + k + '</div><h3>' + h + '</h3><p>' + p + '</p>';
+      c.className = 'card' + (media ? ' card--case' : '');
+      c.innerHTML = '<div class="k">' + k + '</div><h3>' + h + '</h3>'
+        + (media ? '<img class="shot" src="' + media.img + '" alt="' + media.alt + '" loading="lazy" decoding="async">' : '')
+        + '<p>' + p + '</p>';
       cardsEl.appendChild(c);
       cardEls.push(c);
     }
@@ -668,8 +697,9 @@ function update(t, dt) {
   railStops.forEach((r, i) => r.classList.toggle('on', i === idx));
   mountSection(idx);
   // 相機：人視角——平移走進房間(前15%)，站定後隨字卡旋轉凝視對應物件，退出(80%後)，再繞外側到下一間
-  const CW = 0.155, C0 = 0.17;
+  const C0 = 0.17, CEND = 0.79;
   const s0 = SECS[idx], s1 = SECS[Math.min(idx + 1, SECS.length - 1)];
+  const CW = (s0.cards && s0.cards.length) ? (CEND - C0) / s0.cards.length : 0.155;
   const pin = s0.inside ? ss(clamp01(lt / 0.15)) : 0;
   const pout = ss(clamp01((lt - 0.8) / 0.12));
   const ktr = ss(clamp01((lt - 0.92) / 0.08));

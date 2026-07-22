@@ -75,6 +75,9 @@
       overflow: hidden;
     }
     canvas { display: block; outline: none; }
+    /* chrome="off":對外展示用,隱藏開發用的匯出按鈕與滑鼠操作提示 */
+    :host([chrome="off"]) .toolbar,
+    :host([chrome="off"]) .note { display: none; }
     .toolbar {
       position: absolute;
       right: 16px;
