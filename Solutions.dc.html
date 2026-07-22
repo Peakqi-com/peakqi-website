@@ -246,10 +246,36 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <p style="margin:0;padding:0 18px 14px;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">對話為產品介面模擬。AI 辨識服務、需求、聯絡時間,判斷不了就轉真人。</p>
           </div>
           <div style="display:flex;flex-direction:column;gap:14px">
+            <!-- AI 辨識面板:回答「來源是什麼、辨識出什麼、缺什麼、誰處理」,隨情境切換 -->
+            <div style="border:1px solid rgba(255,107,44,.4);border-radius:8px;background:rgba(255,107,44,.04);padding:20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                <span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span>
+                <span style="font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.06em">AI 辨識結果</span>
+                <span style="{{ recStStyle }}">{{ recSt }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:9px">
+                <span style="display:flex;flex-direction:column;gap:3px;border:1px solid rgba(9,11,14,.12);border-radius:5px;background:#F2EFE8;padding:10px 12px;min-width:0">
+                  <span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">詢問來源</span>
+                  <span style="font:700 14.5px 'Noto Sans TC',sans-serif">{{ recSrc }}</span>
+                </span>
+                <span style="display:flex;flex-direction:column;gap:3px;border:1px solid rgba(9,11,14,.12);border-radius:5px;background:#F2EFE8;padding:10px 12px;min-width:0">
+                  <span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">辨識出的需求</span>
+                  <span style="font:700 14.5px 'Noto Sans TC',sans-serif">{{ recNeed }}</span>
+                </span>
+                <span style="display:flex;flex-direction:column;gap:3px;border:1px solid rgba(9,11,14,.12);border-radius:5px;background:#F2EFE8;padding:10px 12px;min-width:0">
+                  <span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">還缺的資料</span>
+                  <span style="font:700 14.5px 'Noto Sans TC',sans-serif">{{ recMiss }}</span>
+                </span>
+              </div>
+            </div>
             <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:rgba(9,11,14,.02);padding:20px;display:flex;flex-direction:column;gap:11px;flex:1">
               <div style="display:flex;align-items:center;gap:9px">
                 <span style="width:7px;height:7px;border-radius:50%;background:#3E9BFF"></span>
-                <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.08em">對話 → CRM 卡片</span>
+                <span style="font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.06em">對話 → CRM 卡片</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">目前階段</span><span style="font:700 14px 'Noto Sans TC',sans-serif;color:#1F63B8">{{ recStage }}</span></span>
+                <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">負責人</span><span style="font:700 14px 'Noto Sans TC',sans-serif">{{ recOwner }}</span></span>
               </div>
               <sc-for list="{{ scCrm }}" as="c" hint-placeholder-count="3">
                 <span data-ccrm style="border:1px solid rgba(62,155,255,.4);background:rgba(62,155,255,.06);border-radius:4px;padding:10px 13px;font:600 13.5px 'Noto Sans TC',sans-serif;color:#090B0E">{{ c }}</span>
@@ -321,11 +347,19 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">成交前後,<br>都使用同一份客戶脈絡</h2>
           <span style="font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:420px;text-wrap:pretty">案例、方案、內容與後續服務,依客戶目前的需求與階段提供——不需要團隊每次重新尋找與整理。</span>
         </div>
-        <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+        <!-- 核心:同一份客戶脈絡被後續流程沿用 -->
+        <div style="margin-top:clamp(22px,3vw,32px);display:flex;flex-wrap:wrap;gap:10px;align-items:center;border:1px solid rgba(9,11,14,.14);border-radius:8px;background:#fff;padding:14px 18px">
+          <span style="display:inline-flex;align-items:center;gap:8px;font:700 14.5px 'Noto Sans TC',sans-serif"><span style="width:8px;height:8px;border-radius:50%;background:#1F63B8"></span>王小姐・到府需求</span>
+          <span style="font:600 13.5px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.4)">→</span>
+          <span style="font:600 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">需求摘要、階段與紀錄</span>
+          <span style="font:600 13.5px 'Space Grotesk',sans-serif;color:rgba(9,11,14,.4)">→</span>
+          <span style="font:600 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">被下面三種流程直接沿用,不用重新整理</span>
+        </div>
+        <div style="margin-top:clamp(16px,2vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
           <div data-nplane style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:22px;display:flex;flex-direction:column;gap:9px">
-            <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">SOCIAL</span>
-            <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">社群貼文</h3>
-            <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">依你的產業,每週自動產出貼文草稿,你潤飾就能發。</p>
+            <span style="font:600 13px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#A63A08">CASES &amp; OFFERS</span>
+            <h3 style="margin:0;font:800 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">案例與方案</h3>
+            <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">依需求提供相關案例、服務範圍與初步方案——內容由 AI 先準備,適不適合由人判斷。</p>
             <!-- 03-A 子動畫:貼文生成(圖片掃描 + 文案逐行)/ 手機貼文卡 -->
             <div style="margin-top:8px;max-width:280px;border:1px solid rgba(9,11,14,.14);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 8px 22px rgba(9,11,14,.08)">
               <div style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid rgba(9,11,14,.08)">
@@ -348,9 +382,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             </div>
           </div>
           <div data-nplane style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:22px;display:flex;flex-direction:column;gap:9px">
-            <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">ASSETS</span>
-            <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">案例・優惠</h3>
-            <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">Banner、EDM、案例內容快速生成,把「考慮中」的客人往前推。</p>
+            <span style="font:600 13px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#A63A08">DOCS &amp; CONTENT</span>
+            <h3 style="margin:0;font:800 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">文件與內容</h3>
+            <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">整理知識、說明、會議摘要與後續資料草稿,寄出前由負責人確認。</p>
             <!-- 03-B 子動畫:Banner / EDM 區塊逐塊組版 -->
             <div style="margin-top:8px;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:13px;display:flex;flex-direction:column;gap:9px;box-shadow:0 8px 22px rgba(9,11,14,.08)">
               <div style="display:flex;gap:8px;align-items:center">
@@ -372,9 +406,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             </div>
           </div>
           <div data-nplane style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:22px;display:flex;flex-direction:column;gap:9px">
-            <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C">RENDER</span>
-            <h3 style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">AI 場景渲染</h3>
-            <p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">場景渲染與風格模擬,讓客人消費前先看效果——婚紗、髮色、空間都能先試。</p>
+            <span style="font:600 13px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#A63A08">PROJECT &amp; SERVICE</span>
+            <h3 style="margin:0;font:800 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">專案與服務</h3>
+            <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">成交後,需求與承諾直接延續到任務、時程與交付流程,不用重新交接。</p>
             <!-- 03-C 子動畫:AI 場景渲染(before → after 擦除 + 運算中) -->
             <div style="margin-top:8px;border:1px solid rgba(9,11,14,.14);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 8px 22px rgba(9,11,14,.08)">
               <div style="position:relative;height:112px;background:repeating-linear-gradient(45deg,rgba(9,11,14,.07) 0 8px,rgba(9,11,14,.02) 8px 16px)">
@@ -518,7 +552,16 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span data-ichip style="border:1px solid rgba(62,155,255,.5);color:#3E9BFF;font:700 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">追客</span>
       <span data-ichip style="border:1px solid rgba(101,224,188,.5);color:#65E0BC;font:700 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">養客</span>
       <sc-for list="{{ mods }}" as="m" hint-placeholder-count="6">
-        <span data-ichip style="border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);font:600 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">{{ m.name }}</span>
+        <span data-ichip style="border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);font:600 13.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">{{ m.name }}</span>
+      </sc-for>
+    </div>
+    <!-- 管理者實際會看的六個焦點:不縮小完整後台,直接講清單 -->
+    <div style="margin-top:clamp(24px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:clamp(10px,1.4vw,16px)">
+      <sc-for list="{{ consoleFocus }}" as="cf" hint-placeholder-count="6">
+        <div style="border:1px solid rgba(242,239,232,.16);border-radius:6px;background:rgba(242,239,232,.04);padding:18px;display:flex;flex-direction:column;gap:8px;box-sizing:border-box;min-width:0">
+          <span style="display:inline-flex;align-items:center;gap:8px;font:700 clamp(15px,1.2vw,16.5px) 'Noto Sans TC',sans-serif"><span style="width:8px;height:8px;border-radius:50%;background:{{ cf.c }}"></span>{{ cf.t }}</span>
+          <span style="font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62);text-wrap:pretty">{{ cf.d }}</span>
+        </div>
       </sc-for>
     </div>
     <!-- 05 手法子動畫:九個來源匯流成一條資料流,收進單一控制台(獨立於捲動母動畫) -->
@@ -586,6 +629,19 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>希望完全不參與,由供應商決定一切</li>
           <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>只需要一次性生成內容,沒有後續流程</li>
         </ul>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1360px;margin:clamp(36px,4.6vw,56px) auto 0">
+    <div style="border:1px solid rgba(9,11,14,.14);border-radius:8px;background:#fff;padding:clamp(22px,2.6vw,30px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(18px,2.4vw,28px);align-items:center">
+      <div style="min-width:0">
+        <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#A63A08">CASE ・ 房仲不動產</span>
+        <h3 style="margin:10px 0 0;font:900 clamp(19px,1.7vw,23px)/1.4 'Noto Sans TC',sans-serif">房仲 AI 助手(串 LINE 官方帳號)</h3>
+        <p style="margin:10px 0 0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">物件、格局、價格與帶看時間的詢問散在 LINE,業務要一則則回、再人工安排帶看。導入後物件資訊與帶看時段由 AI 自動回覆與預約;議價、屋況說明與成交交由業務處理。</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+        <span style="font:600 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">可確認的結果:詢問由系統先接住並建檔,帶看安排不再依賴人工排程。</span>
+        <a href="Case.dc.html?slug=realestate" style="font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">查看完整案例 →</a>
       </div>
     </div>
   </div>
@@ -718,6 +774,27 @@ class Component extends DCLogic {
     return {
       scTabs, scKeys, scMsgs,
       scName: cur.key, scCrm: cur.crm,
+      recSrc: cur.rec?.src ?? 'LINE 官方帳號',
+      recNeed: cur.rec?.need ?? '',
+      recMiss: cur.rec?.miss ?? '',
+      recSt: cur.rec?.st ?? 'AI 可處理',
+      recStStyle: {
+        marginLeft: 'auto', borderRadius: '999px', padding: '5px 13px',
+        font: "700 13.5px 'Noto Sans TC',sans-serif",
+        background: cur.rec?.stc === 'h' ? 'rgba(15,138,106,.12)' : 'rgba(255,107,44,.12)',
+        color: cur.rec?.stc === 'h' ? '#0F8A6A' : '#A63A08',
+        border: '1px solid ' + (cur.rec?.stc === 'h' ? 'rgba(15,138,106,.4)' : 'rgba(255,107,44,.4)')
+      },
+      recStage: cur.rec?.stc === 'h' ? '待人工確認' : '資訊處理中',
+      recOwner: cur.rec?.stc === 'h' ? '已指派專人' : 'AI(例外轉人工)',
+      consoleFocus: [
+        { t: '新進詢問', c: '#FF6B2C', d: '今天進來幾筆、來自哪些管道、AI 是否已接住。' },
+        { t: '待人工確認', c: '#65E0BC', d: '價格、敏感內容與低信心回答,等人拍板的清單。' },
+        { t: '待跟進', c: '#3E9BFF', d: '依案件狀態排出的下一步,誰負責、何時到期。' },
+        { t: '報價與成交', c: '#FF6B2C', d: '報價單狀態與成交進度,不用翻對話紀錄。' },
+        { t: '專案進度', c: '#3E9BFF', d: '成交後的任務、時程與交付狀態。' },
+        { t: '流程停點', c: '#65E0BC', d: '哪一段流程常常卡住,下一階段該調整什麼。' }
+      ],
       seq: d?.followupSeq ?? [],
       mods, modDets,
       inds: d?.industries ?? [],

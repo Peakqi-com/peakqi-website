@@ -259,12 +259,12 @@ function paintSolutions(g, e) {
     d.label(dayK > 0 ? 'FOLLOWING' : 'CRM CARD', cx + 8, cy + chh - 7 * s, 7.5 * s, '#D14E12', 1);
     g.restore();
   }
-  // S4 FOLLOW:DAY 1/3/5/7 節奏
+  // S4 FOLLOW:狀態導向四步(補齊需求→提供案例→確認反應→決定下一步)
   if (kF > 0) {
     const a = ez(kF), l1x = colX + off(1), l1y = ly(1);
     const ty = l1y + lh * .78;
     g.save(); g.globalAlpha = a;
-    ['DAY 1', 'DAY 3', 'DAY 5', 'DAY 7'].forEach((tx, j) => {
+    ['補齊需求', '提供案例', '確認反應', '決定下一步'].forEach((tx, j) => {
       const nx = l1x + 24 + (colW - 60) * j / 3;
       const on = kF * 4 - .4 > j;
       d.node(nx, ty, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', 1, !on);
