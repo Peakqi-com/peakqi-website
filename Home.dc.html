@@ -1821,6 +1821,12 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pf4Okp{0%,89%{stroke-dashoffset:16}94%,97%{stroke-dashoffset:0}100%{stroke-dashoffset:16}}
 .pf4 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
 .pf4 .c2{animation-delay:2.5s}.pf4 .c3{animation-delay:5s}.pf4 .c4{animation-delay:7.5s}
+/* 矮視窗(MacBook Air 類):開場字卡置中後會頂到 top:84px 的階段標籤列 → 往下讓開 */
+@media (max-height:940px){#hero.pq-cine-on .pq-cine-intro{margin-top:72px}}
+/* 回頂部:電影卷軸很長,深捲後給一條快速回頭路(左下,避開右下浮動 CTA) */
+#pq-backtop{position:fixed;left:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:140;display:none;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(9,11,14,.82);color:#F2EFE8;border:1px solid rgba(242,239,232,.3);font:700 18px 'Space Grotesk',sans-serif;text-decoration:none;backdrop-filter:blur(6px)}
+#pq-backtop:hover{border-color:#FF6B2C;color:#FF6B2C}
+body[data-pq-top="1"] #pq-backtop{display:flex}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -2828,12 +2834,24 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
+<a id="pq-backtop" href="#hero" aria-label="回到頁首">↑</a>
 <dc-import name="Footer" hint-size="100%,460px"></dc-import>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
 class Component extends DCLogic {
   state = { d: null };
   componentDidMount() {
+    // 回頂部按鈕:捲超過 1.5 個視窗高才出現(rAF 節流,卸載時移除)
+    this._topOn = false;
+    this._onTopScroll = () => {
+      if (this._topRaf) return;
+      this._topRaf = requestAnimationFrame(() => {
+        this._topRaf = 0;
+        const on = window.scrollY > window.innerHeight * 1.5;
+        if (on !== this._topOn) { this._topOn = on; document.body.dataset.pqTop = on ? '1' : ''; }
+      });
+    };
+    window.addEventListener('scroll', this._onTopScroll, { passive: true });
     import('./content.js').then(m => { if (!this._dead) this.setState({ d: m }); }).catch(() => {});
     import('./seo.js').then(m => m.applySEO('home')).catch(() => {});
     // 母/子動畫引擎:three.js 3D Hero + 跨產業節點網路 + 雙軌進度 + 章節導覽
@@ -2883,7 +2901,9 @@ class Component extends DCLogic {
       a.addEventListener('mouseleave', () => { a.style.transform = 'none'; a.style.borderColor = 'rgba(9,11,14,.14)'; a.style.boxShadow = 'none'; });
     });
   }
-  componentWillUnmount() { this._dead = true; if (this._io) this._io.disconnect(); if (this._nio) this._nio.disconnect(); if (this._engine) { try { this._engine.destroy(); } catch (e) {} this._engine = null; } }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onTopScroll);
+    delete document.body.dataset.pqTop; this._dead = true; if (this._io) this._io.disconnect(); if (this._nio) this._nio.disconnect(); if (this._engine) { try { this._engine.destroy(); } catch (e) {} this._engine = null; } }
   renderVals() { return { stickyVal: this.props.stickyCta ?? true }; }
 }
 </script>

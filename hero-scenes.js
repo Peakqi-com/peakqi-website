@@ -271,8 +271,9 @@ function paintSolutions(g, e) {
       d.label(tx, nx - 14 * s, ty + 14 * s, 8.5 * s, on ? C.blue : 'rgba(242,239,232,.4)', 1);
       if (j < 3) d.line(nx + 5, ty, l1x + 24 + (colW - 60) * (j + 1) / 3 - 5, ty, clamp(kF * 4 - .5 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
     });
-    const hint = ['提醒已擬', '補上案例', '限時優惠', '最後關心'][clamp(Math.floor(kF * 4), 0, 3)];
-    if (kF > .2 && !mobile) d.chip(l1x + colW - 86 * s, l1y + 8, hint, true, 9 * s);
+    const hint = ['補齊需求', '提供案例', '確認反應', '決定下一步'][clamp(Math.floor(kF * 4), 0, 3)];
+    // kF < .85:王小姐卡滑到右端後不再畫 chip,避免兩者疊字(1280 寬實測會撞)
+    if (kF > .2 && kF < .85 && !mobile) d.chip(l1x + colW - 86 * s, l1y + 8, hint, true, 9 * s);
     g.restore();
   }
   // S5 NURTURE:分群標籤 + 內容排程
