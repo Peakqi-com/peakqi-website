@@ -528,24 +528,61 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pqmB1 .lid{transform:scaleY(0)!important}
   .pqmB1 .tick,.pqmB1 .flash{opacity:0!important}
 }
-/* ── Step 3:02 主機板怪破格 —— 雙手吊在格頂橫線做引體向上、雙腳懸空踢(和 01 的坐姿對比)── */
+/* ── Step 3 v2:02 主機板怪 —— 引體向上全套表演(預備、出力、頂點顫抖、落下回彈、11.3s 手滑重抓)
+   手機單欄時上方那條是淺 hairline,壓彎線的顏色粗細跟著斷點切換,不再出現「深線浮在淺線上」的錯位。 ── */
 .pqbrk2 .ico{position:absolute;top:-46px;right:22px;width:110px;height:150px;z-index:4;transform:none}
 .pqbrk2:hover .ico{transform:none}
 .pqmB2{display:block;width:100%;height:100%;overflow:visible}
-.pqmB2 .hang{animation:pqb2Pull 2.6s cubic-bezier(.4,0,.4,1) infinite;transform-origin:55px 46px}
-@keyframes pqb2Pull{0%,100%{transform:translateY(0)}42%{transform:translateY(-7px)}66%{transform:translateY(-1.5px)}}
-.pqmB2 .bar{animation:pqb2Bar 2.6s cubic-bezier(.4,0,.4,1) infinite}
-@keyframes pqb2Bar{0%,100%{transform:translateY(0)}42%{transform:translateY(2.2px)}66%{transform:translateY(.5px)}}
-.pqmB2 .legA2{animation:pqb2LegA 1.5s ease-in-out infinite;transform-origin:48px 92px}
-.pqmB2 .legB2{animation:pqb2LegB 1.5s ease-in-out infinite;transform-origin:62px 92px}
-@keyframes pqb2LegA{0%,100%{transform:rotate(14deg)}50%{transform:rotate(-16deg)}}
-@keyframes pqb2LegB{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
-.pqmB2 .eyes{animation:pqb2Look 3.4s ease-in-out infinite}
-@keyframes pqb2Look{0%,100%{transform:translateX(0)}30%{transform:translateX(2.4px)}60%{transform:translateX(-2.4px)}}
-.pqmB2 .lid2{transform-origin:55px 73px;transform:scaleY(0);animation:pqb2Blink 4s steps(1,end) infinite}
-@keyframes pqb2Blink{0%,90%{transform:scaleY(0)}92%,95%{transform:scaleY(1)}96%,100%{transform:scaleY(0)}}
-@media (max-width:640px){.pqbrk2 .ico{width:96px;height:131px;top:-40px;right:10px}}
-@media (prefers-reduced-motion:reduce){.pqmB2 *{animation:none!important}.pqmB2 .lid2{transform:scaleY(0)!important}}
+.pqmB2 *{transform-box:view-box}
+/* 主循環 4.1s:8% 預備下沉 → 30% 拉起 -8px → 40-48% 頂點顫抖 → 60% 落下過衝 → 回穩 */
+.pqmB2 .heave{transform-origin:55px 45px;animation:pqb2Heave 4.1s cubic-bezier(.45,.03,.25,1) infinite}
+@keyframes pqb2Heave{0%{transform:translateY(0)}8%{transform:translateY(.6px)}15%{transform:translateY(2.2px)}30%{transform:translateY(-8px)}40%{transform:translateY(-8.6px)}44%{transform:translateY(-8.1px)}48%{transform:translateY(-8.5px)}60%{transform:translateY(1.6px)}68%{transform:translateY(-.6px)}78%,100%{transform:translateY(0)}}
+/* 桿:出力時最彎(30%),落下時反彈變淺(60%→.86)再回穩;端點釘死 y=45 */
+.pqmB2 .bar{transform-origin:55px 45px;animation:pqb2Bar 4.1s cubic-bezier(.45,.03,.25,1) infinite}
+@keyframes pqb2Bar{0%{transform:scaleY(1)}15%{transform:scaleY(1.22)}30%{transform:scaleY(1.34)}44%{transform:scaleY(1.18)}60%{transform:scaleY(.86)}68%{transform:scaleY(1.08)}78%,100%{transform:scaleY(1)}}
+/* 應力短線:出力窗口浮現 */
+.pqmB2 .tick{opacity:0}
+.pqmB2 .tickL{transform-origin:26px 50px;animation:pqb2Tick 4.1s ease-out infinite}
+.pqmB2 .tickR{transform-origin:84px 50px;animation:pqb2Tick 4.1s ease-out .12s infinite}
+@keyframes pqb2Tick{0%,14%{opacity:0;transform:scale(.5)}24%,42%{opacity:.5;transform:scale(1)}56%,100%{opacity:0;transform:scale(.5)}}
+/* 腿:外層 4.1s 收腿(拉起時膝蓋前收)× 內層 2.3/2.9s 非整數比自由擺;腳掌晚 8% 反向拖曳 */
+.pqmB2 .tuckA{transform-origin:48px 92px;animation:pqb2Tuck 4.1s cubic-bezier(.45,.03,.25,1) infinite}
+.pqmB2 .tuckB{transform-origin:62px 92px;animation:pqb2Tuck 4.1s cubic-bezier(.45,.03,.25,1) -.12s infinite}
+@keyframes pqb2Tuck{0%,12%{transform:rotate(0)}30%,46%{transform:rotate(-24deg)}62%{transform:rotate(6deg)}76%,100%{transform:rotate(0)}}
+.pqmB2 .dangA{transform-origin:48px 92px;animation:pqb2DangA 2.3s cubic-bezier(.45,.02,.35,1) infinite}
+.pqmB2 .dangB{transform-origin:62px 92px;animation:pqb2DangB 2.9s cubic-bezier(.45,.02,.35,1) -1.2s infinite}
+@keyframes pqb2DangA{0%{transform:rotate(9deg)}38%{transform:rotate(-12deg)}55%{transform:rotate(-9deg)}100%{transform:rotate(9deg)}}
+@keyframes pqb2DangB{0%{transform:rotate(-10deg)}42%{transform:rotate(11deg)}58%{transform:rotate(8.5deg)}100%{transform:rotate(-10deg)}}
+.pqmB2 .ftA{transform-origin:48px 107px;animation:pqb2FtA 2.3s cubic-bezier(.5,0,.5,1) infinite}
+.pqmB2 .ftB{transform-origin:62px 105px;animation:pqb2FtB 2.9s cubic-bezier(.5,0,.5,1) -1.2s infinite}
+@keyframes pqb2FtA{0%{transform:rotate(-5deg)}46%{transform:rotate(8deg)}62%{transform:rotate(5deg)}100%{transform:rotate(-5deg)}}
+@keyframes pqb2FtB{0%{transform:rotate(4deg)}50%{transform:rotate(-7deg)}66%{transform:rotate(-4.5deg)}100%{transform:rotate(4deg)}}
+/* 觸角:外層跟出力甩動(overlapping action),內層 2.7s 各自搖;右邊 reverse+負延遲雙重去同步 */
+.pqmB2 .antWL{transform-origin:40px 60px;animation:pqb2Whip 4.1s cubic-bezier(.35,.05,.3,1) infinite}
+.pqmB2 .antWR{transform-origin:70px 60px;animation:pqb2Whip 4.1s cubic-bezier(.35,.05,.3,1) -.1s infinite}
+@keyframes pqb2Whip{0%,12%{transform:rotate(0)}22%{transform:rotate(14deg)}34%{transform:rotate(-9deg)}46%{transform:rotate(4deg)}60%{transform:rotate(-12deg)}72%{transform:rotate(5deg)}84%,100%{transform:rotate(0)}}
+.pqmB2 .antI{transform-origin:40px 60px;animation:pqb2AntI 2.7s ease-in-out infinite}
+.pqmB2 .antI2{transform-origin:70px 60px;animation-delay:-1.05s;animation-direction:reverse}
+@keyframes pqb2AntI{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+/* 眼睛:出力時往上看(看著桿),5.9s 連眨兩下 */
+.pqmB2 .pup{animation:pqb2Pup 4.1s cubic-bezier(.4,0,.3,1) infinite}
+@keyframes pqb2Pup{0%,12%{transform:translateY(0)}26%,48%{transform:translateY(-1.8px)}64%{transform:translateY(.8px)}78%,100%{transform:translateY(0)}}
+.pqmB2 .lid2{transform-origin:55px 71px;transform:scaleY(0);animation:pqb2Blink 5.9s steps(1,end) infinite}
+@keyframes pqb2Blink{0%,58%{transform:scaleY(0)}60%,63%{transform:scaleY(1)}65%,70%{transform:scaleY(0)}72%,75%{transform:scaleY(1)}77%,100%{transform:scaleY(0)}}
+/* 胸口電路燈:出力時像功率衝高,依序點亮 */
+.pqmB2 .dot{opacity:.25;animation:pqb2Dot 4.1s ease-in-out infinite}
+.pqmB2 .d2{animation-delay:.15s}.pqmB2 .d3{animation-delay:.3s}
+@keyframes pqb2Dot{0%,10%{opacity:.25;transform:scale(1)}26%,46%{opacity:1;transform:scale(1.25)}62%,100%{opacity:.25;transform:scale(1)}}
+/* 偶發事件 11.3s:手滑——身體一沉一歪,馬上重新抓穩(週期與 4.1 非整數比) */
+.pqmB2 .slip{transform-origin:55px 45px;animation:pqb2Slip 11.3s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb2Slip{0%,60%{transform:rotate(0) translateY(0)}62.5%{transform:rotate(4.5deg) translateY(3px)}64%{transform:rotate(-2deg) translateY(1px)}66.5%{transform:rotate(1deg) translateY(.4px)}69%,100%{transform:rotate(0) translateY(0)}}
+@media (max-width:640px){
+  .pqbrk2 .ico{width:96px;height:131px;top:-40px;right:10px}
+  /* 手機單欄:上方那條是淺 hairline → 壓彎線改成同樣的淺色細線,錯位感消失 */
+  .pqmB2 .bar{stroke:rgba(17,22,27,.32);stroke-width:1.1}
+  .pqmB2 .tickL,.pqmB2 .tickR{stroke:rgba(17,22,27,.35)}
+}
+@media (prefers-reduced-motion:reduce){.pqmB2 *{animation:none!important}.pqmB2 .lid2{transform:scaleY(0)!important}.pqmB2 .tick{opacity:0!important}}
 /* ── Step 4:03 感光元件怪破格 —— 整隻趴在格頂橫線上,頭與手往下垂進格子、雙腳往上翹(第三種姿態:趴)── */
 .pqbrk3 .ico{position:absolute;top:-58px;right:16px;width:130px;height:150px;z-index:4;transform:none}
 .pqbrk3:hover .ico{transform:none}
@@ -1808,7 +1845,29 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="leg legA"><path d="M52 54V72" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/><g class="foot footA"><path d="M52 72h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/></g></g>
 <g class="leg legB"><path d="M70 54V70" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/><g class="foot footB"><path d="M70 70h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/></g></g>
 </svg></span><span class="eye"><u></u>LENS · 鏡頭</span><h3>接客 · AI 客服</h3><p>客人從這裡進來,AI 先接住、先理解;半夜的詢問也 30 秒內有回應。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
-      <div data-reveal class="pq-mod pqbrk2" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pqmB2" viewBox="0 0 110 150"><rect x="20" y="41" width="70" height="9" fill="#F2EFE8"/><path class="bar" d="M20 45 Q55 56 90 45" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="hang"><path class="arm" d="M46 60L42 47" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><path class="arm" d="M64 60L68 47" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="42" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/><circle cx="68" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/><path d="M40 60L30 54" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="29" cy="53" r="2.6" fill="#11161B"/><path d="M70 60L80 54" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="81" cy="53" r="2.6" fill="#11161B"/><rect x="38" y="58" width="34" height="34" rx="9" fill="#3E9BFF"/><rect x="44" y="66" width="22" height="15" rx="4" fill="#11161B"/><g class="eyes"><circle cx="51" cy="73.5" r="2.8" fill="#F2EFE8"/><circle cx="60" cy="73.5" r="2.8" fill="#F2EFE8"/></g><path class="lid2" d="M44 66h22v15H44z" fill="#3E9BFF"/><circle cx="46" cy="87" r="1.6" fill="#F2EFE8"/><circle cx="55" cy="87" r="1.6" fill="#F2EFE8"/><circle cx="64" cy="87" r="1.6" fill="#F2EFE8"/><g class="legA2"><path d="M48 92V108" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M48 108h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="legB2"><path d="M62 92V106" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M62 106h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk2" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pqmB2" viewBox="0 0 110 150">
+<rect x="20" y="41" width="70" height="8" fill="#F2EFE8"/>
+<path class="bar" d="M20 45 Q55 55 90 45" fill="none" stroke="rgba(17,22,27,.9)" stroke-width="1.6" stroke-linecap="round"/>
+<path class="tick tickL" d="M26 50l-4 4" stroke="rgba(17,22,27,.5)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<path class="tick tickR" d="M84 50l4 4" stroke="rgba(17,22,27,.5)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<g class="slip"><g class="heave">
+<circle cx="42" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/>
+<circle cx="68" cy="46" r="5" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/>
+<path d="M42 50L46 60" stroke="#11161B" stroke-width="4" stroke-linecap="round"/>
+<path d="M68 50L64 60" stroke="#11161B" stroke-width="4" stroke-linecap="round"/>
+<g class="antW antWL"><g class="antI"><path d="M40 60L31 52" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="30" cy="51" r="2.6" fill="#11161B"/></g></g>
+<g class="antW antWR"><g class="antI antI2"><path d="M70 60L79 52" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="80" cy="51" r="2.6" fill="#11161B"/></g></g>
+<rect x="38" y="58" width="34" height="34" rx="9" fill="#3E9BFF"/>
+<rect x="35.4" y="66" width="2.6" height="6" rx="1.3" fill="#11161B" opacity=".5"/>
+<rect x="35.4" y="76" width="2.6" height="6" rx="1.3" fill="#11161B" opacity=".5"/>
+<rect class="scr" x="44" y="64" width="22" height="15" rx="4" fill="#11161B"/>
+<g class="pup"><circle cx="51" cy="71.5" r="2.8" fill="#F2EFE8"/><circle cx="60" cy="71.5" r="2.8" fill="#F2EFE8"/></g>
+<path class="lid2" d="M44 64h22v15H44z" fill="#3E9BFF"/>
+<circle class="dot d1" cx="46" cy="87" r="1.7" fill="#F2EFE8"/><circle class="dot d2" cx="55" cy="87" r="1.7" fill="#F2EFE8"/><circle class="dot d3" cx="64" cy="87" r="1.7" fill="#F2EFE8"/>
+<g class="tuckA"><g class="dangA"><path d="M48 92V107" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftA"><path d="M48 107h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></g>
+<g class="tuckB"><g class="dangB"><path d="M62 92V105" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftB"><path d="M62 105h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></g>
+</g></g>
+</svg></span><span class="eye"><u></u>MAINBOARD · 主機板</span><h3>CRM · 追客</h3><p>每組客人走到哪一步,一眼看清;該跟進的,系統提醒你。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk3" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pqmB3" viewBox="0 0 130 150"><rect x="22" y="53" width="92" height="9" fill="#F2EFE8"/><path class="bar3" d="M22 57 Q66 69 112 57" fill="none" stroke="rgba(9,11,14,.9)" stroke-width="1.6" stroke-linecap="round"/><g class="drape"><g class="legU1"><path d="M44 46V30" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M44 30h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><g class="legU2"><path d="M56 46V26" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><path d="M56 26h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g><rect x="34" y="40" width="62" height="30" rx="12" fill="#3FA98C"/><g stroke="rgba(9,11,14,.28)" stroke-width="1.4"><path d="M54 40v30M74 40v30M34 55h62"/></g><g class="head"><path d="M92 60q14 2 12 16" stroke="#11161B" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="103" cy="82" r="11" fill="#3FA98C" stroke="#11161B" stroke-width="2"/><circle class="eye3" cx="103" cy="84" r="5" fill="#F2EFE8"/><circle class="eye3" cx="103" cy="85" r="2.4" fill="#11161B"/><path class="lid3" d="M92 84a11 11 0 0 1 22 0z" fill="#3FA98C"/></g><g class="arm3"><path d="M50 68q-6 8-3 18" stroke="#11161B" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="48" cy="88" r="4.6" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g></g></svg></span><span class="eye"><u></u>SENSOR · 感光元件</span><h3>行銷 · 內容生成</h3><p>貼文、Banner、EDM 穩定產出,還能 AI 場景渲染,讓品牌持續發聲。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <circle class="body" cx="48" cy="46" r="32"/>
