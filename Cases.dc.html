@@ -169,15 +169,15 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <h3 style="margin:0;font:800 clamp(1.65rem,2.9vw,2.35rem)/1.25 'Noto Sans TC',sans-serif">{{ st.title }}</h3>
               <div style="position:relative;min-height:190px">
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本卡在</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本問題</span>
                   <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.78)">{{ st.stuck }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 我們做了</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 導入內容</span>
                   <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ st.did }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 該案例成果</span>
+                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 實際結果</span>
                   <sc-for list="{{ st.metrics }}" as="m" hint-placeholder-count="3">
                     <div style="display:flex;align-items:baseline;gap:12px;border-bottom:1px dashed rgba(9,11,14,.18);padding-bottom:7px">
                       <span data-count style="font:700 20px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:100px;font-variant-numeric:tabular-nums">{{ m.v }}</span>
@@ -187,9 +187,13 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                   <span style="font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">※ 該案例成果,依導入範圍而異。</span>
                 </div>
               </div>
+              <div style="margin:2px 0 2px;padding:12px 14px;border-left:2px solid #FF6B2C;background:rgba(255,107,44,.05);display:flex;flex-direction:column;gap:5px">
+                <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">HUMAN —— AI 與人分工</span>
+                <p style="margin:0;font:500 15px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ st.human }}</p>
+              </div>
               <div style="display:flex;gap:14px;flex-wrap:wrap">
-                <a href="{{ st.detailHref }}" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">看完整案例 →</a>
-                <a href="{{ st.demoHref }}" style="font:500 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" style-hover="color:#FF6B2C">套用到我的公司</a>
+                <a href="{{ st.detailHref }}" aria-label="查看完整案例" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">查看完整案例 →</a>
+                <a href="{{ st.demoHref }}" style="font:500 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" aria-label="討論相似導入情境" style-hover="color:#FF6B2C">討論相似導入情境</a>
               </div>
             </div>
           </div>
@@ -366,7 +370,7 @@ class Component extends DCLogic {
       const narr = storyByslug[narrMap[f.slug]] ?? {};
       return {
         slug: f.slug, industry: f.industry, type: f.type, title: narr.title ?? f.name,
-        stuck: narr.stuck ?? '', did: narr.did ?? '', metrics: narr.metrics ?? [],
+        stuck: narr.stuck ?? '', did: narr.did ?? '', human: narr.human ?? '', metrics: narr.metrics ?? [],
         sourcePage: (f.sourcePage || '').toUpperCase(),
         detailHref: 'Case.dc.html?slug=' + f.slug,
         demoHref: 'Demo.dc.html?case=' + encodeURIComponent(narrMap[f.slug]),
