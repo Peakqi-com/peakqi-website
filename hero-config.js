@@ -66,13 +66,13 @@ export const heroConfig = {
     story: 'PLAN YOUR FIRST PHASE:三種起步 → 接住詢問 → 推進案件 → 整合營運 → 並列比較 → 費用三部分通道 → 穩定運作',
     totalVh: { desktop: 380, tablet: 290, mobile: 190 },
     scenes: [
-      { id: 'racks',  label: '三個機架',   kicker: 'SCENE 01 · EMPTY RACKS',    line: '三個空的系統機架進場:接客、業務助理、營運平台。',                        d: [0, .12],   m: [0, .2] },
-      { id: 'cap',    label: 'AI 接客組裝', kicker: 'SCENE 02 · CAPTURE UNIT',   line: 'AI 自動回覆、需求了解、預約、轉真人裝進第一座。', d: [.12, .26], m: null },
-      { id: 'assist', label: '業務助理擴充', kicker: 'SCENE 03 · ASSISTANT UNIT', line: 'CRM、追蹤、跟進序列與分析加入。',               d: [.26, .4],  m: null },
-      { id: 'plat',   label: '營運平台成形', kicker: 'SCENE 04 · PLATFORM UNIT',  line: '行銷、報價、專案、數據補齊。',                 d: [.4, .57],  m: [.2, .45] },
-      { id: 'cmp',    label: '三方案並列',  kicker: 'SCENE 05 · SIDE BY SIDE',   line: '三種規劃並列比較,實際範圍與費用依你的場景評估。',   d: [.57, .72], m: [.45, .68] },
-      { id: 'use',    label: '兩條計費通道', kicker: 'SCENE 06 · TWO CHANNELS',   line: '文字類 AI 走 Included 不限量;圖片/影片走 Usage-based,用多少算多少。',     d: [.72, .88], m: [.68, .88] },
-      { id: 'run',    label: '系統穩定運作', kicker: 'SCENE 07 · RUNNING',        line: '選定方案,系統上線。用你的需求比較方案,或 15 分鐘 Demo。',                 d: [.88, 1],   m: [.88, 1] }
+      { id: 'racks',  label: '三種起步',   kicker: '起步 01 · 三種範圍',    line: '接住詢問、推進案件、整合營運——三個起步範圍等你選。',                        d: [0, .12],   m: [0, .2] },
+      { id: 'cap',    label: 'A 接住詢問', kicker: '起步 02 · A 方案',   line: '裝入知識查詢、回覆草稿、預約與人工轉接——先把詢問接住。', d: [.12, .26], m: null },
+      { id: 'assist', label: 'B 推進案件', kicker: '起步 03 · B 方案', line: '新增 CRM、負責人與跟進——現在每一筆詢問都有下一步。',               d: [.26, .4],  m: null },
+      { id: 'plat',   label: 'C 整合營運', kicker: '起步 04 · C 方案',  line: '加入行銷、報價、專案與數據——前台詢問接到後台交付。',                 d: [.4, .57],  m: [.2, .45] },
+      { id: 'cmp',    label: '並列比較',  kicker: '起步 05 · 比較',   line: '三種起步範圍並列比較,實際範圍與費用依你的場景評估。',   d: [.57, .72], m: [.45, .68] },
+      { id: 'use',    label: '費用三部分', kicker: '起步 06 · 計費',   line: '導入費(一次性)+ 平台月費 + 高成本 AI 用量,依實際使用計。',     d: [.72, .88], m: [.68, .88] },
+      { id: 'run',    label: '開始運作', kicker: '起步 07 · 上線',        line: '選定起步範圍,第一階段上線。找出適合你的方案。',                 d: [.88, 1],   m: [.88, 1] }
     ],
     reduced: ['racks', 'plat', 'cmp', 'use', 'run'],
     ctas: [

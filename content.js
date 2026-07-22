@@ -257,10 +257,16 @@ export const followupSeq = [
 ];
 
 // 方案 ↔ 功能模組對應(功能總覽六模組)
+// 三種起步範圍的模組累加關係(A ⊂ B ⊂ C),選擇器據此標示「本次新增」
 export const planModules = {
   A: ['AI 客服'],
   B: ['AI 客服', 'CRM', '數據'],
   C: ['AI 客服', 'CRM', '行銷', '報價', '專案', '數據']
+};
+export const planAdds = {
+  A: { adds: ['AI 客服'], can: '先把詢問接住、整理,再交給正確的人。' },
+  B: { adds: ['CRM', '數據'], can: '現在每一筆詢問都有負責人、階段與下一步。' },
+  C: { adds: ['行銷', '報價', '專案'], can: '前台詢問一路接到報價、交付與管理視圖。' }
 };
 
 // Demo 表單設定
