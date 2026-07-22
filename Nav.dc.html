@@ -42,7 +42,7 @@
           </div>
         </sc-if>
       </sc-for>
-      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#F2EFE8;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" style-hover="background:#090B0E;color:#F2EFE8">預約 15 分鐘 Demo</a>
+      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#F2EFE8;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="預約 AI 導入評估" style-hover="background:#090B0E;color:#F2EFE8">預約 AI 導入評估</a>
     </nav>
     <button id="pq-burger" ref="{{ burgerRef }}" onClick="{{ toggle }}" aria-label="開啟選單" aria-expanded="{{ menuExpanded }}" style="flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:1px solid rgba(9,11,14,.2);border-radius:2px;cursor:pointer;padding:0 10px">
       <span style="display:block;height:2px;background:#090B0E"></span>
@@ -148,10 +148,11 @@ class Component extends DCLogic {
       padding: '4px 2px', transition: 'color .15s'
     };
     const items = this.state.nav ?? [
-      { href: 'Home.dc.html', key: 'home', label: '首頁' },
-      { href: 'PeakOps.dc.html', key: 'product', label: '產品' },
-      { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
-      { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' }
+      { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+      { href: 'Home.dc.html#onboard', key: 'method', label: '導入方法' },
+      { href: 'Cases.dc.html', key: 'cases', label: '案例' },
+      { href: 'Products.dc.html', key: 'product', label: '產品' },
+      { href: 'About.dc.html', key: 'about', label: '關於我們' }
     ];
     const childStyle = {
       display: 'flex', flexDirection: 'column', gap: '2px', textDecoration: 'none',
@@ -220,8 +221,9 @@ class Component extends DCLogic {
       close: closeMenu,
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
       // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
-      ctaHref: active === 'home' ? 'Products.dc.html' : 'Demo.dc.html',
-      ctaLabel: active === 'home' ? '探索旗下產品' : '用我的場景看 Demo',
+      // 母品牌首頁主要下一步 = 預約 AI 導入評估;其他頁維持產品導向的 Demo 入口
+      ctaHref: active === 'home' ? 'Demo.dc.html' : 'Demo.dc.html',
+      ctaLabel: active === 'home' ? '預約 AI 導入評估' : '用我的場景看 Demo',
       ctaBadge: active !== 'home',
       ctaBadgeText: '15 MIN',
       navDemoClick: () => this._evt('nav_demo_click'),

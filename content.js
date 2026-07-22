@@ -8,23 +8,18 @@ export const contact = {
 };
 
 export const navigation = [
-  { href: 'Home.dc.html', key: 'home', label: '首頁' },
+  { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
+  { href: 'Home.dc.html#onboard', key: 'method', label: '導入方法' },
+  { href: 'Cases.dc.html', key: 'cases', label: '案例' },
   { key: 'product', label: '產品', children: [
     { href: 'PeakOps.dc.html', label: 'Peak Ops', desc: '通用 AI 業務工具' },
-    { href: 'Bubble.dc.html', label: '冒泡', desc: '房仲 AI' },
     { href: 'AIWeddingPro.dc.html', label: 'AI Wedding Pro', desc: '婚禮 AI' },
     { href: 'AIInteriorPro.dc.html', label: 'AI Interior Pro', desc: '室內設計 AI' },
-    { href: 'Products.dc.html', label: '全部產品', desc: '品牌總覽' }
+    { href: 'Bubble.dc.html', label: '冒泡', desc: '房仲 AI' },
+    { href: 'Products.dc.html', label: '全部產品', desc: '品牌總覽' },
+    { href: 'Pricing.dc.html', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' }
   ] },
-  { href: 'Cases.dc.html', key: 'cases', label: '案例與作品' },
-  { href: 'About.dc.html', key: 'about', label: '關於 PeakQi' },
-  { href: 'Contact.dc.html', key: 'contact', label: '聯絡' },
-  { key: 'more', label: '更多', children: [
-    { href: 'Solutions.dc.html', label: '解決方案', desc: '接客追客養客深談' },
-    { href: 'Pricing.dc.html', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' },
-    { href: 'Demo.dc.html', label: '預約 Demo', desc: '15 分鐘場景 Demo' },
-    { href: 'Cases.dc.html', label: '案例與作品', desc: '更多實績' }
-  ] }
+  { href: 'About.dc.html', key: 'about', label: '關於我們' }
 ];
 
 export const stats = [
