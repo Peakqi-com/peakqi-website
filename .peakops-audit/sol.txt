@@ -1,0 +1,47 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: the server responded with a status of 404 (File not found) <http://127.0.0.1:8000/favicon.ico>"
+ ],
+ "probeError": null
+}
+{
+ "secs": [
+  "overview",
+  "capture",
+  "follow",
+  "nurture",
+  "sol-division",
+  "modules",
+  "sol-tools",
+  "integration",
+  "sol-fit",
+  "industries",
+  "最終 CTA"
+ ],
+ "scenes": 7,
+ "ftag": 1,
+ "heroApi": {
+  "scenes": 7,
+  "mode": "full"
+ },
+ "claims": {
+  "30 秒": true,
+  "喚回率": false,
+  "3 倍": false,
+  "25%": false,
+  "漏掉": true
+ },
+ "ctaSet": [
+  "案例",
+  "預約 AI 導入評估",
+  "用我的流程跑一次\n      15 MIN",
+  "用我的流程跑一次",
+  "查看實際導入案例",
+  "用我的流程跑一次 →",
+  "案例頁",
+  "案例與作品",
+  "預約 AI 導入評估 →"
+ ],
+ "overflowX": "ok",
+ "docH": 21011
+}

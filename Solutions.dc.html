@@ -9,7 +9,7 @@
 <x-dc>
 <helmet>
 <title>解決方案|ONE SYSTEM, THREE OPERATIONS|奇鋒國際 PeakQi</title>
-<meta name="description" content="不是再多一個工具,而是把流程接起來:接客、追客、養客在同一條營運資料鏈運作。AI 30 秒接住詢問、CRM 跟進不漏客、內容編排養客,六模組同一個後台。">
+<meta name="description" content="看一筆客戶詢問如何走完整流程:進入、辨識、回應、建檔、分派、跟進、報價與專案,重要節點保留人工確認;既有 LINE、表單與 CRM 可以保留運作。AI 30 秒接住詢問、CRM 跟進不漏客、內容編排養客,六模組同一個後台。">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +20,13 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#FF6B2C}a:hover{color:#D14E12}
+/* 對比:淺底橘字 2.47:1 → 深橘;選擇器比對正規化後 rgb + 前導 "; " 鎖 color。
+   淺區塊內的深色卡片(訊息 App、控制台)蓋回亮橘。 */
+#capture [style*="; color: rgb(255, 107, 44)"],#capture [style^="color: rgb(255, 107, 44)"],#nurture [style*="; color: rgb(255, 107, 44)"],#nurture [style^="color: rgb(255, 107, 44)"],#modules [style*="; color: rgb(255, 107, 44)"],#modules [style^="color: rgb(255, 107, 44)"],#industries [style*="; color: rgb(255, 107, 44)"],#industries [style^="color: rgb(255, 107, 44)"],#sol-tools [style*="; color: rgb(255, 107, 44)"],#sol-tools [style^="color: rgb(255, 107, 44)"],#sol-fit [style*="; color: rgb(255, 107, 44)"],#sol-fit [style^="color: rgb(255, 107, 44)"]{color:#A63A08!important}
+#capture a:not([style*="color"]),#nurture a:not([style*="color"]),#modules a:not([style*="color"]),#industries a:not([style*="color"]),#sol-tools a:not([style*="color"]),#sol-fit a:not([style*="color"]){color:#A63A08}
+#capture [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#capture [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#capture [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#capture [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"],#nurture [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#nurture [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#nurture [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#nurture [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"],#modules [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#modules [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#modules [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#modules [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"],#industries [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#industries [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#industries [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#industries [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"],#sol-tools [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#sol-tools [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#sol-tools [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#sol-tools [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"],#sol-fit [style*="background: rgb(9, 11, 14)"] [style*="; color: rgb(255, 107, 44)"],#sol-fit [style*="background: rgb(9, 11, 14)"] [style^="color: rgb(255, 107, 44)"],#sol-fit [style*="background: rgb(20, 23, 28)"] [style*="; color: rgb(255, 107, 44)"],#sol-fit [style*="background: rgb(20, 23, 28)"] [style^="color: rgb(255, 107, 44)"]{color:#FF6B2C!important}
+a:focus-visible,button:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+@media (max-width:899px){section :not(p):not(span) > a[href]{min-height:44px;display:inline-flex;align-items:center}}
 ::selection{background:#FF6B2C;color:#F2EFE8}
 @keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
@@ -120,9 +127,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">解決方案</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">ONE SYSTEM, THREE OPERATIONS</span>
-          <h1 style="margin:0;font:900 clamp(2.1rem,4.4vw,3.9rem)/1.3 'Noto Sans TC',sans-serif">不是再多一個工具,<br>而是把<span style="color:#FF6B2C">流程接起來</span>。</h1>
-          <p style="margin:0;max-width:520px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);text-wrap:pretty">接客、追客、養客,在同一條營運資料鏈中運作。以下每一章,都是系統實際跑的樣子;15 分鐘 Demo 可以用你的場景重跑一遍。</p>
+          <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW THE SYSTEM WORKS · FROM INQUIRY TO OPERATION</span>
+          <h1 style="margin:0;font:900 clamp(2.2rem,3.8vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">一筆詢問進來後,<br>不應只停在<span style="color:#FF6B2C">聊天室</span>裡。</h1>
+          <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">看 PeakQi 如何將客戶詢問接進回應、建檔、分派、跟進、報價與專案流程,並在重要節點保留人工確認。</p>
+          <p style="margin:0;max-width:560px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55);text-wrap:pretty">既有 LINE、網站、表單與 CRM 可以保留;我們處理的是它們之間原本需要人工搬運的工作。</p>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
             <path data-hero-line="sig" d="M2 7 L560 7" stroke="rgba(255,107,44,.55)" stroke-width="1.5"></path>
             <circle data-hero-node="cap" cx="576" cy="7" r="4" fill="none" stroke="#FF6B2C" stroke-width="1.5"></circle>
@@ -130,44 +138,44 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           </svg>
           <div data-hero-scenestage style="position:relative;min-height:122px">
             <div data-hero-scene="sig" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · SCATTERED</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">各做各的</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">散落的 LINE、Excel、表單、報價與工作視窗——接客、追客、養客,不再各做各的。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">階段 01 / 07 ・ 進入</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">詢問進來</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">一筆詢問從 LINE、網站或表單進來——原本它會停在聊天室裡等人處理。</p>
             </div>
             <div data-hero-scene="layers" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 02 · THREE LAYERS</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">三個系統層</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">CAPTURE、FOLLOW、NURTURE 各自成形,但層與層之間,資料還是斷的。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">階段 02 / 07 ・ 辨識</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">辨識需求</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">AI 辨識需求、補齊欄位;價格與敏感內容標記為待人工確認。</p>
             </div>
             <div data-hero-scene="cap" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 03 · CAPTURE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">詢問被接住</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">一則 LINE 詢問進入 CAPTURE:AI 辨識需求、服務、聯絡時間與是否需要真人,對話轉成 CRM 客戶卡。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">階段 03 / 07 ・ 建檔</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">回應與建檔</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">對話結束的同時,客戶、案件與下一步已寫進 CRM,並指定負責人。</p>
             </div>
             <div data-hero-scene="fol" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 04 · FOLLOW</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">跟進節奏</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">客戶卡進入 FOLLOW:DAY 1、3、5、7 的跟進節奏、提醒與訊息草稿。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">階段 04 / 07 ・ 跟進</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">安排下一步</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">系統依案件狀態提醒負責人;訊息由 AI 擬好,人確認才送出。</p>
             </div>
             <div data-hero-scene="nur" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · NURTURE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">持續加溫</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">內容、案例與優惠進入 NURTURE,標籤分群、內容排程。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">階段 05 / 07 ・ 延續</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">延續脈絡</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">報價、案例與後續服務沿用同一份客戶脈絡,不用重新整理。</p>
             </div>
             <div data-hero-scene="align" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · ALIGN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">資料線接通</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">三層對齊,橘色與藍色資料線接通;客服、CRM、行銷、報價、專案、數據在後方組裝。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">階段 06 / 07 ・ 接通</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">流程接通</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">既有工具保留;模組依流程斷點加入,資料線在後方接通。</p>
             </div>
             <div data-hero-scene="console" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · CONSOLE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">營運控制台</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">完整的 PeakQi AI 營運控制台成形。換你的流程跑一次。</p>
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">階段 07 / 07 ・ 管理</span>
+              <p style="margin:0;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">營運視圖</p>
+              <p style="margin:0;font:400 clamp(14.5px,1.1vw,15.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:520px;text-wrap:pretty">每一筆詢問在哪個階段、由誰負責、下一步是什麼——一個視圖看完。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">用我的流程跑一次 Demo</a>
-            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">用我的流程跑一次</a>
+            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
           </div>
         </div>
         <!-- 右側改由 data-hero-canvas 統一繪製情境圖(母動畫=捲動);移除原本疊在畫布上的浮動卡片 -->
@@ -188,7 +196,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CAPTURE — 接客</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:end;justify-content:space-between">
-          <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">客人一問,AI 30 秒內先接住</h2>
+          <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">詢問進來,先辨識需求,<br>再決定怎麼回應</h2>
+          <p style="margin:14px 0 0;max-width:640px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">AI 根據企業核准的資料處理常見問題、整理需求與補齊欄位。遇到價格承諾、敏感資料、低信心回答或特殊情況時,交由真人確認。</p>
           <div role="tablist" aria-label="接客情境切換" onKeyDown="{{ scKeys }}" style="display:inline-flex;gap:6px;background:rgba(9,11,14,.06);border:1px solid rgba(9,11,14,.14);border-radius:999px;padding:5px;flex-wrap:wrap">
             <sc-for list="{{ scTabs }}" as="t" hint-placeholder-count="4">
               <button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
@@ -245,7 +254,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <sc-for list="{{ scCrm }}" as="c" hint-placeholder-count="3">
                 <span data-ccrm style="border:1px solid rgba(62,155,255,.4);background:rgba(62,155,255,.06);border-radius:4px;padding:10px 13px;font:600 13.5px 'Noto Sans TC',sans-serif;color:#090B0E">{{ c }}</span>
               </sc-for>
-              <span style="margin-top:auto;font:400 12px/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">對話結束的同時,客戶卡已建好——不用手動再打一次。</span>
+              <span style="margin-top:auto;font:600 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)">AI 負責整理,系統負責保存,人負責做決定。<br><span style="font-weight:400;color:rgba(9,11,14,.55)">對話結束的同時,客戶卡已建好——資料不會留在聊天紀錄裡。</span></span>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px">
               <div style="display:flex;gap:12px;align-items:baseline"><span style="width:6px;height:6px;background:#FF6B2C;flex-shrink:0;transform:translateY(-2px)"></span><p style="margin:0;font:400 14.5px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72)">理解需求,不是罐頭回覆——主動幫忙約時段、保留時段。</p></div>
@@ -268,13 +277,13 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span style="width:36px;height:1px;background:#FF6B2C"></span>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">FOLLOW — 追客</span>
         </div>
-        <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">客人不會再被你漏掉</h2>
-        <p style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">CRM pipeline 是主視覺,也是實際流程:每組客人在哪個階段、聊過什麼,一目了然;該跟進的,系統照序列提醒你。</p>
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">每一筆需求,<br>都有清楚的下一步</h2>
+        <p style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">系統根據案件狀態安排提醒、準備內容或交由負責人處理,而不是對所有客戶發送同一套自動訊息。觸發方式可依案件狀態、指定時間或客戶互動設定你。</p>
         <div id="pq-fscroll" style="margin-top:clamp(24px,3.5vw,40px);overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-ms-overflow-style:none">
           <div id="pq-ftrack" data-ftrack style="position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;min-width:720px">
             <div data-fcard style="position:absolute;top:-14px;left:0;width:calc(25% - 9px);z-index:2;background:#F2EFE8;color:#090B0E;border:1.5px solid #FF6B2C;border-radius:6px;padding:12px 14px;box-shadow:0 16px 36px rgba(0,0,0,.45);will-change:transform">
               <span style="font:800 13.5px 'Noto Sans TC',sans-serif">王小姐・到府需求</span>
-              <span data-ftag style="display:block;margin-top:5px;font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">DAY 1・提醒已擬</span>
+              <span data-ftag style="display:block;margin-top:5px;font:700 13px 'Noto Sans TC',sans-serif;color:#FF6B2C">補齊需求・提醒已擬</span>
             </div>
             <sc-for list="{{ seq }}" as="s" hint-placeholder-count="4">
               <div data-fcol style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:52px 16px 16px;display:flex;flex-direction:column;gap:8px;background:#14171C;border-color:rgba(242,239,232,.14)">
@@ -291,7 +300,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           </div>
         </div>
         <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);max-width:560px">沉睡名單也有救——照這套序列跟進,依實際導入案例,喚回率提升<b style="color:#65E0BC">約 25%</b>。<span style="color:rgba(242,239,232,.45)">(該案例成果,非通用保證)</span></span>
+          <span style="font:400 clamp(15px,1.15vw,16px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72);max-width:560px">停在半路的名單也會回到這條流程:依狀態安排下一步,而不是放著等人想起來。</span></span>
           <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">訊息由 AI 擬好,你確認才送出。</span>
         </div>
       </div>
@@ -309,8 +318,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">NURTURE — 養客</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:end;justify-content:space-between">
-          <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">從一次詢問,到持續關係</h2>
-          <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);max-width:340px">依實際導入案例,內容產能提升約 3 倍;實際依產業而異。</span>
+          <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">成交前後,<br>都使用同一份客戶脈絡</h2>
+          <span style="font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:420px;text-wrap:pretty">案例、方案、內容與後續服務,依客戶目前的需求與階段提供——不需要團隊每次重新尋找與整理。</span>
         </div>
         <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
           <div data-nplane style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:22px;display:flex;flex-direction:column;gap:9px">
@@ -396,6 +405,28 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
+<section id="sol-division" data-screen-label="AI 規則 人 分工" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,120px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">WHO DOES WHAT</span>
+    <h2 style="margin:14px 0 0;max-width:820px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">AI 可以協助處理,<br>企業仍然保有控制權</h2>
+    <p style="margin:16px 0 0;max-width:640px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">前面每一段流程,都是這三種角色在分工。同一套顏色也用在全頁的狀態標籤上。</p>
+    <div style="margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(16px,2vw,24px)">
+      <div style="border:1px solid rgba(255,107,44,.45);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(255,107,44,.05);box-sizing:border-box;min-width:0">
+        <span style="display:inline-flex;align-items:center;gap:9px;font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C"><span style="width:10px;height:10px;border-radius:50%;background:#FF6B2C"></span>AI 協助</span>
+        <p style="margin:0;font:400 clamp(15.5px,1.2vw,17px)/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.78)">分類、摘要、資料擷取、知識查詢,以及回覆與文件草稿。</p>
+      </div>
+      <div style="border:1px solid rgba(62,155,255,.45);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(62,155,255,.05);box-sizing:border-box;min-width:0">
+        <span style="display:inline-flex;align-items:center;gap:9px;font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF"><span style="width:10px;height:10px;border-radius:50%;background:#3E9BFF"></span>系統規則</span>
+        <p style="margin:0;font:400 clamp(15.5px,1.2vw,17px)/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.78)">建檔、分派、提醒、狀態更新,以及權限與流程條件。</p>
+      </div>
+      <div style="border:1px solid rgba(101,224,188,.45);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(101,224,188,.05);box-sizing:border-box;min-width:0">
+        <span style="display:inline-flex;align-items:center;gap:9px;font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC"><span style="width:10px;height:10px;border-radius:50%;background:#65E0BC"></span>人工確認</span>
+        <p style="margin:0;font:400 clamp(15.5px,1.2vw,17px)/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.78)">價格與承諾、敏感內容、特殊需求、低信心回答與重要決策。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="modules" data-screen-label="六模組深度" style="background:#F2EFE8;border-top:1px solid rgba(9,11,14,.1)">
   <div data-wrap style="position:relative">
     <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
@@ -405,7 +436,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <span style="width:36px;height:1px;background:#FF6B2C"></span>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">MODULES — 六模組,同一個核心</span>
         </div>
-        <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">六個模組,按需求搭配</h2>
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">流程卡在哪裡,<br>就從對應模組開始</h2>
+        <p style="margin:14px 0 0;max-width:620px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">不需要一次導入全部。先處理最影響營運的一段,確認有效後再加入其他能力。</p>
         <div id="pq-mod-grid" style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,2.6vw,36px);align-items:stretch">
           <div style="display:flex;flex-direction:column;gap:9px">
             <div data-score style="align-self:flex-start;display:flex;align-items:center;gap:12px;background:#090B0E;color:#F2EFE8;border:1.5px solid #FF6B2C;border-radius:999px;padding:12px 22px;margin-bottom:8px">
@@ -450,6 +482,26 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
+<section id="sol-tools" data-screen-label="既有工具整合" style="background:#F2EFE8;padding:clamp(72px,9vw,120px) clamp(20px,5vw,48px);border-top:1px solid rgba(9,11,14,.1)">
+  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(28px,4vw,64px);align-items:start">
+    <div style="min-width:0">
+      <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">WORKS WITH YOUR STACK</span>
+      <h2 style="margin:14px 0 0;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">工具可以保留,<br>資料不必再手動搬運</h2>
+      <p style="margin:16px 0 0;max-width:560px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">PeakQi 可以依實際條件,將詢問來源、客戶資料與後續工作接入既有流程。實際串接方式會依工具、API、權限與資料結構評估。</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-content:start;min-width:0">
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">LINE 等訊息入口</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">網站與表單</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">Email</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">既有 CRM</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">試算表</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">資料庫</span>
+      <span style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:12px 22px;font:600 15px 'Noto Sans TC',sans-serif;background:#F2EFE8">內部系統</span>
+      <span style="flex-basis:100%;margin-top:8px;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">以上為可評估的接入類型;特定平台與版本的支援方式,在導入前確認。</span>
+    </div>
+  </div>
+</section>
+
 <section id="integration" data-screen-label="整合成果" style="background:#090B0E;color:#F2EFE8">
   <div data-wrap style="position:relative">
     <div data-stage style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
@@ -459,7 +511,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">INTEGRATION — 收進一個後台</span>
     </div>
-    <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">三層流程 × 六個模組,<br>最後只有一個控制台</h2>
+    <h2 style="margin:14px 0 0;max-width:780px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">流程可以分段,<br>管理者仍然只需要一個營運視圖</h2>
+    <p style="margin:14px 0 0;max-width:640px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">查看每一筆詢問目前在哪個階段、由誰負責、下一步是什麼,以及哪些流程需要調整。</p>
     <div style="margin-top:clamp(22px,3vw,32px);display:flex;gap:8px;flex-wrap:wrap">
       <span data-ichip style="border:1px solid rgba(255,107,44,.5);color:#FF6B2C;font:700 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">接客</span>
       <span data-ichip style="border:1px solid rgba(62,155,255,.5);color:#3E9BFF;font:700 12.5px 'Noto Sans TC',sans-serif;padding:6px 14px;border-radius:999px">追客</span>
@@ -501,9 +554,38 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       </div>
     </div>
     <div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-      <a id="s-demo" href="Demo.dc.html?case=接客追客養客整合流程" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">用我的流程跑一次 Demo <span data-arrow>→</span></a>
+      <a id="s-demo" href="Demo.dc.html?case=接客追客養客整合流程" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">用我的流程跑一次 <span data-arrow>→</span></a>
       <a href="Pricing.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看方案說明</a>
     </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sol-fit" data-screen-label="適合誰" style="background:#F2EFE8;padding:clamp(72px,9vw,120px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">IS THIS FOR YOU</span>
+    <h2 style="margin:14px 0 0;max-width:700px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">這套方式<br>適合你的團隊嗎?</h2>
+    <div style="margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(20px,2.6vw,32px)">
+      <div style="border-top:2px solid #0F8A6A;padding-top:20px;min-width:0">
+        <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif;color:#0F8A6A">適合</h3>
+        <ul style="margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)"><span style="color:#0F8A6A;font-weight:700">✓</span>已有穩定詢問量,資料散在多個工具</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)"><span style="color:#0F8A6A;font-weight:700">✓</span>客服與業務需要重複整理同一批資訊</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)"><span style="color:#0F8A6A;font-weight:700">✓</span>案件容易停在聊天紀錄裡沒有下一步</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)"><span style="color:#0F8A6A;font-weight:700">✓</span>希望先從一段流程驗證,再決定擴大</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.75)"><span style="color:#0F8A6A;font-weight:700">✓</span>願意指定內部負責人共同導入</li>
+        </ul>
+      </div>
+      <div style="border-top:2px solid rgba(9,11,14,.35);padding-top:20px;min-width:0">
+        <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">暫時不適合</h3>
+        <ul style="margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>尚未有明確流程或實際使用者</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>希望 AI 完全取代人工判斷</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>沒有可使用的資料或內容來源</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>希望完全不參與,由供應商決定一切</li>
+          <li style="display:flex;gap:12px;font:400 clamp(15.5px,1.2vw,17px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)"><span style="font-weight:700">—</span>只需要一次性生成內容,沒有後續流程</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -517,7 +599,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         <span style="width:36px;height:1px;background:#FF6B2C"></span>
         <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">INDUSTRIES</span>
       </div>
-      <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">我們服務過的產業</h2>
+      <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">流程不同,<br>核心問題通常相似</h2>
+      <p style="margin:14px 0 0;max-width:460px;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66);text-wrap:pretty">我們接觸過不同產業的客服、業務與營運場景。產業會影響用語、資料與系統,但導入仍從實際流程開始。完整案例見<a href="Cases.dc.html">案例頁</a>。</p>
       <p style="margin:20px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);max-width:400px">{{ indNote }}你的產業不在列表上?Demo 時直接帶你的場景來測。</p>
     </div>
     <!-- 06 手法:產業星群。每個產業各自的品牌色重點、脈衝與漂浮(子動畫,不需切換) -->
@@ -526,6 +609,19 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         <span data-ind style="border:1px solid rgba(9,11,14,.22);border-radius:999px;padding:10px 20px;font:500 14.5px 'Noto Sans TC',sans-serif;background:#F2EFE8">{{ i }}</span>
       </sc-for>
       <span style="padding:10px 6px;font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">還有更多⋯</span>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="最終 CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
+    <div style="min-width:0">
+      <h2 style="margin:0;max-width:680px;font:900 clamp(2rem,3.9vw,3.3rem)/1.22 'Noto Sans TC',sans-serif;text-wrap:pretty">想看一筆真實詢問,<br>如何接進你的營運流程?</h2>
+      <p style="margin:16px 0 0;max-width:620px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">帶一個目前最花時間、最容易漏掉的情境,我們先確認哪些工作適合交給 AI、系統與人。</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <a href="Demo.dc.html" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#F2EFE8">用我的流程跑一次 <span data-arrow>→</span></a>
+      <a href="Cases.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
     </div>
   </div>
 </section>

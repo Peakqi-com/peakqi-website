@@ -23,20 +23,20 @@ export const HERO_SHARED = {
 export const heroConfig = {
   solutions: {
     key: 'solutions', paint: 'solutions',
-    story: 'ONE SYSTEM, THREE OPERATIONS:散落工具 → 三層成形 → 接住 → 跟進 → 加溫 → 接通組裝 → 控制台',
+    story: 'FROM INQUIRY TO OPERATION:一筆詢問 → 辨識回應 → 建檔 → 跟進 → 延續 → 接通 → 營運視圖',
     totalVh: { desktop: 380, tablet: 280, mobile: 190 },
     scenes: [
-      { id: 'sig',     label: '各做各的',   kicker: 'SCENE 01 · SCATTERED',    line: '散落的 LINE、Excel、表單、報價與工作視窗,漂在三個深度層。',        d: [0, .12],   m: [0, .18] },
-      { id: 'layers',  label: '三個系統層', kicker: 'SCENE 02 · THREE LAYERS', line: 'CAPTURE、FOLLOW、NURTURE 各自成形,但層與層之間資料還是斷的。',      d: [.12, .28], m: null },
-      { id: 'cap',     label: '詢問被接住', kicker: 'SCENE 03 · CAPTURE',      line: 'LINE 詢問進入 CAPTURE:AI 辨識需求、服務、聯絡時間、是否轉真人。',  d: [.28, .43], m: [.18, .42] },
-      { id: 'fol',     label: '跟進節奏',   kicker: 'SCENE 04 · FOLLOW',       line: '客戶卡進入 FOLLOW:DAY 1、3、5、7 跟進節奏、提醒與訊息草稿。',      d: [.43, .58], m: [.42, .64] },
-      { id: 'nur',     label: '持續加溫',   kicker: 'SCENE 05 · NURTURE',      line: '內容、案例與優惠進入 NURTURE:標籤分群、內容排程。',                d: [.58, .72], m: null },
-      { id: 'align',   label: '資料線接通', kicker: 'SCENE 06 · ALIGN',        line: '三層對齊,橘藍資料線接通;六個模組在後方組裝。',                     d: [.72, .88], m: [.64, .85] },
-      { id: 'console', label: '營運控制台', kicker: 'SCENE 07 · CONSOLE',      line: '完整的 PeakQi AI 營運控制台成形。換你的流程跑一次。',               d: [.88, 1],   m: [.85, 1] }
+      { id: 'sig',     label: '詢問進來',   kicker: '階段 01 · 進入',    line: '一筆詢問從 LINE、網站或表單進來——原本它會停在聊天室裡等人處理。',        d: [0, .12],   m: [0, .18] },
+      { id: 'layers',  label: '辨識需求',   kicker: '階段 02 · 辨識', line: 'AI 辨識需求、補齊欄位;價格與敏感內容標記為待人工確認。',      d: [.12, .28], m: null },
+      { id: 'cap',     label: '回應與建檔', kicker: '階段 03 · 建檔',      line: '對話結束的同時,客戶、案件與下一步已寫進 CRM,並指定負責人。',  d: [.28, .43], m: [.18, .42] },
+      { id: 'fol',     label: '安排下一步', kicker: '階段 04 · 跟進',       line: '系統依案件狀態提醒負責人;訊息由 AI 擬好,人確認才送出。',      d: [.43, .58], m: [.42, .64] },
+      { id: 'nur',     label: '延續脈絡',   kicker: '階段 05 · 延續',      line: '報價、案例與後續服務沿用同一份客戶脈絡,不用重新整理。',                d: [.58, .72], m: null },
+      { id: 'align',   label: '流程接通',   kicker: '階段 06 · 接通',        line: '既有工具保留;模組依流程斷點加入,資料線在後方接通。',                     d: [.72, .88], m: [.64, .85] },
+      { id: 'console', label: '營運視圖',   kicker: '階段 07 · 管理',      line: '每一筆詢問在哪個階段、由誰負責、下一步是什麼——一個視圖看完。',               d: [.88, 1],   m: [.85, 1] }
     ],
     reduced: ['sig', 'layers', 'cap', 'fol', 'console'],
     ctas: [
-      { kind: 'primary', label: '用我的流程跑一次 Demo', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' },
+      { kind: 'primary', label: '用我的流程跑一次', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' },
       { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
     ],
     flags: {}

@@ -232,7 +232,7 @@ class Component extends DCLogic {
       // 產品頁(PeakOps)的浮動 CTA 與該頁全部主 CTA 統一為「用我的流程跑一次」;
       // 首頁維持「預約 AI 導入評估」,其餘頁面維持原文案,避免單頁需求外溢到全站
       ctaLabel: active === 'home' || active === 'about' ? '預約 AI 導入評估'
-        : active === 'product' ? '用我的流程跑一次'
+        : active === 'product' || active === 'solutions' ? '用我的流程跑一次'
         : '用我的場景看 Demo',
       ctaBadge: active !== 'home',
       ctaBadgeText: '15 MIN',
