@@ -102,6 +102,23 @@ export const heroConfig = {
     ],
     flags: {}
   },
+  method: {
+    key: 'method', paint: 'method',
+    story: 'HOW WE DELIVER:盤點現況 → 定義第一階段 → 建立驗證 → 上線與持續改善',
+    totalVh: { desktop: 300, tablet: 235, mobile: 165 },
+    scenes: [
+      { id: 'map',   label: '盤點現況',     kicker: '階段 1 / 4', line: '找出詢問從哪進來、資料在哪重複、案件停在哪裡——產出問題清單。', d: [0, .26],   m: [0, .28] },
+      { id: 'goal',  label: '定義第一階段', kicker: '階段 2 / 4', line: '框出第一階段的目標、範圍與人工確認邊界,先做最有價值的一段。', d: [.26, .5],  m: [.28, .55] },
+      { id: 'pilot', label: '建立驗證',     kicker: '階段 3 / 4', line: '接出可操作的流程,讓實際使用者測試;人工確認閘門就在流程裡。', d: [.5, .76],  m: [.55, .8] },
+      { id: 'live',  label: '上線與改善',   kicker: '階段 4 / 4', line: '標準模組最快 10 個工作天完成第一階段,上線後依使用持續調整。', d: [.76, 1],   m: [.8, 1] }
+    ],
+    reduced: ['map', 'goal', 'pilot', 'live'],
+    ctas: [
+      { kind: 'primary', label: '預約 AI 導入評估', href: 'Demo.dc.html', track: 'hero_demo_click' },
+      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+    ],
+    flags: {}
+  },
   demo: {
     key: 'demo', paint: 'demo',
     story: 'BUILD YOUR FIRST AI FLOW:選擇情境 → 找出卡點 → 組合第一階段 → 確認並送出',

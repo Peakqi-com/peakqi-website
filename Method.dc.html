@@ -27,6 +27,17 @@ a:focus-visible,button:focus-visible{outline:2px solid #FF6B2C;outline-offset:2p
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
 body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}}
+/* 捲動展開:六階段卡逐張浮現、時程節點逐點亮(零 JS;不支援或 reduced 時直接顯示) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    #m-grid > div{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 4% entry 38%}
+    #m-grid > div:nth-child(2),#m-grid > div:nth-child(5){animation-range:entry 10% entry 46%}
+    #m-grid > div:nth-child(3),#m-grid > div:nth-child(6){animation-range:entry 16% entry 54%}
+    #m-tl > div{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 6% entry 40%}
+    #m-risk [data-mv]{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 5% entry 42%}
+  }
+}
+@keyframes pqRiseIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 @media (max-width:1099px){#m-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:719px){#m-grid{grid-template-columns:minmax(0,1fr)!important}}
 nav[aria-label="breadcrumb"]{align-items:center}
@@ -36,19 +47,46 @@ nav[aria-label="breadcrumb"]{align-items:center}
 <a id="pq-skip" href="#m-steps">跳到主要內容</a>
 <dc-import name="Nav" active="method" hint-size="100%,68px"></dc-import>
 
-<section id="m-hero" data-screen-label="導入方法開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto">
-    <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 14px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
-      <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
-      <span>/</span>
-      <span style="color:#F2EFE8;font-weight:700">導入方法</span>
-    </nav>
-    <span style="display:block;margin-top:18px;font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW WE DELIVER</span>
-    <h1 style="margin:14px 0 0;max-width:900px;font:900 clamp(2.4rem,5vw,4.4rem)/1.15 'Noto Sans TC',sans-serif">不是先買工具,<br>而是先把<span style="color:#FF6B2C">第一階段</span>做出來。</h1>
-    <p style="margin:20px 0 0;max-width:680px;font:400 clamp(16.5px,1.35vw,19px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">我們把導入拆成六個階段:先盤點流程與資料、定義要改善的成果,再建立可驗證的第一版流程,完成上線交接與持續改善。每一階段都有清楚的交付物與確認節點,由同一個團隊負責到底。</p>
-    <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-      <a href="Demo.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#F2EFE8">預約 AI 導入評估 →</a>
-      <a href="Cases.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+<section id="m-hero" data-hero="method" data-screen-label="導入方法開場" style="background:#090B0E;color:#F2EFE8;position:relative">
+  <div data-hero-wrap style="position:relative">
+    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+        <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+          <nav aria-label="breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 14px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+            <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+            <span>/</span>
+            <span style="color:#F2EFE8;font-weight:700">導入方法</span>
+          </nav>
+          <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW WE DELIVER</span>
+          <h1 style="margin:0;font:900 clamp(2.2rem,3.8vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">不是先買工具,<br>而是先把<span style="color:#FF6B2C">第一階段</span>做出來。</h1>
+          <p style="margin:0;max-width:620px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">導入拆成清楚的階段:先盤點流程與資料、定義要改善的成果,再建立可驗證的第一版流程,完成上線交接與持續改善——由同一個團隊負責到底。</p>
+          <div data-hero-scenestage style="position:relative;min-height:96px">
+            <div data-hero-scene="map" style="position:relative;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">階段 1 / 4 ・ 盤點現況</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">找出詢問從哪進來、資料在哪重複、案件停在哪裡——產出問題清單。</p>
+            </div>
+            <div data-hero-scene="goal" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">階段 2 / 4 ・ 定義第一階段</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">框出第一階段的目標、範圍與人工確認邊界,先做最有價值的一段。</p>
+            </div>
+            <div data-hero-scene="pilot" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF">階段 3 / 4 ・ 建立驗證</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">接出可操作的流程,讓實際使用者測試;人工確認閘門就在流程裡。</p>
+            </div>
+            <div data-hero-scene="live" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC">階段 4 / 4 ・ 上線與改善</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">標準模組最快 10 個工作天完成第一階段,上線後依使用持續調整。</p>
+            </div>
+          </div>
+          <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 15.5px 'Noto Sans TC',sans-serif;padding:15px 28px;border-radius:2px;min-height:44px;display:inline-flex;align-items:center">預約 AI 導入評估</a>
+            <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif;padding:14px 24px;border:1px solid rgba(242,239,232,.32);border-radius:2px;min-height:44px;display:inline-flex;align-items:center" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+          </div>
+        </div>
+        <div data-hero-media style="position:relative;z-index:2;min-height:clamp(320px,52vh,480px)" aria-hidden="true"></div>
+      </div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -93,7 +131,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
     <h2 style="margin:14px 0 0;max-width:760px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">用更低風險<br>開始第一階段</h2>
     <div style="margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(14px,1.8vw,20px)">
       <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
-        <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(9,11,14,.02);box-sizing:border-box;min-width:0">
+        <div data-mv style="border:1px solid rgba(9,11,14,.14);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(9,11,14,.02);box-sizing:border-box;min-width:0">
           <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#A63A08">{{ r.n }}</span>
           <h3 style="margin:0;font:900 clamp(20px,1.7vw,23px)/1.4 'Noto Sans TC',sans-serif">{{ r.t }}</h3>
           <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">{{ r.d }}</p>
@@ -123,6 +161,15 @@ class Component extends DCLogic {
   componentDidMount() {
     import('./content.js').then(m => this.setState({ d: m }));
     import('./seo.js').then(m => m.applySEO('method')).catch(() => {});
+    Promise.all([import('./motion-kit.js'), import('./motion/method.motion.js')])
+      .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
+      .catch(() => {});
+    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('method'); }).catch(() => {});
+  }
+  componentWillUnmount() {
+    this._dead = true;
+    if (this._hero) this._hero.destroy();
+    if (this._motion) this._motion.destroy();
   }
   renderVals() {
     const d = this.state.d;
