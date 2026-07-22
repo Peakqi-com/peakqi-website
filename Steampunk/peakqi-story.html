@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>奇鋒國際 PeakQi — 一棟會走路的品牌屋</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  three-d-stage:not(:defined) { visibility: hidden; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body { margin: 0; background: #161412; font-family: 'Noto Sans TC', system-ui, sans-serif; color: #fff; }
+  a { color: #fe6a2d; text-decoration: none; } a:hover { color: #ff8a55; }
+  three-d-stage { position: fixed; inset: 0; height: 100vh; z-index: 0; }
+  #spacer { position: relative; z-index: 1; pointer-events: none; }
+  #spacer section { padding: 4vh 6vw; color: transparent; user-select: none; }
+  #spacer h2 { font-size: 22px; margin: 0 0 8px; }
+  #spacer p { font-size: 14px; margin: 0 0 6px; max-width: 520px; }
+
+  #topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none;
+    display: flex; align-items: center; justify-content: space-between; padding: 18px 28px;
+  }
+  #topbar .logo { font-weight: 900; font-size: 17px; letter-spacing: .02em; }
+  #topbar .logo b { color: #fe6a2d; }
+  #topbar .logo small { display: block; font-size: 10px; font-weight: 500; color: rgba(255,255,255,.5); letter-spacing: .3em; }
+  #topbar a.viewer { pointer-events: auto; font-size: 12px; font-weight: 500; border: 1px solid rgba(254,106,45,.5); border-radius: 999px; padding: 8px 14px; }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: #fe6a2d; width: 0; z-index: 11; }
+
+  #rail { position: fixed; left: 26px; top: 50%; transform: translateY(-50%); z-index: 9; display: flex; flex-direction: column; gap: 13px; }
+  #rail .stop { display: flex; align-items: center; gap: 9px; font-size: 10.5px; letter-spacing: .14em; color: rgba(255,255,255,.38); transition: color .25s; white-space: nowrap; }
+  #rail .stop i { font-style: normal; font-weight: 700; font-size: 10px; width: 18px; color: inherit; }
+  #rail .stop::before { content: ''; width: 16px; height: 1px; background: rgba(255,255,255,.25); transition: all .25s; }
+  #rail .stop.on { color: #fe6a2d; }
+  #rail .stop.on::before { width: 26px; background: #fe6a2d; }
+
+  #hero { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; justify-content: center; padding-left: max(11vw, 150px); pointer-events: none; max-width: 700px; }
+  #hero .kicker { color: #fe6a2d; font-weight: 700; font-size: 12.5px; letter-spacing: .42em; }
+  #hero h1 { margin: 14px 0 12px; font-size: clamp(34px, 5vw, 58px); font-weight: 900; line-height: 1.15; letter-spacing: .04em; }
+  #hero p { margin: 0 0 22px; font-size: 15px; line-height: 1.9; color: rgba(255,255,255,.72); max-width: 360px; }
+  #hero .slogan { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(254,106,45,.55); background: rgba(254,106,45,.1); border-radius: 999px; padding: 10px 18px; font-size: 13.5px; font-weight: 700; width: max-content; white-space: nowrap; }
+  #hero .slogan::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fe6a2d; }
+  #hero .scrollhint { margin-top: 46px; font-size: 11.5px; letter-spacing: .28em; color: rgba(255,255,255,.45); }
+  #hero .scrollhint::after { content: '↓'; margin-left: 8px; color: #fe6a2d; }
+
+  #secHead { position: fixed; left: max(12vw, 178px); top: 13vh; z-index: 6; pointer-events: none; max-width: 360px; }
+  #secHead .no { font-size: 11.5px; font-weight: 700; letter-spacing: .34em; color: #fe6a2d; }
+  #secHead h2 { margin: 10px 0 6px; font-size: clamp(24px, 3vw, 36px); font-weight: 900; letter-spacing: .05em; }
+  #secHead .sub { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.8; }
+
+  #cards { position: fixed; right: 5vw; top: 0; bottom: 0; z-index: 6; width: min(400px, 40vw); pointer-events: none; }
+  .card {
+    position: absolute; right: 0; top: 50%; width: 100%;
+    background: rgba(22, 19, 17, .84); border: 1px solid rgba(255,255,255,.1); border-left: 3px solid #fe6a2d;
+    border-radius: 12px; padding: 22px 24px; backdrop-filter: blur(6px);
+    opacity: 0; transform: translateY(-46%); will-change: opacity; transition: opacity .24s ease;
+  }
+  .card.on { opacity: 1; }
+  .card .k { font-size: 11px; font-weight: 700; letter-spacing: .24em; color: #fe6a2d; margin-bottom: 8px; }
+  .card h3 { margin: 0 0 8px; font-size: 21px; font-weight: 900; letter-spacing: .03em; }
+  .card p { margin: 0; font-size: 14px; line-height: 1.85; color: rgba(255,255,255,.7); }
+  .card p b { color: #ffe4d3; font-weight: 700; }
+  .dots { position: absolute; right: 2px; top: calc(50% - 138px); display: flex; gap: 8px; }
+  .dots i { width: 24px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.18); transition: background .25s; }
+  .dots i.on { background: #fe6a2d; }
+
+  #finale { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; padding: 0 8vw; }
+  #finale .big { font-size: clamp(26px, 4vw, 46px); font-weight: 900; line-height: 1.4; letter-spacing: .05em; }
+  #finale .big em { font-style: normal; color: #fe6a2d; }
+  #finale .en { margin-top: 14px; font-size: 15px; letter-spacing: .2em; color: rgba(255,255,255,.6); }
+  #finale .cta { pointer-events: auto; margin-top: 34px; display: inline-block; background: #fe6a2d; color: #1a1a1a; font-weight: 700; font-size: 14px; border-radius: 999px; padding: 13px 26px; }
+  #finale .cta:hover { background: #ff8a55; color: #1a1a1a; }
+
+  @media (max-width: 860px) {
+    #rail { display: none; }
+    #secHead { top: 9vh; left: 6vw; max-width: 70vw; }
+    #cards { right: 4vw; left: 4vw; width: auto; }
+    .card { top: auto; bottom: 5vh; transform: none; padding: 15px 17px; }
+    .card h3 { font-size: 17px; }
+    .card p { font-size: 12.5px; }
+    .dots { top: auto; bottom: 2vh; right: 4vw; }
+    #hero { padding-left: 7vw; padding-right: 7vw; }
+  }
+</style>
+</head>
+<body>
+<three-d-stage name="peakqi_tower" background="
+  radial-gradient(1.6px 1.6px at 12% 18%, rgba(255,238,200,.55), transparent 65%),
+  radial-gradient(1.4px 1.4px at 78% 12%, rgba(255,238,200,.4), transparent 65%),
+  radial-gradient(1.8px 1.8px at 88% 42%, rgba(255,224,178,.5), transparent 65%),
+  radial-gradient(1.3px 1.3px at 64% 8%, rgba(255,238,200,.35), transparent 65%),
+  radial-gradient(1.5px 1.5px at 30% 6%, rgba(255,238,200,.4), transparent 65%),
+  radial-gradient(1.7px 1.7px at 94% 74%, rgba(255,224,178,.4), transparent 65%),
+  radial-gradient(1.3px 1.3px at 6% 58%, rgba(255,238,200,.35), transparent 65%),
+  radial-gradient(1.5px 1.5px at 46% 26%, rgba(255,238,200,.3), transparent 65%),
+  radial-gradient(120% 95% at 48% 46%, #2e2218 0%, #201812 52%, #14100c 100%)
+"></three-d-stage>
+<div id="spacer" aria-hidden="true">
+  <section style="height:126vh"><h2>奇鋒國際 PeakQi — 一棟會走路的品牌屋</h2><p>六個房間、六門生意，樓下是同一顆 47 模組 AI 引擎。別讓瑣碎，耽誤真正重要的事。</p></section>
+  <section style="height:166vh"><h2>引擎室 — 47 模組 AI 引擎</h2><p>一套引擎，多個品牌。接客、CRM、創意生成、專案財務、數據。換臉不換心，文字 AI 不限量，越用越強。</p></section>
+  <section style="height:166vh"><h2>1F 標案補助 — 母公司 peakqi.com</h2><p>奇鋒是平台公司，雙軌驗證，估值走 SaaS，死線大鐘。</p></section>
+  <section style="height:166vh"><h2>2F 影像製作劇本 — 奇鋒客製開發</h2><p>我們自己踩過坑，大案走專案線，接案三原則，內容自己來。</p></section>
+  <section style="height:166vh"><h2>3F 殯葬 AI 影片 — 創意生成</h2><p>主打 AI 客服做不到的事，額度制包月，超量再加購，真實產業餵養飛輪。</p></section>
+  <section style="height:166vh"><h2>4F 房仲業務系統「冒泡」bubble.tw</h2><p>賣成果不賣客服，不打自己人，垂直做得更深。</p></section>
+  <section style="height:166vh"><h2>5F 室內設計 — AI Interior Pro</h2><p>完工模擬，換上你的樣子，一步一步，帳號始終同一個。</p></section>
+  <section style="height:166vh"><h2>6F 婚禮 — AI Wedding Pro</h2><p>婚紗與場地模擬內建，半夜也接得住，年訂閱三重保障，今天用今天有感。</p></section>
+  <section style="height:146vh"><h2>別讓瑣碎，耽誤真正重要的事。Made for what matters.</h2></section>
+</div>
+<div id="progress"></div>
+<div id="topbar">
+  <div class="logo">奇鋒國際 <b>PeakQi</b><small>AI OPERATING PLATFORM</small></div>
+  <a class="viewer" href="steampunk-tower.html">開啟 3D 檢視器 →</a>
+</div>
+<div id="rail"></div>
+<div id="hero">
+  <div class="kicker">PEAKQI · BRAND HOUSE</div>
+  <h1>一棟會走路的<br>品牌屋</h1>
+  <p>六個房間、六門生意，樓下是同一顆 47 模組 AI 引擎。往下捲，一層一層看我們怎麼把散落的日常，收進同一套系統。</p>
+  <div class="slogan">別讓瑣碎，耽誤真正重要的事</div>
+  <div class="scrollhint">SCROLL</div>
+</div>
+<div id="secHead"><div class="no"></div><h2></h2><div class="sub"></div></div>
+<div id="cards"></div>
+<div id="finale">
+  <div class="big">別讓瑣碎，<em>耽誤真正重要的事</em>。</div>
+  <div class="en">MADE FOR WHAT MATTERS.</div>
+  <a class="cta" href="steampunk-tower.html">拆解這棟品牌屋 — 3D 檢視器</a>
+</div>
+
+<script src="three-d-stage.js"></script>
+<script type="module">
+import { buildTower } from './tower.js';
+
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+{
+  const pm = new THREE.PMREMGenerator(stage._renderer);
+  const es = new THREE.Scene();
+  es.background = new THREE.Color(0x0e0c09);
+  const card = (w, h, c, i, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(i) }));
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m);
+  };
+  card(14, 10, 0xfff1dc, 3.2, 8, 6, 6);
+  card(12, 9, 0xbcd3e8, 1.5, -9, 4, -5);
+  card(18, 14, 0xfff7ea, 1.1, 0, 12, 0);
+  card(16, 4, 0x8a5a2e, 0.8, 0, -6, 2);
+  stage._scene.environment = pm.fromScene(es, 0.035).texture;
+  stage._scene.environmentIntensity = 0.55;
+  pm.dispose();
+}
+const { root, anim } = buildTower();
+const angryP = root.getObjectByName('referral_person');
+const angryBub = root.getObjectByName('referral_person_bubble');
+const coinG = root.getObjectByName('anim_topup_coin');
+stage.setObject(root);
+root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+stage._controls.enabled = false;
+// 重要：繞過 OrbitControls.update()—否則它每幀把相機拉回它自己的目標(俯視塔心)
+stage._renderer.setAnimationLoop(() => { stage._renderer.render(stage._scene, stage._camera); });
+stage._camera.near = 0.12;
+stage._camera.far = 420; // 縮小深度範圍，消除遠景牆面 z-fight 闃爍
+stage._camera.updateProjectionMatrix();
+// 6F 專屬效果：關燈＋24/7 手機彈出
+const V1 = new THREE.Vector3();
+const wedBadge = document.createElement('div');
+wedBadge.textContent = '24/7 接單中';
+wedBadge.style.cssText = 'position:fixed;z-index:5;pointer-events:none;opacity:0;white-space:nowrap;transform:translate(-50%,-100%);font:700 13px/1 "Noto Sans TC",sans-serif;letter-spacing:.14em;color:#ffd9c4;background:rgba(22,13,8,.88);border:1px solid #fe6a2d;border-radius:999px;padding:8px 13px;box-shadow:0 4px 18px rgba(254,106,45,.35)';
+document.body.appendChild(wedBadge);
+const wedFx = {
+  l1: root.getObjectByName('wedding_light'),
+  l2: root.getObjectByName('wedding_light_b'),
+  phone: root.getObjectByName('wedding_phone'),
+  badge: wedBadge,
+};
+stage._toolbar.style.display = 'none';
+const noteEl = stage.shadowRoot.querySelector('.note');
+if (noteEl) noteEl.style.display = 'none';
+
+const N = (n) => root.getObjectByName(n);
+const nodes = {
+  stamp: N('gov_stamp'), stampKnob: N('gov_stamp_knob'), house: N('estate_minihouse'),
+  bubbles: [0, 1, 2, 3].map(i => N('estate_bubble_' + i)),
+  sui: { dot: N('sui0_dot'), la: N('sui1_line_a'), lb: N('sui1_line_b'), bars: [0, 1, 2].map(i => N('sui2_bar_' + i)), needle: N('sui3_needle'), hl: N('sui4_hl'), ca: N('sui5_chat_a'), cb: N('sui5_chat_b') },
+  keys: [0, 1, 2, 3, 4].map(i => N('typewriter_key_' + i)),
+  leds: [0, 1, 2, 3, 4, 5].map(i => N('ai_rack_led_' + i)),
+  diamond: N('ring_diamond'), brideHead: N('bride_head'), groomHead: N('groom_head'),
+  paper: N('typewriter_paper'), dial: N('safe_dial'), orb: N('ai_orb'),
+};
+const baseY = {};
+['gov_stamp', 'gov_stamp_knob', 'estate_minihouse', 'bride_head', 'groom_head'].forEach(n => { const o = N(n); if (o) baseY[n] = o.position.y; });
+nodes.bubbles.forEach((b, i) => { if (b) baseY['bub' + i] = b.position.y; });
+nodes.keys.forEach((k, i) => { if (k) baseY['key' + i] = k.position.y; });
+
+// 3F AI 工作站螢幕:常態播放中的「生成影片」(逐格重繪的動態貼圖)
+let monCtx = null, monTex = null;
+{
+  const mon = N('ai_monitor');
+  if (mon) {
+    const cv = document.createElement('canvas'); cv.width = 256; cv.height = 176;
+    monCtx = cv.getContext('2d');
+    monTex = new THREE.CanvasTexture(cv);
+    monTex.colorSpace = THREE.SRGBColorSpace;
+    mon.material = new THREE.MeshBasicMaterial({ map: monTex });
+  }
+}
+function drawMonitor(t) {
+  const g = monCtx, W = 256, H = 176;
+  const hue = 24 + Math.sin(t * 0.3) * 10;
+  const sky = g.createLinearGradient(0, 0, 0, H * 0.72);
+  sky.addColorStop(0, 'hsl(' + (hue + 190) + ',38%,22%)');
+  sky.addColorStop(1, 'hsl(' + hue + ',72%,58%)');
+  g.fillStyle = sky; g.fillRect(0, 0, W, H * 0.72);
+  const sx = W * 0.62 + Math.sin(t * 0.22) * 8, sy = H * 0.5 + Math.sin(t * 0.35) * 4;
+  const glow = g.createRadialGradient(sx, sy, 2, sx, sy, 44);
+  glow.addColorStop(0, 'rgba(255,236,190,.95)'); glow.addColorStop(1, 'rgba(255,200,120,0)');
+  g.fillStyle = glow; g.beginPath(); g.arc(sx, sy, 44, 0, 7); g.fill();
+  g.fillStyle = '#fff3d8'; g.beginPath(); g.arc(sx, sy, 9, 0, 7); g.fill();
+  g.fillStyle = 'rgba(255,235,215,.5)';
+  for (let i = 0; i < 3; i++) {
+    const cx = ((t * (8 + i * 4) + i * 130) % (W + 90)) - 45;
+    g.beginPath(); g.ellipse(cx, 28 + i * 22, 34 - i * 6, 8, 0, 0, 7); g.fill();
+  }
+  g.fillStyle = 'hsl(' + (hue + 200) + ',30%,16%)';
+  g.beginPath(); g.moveTo(0, H * 0.62);
+  for (let x = 0; x <= W; x += 16) g.lineTo(x, H * 0.62 - 14 * Math.abs(Math.sin(x * 0.045 + 1.3)));
+  g.lineTo(W, H * 0.72); g.lineTo(0, H * 0.72); g.closePath(); g.fill();
+  g.fillStyle = 'hsl(' + hue + ',50%,30%)'; g.fillRect(0, H * 0.72, W, H * 0.28);
+  g.strokeStyle = 'rgba(255,215,150,.55)'; g.lineWidth = 2;
+  for (let i = 0; i < 4; i++) {
+    const yy = H * 0.76 + i * 9, ww = 26 - i * 4 + Math.sin(t * 2 + i) * 6;
+    g.beginPath(); g.moveTo(sx - ww, yy); g.lineTo(sx + ww, yy); g.stroke();
+  }
+  g.fillStyle = 'rgba(10,10,14,.78)'; g.fillRect(0, H - 22, W, 22);
+  g.fillStyle = 'rgba(255,255,255,.25)'; g.fillRect(10, H - 13, W - 66, 4);
+  const pr = (t * 0.07) % 1;
+  g.fillStyle = '#ff8a3d'; g.fillRect(10, H - 13, (W - 66) * pr, 4);
+  g.beginPath(); g.arc(10 + (W - 66) * pr, H - 11, 4, 0, 7); g.fill();
+  const sec = Math.floor(pr * 96);
+  g.fillStyle = '#ffe9c9'; g.font = '10px monospace';
+  g.fillText('0' + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'), W - 48, H - 8);
+  if (Math.sin(t * 4) > 0) { g.fillStyle = '#ff4b3d'; g.beginPath(); g.arc(12, 12, 5, 0, 7); g.fill(); }
+  g.fillStyle = '#ffe9c9'; g.font = '9px monospace'; g.fillText('AI GEN', 22, 15);
+  monTex.needsUpdate = true;
+}
+
+// —— 引擎室/1F 展品物件(每張卡一個主體) ——
+const MS = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.6, metalness: 0.3 }, o));
+const tubeBetween = (a, b, r, mat, parent) => {
+  const A = new THREE.Vector3(...a), Bv = new THREE.Vector3(...b);
+  const d = new THREE.Vector3().subVectors(Bv, A), len = d.length();
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), mat);
+  m.position.copy(A).addScaledVector(d, 0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+  parent.add(m); return m;
+};
+// ②品牌屋「換臉不換心」:品牌臉輪盤 — 軸心(心)不動發光,四張臉繞著轉
+let caroSpin = null, caroCore = null;
+{
+  const cg = new THREE.Group(); cg.name = 'engine_carousel'; cg.position.set(2.3, 2.62, 2.42); root.add(cg);
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.13, 0.5, 12), MS(0x3a3f49)); ped.position.y = 0.25; cg.add(ped);
+  const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.78, 10), MS(0x8a6a3f, { metalness: 0.6, roughness: 0.35 })); axle.position.y = 0.86; cg.add(axle);
+  caroCore = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 10), new THREE.MeshStandardMaterial({ color: 0xffc98c, emissive: 0xff9a3d, emissiveIntensity: 1.4, roughness: 0.3 }));
+  caroCore.position.y = 1.3; cg.add(caroCore);
+  caroSpin = new THREE.Group(); caroSpin.position.y = 0.82; cg.add(caroSpin);
+  [0xb87352, 0x5e9486, 0xe8a7b8, 0xe0d2b4].forEach((c, i) => {
+    const a = i * Math.PI / 2;
+    const p = new THREE.Group(); p.position.set(Math.sin(a) * 0.35, 0, Math.cos(a) * 0.35); p.rotation.y = a; caroSpin.add(p);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.26, 0.025), MS(c, { roughness: 0.75, metalness: 0.1 })); p.add(plate);
+    const eyeM = MS(0x2a2620);
+    [-0.045, 0.045].forEach(x => { const e = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.028, 0.015), eyeM); e.position.set(x, 0.05, 0.016); p.add(e); });
+    const mo = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.016, 0.015), eyeM); mo.position.set(0, -0.055, 0.016); p.add(mo);
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.35, 6), MS(0x3a3f49));
+    arm.position.set(Math.sin(a) * 0.175, 0, Math.cos(a) * 0.175); arm.rotation.z = Math.PI / 2; arm.rotation.y = a; caroSpin.add(arm);
+  });
+}
+// ③額度「文字 AI 不限量」:鍋爐口吐不完的電報紙條
+const tapeSegs = [];
+{
+  const tg = new THREE.Group(); tg.name = 'engine_tape'; root.add(tg);
+  for (let i = 0; i < 8; i++) {
+    const m = new THREE.MeshBasicMaterial({ color: 0xf4ecd8, transparent: true, opacity: 0, side: THREE.DoubleSide });
+    const s = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.15), m);
+    tg.add(s); tapeSegs.push(s);
+  }
+}
+const TAPE_P = [[-1.62, 3.36, 1.06], [-1.28, 3.32, 1.62], [-1.02, 2.66, 1.92]];
+// ④護城河「越用越強」:飛輪+環繞的護城河環帶與資料珠
+let moatWheel = null, moatRing = null; const moatBeads = [];
+{
+  const mg = new THREE.Group(); mg.name = 'engine_moat'; mg.position.set(-0.75, 2.62, 2.4); root.add(mg);
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.42, 12), MS(0x3a3f49)); ped.position.y = 0.21; mg.add(ped);
+  moatWheel = new THREE.Group(); moatWheel.position.y = 0.72; mg.add(moatWheel);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.05, 10, 28), MS(0xb08d57, { metalness: 0.55, roughness: 0.35 })); moatWheel.add(rim);
+  for (let i = 0; i < 4; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.5, 0.04), MS(0x3a3f49)); sp.rotation.z = i * Math.PI / 4; moatWheel.add(sp); }
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.1, 10), MS(0x8a6a3f)); hub.rotation.x = Math.PI / 2; moatWheel.add(hub);
+  moatRing = new THREE.Group(); moatRing.position.y = 0.42; mg.add(moatRing);
+  const water = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.045, 10, 36), MS(0x5e9486, { roughness: 0.3, metalness: 0.2, emissive: 0x1e4038, emissiveIntensity: 0.4 }));
+  water.rotation.x = Math.PI / 2; moatRing.add(water);
+  for (let i = 0; i < 3; i++) {
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), new THREE.MeshStandardMaterial({ color: 0xffc98c, emissive: 0xff9a3d, emissiveIntensity: 1.2 }));
+    moatRing.add(b); moatBeads.push(b);
+  }
+}
+// 1F②雙軌「兩條線互相證明」:兩條供給管線送進同一棟樓
+const railBeads = [];
+let railJunction = null;
+{
+  const rg = new THREE.Group(); rg.name = 'gov_twinrails'; root.add(rg);
+  const L = [
+    { a: [3.9, 0.1, 4.6], b: [1.78, 2.42, 2.08], c: 0xff9a3d, e: 0xff7a1d },
+    { a: [4.35, 0.1, 4.15], b: [2.12, 2.42, 1.72], c: 0x7fc4de, e: 0x3fa8d8 },
+  ];
+  for (const ln of L) {
+    tubeBetween(ln.a, ln.b, 0.045, MS(0xb08d57, { metalness: 0.5, roughness: 0.4 }), rg);
+    for (const f of [0.3, 0.62]) {
+      const px = ln.a[0] + (ln.b[0] - ln.a[0]) * f, py = ln.a[1] + (ln.b[1] - ln.a[1]) * f, pz = ln.a[2] + (ln.b[2] - ln.a[2]) * f;
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.03, py, 8), MS(0x3a3f49));
+      post.position.set(px, py / 2, pz); rg.add(post);
+    }
+    for (let i = 0; i < 4; i++) {
+      const b = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), new THREE.MeshStandardMaterial({ color: ln.c, emissive: ln.e, emissiveIntensity: 1.3 }));
+      rg.add(b); railBeads.push({ m: b, a: ln.a, b2: ln.b, off: i / 4 });
+    }
+  }
+  railJunction = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.035, 10, 24), MS(0xffc98c, { emissive: 0xff9a3d, emissiveIntensity: 0.9 }));
+  railJunction.position.set(1.95, 2.5, 1.9); railJunction.rotation.x = 0.7; railJunction.rotation.y = 0.78; rg.add(railJunction);
+}
+
+// 3F 禮儀師(白襯衫+西裝外套+黑長褲,手拿小冊子)
+let director = null;
+{
+  const funG = N('floor3_funeral_ai');
+  if (funG) {
+    const fg = new THREE.Group();
+    fg.name = 'funeral_director';
+    fg.position.set(-0.55, 0.22, 0.95);
+    fg.scale.setScalar(1.4);
+    const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.8, metalness: 0.05 }, o));
+    const mSuit = M(0x2e3138), mBlack = M(0x1e2026), mShirt = M(0xf2efe6), mSkin = M(0xe9c39e), mHair = M(0x3a2e26);
+    const bx = (w, h, d, m, x, y, z) => { const q = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); q.position.set(x, y, z); fg.add(q); return q; };
+    // 黑長褲+鞋
+    bx(0.05, 0.2, 0.06, mBlack, -0.032, 0.1, 0); bx(0.05, 0.2, 0.06, mBlack, 0.032, 0.1, 0);
+    bx(0.055, 0.03, 0.09, mBlack, -0.032, 0.015, 0.012); bx(0.055, 0.03, 0.09, mBlack, 0.032, 0.015, 0.012);
+    // 白襯衫身+西裝外套(前面露出襯衫)
+    bx(0.14, 0.17, 0.085, mShirt, 0, 0.285, 0);
+    bx(0.16, 0.16, 0.1, mSuit, 0, 0.275, -0.008);
+    bx(0.05, 0.15, 0.012, mShirt, 0, 0.28, 0.046);
+    // 頭+髮髻
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.055, 14, 12), mSkin); head.position.set(0, 0.435, 0); fg.add(head);
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.058, 14, 12), mHair); hair.position.set(0, 0.448, -0.014); hair.scale.set(1, 0.92, 0.95); fg.add(hair);
+    const bun = new THREE.Mesh(new THREE.SphereGeometry(0.026, 10, 8), mHair); bun.position.set(0, 0.47, -0.055); fg.add(bun);
+    // 手臂(西裝色)彎向前方捧冊
+    const ua = bx(0.035, 0.12, 0.04, mSuit, -0.095, 0.3, 0.008); ua.rotation.x = 0.35;
+    const ub = bx(0.035, 0.12, 0.04, mSuit, 0.095, 0.3, 0.008); ub.rotation.x = 0.35;
+    bx(0.035, 0.04, 0.095, mSuit, -0.082, 0.24, 0.06); bx(0.035, 0.04, 0.095, mSuit, 0.082, 0.24, 0.06);
+    bx(0.028, 0.028, 0.028, mSkin, -0.078, 0.245, 0.105); bx(0.028, 0.028, 0.028, mSkin, 0.078, 0.245, 0.105);
+    // 小冊子(微傾)
+    const book = bx(0.11, 0.075, 0.014, M(0xe0d2b4), 0, 0.26, 0.115); book.rotation.x = -0.55;
+    const spine = bx(0.006, 0.075, 0.016, M(0x8a6a3f, { metalness: 0.5, roughness: 0.4 }), 0, 0.26, 0.116); spine.rotation.x = -0.55;
+    funG.add(fg);
+    director = fg;
+  }
+}
+
+// 5F「完工模擬」畫架:畫布換成完工室內照
+{
+  const rp = N('easel_render');
+  if (rp) {
+    const cv = document.createElement('canvas'); cv.width = 512; cv.height = 640;
+    const g = cv.getContext('2d');
+    // 牆面
+    const wall = g.createLinearGradient(0, 0, 0, 640);
+    wall.addColorStop(0, '#efe3d0'); wall.addColorStop(1, '#d9c4a8');
+    g.fillStyle = wall; g.fillRect(0, 0, 512, 460);
+    // 地板
+    const fl = g.createLinearGradient(0, 460, 0, 640);
+    fl.addColorStop(0, '#b98a5a'); fl.addColorStop(1, '#8f6238');
+    g.fillStyle = fl; g.fillRect(0, 460, 512, 180);
+    for (let i = 0; i < 6; i++) { g.strokeStyle = 'rgba(90,55,25,.25)'; g.beginPath(); g.moveTo(256 + (i - 2.5) * 45, 460); g.lineTo(256 + (i - 2.5) * 170, 640); g.stroke(); }
+    // 窗+陽光
+    g.fillStyle = '#7a5a38'; g.fillRect(310, 60, 164, 240);
+    const sky = g.createLinearGradient(0, 60, 0, 300);
+    sky.addColorStop(0, '#ffe9bd'); sky.addColorStop(1, '#ffc98e');
+    g.fillStyle = sky; g.fillRect(320, 70, 144, 220);
+    g.fillStyle = '#7a5a38'; g.fillRect(388, 70, 8, 220); g.fillRect(320, 175, 144, 8);
+    g.fillStyle = 'rgba(255,225,170,.35)';
+    g.beginPath(); g.moveTo(330, 300); g.lineTo(470, 300); g.lineTo(430, 620); g.lineTo(230, 620); g.closePath(); g.fill();
+    // 掛畫
+    g.fillStyle = '#6b4d2a'; g.fillRect(60, 80, 150, 118);
+    g.fillStyle = '#8fb996'; g.fillRect(72, 92, 126, 94);
+    g.fillStyle = '#e9ddc8'; g.beginPath(); g.arc(120, 130, 22, 0, 7); g.fill();
+    // 沙發
+    g.fillStyle = '#a22636';
+    g.fillRect(52, 380, 250, 46);           // 椅背
+    g.fillRect(40, 420, 274, 76);           // 座
+    g.fillRect(28, 396, 30, 100); g.fillRect(296, 396, 30, 100); // 扶手
+    g.fillStyle = '#8a1e2c'; g.fillRect(40, 452, 274, 10);
+    g.fillStyle = '#e8aeb4'; g.fillRect(80, 396, 56, 40); // 抱枕
+    g.fillStyle = '#8fb996'; g.fillRect(210, 396, 56, 40);
+    // 地毯
+    g.fillStyle = 'rgba(233,221,200,.8)'; g.beginPath(); g.ellipse(190, 560, 160, 44, 0, 0, 7); g.fill();
+    g.strokeStyle = '#a22636'; g.lineWidth = 5; g.beginPath(); g.ellipse(190, 560, 130, 32, 0, 0, 7); g.stroke();
+    // 立燈
+    g.strokeStyle = '#6b4d2a'; g.lineWidth = 8; g.beginPath(); g.moveTo(430, 500); g.lineTo(430, 340); g.stroke();
+    g.fillStyle = '#e8aeb4'; g.beginPath(); g.moveTo(400, 350); g.lineTo(460, 350); g.lineTo(448, 300); g.lineTo(412, 300); g.closePath(); g.fill();
+    g.fillStyle = 'rgba(255,215,150,.45)'; g.beginPath(); g.arc(430, 365, 26, 0, 7); g.fill();
+    g.fillStyle = '#6b4d2a'; g.beginPath(); g.ellipse(430, 502, 26, 8, 0, 0, 7); g.fill();
+    // 盆栽
+    g.fillStyle = '#8a5a30'; g.fillRect(452, 585, 44, 40);
+    g.fillStyle = '#5f8f5f';
+    [[474, 560, 20], [458, 572, 14], [490, 572, 14]].forEach(([x, y, r]) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); });
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    rp.material = new THREE.MeshBasicMaterial({ map: tex });
+  }
+}
+
+// 5F「換上你的樣子」迷你模擬展示架:色票板下方的小展間,沙發/立燈/掛畫依序進場
+const dioItems = [];
+let dioG = null;
+{
+  const intrG = N('floor5_interior');
+  if (intrG) {
+    dioG = new THREE.Group();
+    dioG.name = 'studio_diorama';
+    dioG.position.set(1.08, 0.42, 0.12);
+    dioG.rotation.y = -Math.PI / 2;
+    const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.75, metalness: 0.1 }, o));
+    const bx = (w, h, d, m, x, y, z, parent) => { const q = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); q.position.set(x, y, z); parent.add(q); return q; };
+    // 展架本體:底座+迷你牧牆+地板
+    bx(0.64, 0.03, 0.3, M(0x8a6a3f, { metalness: 0.45, roughness: 0.4 }), 0, -0.015, 0.1, dioG);
+    bx(0.56, 0.42, 0.02, M(0xe9ddc8), 0, 0.21, 0, dioG);
+    bx(0.56, 0.02, 0.24, M(0x9a7448), 0, 0.01, 0.12, dioG);
+    // ① 沙發(紅)
+    const sofa = new THREE.Group(); sofa.position.set(-0.14, 0, 0.13); dioG.add(sofa);
+    const mRed = M(0xa22636);
+    bx(0.22, 0.05, 0.1, mRed, 0, 0.055, 0, sofa);
+    bx(0.22, 0.1, 0.03, mRed, 0, 0.1, -0.05, sofa);
+    bx(0.03, 0.09, 0.1, mRed, -0.115, 0.085, 0, sofa);
+    bx(0.03, 0.09, 0.1, mRed, 0.115, 0.085, 0, sofa);
+    // ② 立燈(粉罩+暖光)
+    const lamp = new THREE.Group(); lamp.position.set(0.19, 0, 0.13); dioG.add(lamp);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.17, 8), M(0x8a6a3f, { metalness: 0.6, roughness: 0.35 })); pole.position.y = 0.09; lamp.add(pole);
+    const lbase = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.034, 0.012, 12), M(0x8a6a3f, { metalness: 0.6, roughness: 0.35 })); lbase.position.y = 0.006; lamp.add(lbase);
+    const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.046, 0.05, 12, 1, true), M(0xe8aeb4, { side: THREE.DoubleSide, emissive: 0x552a20, emissiveIntensity: 0.6 })); shade.position.y = 0.185; lamp.add(shade);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.014, 10, 8), new THREE.MeshBasicMaterial({ color: 0xffd9a0 })); bulb.position.y = 0.165; lamp.add(bulb);
+    // ③ 掛畫(綠)
+    const art = new THREE.Group(); art.position.set(0.02, 0.27, 0.018); dioG.add(art);
+    bx(0.15, 0.12, 0.012, M(0x6b4d2a, { metalness: 0.5, roughness: 0.4 }), 0, 0, 0, art);
+    bx(0.12, 0.09, 0.012, M(0x8fb996, { emissive: 0x1e3324, emissiveIntensity: 0.5 }), 0, 0, 0.004, art);
+    dioItems.push(sofa, lamp, art);
+    dioG.scale.setScalar(0.001);
+    intrG.add(dioG);
+  }
+}
+
+// 5F「一步一步」腳印(掛在 floor5_interior 群組內,用局部座標)
+const stepMats = [];
+{
+  const intrG = N('floor5_interior');
+  if (intrG) {
+    const stepsG = new THREE.Group();
+    stepsG.name = 'interior_footsteps';
+    const soleGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.008, 14);
+    const toeGeo = new THREE.CylinderGeometry(0.026, 0.026, 0.008, 12);
+    // 從入口(z+)一路走向工作桌,左右交替
+    const pts = [[0.17, 0.74, -12], [-0.03, 0.56, 10], [0.13, 0.38, -10], [-0.07, 0.20, 8], [0.09, 0.03, -8], [-0.11, -0.14, 6]];
+    for (const [x, z, deg] of pts) {
+      const m = new THREE.MeshBasicMaterial({ color: 0xffc07a, transparent: true, opacity: 0, depthWrite: false });
+      stepMats.push(m);
+      const f = new THREE.Group();
+      f.position.set(x, 0.075, z);
+      f.rotation.y = deg * Math.PI / 180;
+      const sole = new THREE.Mesh(soleGeo, m); sole.scale.set(0.62, 1, 1);
+      const toe = new THREE.Mesh(toeGeo, m); toe.position.z = -0.078; toe.scale.set(0.62, 1, 1);
+      f.add(sole, toe);
+      stepsG.add(f);
+    }
+    intrG.add(stepsG);
+  }
+}
+
+// ---------------- 章節與字卡(內容源:整體規劃藍圖 + 品牌策略書) ----------------
+const SECS = [
+  { id: 'hero', rail: '首頁', vh: 130, cam: [3.5, 12.5, 37.5], tgt: [0, 8.6, 0] },
+  {
+    id: 'engine', rail: '引擎室', vh: 170, cam: [3.6, 4.2, 6.4], tgt: [0.5, 3.8, 1.5], inside: [2.2, 4.1, 3.6], tgtIn: [0.95, 3.6, 2.35],
+    stands: [[1.05, 3.9, 5.2], [2.6, 3.75, 5.2], [-2.6, 3.95, 4.5], [-0.85, 3.65, 5.4]],
+    looks: [[1.0, 3.6, 2.35], [2.32, 3.35, 2.5], [-2.35, 3.45, 1.35], [-0.75, 3.15, 2.4]],
+    no: '01 / 引擎室', title: '47 模組 AI 引擎', sub: '整棟樓的動力來源。一套引擎、多個品牌、雙軌驗證。',
+    cards: [
+      ['底層', '一套引擎，多個品牌', '接客、CRM、創意生成、專案財務、數據——<b>47 個模組</b>共用同一顆引擎。'],
+      ['品牌屋', '換臉，不換心', '每個產業品牌換的是知識庫、工具組合、一句話定位、Demo 場景。引擎同一顆。'],
+      ['額度', '文字 AI 不限量', '對話、文案、報告、SEO、報價提案——<b>全部方案吃到飽</b>。'],
+      ['護城河', '越用越強', '創意生成＋持續累積的模組資產＋自家品牌帶回的產業 know-how，資料飛輪越轉越準。'],
+    ],
+  },
+  {
+    id: 'gov', rail: '1F 母公司', vh: 170, cam: [-3.2, 4.2, 0.5], tgt: [-0.3, 3.9, -0.6], inside: [-4.6, 5.0, 4.2], tgtIn: [0.1, 6.2, 0],
+    stands: [[12, 10, 13], [3.6, 2.6, 6.6], [3.9, 15.6, 4.9], [0.15, 4.5, 5.4]],
+    looks: [[-0.3, 8.4, 0], [2.55, 1.55, 2.9], [0, 16.3, 0], [0, 4.35, 2.1]],
+    no: '02 / 1F', title: '標案 · 補助 · 母公司', sub: 'peakqi.com 對投資人、夥伴、補助評審說話。這裡講故事，不賣東西。',
+    cards: [
+      ['定位', '奇鋒是平台公司', '不是接案公司。我們是<b>台灣中小企業的 AI 營運基礎設施</b>。'],
+      ['雙軌', '兩條線互相證明', '自家垂直品牌證明產品好用；Peak Ops 外部客戶證明市場願意買。'],
+      ['估值', '走 SaaS 的路', '多品牌控股＝營收 × 1–3 倍；AI SaaS 平台＝ARR × 5–15 倍。<b>藍圖選後者</b>。'],
+      ['老本行', '死線大鐘', '標案與補助是我們十幾年的本行——時程紀律，刻在這面鐘上。'],
+    ],
+  },
+  {
+    id: 'film', rail: '2F 影像劇本', vh: 170, cam: [0.9, 6.7, 4.4], tgt: [0.45, 6.5, 0], inside: [0.55, 6.65, 0.75], tgtIn: [0.45, 6.25, -0.25],
+    stands: [[0.05, 6.15, 2.1], [0.75, 6.3, 2.5], [0.48, 6.52, 0.85], [-0.25, 6.2, 0.5]],
+    looks: [[0.0, 5.5, 0.69], [1.15, 5.88, 0.53], [-0.7, 6.6, -0.95], [1.3, 5.95, -0.75]],
+    no: '03 / 2F', title: '影像製作 · 劇本開發', sub: '我們不是台大電機出身的天才少年，是一路做、一路學、一路踩坑走過來的。',
+    cards: [
+      ['出身', '我們自己踩過坑', '創辦人十幾年做<b>影像、活動、標案、品牌、AI 開發</b>——每個坑都親身踩過。'],
+      ['分工', '大案走專案線', '架構級客製、雙邊平台、電商——掛「奇鋒客製開發」，不掛 Peak Ops。'],
+      ['紀律', '接案三原則', '餵養產品路線、留下案例、盡量轉長期月費。<b>接案為輔，不為主</b>。'],
+      ['武器', '內容自己來', '官網文案、Demo 腳本、品牌影片——自己寫、自己拍、自己剪。'],
+    ],
+  },
+  {
+    id: 'ai', rail: '3F AI 影片', vh: 170, cam: [1.5, 9.1, 3.15], tgt: [-0.3, 8.85, 0], inside: [0.05, 9.1, 0.6], tgtIn: [-0.3, 8.65, -0.15],
+    stands: [[1.35, 9.3, 2.75], [0.0, 8.6, 1.75], [0.4, 8.78, 1.5], [0.15, 8.6, 1.35]],
+    looks: [[-0.35, 8.62, -0.15], [0.65, 8.2, 0.28], [-1.18, 8.25, -0.28], [-0.85, 8.25, 0.95]],
+    no: '04 / 3F', title: '殯葬 · AI 影片生成', sub: '主打 AI 客服做不到的事。創意生成才是差異，客服只是附加。',
+    cards: [
+      ['差異', '客服做不到的事', '圖片、影片、渲染、模擬——<b>創意生成</b>是多數對手沒有的那一塊。'],
+      ['額度', '包月，不嚇人', '圖片 30／100／300 張、影片 3／10 支，依方案內建；文字永遠不限量。'],
+      ['彈性', '超量再加購', '圖片 NT$15–25／張、影片 NT$80–150／支——<b>用多少，補多少</b>。'],
+      ['飛輪', '真實產業餵養', '自家品牌天天在真實場景裡用，成果回饋引擎，越用越準。'],
+    ],
+  },
+  {
+    id: 'estate', rail: '4F 房仲', vh: 170, cam: [0.55, 11.15, 3.6], tgt: [0.4, 10.6, -0.2], inside: [0.5, 10.85, 2.9], tgtIn: [0.4, 10.6, -0.2],
+    stands: [[0.5, 10.85, 2.9], [-0.5, 10.8, -0.15], [0.75, 10.52, 1.1], [0.85, 10.85, 0.9]],
+    looks: [[0.4, 10.6, -0.2], [1.55, 10.85, 0.15], [-0.95, 10.5, 0.02], [-0.22, 10.85, -0.86]],
+    no: '05 / 4F', title: '房仲業務系統「冒泡」', sub: 'bubble.tw — 房仲版垂直品牌。獨立名字、獨立官網、獨立定價、獨立客群。',
+    cards: [
+      ['品牌', '冒泡 bubble.tw', '房仲版垂直品牌——<b>獨立品牌、獨立定價</b>，頁尾一行小字連回奇鋒。'],
+      ['主打', '賣成果，不賣客服', '房型渲染這種<b>看得見的成果</b>，加上 24 小時自動接客、追蹤、養客到成交。'],
+      ['原則', '不打自己人', 'Peak Ops 不主動接房仲客——這個產業留給冒泡吃，詢問一律導流。'],
+      ['深度', '垂直做得更深', '知識庫、話術、Demo 場景全為房仲重做，比通用版更懂這一行。'],
+    ],
+  },
+  {
+    id: 'interior', rail: '5F 室內設計', vh: 170, cam: [-0.1, 13.15, 3.9], tgt: [-0.15, 12.5, -0.3], inside: [-0.15, 12.6, 0.75], tgtIn: [-0.15, 12.5, -0.35],
+    stands: [[-0.1, 12.7, 2.85], [-0.4, 12.65, 0.95], [-0.55, 12.6, 0.35], [0.32, 12.5, 0.95]],
+    looks: [[-0.15, 12.5, -0.35], [0.67, 12.52, -0.62], [1.02, 12.62, 0.05], [-0.43, 12.32, 0.32]],
+    no: '06 / 5F', title: 'AI Interior Pro', sub: 'aiinteriorpro.com — 室內設計版垂直品牌。讓客戶下訂前，就看到完工的樣子。',
+    cards: [
+      ['品牌', 'AI Interior Pro', '室內設計版垂直品牌——同一顆引擎，換上設計產業的臉。'],
+      ['主打', '完工模擬', '客戶還沒下訂，就先看到<b>完工的樣子</b>——這是設計師最有力的一張圖。'],
+      ['導入', '換上你的樣子', '灌入你的服務項目、FAQ、話術；UI 換上你的 Logo 與色系。'],
+      ['節奏', '一步一步', '從你最痛的那個點開始用，有感了再接下一步——<b>帳號始終同一個</b>。'],
+    ],
+  },
+  {
+    id: 'wedding', rail: '6F 婚禮', vh: 170, cam: [0.1, 15.0, 3.8], tgt: [0, 14.6, 0], inside: [0.05, 14.9, 0.85], tgtIn: [0, 14.45, -0.15],
+    stands: [[0.15, 15.05, 2.6], [0.05, 14.9, 0.85], [0.05, 14.9, 0.85], [0.0, 14.22, 0.95]],
+    looks: [[0, 14.45, -0.15], [0.93, 14.12, -0.09], [-0.9, 14.5, -0.65], [0, 14.02, -0.36]],
+    no: '07 / 6F', title: 'AI Wedding Pro', sub: 'aiweddingpro.com — 婚慶版垂直品牌，樓頂那枚婚戒就是招牌。',
+    cards: [
+      ['品牌', 'AI Wedding Pro', '婚慶版垂直品牌——<b>婚紗與場地模擬</b>額度直接內建在方案裡。'],
+      ['場景', '半夜也接得住', '新人凌晨兩點傳訊詢價？AI 自動回覆、追蹤、養客到成交。'],
+      ['保障', '年訂閱＋三重保障', '30 天全額退款、NT$3,000 體驗月、年繳送兩個月。'],
+      ['承諾', '感覺得到，才叫做到', '不做隱形的技術後台——<b>今天用、今天有感</b>。'],
+    ],
+  },
+  { id: 'finale', rail: '尾聲', vh: 150, cam: [26, 17.5, 28], tgt: [-3.8, 9.8, 0] },
+];
+
+// ---------------- DOM 準備 ----------------
+const railEl = document.getElementById('rail');
+SECS.forEach((s, i) => {
+  const d = document.createElement('div');
+  d.className = 'stop';
+  d.innerHTML = '<i>' + String(i).padStart(2, '0') + '</i>' + s.rail;
+  railEl.appendChild(d);
+});
+const railStops = [...railEl.children];
+const cardsEl = document.getElementById('cards');
+const headEl = document.getElementById('secHead');
+const heroEl = document.getElementById('hero');
+const finaleEl = document.getElementById('finale');
+const progEl = document.getElementById('progress');
+let cardEls = [];
+let dotEls = [];
+let headSec = -1;
+function mountSection(i) {
+  if (headSec === i) return;
+  headSec = i;
+  const s = SECS[i];
+  cardsEl.innerHTML = '';
+  cardEls = []; dotEls = [];
+  if (s.cards) {
+    headEl.querySelector('.no').textContent = s.no;
+    headEl.querySelector('h2').textContent = s.title;
+    headEl.querySelector('.sub').textContent = s.sub;
+    const dots = document.createElement('div');
+    dots.className = 'dots';
+    for (let d = 0; d < s.cards.length; d++) {
+      const ii = document.createElement('i');
+      dots.appendChild(ii);
+      dotEls.push(ii);
+    }
+    cardsEl.appendChild(dots);
+    for (const [k, h, p] of s.cards) {
+      const c = document.createElement('div');
+      c.className = 'card';
+      c.innerHTML = '<div class="k">' + k + '</div><h3>' + h + '</h3><p>' + p + '</p>';
+      cardsEl.appendChild(c);
+      cardEls.push(c);
+    }
+  } else {
+    headEl.querySelector('.no').textContent = '';
+    headEl.querySelector('h2').textContent = '';
+    headEl.querySelector('.sub').textContent = '';
+  }
+}
+const totalVh = SECS.reduce((a, s) => a + s.vh, 0);
+const spacerEl = document.getElementById('spacer');
+spacerEl.style.height = totalVh + 'vh';
+spacerEl.style.overflow = 'hidden';
+const bounds = [];
+{
+  let acc = 0;
+  for (const s of SECS) { bounds.push([acc, acc + s.vh]); acc += s.vh; }
+}
+
+// ---------------- 相機軌道 + 動畫 ----------------
+const camPos = new THREE.Vector3(24, 15, 26), camTgt = new THREE.Vector3(0, 8.8, 0);
+const dPos = new THREE.Vector3(), dTgt = new THREE.Vector3();
+const A = new THREE.Vector3(), B = new THREE.Vector3();
+const ss = (t) => t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+let last = performance.now() / 1000;
+
+function update(t, dt) {
+  const vh = window.innerHeight;
+  const scrollable = document.documentElement.scrollHeight - vh;
+  const sy = (window.__scrollOverride != null ? window.__scrollOverride : window.scrollY);
+  const y = sy / vh * 100; // in vh units
+  progEl.style.width = (scrollable > 0 ? (sy / scrollable) * 100 : 0) + '%';
+  // 目前章節與區內進度
+  let idx = 0;
+  for (let i = 0; i < SECS.length; i++) if (y >= bounds[i][0]) idx = i;
+  const lt = clamp01((y - bounds[idx][0]) / SECS[idx].vh); // 區內 0..1
+  railStops.forEach((r, i) => r.classList.toggle('on', i === idx));
+  mountSection(idx);
+  // 相機：人視角——平移走進房間(前15%)，站定後隨字卡旋轉凝視對應物件，退出(80%後)，再繞外側到下一間
+  const CW = 0.155, C0 = 0.17;
+  const s0 = SECS[idx], s1 = SECS[Math.min(idx + 1, SECS.length - 1)];
+  const pin = s0.inside ? ss(clamp01(lt / 0.15)) : 0;
+  const pout = ss(clamp01((lt - 0.8) / 0.12));
+  const ktr = ss(clamp01((lt - 0.92) / 0.08));
+  const u = pin * (1 - pout);
+  // 卡序進度(供凝視與站位共用)：停留 70%，末段才移動
+  let gi0 = 0, ghold = 0, graw = -9;
+  if (s0.looks) {
+    graw = (lt - C0) / CW;
+    const cf = Math.min(s0.looks.length - 1, Math.max(0, graw));
+    gi0 = Math.floor(cf);
+    const frac = Math.min(1, cf - gi0);
+    ghold = ss(Math.max(0, (frac - 0.7) / 0.3));
+  }
+  const blendAt = (arr, out) => {
+    out.set(...arr[gi0]);
+    if (gi0 + 1 < arr.length) { const nb = arr[gi0 + 1]; out.x += (nb[0] - out.x) * ghold; out.y += (nb[1] - out.y) * ghold; out.z += (nb[2] - out.z) * ghold; }
+    return out;
+  };
+  A.set(...s0.cam);
+  if (s0.stands) { A.lerp(blendAt(s0.stands, B), u); }
+  else if (s0.inside) { B.set(...s0.inside); A.lerp(B, u); }
+  dPos.copy(A);
+  // 凝視目標：依目前字卡在 looks 間平滑轉頭
+  A.set(...s0.tgt);
+  if (s0.looks) { A.lerp(blendAt(s0.looks, B), u); }
+  else if (s0.tgtIn) { B.set(...s0.tgtIn); A.lerp(B, u); }
+  dTgt.copy(A);
+  // 6F：第二張卡關燈，手機彈出 24/7
+  const w2 = (s0.id === 'wedding' && graw > -9) ? ss(clamp01((graw - 0.82) / 0.3)) * (1 - ss(clamp01((graw - 1.95) / 0.3))) * u : 0;
+  if (wedFx.l1) {
+    wedFx.l1.intensity = 3.2 * (1 - 0.88 * w2);
+    wedFx.l2.intensity = 1.1 * (1 - 0.88 * w2);
+    const sc = 0.001 + ss(clamp01(w2 * 1.5));
+    wedFx.phone.scale.setScalar(Math.min(1, sc));
+    wedFx.badge.style.opacity = (w2 > 0.35 ? (w2 - 0.35) / 0.65 : 0).toFixed(2);
+    if (w2 > 0.35) {
+      V1.set(0, 0.15, 0);
+      wedFx.phone.localToWorld(V1);
+      V1.project(stage._camera);
+      wedFx.badge.style.left = ((V1.x * 0.5 + 0.5) * window.innerWidth) + 'px';
+      wedFx.badge.style.top = ((-V1.y * 0.5 + 0.5) * window.innerHeight - 14) + 'px';
+    }
+  }
+  if (ktr > 0) {
+    B.set(...s1.cam); dPos.lerp(B, ktr);
+    B.set(...s1.tgt); dTgt.lerp(B, ktr);
+    // 繞外弧線：避免穿過塔身
+    const rr = Math.hypot(dPos.x, dPos.z);
+    const need = 4.35 * Math.sin(Math.PI * ktr);
+    if (rr < need) { const f = need / Math.max(rr, 0.001); dPos.x *= f; dPos.z *= f; }
+  }
+  // 有字卡時：目標點依距離往螢幕右側偏，主體讓出卡片欄
+  if (window.innerWidth > 860) {
+    const sh0 = s0.cards ? 1 : 0, sh1 = s1.cards ? 1 : 0;
+    const shBase = sh0 + (sh1 - sh0) * ktr;
+    window.__wobAmp = 1 - 0.72 * shBase;
+    if (shBase > 0.001) {
+      A.copy(dTgt).sub(dPos);
+      const dist = A.length();
+      A.normalize();
+      B.crossVectors(A, stage._camera.up).normalize();
+      dTgt.addScaledVector(B, shBase * Math.min(1.1, Math.max(0.42, dist * 0.2)));
+    }
+  }
+  if (idx === 0) { // hero 緩慢環繞
+    const a = t * 0.05;
+    const r = Math.hypot(dPos.x, dPos.z);
+    const base = Math.atan2(dPos.z, dPos.x) + a * (1 - ktr);
+    dPos.x = Math.cos(base) * r; dPos.z = Math.sin(base) * r;
+  }
+  const damp = 1 - Math.exp(-dt * 5);
+  camPos.lerp(dPos, damp); camTgt.lerp(dTgt, damp);
+  stage._camera.position.copy(camPos);
+  stage._camera.lookAt(camTgt);
+  // 字卡進出
+  const F = ss(clamp01((lt - 0.14) / 0.1)) * (1 - ss(clamp01((lt - 0.78) / 0.1))); // 本區聚焦強度
+  // 字卡：進房後一次一張，滾動切換
+  let cur = -1;
+  const ci = cardEls.length ? Math.max(0, Math.min(cardEls.length - 1, Math.floor((lt - C0) / CW))) : 0;
+  const inWin = lt >= C0 - 0.03 && lt <= 0.82;
+  cardEls.forEach((c, i) => {
+    const on = inWin && i === ci;
+    c.classList.toggle('on', on);
+    if (on) cur = i;
+  });
+  dotEls.forEach((d, i) => d.classList.toggle('on', i === cur));
+  heroEl.style.opacity = idx === 0 ? String(1 - ss(clamp01(lt * 2.2))) : '0';
+  const isLast = idx === SECS.length - 1;
+  finaleEl.style.opacity = isLast ? String(ss(clamp01(lt * 3.5))) : '0';
+
+  // —— 全域怠速動畫 ——
+  for (const g of anim.gears) g.node.rotation.z += g.speed * dt * (SECS[idx].id === 'engine' ? 1 + 3 * F : 1);
+  for (const s of anim.spinners) s.node.rotation[s.axis] += s.speed * dt;
+  anim.clockMin.rotation.z -= 0.22 * dt * (SECS[idx].id === 'gov' ? 1 + 14 * F : 1);
+  anim.clockHour.rotation.z -= 0.018 * dt * (SECS[idx].id === 'gov' ? 1 + 14 * F : 1);
+  anim.bell.rotation.z = Math.sin(t * 2.0) * 0.2;
+  anim.ring.rotation.y += 0.55 * dt * (SECS[idx].id === 'wedding' ? 1 + 2.5 * F : 1);
+  if (coinG) {
+    const cg = SECS[idx].id === 'ai' ? 1 : 0.35;
+    coinG.position.y = 0.74 + Math.sin(t * 3.1) * 0.035 * cg;
+    coinG.rotation.y = t * 1.6 * cg;
+  }
+  // 整棟微微搖頭晃腦(入室時收小幅度)
+  const wobA = window.__wobAmp === undefined ? 1 : window.__wobAmp;
+  root.rotation.z = Math.sin(t * 0.5) * 0.006 * wobA;
+  root.rotation.x = Math.cos(t * 0.37) * 0.0045 * wobA;
+  root.rotation.y = Math.sin(t * 0.23) * 0.009 * wobA;
+  // 詢問客人：沒被接住氣噴噴地動來動去
+  if (angryP) {
+    const ag = SECS[idx].id === 'estate' ? 0.3 + 0.7 * F : 0.25;
+    angryP.rotation.y = 2.5 + Math.sin(t * 7.5) * 0.24 * ag;
+    angryP.rotation.z = Math.sin(t * 8.7) * 0.07 * ag;
+    angryP.position.y = 0.1 + Math.abs(Math.sin(t * 9)) * 0.045 * ag;
+    if (angryBub) {
+      angryBub.rotation.y = -angryP.rotation.y + 0.95; // 氣泡面向鏡頭
+      angryBub.scale.setScalar(1 + Math.sin(t * 6) * 0.14 * ag);
+    }
+  }
+  anim.iris.position.x = Math.sin(t * 0.4) * 0.05;
+  anim.beam.material.opacity = 0.1 + 0.035 * (0.5 + 0.5 * Math.sin(t * 11) * Math.sin(t * 6.3));
+  for (const p of anim.puffs) {
+    const ph = (t * 0.17 + p.userData.phase) % 1;
+    p.position.y = ph * 2.3;
+    p.position.x = Math.sin(ph * 5 + p.userData.phase * 9) * 0.14;
+    p.scale.setScalar(0.5 + ph * 1.15);
+    p.material.opacity = Math.min(ph * 5, 1) * (1 - ph) * 0.55;
+  }
+  for (const L of anim.lanterns) L.rotation.x = Math.sin(t * 1.3 + L.position.x * 3) * 0.07;
+
+  // —— 各區子動畫 ——
+  const id = SECS[idx].id;
+  if (nodes.stamp) {
+    const b = id === 'gov' ? Math.max(0, Math.sin(t * 5)) * 0.05 * F : 0;
+    nodes.stamp.position.y = baseY['gov_stamp'] + b;
+    nodes.stampKnob.position.y = baseY['gov_stamp_knob'] + b;
+    nodes.dial.rotation.z = id === 'gov' ? t * 1.2 * F : nodes.dial.rotation.z;
+  }
+  nodes.keys.forEach((kk, i) => {
+    if (kk) kk.position.y = baseY['key' + i] + (id === 'film' ? Math.max(0, Math.sin(t * 13 + i * 1.7)) * 0.008 * F : 0);
+  });
+  if (nodes.paper) nodes.paper.rotation.x = -0.3 + (id === 'film' ? Math.sin(t * 3) * 0.05 * F : 0);
+  nodes.leds.forEach((l, i) => {
+    if (l) l.visible = id !== 'ai' || Math.sin(t * 6 + i * 2.1) > -0.6 + 1.2 * (1 - F);
+  });
+  if (nodes.orb) nodes.orb.scale.setScalar(1 + (id === 'ai' ? Math.sin(t * 4) * 0.12 * F : 0));
+  if (nodes.house) {
+    nodes.house.rotation.y = 0.4 + (id === 'estate' ? t * 1.6 * F : 0);
+    nodes.house.position.y = baseY['estate_minihouse'] + (id === 'estate' ? Math.abs(Math.sin(t * 3)) * 0.04 * F : 0);
+  }
+  nodes.bubbles.forEach((b, i) => {
+    if (!b) return;
+    const p = (t * 0.22 + i * 0.26) % 1;
+    b.position.y = baseY['bub' + i] + (id === 'estate' ? p * 0.2 * F : 0);
+    b.scale.setScalar(id === 'estate' ? 0.4 + p * 0.45 : 1);
+  });
+  // 螢幕牆六個介面動畫
+  {
+    const es = id === 'estate' ? 1 : 0;
+    const S = nodes.sui;
+    if (S.dot) S.dot.scale.setScalar(1 + es * Math.sin(t * 5) * 0.45);
+    if (S.la) S.la.scale.x = es ? Math.min(1, ((t * 0.55) % 1) * 1.7) : 1;
+    if (S.lb) S.lb.scale.x = es ? Math.min(1, ((t * 0.55 + 0.4) % 1) * 1.7) : 1;
+    S.bars.forEach((b, i) => { if (b) b.scale.y = es ? 0.4 + 0.6 * Math.abs(Math.sin(t * 1.4 + i * 0.9)) : 1; });
+    if (S.needle) S.needle.rotation.z = es ? 0.95 * Math.sin(t * 1.2) : 0.8;
+    if (S.hl) S.hl.position.y = [0.09, 0, -0.09][Math.floor(t * 1.5) % 3];
+    if (S.ca) S.ca.scale.setScalar(1 - es * 0.3 * (1 - ss(Math.min(1, ((t * 0.8) % 1) * 3))));
+    if (S.cb) S.cb.scale.setScalar(1 - es * 0.3 * (1 - ss(Math.min(1, ((t * 0.8 + 0.5) % 1) * 3))));
+  }
+  if (nodes.diamond) {
+    const sp = id === 'wedding' ? 1.35 + Math.sin(t * 7) * 0.18 * F : 1.35;
+    nodes.diamond.scale.set(1, sp, 1);
+  }
+  // —— 引擎室/1F 展品動畫 ——
+  const eb = (i) => (id === 'engine' && graw > -9) ? ss(clamp01(1 - Math.abs(graw - (i + 0.5)))) : 0;
+  const gb = (i) => (id === 'gov' && graw > -9) ? ss(clamp01(1 - Math.abs(graw - (i + 0.5)))) : 0;
+  if (caroSpin) {
+    caroSpin.rotation.y = t * (0.5 + 1.6 * eb(1));
+    caroCore.scale.setScalar(1 + Math.sin(t * 4) * 0.12 * (0.4 + 0.6 * eb(1)));
+  }
+  {
+    const tk = 0.35 + 1.1 * eb(2);
+    tapeSegs.forEach((s, i) => {
+      const ph = (t * 0.22 * (1 + tk) + i / tapeSegs.length) % 1;
+      const q0x = TAPE_P[0][0] + (TAPE_P[1][0] - TAPE_P[0][0]) * ph, q0y = TAPE_P[0][1] + (TAPE_P[1][1] - TAPE_P[0][1]) * ph, q0z = TAPE_P[0][2] + (TAPE_P[1][2] - TAPE_P[0][2]) * ph;
+      const q1x = TAPE_P[1][0] + (TAPE_P[2][0] - TAPE_P[1][0]) * ph, q1y = TAPE_P[1][1] + (TAPE_P[2][1] - TAPE_P[1][1]) * ph, q1z = TAPE_P[1][2] + (TAPE_P[2][2] - TAPE_P[1][2]) * ph;
+      s.position.set(q0x + (q1x - q0x) * ph, q0y + (q1y - q0y) * ph, q0z + (q1z - q0z) * ph);
+      s.rotation.set(-0.4 - ph * 0.9, 0.65, 0.1);
+      s.material.opacity = Math.min(ph * 6, 1) * (1 - ss(clamp01((ph - 0.82) / 0.18))) * (0.5 + 0.5 * tk);
+    });
+  }
+  if (moatWheel) {
+    moatWheel.rotation.z += dt * (0.8 + 3.2 * eb(3));
+    moatRing.rotation.y += dt * (0.35 + 1.2 * eb(3));
+    moatRing.position.y = 0.42 + Math.sin(t * 1.8) * 0.02;
+    moatBeads.forEach((b, i) => {
+      const a = t * (0.9 + 1.5 * eb(3)) + i * 2.09;
+      b.position.set(Math.cos(a) * 0.5, Math.sin(t * 3 + i) * 0.03, Math.sin(a) * 0.5);
+    });
+  }
+  {
+    const rk = 0.4 + 1.2 * gb(1);
+    railBeads.forEach(({ m, a, b2, off }) => {
+      const ph = (t * 0.16 * rk + off) % 1;
+      m.position.set(a[0] + (b2[0] - a[0]) * ph, a[1] + (b2[1] - a[1]) * ph + Math.sin(ph * Math.PI) * 0.12, a[2] + (b2[2] - a[2]) * ph);
+      m.scale.setScalar(0.7 + 0.5 * Math.sin(ph * Math.PI));
+    });
+    if (railJunction) railJunction.scale.setScalar(1 + Math.sin(t * 5) * 0.12 * rk);
+  }
+  // 3F 螢幕影片常態播放
+  if (monCtx) drawMonitor(t);
+  // 3F 禮儀師:在原地轉來轉去+微微點頭踏步
+  if (director) {
+    const dg = id === 'ai' ? 0.4 + 0.6 * F : 0.3;
+    director.rotation.y = 0.55 + Math.sin(t * 0.85) * 0.95 * dg + Math.sin(t * 2.3) * 0.08 * dg;
+    director.position.y = 0.22 + Math.abs(Math.sin(t * 2.6)) * 0.008 * dg;
+  }
+  // 5F 第三張卡「換上你的樣子」:展示架現身,沙發/立燈/掛畫依序彈入,再一起收走,循環
+  if (dioG) {
+    const g = (id === 'interior' && graw > -9) ? ss(clamp01((graw - 1.8) / 0.25)) * (1 - ss(clamp01((graw - 3.05) / 0.25))) * u : 0;
+    dioG.scale.setScalar(Math.max(0.001, g));
+    const ph = (t * 0.5) % 2.3;
+    const oOut = 1 - ss(clamp01((ph - 1.9) / 0.3));
+    dioItems.forEach((it, i) => {
+      const sIn = ss(clamp01((ph - (0.15 + i * 0.42)) / 0.3));
+      const k = sIn * oOut;
+      it.scale.setScalar(Math.max(0.001, 1.15 * k - 0.15 * k * k)); // 微彈一下
+    });
+  }
+  // 5F 第四張卡「一步一步」:腳印一枚枚淡入,走完再一起淡出,循環
+  if (stepMats.length) {
+    const g = (id === 'interior' && graw > -9) ? ss(clamp01((graw - 2.8) / 0.25)) * (1 - ss(clamp01((graw - 4.05) / 0.25))) * u : 0;
+    const ph = (t * 0.55) % 1.9;
+    const oOut = 1 - ss(clamp01((ph - 1.45) / 0.35));
+    stepMats.forEach((m, i) => {
+      m.opacity = 0.85 * g * ss(clamp01((ph - i * 0.17) / 0.14)) * oOut;
+    });
+  }
+  if (nodes.brideHead) nodes.brideHead.position.y = baseY['bride_head'] + (id === 'wedding' ? Math.abs(Math.sin(t * 4)) * 0.012 * F : 0);
+  if (nodes.groomHead) nodes.groomHead.position.y = baseY['groom_head'] + (id === 'wedding' ? Math.abs(Math.sin(t * 4 + 0.9)) * 0.012 * F : 0);
+}
+
+function tick() {
+  requestAnimationFrame(tick);
+  const t = performance.now() / 1000;
+  const dt = Math.min(t - last, 0.05);
+  last = t;
+  update(t, dt);
+}
+tick();
+// 供離線快照用:一步收斂
+window.__step = (yPx) => {
+  window.__scrollOverride = yPx;
+  const t = performance.now() / 1000;
+  for (let i = 0; i < 80; i++) update(t, 0.05);
+  stage._renderer.render(stage._scene, stage._camera);
+};
+</script>
+</body>
+</html>
