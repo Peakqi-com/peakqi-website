@@ -1098,15 +1098,15 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     </div>
     <div style="margin-top:18px;background:#090B0E;color:#F2EFE8;border-radius:6px;padding:26px clamp(20px,3vw,36px);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
       <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">請一位真人助理</span>
-        <span style="font:700 clamp(1.05rem,1.9vw,1.4rem) 'Noto Sans TC',sans-serif">月薪＋招募與管理成本</span>
+        <span style="font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">人工重複處理</span>
+        <span style="font:700 clamp(1.05rem,1.9vw,1.4rem) 'Noto Sans TC',sans-serif">逐筆複製、整理與轉貼資料</span>
       </div>
       <span style="width:46px;height:46px;border:1.5px solid #FF6B2C;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 14px 'Space Grotesk',sans-serif;color:#FF6B2C;flex-shrink:0">VS</span>
       <div style="display:flex;flex-direction:column;gap:4px">
-        <span style="font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">這套系統</span>
-        <span style="font:700 clamp(1.05rem,1.9vw,1.4rem) 'Noto Sans TC',sans-serif;color:#FF6B2C">一次導入,持續運作</span>
+        <span style="font:500 14.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">AI 協作流程</span>
+        <span style="font:700 clamp(1.05rem,1.9vw,1.4rem) 'Noto Sans TC',sans-serif;color:#FF6B2C">系統彙整,人工確認</span>
       </div>
-      <span style="font:700 clamp(15px,1.6vw,18px) 'Noto Sans TC',sans-serif;max-width:300px">還幫你 <span style="color:#65E0BC">24 小時</span>顧前線。</span>
+      <span style="font:700 clamp(15px,1.6vw,18px) 'Noto Sans TC',sans-serif;max-width:340px">AI 先處理常見問題,<span style="color:#65E0BC">例外轉人工</span>。</span>
     </div>
     <div style="margin-top:18px;border:1px solid rgba(9,11,14,.16);border-radius:6px;padding:26px clamp(20px,3vw,36px);display:flex;flex-direction:column;gap:18px;background:#F2EFE8">
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:baseline">
@@ -1470,7 +1470,7 @@ class Component extends DCLogic {
     }));
     const tipOpenIdx = this.state.tipOpen;
     const usageTips = [
-      '包含在月費、不限量:AI 對話、文案、報告、SEO 分析。不會因為文字用量多而加價。',
+      '標準用量包含於月費:AI 對話、文案、報告、SEO 分析。實際額度與公平使用範圍依方案確認,不會因為正常使用而加價。',
       '按實際使用量計費、用多少付多少:AI 場景渲染、風格模擬、短影音。實際費率依方案而定,Demo 時可依你的用量情境估算。'
     ];
     const usageList = (d?.usage ?? []).map((u, ui) => {
@@ -1486,7 +1486,7 @@ class Component extends DCLogic {
         ...u,
         barStyle: { width: '4px', flexShrink: 0, background: u.c, borderRadius: '0 2px 2px 0' },
         cells,
-        meterLabel: unlimited ? '不限量' : '用多少・付多少',
+        meterLabel: unlimited ? '標準用量含月費' : '用多少・付多少',
         meterLabelStyle: { font: "700 12px 'Noto Sans TC',sans-serif", color: unlimited ? '#1e9a72' : '#2b76c9', whiteSpace: 'nowrap' },
         tip: usageTips[ui] ?? '',
         tipId: 'pq-tip-' + ui,

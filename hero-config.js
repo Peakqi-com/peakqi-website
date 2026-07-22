@@ -63,7 +63,7 @@ export const heroConfig = {
   },
   pricing: {
     key: 'pricing', paint: 'pricing',
-    story: 'CONFIGURE YOUR OPERATING SYSTEM:空機架 → 接客組裝 → 業務助理 → 營運平台 → 並列比價 → 雙計費通道 → 穩定運作',
+    story: 'PLAN YOUR FIRST PHASE:三種起步 → 接住詢問 → 推進案件 → 整合營運 → 並列比較 → 費用三部分通道 → 穩定運作',
     totalVh: { desktop: 380, tablet: 290, mobile: 190 },
     scenes: [
       { id: 'racks',  label: '三個機架',   kicker: 'SCENE 01 · EMPTY RACKS',    line: '三個空的系統機架進場:接客、業務助理、營運平台。',                        d: [0, .12],   m: [0, .2] },
