@@ -181,7 +181,10 @@ class Component extends DCLogic {
         },
         btnStyle: {
           ...base, display: 'inline-flex', alignItems: 'center', gap: '5px',
+          // borderBottom 與一般連結一致(2px):border:none 會讓盒高矮 2px,
+          // 在 align-items:center 的列裡整顆「產品」看起來往下掉
           background: 'none', border: 'none', cursor: 'pointer',
+          borderBottom: l.key === active ? '2px solid #FF6B2C' : '2px solid transparent',
           color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
           fontWeight: l.key === active ? 700 : 500
         },

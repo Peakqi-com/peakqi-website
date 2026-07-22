@@ -5,18 +5,19 @@
  "probeError": null
 }
 {
- "vw": 1440,
- "vh": 900,
+ "vw": 390,
+ "vh": 844,
  "rendered": true,
+ "heroClipY": -7,
  "heroApi": {
   "scenes": 4,
-  "mode": "full",
+  "mode": "lite",
   "ok": true
  },
  "aboutHeroApi": {
   "mode": "on"
  },
- "docH": 11472,
+ "docH": 15169,
  "missingSections": [],
  "missingIds": [],
  "nest": {
@@ -82,16 +83,6 @@
   "2.89:1 \"AI OPERATING SYSTEM \""
  ],
  "tinyTouch": [
-  "PeakQi\n       =36",
-  "解決方案=30",
-  "導入方法=30",
-  "案例=30",
-  "產品 ▼=28",
-  "關於我們=30",
-  "我們是誰=30",
-  "為什麼存在=30",
-  "工作原則=30",
-  "如何合作=30",
-  "合作角色=30"
+  "PeakQi\n       =36"
  ]
 }

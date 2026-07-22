@@ -114,6 +114,10 @@ const missId = IDS.filter(s => !document.getElementById(s));
 return JSON.stringify({
   vw: innerWidth, vh: innerHeight,
   rendered: !!$('section#a-hero'),
+  heroClipY: (function(){ const st=$('[data-hero-stage]'); if(!st) return null;
+    const copy=$('[data-hero-copy]'); if(!copy) return null;
+    const sr=st.getBoundingClientRect(), cr=copy.getBoundingClientRect();
+    return Math.round(cr.bottom - sr.bottom); })(),
   heroApi: window.__pqHero ? { scenes: window.__pqHero.scenes, mode: window.__pqHero.mode, ok: window.__pqHero.ok } : null,
   aboutHeroApi: window.__pqAboutHero ? { mode: window.__pqAboutHero.mode } : null,
   docH: document.body.scrollHeight,
