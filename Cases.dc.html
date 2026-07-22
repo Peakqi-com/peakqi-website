@@ -204,6 +204,166 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </sc-for>
 </section>
 
+<!-- ============ 品牌屋塔樓(由 Steampunk 3D 故事移植成 2D 響應式滾動 + 旗艦產品卡)============ -->
+<section id="brandhouse" data-screen-label="品牌屋" style="background:#0B0E12;color:#F2EFE8;padding:clamp(60px,8vw,104px) clamp(20px,5vw,48px)">
+<style>
+/* 品牌屋:純 CSS 捲動揭示(animation-timeline:view()),不支援時退化成靜態全顯示。
+   全區以 minmax(0,…) 與 max-width:100% 防溢位——任何斷點都不得爆版。 */
+.pq-bh{max-width:1120px;margin:0 auto}
+.pq-bh *{box-sizing:border-box}
+.pq-bh-head{max-width:740px}
+.pq-bh-eye{display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)}
+.pq-bh-eye i{width:34px;height:1.5px;background:#FF6B2C;flex:none}
+.pq-bh h2{margin:14px 0 0;font:900 clamp(1.9rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pq-bh h2 em{font-style:normal;color:#FF6B2C}
+.pq-bh-sub{margin:14px 0 0;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)}
+/* 塔樓:左側直脊 */
+.pq-bh-tower{margin-top:clamp(30px,4.5vw,52px);position:relative;padding-left:clamp(28px,4.5vw,46px)}
+.pq-bh-tower::before{content:'';position:absolute;left:clamp(11px,2vw,19px);top:8px;bottom:8px;width:2px;
+  background:linear-gradient(#FF6B2C,rgba(255,107,44,.2))}
+.pq-bh-floor{position:relative;display:grid;grid-template-columns:minmax(0,272px) minmax(0,1fr);
+  gap:clamp(14px,2.2vw,28px);align-items:center;
+  padding:clamp(16px,2.2vw,24px) 0;border-bottom:1px solid rgba(242,239,232,.09)}
+.pq-bh-floor:last-child{border-bottom:0}
+.pq-bh-floor::before{content:'';position:absolute;left:calc(-1 * clamp(28px,4.5vw,46px) + clamp(6px,1.5vw,14px));
+  top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:#0B0E12;
+  border:2px solid var(--fc,#FF6B2C);box-shadow:0 0 0 4px #0B0E12}
+/* 產品截圖 */
+.pq-bh-shot{width:100%;max-width:100%;border-radius:10px;overflow:hidden;background:#151A20;
+  border:1px solid rgba(242,239,232,.1);aspect-ratio:16/10}
+.pq-bh-shot img{display:block;width:100%;height:100%;max-width:100%;object-fit:cover;object-position:top center}
+/* 無產品樓層:發光窗格面板 */
+.pq-bh-panel{width:100%;max-width:100%;aspect-ratio:16/10;border-radius:10px;background:#12171D;
+  border:1px solid rgba(242,239,232,.1);display:grid;grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(3,1fr);gap:7px;padding:14px}
+.pq-bh-panel i{border-radius:3px;background:rgba(242,239,232,.07);animation:pqbhWin 3.2s ease-in-out infinite}
+.pq-bh-panel i:nth-child(2){animation-delay:.25s}.pq-bh-panel i:nth-child(3){animation-delay:.5s}
+.pq-bh-panel i:nth-child(4){animation-delay:.75s}.pq-bh-panel i:nth-child(5){animation-delay:1s}
+.pq-bh-panel i:nth-child(6){animation-delay:1.25s}.pq-bh-panel i:nth-child(7){animation-delay:1.5s}
+.pq-bh-panel i:nth-child(8){animation-delay:1.75s}.pq-bh-panel i:nth-child(9){animation-delay:2s}
+.pq-bh-panel i:nth-child(10){animation-delay:2.25s}.pq-bh-panel i:nth-child(11){animation-delay:2.5s}
+.pq-bh-panel i:nth-child(12){animation-delay:2.75s}
+@keyframes pqbhWin{0%,100%{background:rgba(242,239,232,.07)}45%{background:color-mix(in srgb,var(--fc,#FF6B2C) 70%,transparent)}}
+/* 內文 */
+.pq-bh-body{min-width:0}
+.pq-bh-tag{display:inline-block;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:var(--fc,#FF6B2C)}
+.pq-bh-name{margin:6px 0 0;font:800 clamp(1.15rem,2vw,1.55rem)/1.3 'Noto Sans TC',sans-serif;color:#F2EFE8;word-break:break-word}
+.pq-bh-desc{margin:8px 0 0;font:400 clamp(13.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6);max-width:48ch}
+.pq-bh-link{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:9px 16px;border-radius:999px;
+  border:1px solid var(--fc,#FF6B2C);color:var(--fc,#FF6B2C);text-decoration:none;
+  font:700 13px 'Noto Sans TC',sans-serif;transition:background .2s ease,color .2s ease;max-width:100%}
+.pq-bh-link:hover{background:var(--fc,#FF6B2C);color:#0B0E12}
+/* 收尾 */
+.pq-bh-roof{margin-top:clamp(26px,3.5vw,42px);text-align:center;padding:clamp(26px,3.5vw,40px) 20px;
+  border:1px solid rgba(255,107,44,.28);border-radius:16px;background:rgba(255,107,44,.05)}
+.pq-bh-roof b{display:block;font:900 clamp(1.4rem,2.8vw,2.2rem)/1.35 'Noto Sans TC',sans-serif}
+.pq-bh-roof b em{font-style:normal;color:#FF6B2C}
+.pq-bh-roof span{display:block;margin-top:10px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(242,239,232,.5)}
+/* 捲動揭示 */
+.pq-bh-head,.pq-bh-floor,.pq-bh-roof{opacity:0;transform:translateY(18px)}
+@supports (animation-timeline:view()){
+  .pq-bh-head,.pq-bh-floor,.pq-bh-roof{animation:pqbhIn .65s cubic-bezier(.16,1,.3,1) both;
+    animation-timeline:view();animation-range:entry 4% cover 20%}
+  @keyframes pqbhIn{to{opacity:1;transform:none}}
+}
+@supports not (animation-timeline:view()){.pq-bh-head,.pq-bh-floor,.pq-bh-roof{opacity:1;transform:none}}
+/* 手機:單欄,圖在上文字在下 */
+@media (max-width:720px){
+  .pq-bh-floor{grid-template-columns:minmax(0,1fr);gap:14px}
+  .pq-bh-tower{padding-left:26px}
+  .pq-bh-floor::before{left:-20px;top:34px;margin-top:0}
+  .pq-bh-shot,.pq-bh-panel{aspect-ratio:16/9}
+}
+@media (prefers-reduced-motion:reduce){
+  .pq-bh-head,.pq-bh-floor,.pq-bh-roof{opacity:1!important;transform:none!important;animation:none!important}
+  .pq-bh-panel i{animation:none!important}
+}
+</style>
+  <div class="pq-bh">
+    <div class="pq-bh-head">
+      <div class="pq-bh-eye"><i></i>BRAND HOUSE · 品牌屋</div>
+      <h2>一棟會走路的<em>品牌屋</em></h2>
+      <p class="pq-bh-sub">六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。這些不是各做各的案子——它們共用一套引擎,一層一層長出來,每一層都是真的在營運的產品。</p>
+    </div>
+
+    <div class="pq-bh-tower">
+      <article class="pq-bh-floor" style="--fc:#FF6B2C">
+        <div class="pq-bh-panel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">ENGINE · 引擎室</span>
+          <h3 class="pq-bh-name">47 模組 AI 引擎 · Peak Ops</h3>
+          <p class="pq-bh-desc">一套引擎,多個品牌。接客、CRM、創意生成、專案財務、數據——換臉不換心,越用越強。對外提供的通用版本就是 Peak Ops。</p>
+          <a class="pq-bh-link" href="PeakOps.dc.html" aria-label="了解 Peak Ops">了解 Peak Ops →</a>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#F2EFE8">
+        <div class="pq-bh-shot"><img src="assets/works/work-expo.png" alt="嘉義市世博會官網——市府級大型活動官網實際畫面" loading="lazy" decoding="async"></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">1F · 標案補助</span>
+          <h3 class="pq-bh-name">母公司 peakqi.com</h3>
+          <p class="pq-bh-desc">奇鋒是平台公司,不是接案公司。雙軌驗證:一邊做自家垂直品牌,一邊把通用工具賣給市場。市府級大型活動官網也如期交付上線。</p>
+          <a class="pq-bh-link" href="#index" aria-label="查看完整作品索引">查看完整作品 →</a>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#3E9BFF">
+        <div class="pq-bh-panel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">2F · 影像製作</span>
+          <h3 class="pq-bh-name">奇鋒客製開發</h3>
+          <p class="pq-bh-desc">我們自己踩過坑,所以知道大案要走專案線。客製系統、內部工具、營運平台——內容自己來,交付自己扛。</p>
+          <a class="pq-bh-link" href="#custom" aria-label="查看客製系統合作範圍">客製合作範圍 →</a>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#65E0BC">
+        <div class="pq-bh-panel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">3F · 殯葬 AI 影片</span>
+          <h3 class="pq-bh-name">創意生成</h3>
+          <p class="pq-bh-desc">主打 AI 客服做不到的事:把回憶做成影片。額度制包月、超量再加購,真實產業持續餵養資料飛輪。</p>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#FF6B2C">
+        <div class="pq-bh-shot"><img src="assets/works/work-realestate.png" alt="冒泡 房仲 AI 助手畫面:串接 LINE 官方帳號,自動回物件、排預約帶看" loading="lazy" decoding="async"></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">4F · 房仲不動產</span>
+          <h3 class="pq-bh-name">冒泡 bubble.tw</h3>
+          <p class="pq-bh-desc">房仲 AI 助手,串 LINE 官方帳號:客戶自己看房、自己約帶看,業務專心成交。賣成果不賣客服,垂直做得更深。</p>
+          <a class="pq-bh-link" href="https://bubble.tw" target="_blank" rel="noopener noreferrer" aria-label="前往冒泡官網(另開視窗)">前往冒泡 ↗</a>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#3E9BFF">
+        <div class="pq-bh-shot"><img src="assets/works/work-interior.png" alt="AI Interior Pro 室內設計整合平台畫面:空間渲染、風格模擬與自動提案簡報" loading="lazy" decoding="async"></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">5F · 室內設計</span>
+          <h3 class="pq-bh-name">AI Interior Pro</h3>
+          <p class="pq-bh-desc">完工模擬,換上你的樣子。空間渲染、風格模擬、自動提案簡報整合進一個平台——一步一步走,帳號始終同一個。</p>
+          <a class="pq-bh-link" href="https://www.aiinteriorpro360.com/" target="_blank" rel="noopener noreferrer" aria-label="前往 AI Interior Pro 官網(另開視窗)">前往 AI Interior Pro ↗</a>
+        </div>
+      </article>
+
+      <article class="pq-bh-floor" style="--fc:#65E0BC">
+        <div class="pq-bh-shot"><img src="assets/works/work-wedding.png" alt="AI Wedding Pro 婚禮系統畫面:婚紗試穿模擬、髮妝模擬與 AI 接客" loading="lazy" decoding="async"></div>
+        <div class="pq-bh-body">
+          <span class="pq-bh-tag">6F · 婚禮婚慶</span>
+          <h3 class="pq-bh-name">AI Wedding Pro</h3>
+          <p class="pq-bh-desc">婚紗與場地模擬內建,消費前先看效果;半夜的詢問也接得住。年訂閱三重保障,今天用今天有感。</p>
+          <a class="pq-bh-link" href="https://www.aiweddingpro360.com/" target="_blank" rel="noopener noreferrer" aria-label="前往 AI Wedding Pro 官網(另開視窗)">前往 AI Wedding Pro ↗</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="pq-bh-roof">
+      <b>別讓瑣碎,<em>耽誤真正重要的事</em>。</b>
+      <span>MADE FOR WHAT MATTERS</span>
+    </div>
+  </div>
+</section>
+
 <section id="index" data-screen-label="Work Index" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:14px">
