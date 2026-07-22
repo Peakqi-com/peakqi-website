@@ -48,7 +48,7 @@ ws.onmessage = e => {
     CONSOLE.push('EXCEPTION: ' + (d.exception?.description || d.text || '').slice(0, 220));
   }
   if (m.method === 'Log.entryAdded' && m.params.entry.level === 'error') {
-    CONSOLE.push('log: ' + String(m.params.entry.text).slice(0, 220));
+    CONSOLE.push('log: ' + String(m.params.entry.text).slice(0, 120) + ' <' + String(m.params.entry.url || '').slice(-90) + '>');
   }
 };
 const send = (method, params = {}) => new Promise(r => {

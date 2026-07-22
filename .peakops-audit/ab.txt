@@ -1,6 +1,6 @@
 {
  "consoleErrors": [
-  "log: Failed to load resource: the server responded with a status of 404 (File not found)"
+  "log: Failed to load resource: the server responded with a status of 404 (File not found) <http://127.0.0.1:8000/favicon.ico>"
  ],
  "probeError": null
 }
@@ -16,15 +16,15 @@
  "aboutHeroApi": {
   "mode": "on"
  },
- "docH": 14255,
+ "docH": 11472,
  "missingSections": [],
  "missingIds": [],
  "nest": {
   "heroWrapStage": true,
   "heroCopyInStage": true,
   "shotwallInStage": true,
-  "methodPin": true,
-  "stripPin": true,
+  "methodFlow": true,
+  "stripTrack": true,
   "sceneStage": true
  },
  "hooks": {
@@ -44,8 +44,8 @@
   "aclust": 4,
   "acore": 1,
   "count": 2,
-  "wrap": 2,
-  "stage": 2,
+  "wrap": 0,
+  "stage": 0,
   "mfill": 1,
   "mstep": 6,
   "mconsole-text": 1,
@@ -64,18 +64,20 @@
   "13.0px \"場景 02 / 04 ・ 找出斷點\"",
   "13.0px \"場景 03 / 04 ・ 建立流程\"",
   "13.0px \"場景 04 / 04 ・ 開始運作\"",
-  "10.0px \"01 看見碎片\"",
-  "10.0px \"02 找出斷點\"",
-  "10.0px \"03 建立流程\"",
-  "10.0px \"04 開始運作\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
   "13.0px \"CASE ↗\"",
   "13.0px \"CASE ↗\"",
   "13.0px \"CASE ↗\"",
   "13.0px \"CASE ↗\""
  ],
  "lowContrast": [
-  "2.49:1 \"AI MODULES\"",
-  "1.41:1 \"OPS PLATFORM\"",
+  "2.42:1 \"PHOTO\"",
+  "2.42:1 \"PHOTO\"",
+  "2.42:1 \"PHOTO\"",
+  "2.42:1 \"PHOTO\"",
   "2.89:1 \"FROM CHAOS TO CONTRO\"",
   "2.89:1 \"AI OPERATING SYSTEM \""
  ],
@@ -86,10 +88,10 @@
   "案例=30",
   "產品 ▼=28",
   "關於我們=30",
-  "首頁=21",
-  "看案例 →=19",
-  "jacky@peakqi.c=19",
-  "(02) 6609-3699=19",
-  "peakqi.com=19"
+  "我們是誰=30",
+  "為什麼存在=30",
+  "工作原則=30",
+  "如何合作=30",
+  "合作角色=30"
  ]
 }

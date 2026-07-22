@@ -9,7 +9,7 @@ export const contact = {
 
 export const navigation = [
   { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
-  { href: 'Solutions.dc.html', key: 'method', label: '導入方法' },
+  { href: 'Method.dc.html', key: 'method', label: '導入方法' },
   { href: 'Cases.dc.html', key: 'cases', label: '案例' },
   { key: 'product', label: '產品', children: [
     { href: 'PeakOps.dc.html', label: 'Peak Ops', desc: '通用 AI 業務工具' },

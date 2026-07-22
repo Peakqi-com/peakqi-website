@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>導入方法|從流程盤點到上線後調整|奇鋒國際 PeakQi</title>
+<meta name="description" content="PeakQi 的 AI 導入方法:先盤點流程與資料、定義第一階段成果,再建立可驗證的流程、完成上線交接與持續改善。每一階段都有清楚的交付物與確認節點。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#D14E12}
+/* 品牌橘當文字色在淺底只有 2.47:1:淺色區塊內一律改深橘,深底區塊維持原橘 */
+::selection{background:#FF6B2C;color:#F2EFE8}
+a:focus-visible,button:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+section :not(p):not(span) > a[href]{min-height:44px;display:inline-flex;align-items:center}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}}
+@media (max-width:1099px){#m-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:719px){#m-grid{grid-template-columns:minmax(0,1fr)!important}}
+</style>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+</helmet>
+<a id="pq-skip" href="#m-steps">跳到主要內容</a>
+<dc-import name="Nav" active="method" hint-size="100%,68px"></dc-import>
+
+<section id="m-hero" data-screen-label="導入方法開場" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,128px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 14px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+      <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+      <span>/</span>
+      <span style="color:#F2EFE8;font-weight:700">導入方法</span>
+    </nav>
+    <span style="display:block;margin-top:18px;font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW WE DELIVER</span>
+    <h1 style="margin:14px 0 0;max-width:900px;font:900 clamp(2.4rem,5vw,4.4rem)/1.15 'Noto Sans TC',sans-serif">不是先買工具,<br>而是先把<span style="color:#FF6B2C">第一階段</span>做出來。</h1>
+    <p style="margin:20px 0 0;max-width:680px;font:400 clamp(16.5px,1.35vw,19px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">我們把導入拆成六個階段:先盤點流程與資料、定義要改善的成果,再建立可驗證的第一版流程,完成上線交接與持續改善。每一階段都有清楚的交付物與確認節點,由同一個團隊負責到底。</p>
+    <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+      <a href="Demo.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#F2EFE8">預約 AI 導入評估 →</a>
+      <a href="Cases.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+    </div>
+  </div>
+</section>
+
+<section id="m-steps" data-screen-label="六階段" style="padding:clamp(72px,9vw,124px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">SIX STAGES</span>
+    <h2 style="margin:14px 0 0;max-width:820px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">六個階段,<br>每一步都有交付物</h2>
+    <div id="m-grid" style="margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,1.8vw,20px)">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="6">
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.02);padding:clamp(20px,2.2vw,26px);display:flex;flex-direction:column;gap:10px;box-sizing:border-box;min-width:0">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#A63A08">{{ st.n }}</span>
+          <span style="font:900 clamp(20px,1.7vw,24px)/1.35 'Noto Sans TC',sans-serif">{{ st.t }}</span>
+          <span style="font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">{{ st.d }}</span>
+          <span style="margin-top:2px;padding-top:10px;border-top:1px solid rgba(9,11,14,.12);font:600 clamp(14px,1.05vw,15px)/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.58)"><span style="color:#A63A08;font-weight:700">交付</span>　{{ st.out }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="m-timeline" data-screen-label="上線時程" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,124px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">GO-LIVE TIMELINE</span>
+    <h2 style="margin:14px 0 0;max-width:860px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">標準模組最快 <span style="color:#FF6B2C;font-family:'Space Grotesk',sans-serif">10</span> 個工作天<br>完成第一階段上線</h2>
+    <p style="margin:16px 0 0;max-width:640px;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);text-wrap:pretty">{{ timelineNote }}</p>
+    <div id="m-tl" style="margin-top:clamp(28px,3.6vw,44px);display:flex;flex-direction:column;gap:0;border-left:2px solid rgba(242,239,232,.18);padding-left:24px">
+      <sc-for list="{{ tl }}" as="t" hint-placeholder-count="6">
+        <div style="position:relative;padding:0 0 26px">
+          <span aria-hidden="true" style="position:absolute;left:-31px;top:5px;width:12px;height:12px;border-radius:50%;background:#FF6B2C"></span>
+          <span style="display:block;font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#FF6B2C">{{ t.d }}</span>
+          <span style="display:block;margin-top:4px;font:600 clamp(16px,1.3vw,18px)/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.85)">{{ t.t }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="m-risk" data-screen-label="風險控制" style="padding:clamp(72px,9vw,124px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">LOWER THE RISK</span>
+    <h2 style="margin:14px 0 0;max-width:760px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">用更低風險<br>開始第一階段</h2>
+    <div style="margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(14px,1.8vw,20px)">
+      <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;padding:clamp(24px,2.6vw,30px);display:flex;flex-direction:column;gap:12px;background:rgba(9,11,14,.02);box-sizing:border-box;min-width:0">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#A63A08">{{ r.n }}</span>
+          <h3 style="margin:0;font:900 clamp(20px,1.7vw,23px)/1.4 'Noto Sans TC',sans-serif">{{ r.t }}</h3>
+          <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">{{ r.d }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
+    <div style="min-width:0">
+      <h2 style="margin:0;max-width:640px;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif;text-wrap:pretty">帶一段你最想改善的流程,<br>我們從第一階段開始。</h2>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <a href="Demo.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#F2EFE8">預約 AI 導入評估 →</a>
+      <a href="Cases.dc.html" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+    </div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { d: null };
+  componentDidMount() {
+    import('./content.js').then(m => this.setState({ d: m }));
+    import('./seo.js').then(m => m.applySEO('method')).catch(() => {});
+  }
+  renderVals() {
+    const d = this.state.d;
+    // 六階段與 About 頁「如何合作」同一套定義(角度是責任與交付物,不是功能)
+    const steps = [
+      { n: 'STAGE 01', t: '了解現況', d: '了解客戶從哪裡進來、團隊如何工作,以及目前真正卡住的位置。', out: '流程現況與問題清單' },
+      { n: 'STAGE 02', t: '定義成果', d: '確認第一階段要改善的指標、使用者與導入邊界。', out: '導入目標與範圍' },
+      { n: 'STAGE 03', t: '整理資料', d: '盤點知識、欄位、規則、權限與既有工具。', out: '資料與串接需求' },
+      { n: 'STAGE 04', t: '建立驗證', d: '先做可操作的流程或 Demo,讓實際使用者參與確認。', out: '可測試的第一版流程' },
+      { n: 'STAGE 05', t: '上線交接', d: '完成測試、權限、例外處理與使用說明。', out: '正式上線版本與操作文件' },
+      { n: 'STAGE 06', t: '持續改善', d: '依實際使用、錯誤與流程數據調整系統。', out: '優化紀錄與下一階段建議' }
+    ];
+    return {
+      steps,
+      tl: d?.timeline ?? [],
+      timelineNote: d?.timelineNote ?? '',
+      risks: d?.risk ?? []
+    };
+  }
+}
+</script>
+</body>
+</html>

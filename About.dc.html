@@ -29,6 +29,15 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 /* 手機觸控區:文字型連結原本只有 19-21px 高 */
 @media (max-width:899px){section :not(p):not(span) > a[href]{min-height:44px;display:inline-flex;align-items:center}}
 a:focus-visible,button:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+/* spectrum 逐列點亮的 inset 3px 橘線在淺底看起來像破版線,底色也顯髒:一律蓋掉。
+   (pa-engine 是 inline style,只能用 !important 蓋) */
+#a-spectrum [data-spec]{box-shadow:none!important;background:transparent!important}
+/* 手機作品帶:改原生水平滑動(swipe),蓋掉引擎的 translateX */
+@media (max-width:899px){
+  #a-strip [data-strack]{transform:none!important;width:auto!important;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:10px}
+  #a-strip [data-strack]>a{scroll-snap-align:start}
+}
 /* Hero 四段進度(看見碎片→找出斷點→建立流程→開始運作):hero-kit 產生的節點,
    只用 CSS 調可讀性,不改動畫程式。手機只顯示目前這一段,避免塞多個小字。 */
 [data-hero-progress]{gap:18px;align-items:center}
@@ -203,8 +212,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 </section>
 
 <section id="a-method" data-screen-label="方法章節" style="background:#F2EFE8">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+  <!-- 不掛 data-wrap/data-stage:pa-engine 的 pin() 找不到就走非 pin 路徑(與手機相同),
+       步驟仍隨捲動點亮,但沒有 200vh 跑道,矮視窗也不會被 100vh stage 裁掉內容 -->
+  <div style="position:relative">
+    <div style="padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px);box-sizing:border-box">
       <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">METHOD</span>
     <h2 style="margin:12px 0 0;max-width:780px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">同一個團隊,<br>從理解問題到上線後調整</h2>
@@ -229,8 +240,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 </section>
 
 <section id="a-strip" data-screen-label="作品帶" style="background:#090B0E;color:#F2EFE8;overflow:hidden">
-  <div data-wrap style="position:relative">
-    <div data-stage style="padding:clamp(56px,7vw,88px) 0;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
+  <!-- 不掛 pin:170vh 跑道會產生整屏黑色空白;非 pin 時 track 仍隨捲動輕微平移 -->
+  <div style="position:relative">
+    <div style="padding:clamp(56px,7vw,88px) 0;box-sizing:border-box">
   <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between">
     <div style="min-width:0">
       <h2 style="margin:0;max-width:760px;font:900 clamp(2rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif;text-wrap:pretty">這些不是效果圖,<br>而是實際交付過的工作畫面</h2>
@@ -299,7 +311,20 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         </div>
       </sc-for>
     </div>
-    <p style="margin:clamp(20px,2.6vw,28px) 0 0;max-width:700px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">實際參與的成員與人數依專案範圍安排;專案開始前會確認各角色的對口與聯絡方式。</p>
+    <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:clamp(14px,1.8vw,20px)">
+      <sc-for list="{{ teamSlots }}" as="ts" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+          <div aria-hidden="true" style="aspect-ratio:4/5;border-radius:6px;border:1px solid rgba(242,239,232,.14);background:linear-gradient(160deg,#1A1F26,#12161B);display:flex;align-items:center;justify-content:center">
+            <span style="font:600 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.3)">PHOTO</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font:800 clamp(16px,1.3vw,18px) 'Noto Sans TC',sans-serif">{{ ts.name }}</span>
+            <span style="font:400 clamp(14px,1.05vw,15px)/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ ts.role }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:clamp(20px,2.6vw,28px) 0 0;max-width:700px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">成員介紹整理中,以上先以角色佔位;實際參與的成員與人數依專案範圍安排,專案開始前會確認各角色的對口與聯絡方式。</p>
   </div>
 </section>
 
@@ -380,6 +405,13 @@ class Component extends DCLogic {
       { n: 'ROLE 02', c: '#3E9BFF', t: 'UX 與系統設計', d: '將複雜工作整理成團隊真正能使用的介面與操作方式。' },
       { n: 'ROLE 03', c: '#65E0BC', t: 'AI 與系統工程', d: '負責模型、資料、API、權限、後端與既有工具串接。' },
       { n: 'ROLE 04', c: 'rgba(242,239,232,.8)', t: '導入與持續優化', d: '協助測試、上線、蒐集使用回饋與後續調整。' }
+    ];
+    // 團隊成員佔位:實際姓名/照片待使用者提供,先預留版位,文案明示整理中
+    const teamSlots = [
+      { name: '成員介紹整理中', role: '流程與產品策略' },
+      { name: '成員介紹整理中', role: 'UX 與系統設計' },
+      { name: '成員介紹整理中', role: 'AI 與系統工程' },
+      { name: '成員介紹整理中', role: '導入與持續優化' }
     ];
     const governance = [
       { t: '資料範圍需要被定義', d: '先確認 AI 可以使用哪些資料,以及哪些資料不得進入模型流程。' },
@@ -550,7 +582,7 @@ class Component extends DCLogic {
     }).filter(Boolean);
     return {
       whyResults, principles,
-      roles, governance,
+      roles, governance, teamSlots,
       aboutShots, spectrumRows,
       bigNums, indNodes, method, stripThumbs,
       previewAlt: selCase ? selCase.cover.alt : '此產業案例素材整理中',

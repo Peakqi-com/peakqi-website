@@ -7,6 +7,8 @@ const ROUTES = {
   cases: { path: '/cases', file: 'Cases.dc.html', name: '案例與作品' },
   pricing: { path: '/pricing', file: 'Pricing.dc.html', name: '方案說明' },
   about: { path: '/about', file: 'About.dc.html', name: '關於 PeakQi' },
+  method: { path: '/method', file: 'Method.dc.html', name: '導入方法' },
+  peakops: { path: '/peakops', file: 'PeakOps.dc.html', name: 'Peak Ops' },
   demo: { path: '/demo', file: 'Demo.dc.html', name: '預約 Demo' }
 };
 function el(tag, attrs) {

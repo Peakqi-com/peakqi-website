@@ -1328,7 +1328,7 @@ class Component extends DCLogic {
         }
       } catch (e) {}
     });
-    import('./seo.js').then(m => m.applySEO('home')).catch(() => {});
+    import('./seo.js').then(m => m.applySEO('peakops')).catch(() => {});
     Promise.all([import('./motion-kit.js'), import('./motion/home.motion.js')])
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});

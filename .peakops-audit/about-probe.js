@@ -32,8 +32,8 @@ const nest = {
   heroWrapStage: !!$('#a-hero > [data-hero-wrap] > [data-hero-stage]'),
   heroCopyInStage: !!$('[data-hero-stage] [data-hero-copy]'),
   shotwallInStage: !!$('[data-hero-stage] > [data-ashotwall]'),
-  methodPin: !!$('#a-method > [data-wrap] > [data-stage]'),
-  stripPin: !!$('#a-strip > [data-wrap] > [data-stage]'),
+  methodFlow: !!$('#a-method [data-mfill]'),
+  stripTrack: !!$('#a-strip [data-strack]'),
   sceneStage: !!$('[data-hero-copy] [data-hero-scenestage] [data-hero-scene]'),
 };
 
