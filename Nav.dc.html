@@ -223,7 +223,11 @@ class Component extends DCLogic {
       // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
       // 母品牌首頁主要下一步 = 預約 AI 導入評估;其他頁維持產品導向的 Demo 入口
       ctaHref: active === 'home' ? 'Demo.dc.html' : 'Demo.dc.html',
-      ctaLabel: active === 'home' ? '預約 AI 導入評估' : '用我的場景看 Demo',
+      // 產品頁(PeakOps)的浮動 CTA 與該頁全部主 CTA 統一為「用我的流程跑一次」;
+      // 首頁維持「預約 AI 導入評估」,其餘頁面維持原文案,避免單頁需求外溢到全站
+      ctaLabel: active === 'home' ? '預約 AI 導入評估'
+        : active === 'product' ? '用我的流程跑一次'
+        : '用我的場景看 Demo',
       ctaBadge: active !== 'home',
       ctaBadgeText: '15 MIN',
       navDemoClick: () => this._evt('nav_demo_click'),
