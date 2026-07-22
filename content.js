@@ -13,10 +13,9 @@ export const navigation = [
   { href: 'Cases.dc.html', key: 'cases', label: '案例' },
   { key: 'product', label: '產品', children: [
     { href: 'PeakOps.dc.html', label: 'Peak Ops', desc: '通用 AI 業務工具' },
-    { href: 'AIWeddingPro.dc.html', label: 'AI Wedding Pro', desc: '婚禮 AI' },
-    { href: 'AIInteriorPro.dc.html', label: 'AI Interior Pro', desc: '室內設計 AI' },
-    { href: 'Bubble.dc.html', label: '冒泡', desc: '房仲 AI' },
-    { href: 'Products.dc.html', label: '全部產品', desc: '品牌總覽' },
+    { href: 'https://www.aiweddingpro360.com/', label: 'AI Wedding Pro', desc: '婚禮 AI', ext: true },
+    { href: 'https://www.aiinteriorpro360.com/', label: 'AI Interior Pro', desc: '室內設計 AI', ext: true },
+    { href: 'https://bubble.tw', label: '冒泡', desc: '房仲 AI', ext: true },
     { href: 'Pricing.dc.html', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' }
   ] },
   { href: 'About.dc.html', key: 'about', label: '關於我們' }

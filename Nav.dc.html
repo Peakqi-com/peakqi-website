@@ -33,7 +33,7 @@
             <button type="button" style="{{ l.btnStyle }}" aria-haspopup="true" style-hover="color:#FF6B2C">{{ l.label }} <span style="font-size:9px;opacity:.7">▼</span></button>
             <div class="pq-dd-panel" style="position:absolute;left:0;top:calc(100% + 10px);min-width:234px;background:#090B0E;border:1px solid rgba(242,239,232,.14);border-radius:12px;padding:8px;box-shadow:0 22px 48px rgba(9,11,14,.32);z-index:120">
               <sc-for list="{{ l.children }}" as="c" hint-placeholder-count="4">
-                <a href="{{ c.href }}" style="{{ c.style }}">
+                <a href="{{ c.href }}" target="{{ c.target }}" rel="{{ c.rel }}" style="{{ c.style }}">
                   <span style="font:700 13.5px 'Noto Sans TC',sans-serif">{{ c.label }}</span>
                   <span style="font:400 11px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">{{ c.desc }}</span>
                 </a>
@@ -72,7 +72,7 @@
             </div>
             <div style="display:flex;flex-direction:column;margin-top:8px;padding-left:34px">
               <sc-for list="{{ l.children }}" as="c" hint-placeholder-count="4">
-                <a href="{{ c.href }}" style="{{ c.mStyle }}" style-hover="color:#FF6B2C">{{ c.label }} <span style="font-weight:400;color:rgba(242,239,232,.45);font-size:12px">· {{ c.desc }}</span></a>
+                <a href="{{ c.href }}" target="{{ c.target }}" rel="{{ c.rel }}" style="{{ c.mStyle }}" style-hover="color:#FF6B2C">{{ c.label }} <span style="font-weight:400;color:rgba(242,239,232,.45);font-size:12px">· {{ c.desc }}</span></a>
               </sc-for>
             </div>
           </div>
@@ -169,7 +169,7 @@ class Component extends DCLogic {
         idx: '0' + (i + 1),
         isGroup, isLink: !isGroup,
         href: l.href || '#',
-        children: isGroup ? l.children.map(c => ({ ...c, style: childStyle, mStyle: mChildStyle })) : [],
+        children: isGroup ? l.children.map(c => ({ ...c, style: childStyle, mStyle: mChildStyle, target: c.ext ? '_blank' : '_self', rel: c.ext ? 'noopener noreferrer' : '' })) : [],
         style: {
           ...base,
           color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
