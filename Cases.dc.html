@@ -133,6 +133,29 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   </div>
 </section>
 
+<!-- ============ 品牌屋 3D 導覽(Steampunk 視差滾動,以父頁捲動驅動 iframe)============ -->
+<section id="brandhouse" data-screen-label="品牌屋 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px) clamp(20px,3vw,32px)">
+    <div style="display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)">
+      <span style="width:34px;height:1.5px;background:#FF6B2C"></span>BRAND HOUSE · 品牌屋
+    </div>
+    <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
+    <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
+      六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
+  </div>
+  <!-- 捲動跑道(手機與桌機共用):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景。
+       節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
+       跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、
+       5 張卡(含實績卡)的章節每張約 34vh,足夠讀完再換卡,不會一滑就過。 -->
+  <div id="pq-bh-runway" style="height:2200vh;position:relative;margin-top:clamp(24px,4vw,40px)">
+    <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
+      <iframe id="pq-bh-frame" src="Steampunk/peakqi-story.html" title="PeakQi 品牌屋 3D 導覽"
+        scrolling="no"
+        style="display:block;width:100%;height:100%;border:0;pointer-events:none"></iframe>
+    </div>
+  </div>
+</section>
+
 <section id="stories" data-screen-label="Featured Stories" style="padding:clamp(64px,8vw,104px) 0 0">
   <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px)">
     <div style="display:flex;align-items:center;gap:14px">
@@ -140,7 +163,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
     </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">四個產業,<br>四種把 AI 接進流程的方法</h2>
+    <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,<br>三種把 AI 接進流程的方法</h2>
     <p style="margin:14px 0 0;font:400 clamp(16px,1.3vw,18px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">每個案例都從原本的工作方式開始,說明導入了哪些系統、AI 與人如何分工,以及最後改善了什麼。</p>
   </div>
   <sc-for list="{{ stories }}" as="st" hint-placeholder-count="4">
@@ -202,30 +225,6 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       </div>
     </div>
   </sc-for>
-</section>
-
-
-<!-- ============ 品牌屋 3D 導覽(Steampunk 視差滾動,以父頁捲動驅動 iframe)============ -->
-<section id="brandhouse" data-screen-label="品牌屋 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
-  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px) clamp(20px,3vw,32px)">
-    <div style="display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)">
-      <span style="width:34px;height:1.5px;background:#FF6B2C"></span>BRAND HOUSE · 品牌屋
-    </div>
-    <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
-    <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
-      六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
-  </div>
-  <!-- 捲動跑道(手機與桌機共用):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景。
-       節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
-       跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、
-       5 張卡(含實績卡)的章節每張約 34vh,足夠讀完再換卡,不會一滑就過。 -->
-  <div id="pq-bh-runway" style="height:2200vh;position:relative;margin-top:clamp(24px,4vw,40px)">
-    <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
-      <iframe id="pq-bh-frame" src="Steampunk/peakqi-story.html" title="PeakQi 品牌屋 3D 導覽"
-        scrolling="no"
-        style="display:block;width:100%;height:100%;border:0;pointer-events:none"></iframe>
-    </div>
-  </div>
 </section>
 
 <section id="index" data-screen-label="Work Index" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
