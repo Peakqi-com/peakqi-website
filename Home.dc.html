@@ -1744,6 +1744,50 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pf2Conf{0%,88%{opacity:0;transform:translateY(0)}91%{opacity:1}96%,100%{opacity:0;transform:translateY(16px)}}
 .pf2 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
 .pf2 .c2{animation-delay:2.5s}.pf2 .c3{animation-delay:5s}.pf2 .c4{animation-delay:7.5s}
+
+/* ── 03 AI Wedding Pro:婚紗試穿 → 髮妝模擬 → 場景生成 → AI 接客,10s 一輪 ── */
+.pf3 .led{animation:pf1Led 1.6s ease-in-out infinite}
+.pf3 .a1,.pf3 .a2,.pf3 .a3,.pf3 .a4{opacity:0}
+.pf3 .a1{animation:pf2A1 10s ease-out infinite}
+.pf3 .a2{animation:pf2A2 10s ease-out infinite}
+.pf3 .a3{animation:pf2A3 10s ease-out infinite}
+.pf3 .a4{animation:pf2A4 10s ease-out infinite}
+/* 幕一:三件婚紗輪流試穿(裙擺交叉淡入,帶一點擺動) */
+.pf3 .dress{opacity:0;transform-origin:100px 78px;animation:pf3Dress 10s ease-in-out infinite}
+.pf3 .dr2{animation-delay:.85s}.pf3 .dr3{animation-delay:1.7s}
+@keyframes pf3Dress{0%{opacity:0;transform:rotate(-3deg)}3%,8%{opacity:1;transform:rotate(0)}
+  10.5%,100%{opacity:0;transform:rotate(2deg)}}
+.pf3 .spark{opacity:0;animation:pf3Spark 10s ease-out infinite}
+.pf3 .sp2{animation-delay:.5s}.pf3 .sp3{animation-delay:1s}
+@keyframes pf3Spark{0%,4%{opacity:0;transform:scale(.4)}7%{opacity:.9;transform:scale(1.15)}
+  11%,100%{opacity:0;transform:scale(.5)}}
+/* 幕二:髮型 A/B 切換 + 腮紅浮現 */
+.pf3 .hairA{animation:pf3HairA 10s steps(1,end) infinite}
+.pf3 .hairB{opacity:0;animation:pf3HairB 10s steps(1,end) infinite}
+@keyframes pf3HairA{0%,36%{opacity:1}36.01%,42%{opacity:0}42.01%,100%{opacity:1}}
+@keyframes pf3HairB{0%,36%{opacity:0}36.01%,42%{opacity:1}42.01%,100%{opacity:0}}
+.pf3 .blush{opacity:0;animation:pf3Blush 10s ease-out infinite}
+@keyframes pf3Blush{0%,31%{opacity:0}34%,47%{opacity:.75}51%,100%{opacity:0}}
+.pf3 .wand{animation:pf3Wand 10s ease-in-out infinite}
+@keyframes pf3Wand{0%,27%{transform:translate(0,0) rotate(0)}31%{transform:translate(-14px,6px) rotate(-16deg)}
+  36%{transform:translate(-26px,-2px) rotate(8deg)}41%{transform:translate(-12px,-8px) rotate(-10deg)}
+  47%,100%{transform:translate(0,0) rotate(0)}}
+/* 幕三:場景由左往右生成(遮罩掃過),新人剪影浮現 */
+.pf3 .scene{transform-origin:left center;transform:scaleX(0);animation:pf3Scene 10s cubic-bezier(.3,1,.4,1) infinite}
+@keyframes pf3Scene{0%,52%{transform:scaleX(0)}62%,71%{transform:scaleX(1)}75%,100%{transform:scaleX(0)}}
+.pf3 .couple{opacity:0;animation:pf3Couple 10s ease-out infinite}
+@keyframes pf3Couple{0%,62%{opacity:0;transform:translateY(6px)}66%,71%{opacity:1;transform:none}75%,100%{opacity:0}}
+/* 幕四:詢問氣泡進來 → 愛心回覆 → 日期打勾 */
+.pf3 .q1,.pf3 .q2{opacity:0;animation:pf3Msg 10s ease-out infinite}
+.pf3 .q1{animation-delay:7.75s}.pf3 .q2{animation-delay:8.35s}
+@keyframes pf3Msg{0%{opacity:0;transform:translateY(6px)}3%,17%{opacity:1;transform:none}20%,100%{opacity:0}}
+.pf3 .hb{transform-origin:center;opacity:0;animation:pf3Heart 10s cubic-bezier(.4,1.4,.5,1) infinite}
+@keyframes pf3Heart{0%,86%{opacity:0;transform:scale(.4)}89%,95%{opacity:1;transform:scale(1)}
+  91.5%{transform:scale(1.22)}97%,100%{opacity:0}}
+.pf3 .okv{stroke-dasharray:16;stroke-dashoffset:16;animation:pf3Ok 10s ease-out infinite}
+@keyframes pf3Ok{0%,90%{stroke-dashoffset:16}95%,98%{stroke-dashoffset:0}100%{stroke-dashoffset:16}}
+.pf3 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
+.pf3 .c2{animation-delay:2.5s}.pf3 .c3{animation-delay:5s}.pf3 .c4{animation-delay:7.5s}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -2546,7 +2590,70 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
         <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#3E9BFF">了解更多 →</span>
       </a>
-      <a data-reveal data-brand href="https://aiweddingpro.com" target="_blank" rel="noopener" style="--a:#E06B9C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+      <a data-reveal data-brand href="https://aiweddingpro.com" target="_blank" rel="noopener" style="--a:#E06B9C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf3" aria-hidden="true"><svg viewBox="0 0 200 200">
+<rect class="bg" width="200" height="200"/>
+<g stroke="rgba(255,255,255,.05)" stroke-width="1">
+<path d="M0 40h200M0 80h200M0 120h200M0 160h200M40 0v200M80 0v200M120 0v200M160 0v200"/></g>
+<rect class="pane" x="14" y="14" width="172" height="24" rx="7"/>
+<circle class="led" cx="27" cy="26" r="4" fill="var(--a)"/>
+<rect class="mut" x="38" y="22" width="50" height="7" rx="3.5"/>
+<rect class="mut" x="150" y="22" width="24" height="7" rx="3.5" opacity=".6"/>
+<!-- 幕一:婚紗試穿 -->
+<g class="a1">
+<circle cx="100" cy="62" r="9" fill="#2A323B"/>
+<path d="M100 71v10" stroke="#2A323B" stroke-width="5" stroke-linecap="round"/>
+<g class="dress dr1"><path d="M100 76 L120 148 Q100 156 80 148Z" fill="var(--a)" opacity=".9"/>
+<path d="M92 96h16M88 112h24" stroke="#0E1216" stroke-width="1.4" opacity=".3"/></g>
+<g class="dress dr2"><path d="M100 76 L114 112 L126 148 Q100 158 74 148 L86 112Z" fill="#F2EFE8" opacity=".92"/>
+<path d="M90 104q10 6 20 0M84 128q16 8 32 0" stroke="#0E1216" stroke-width="1.2" fill="none" opacity=".25"/></g>
+<g class="dress dr3"><path d="M100 76 Q126 96 118 148 Q100 154 82 148 Q74 96 100 76Z" fill="var(--a)" opacity=".65"/>
+<circle cx="94" cy="108" r="2" fill="#F2EFE8" opacity=".7"/><circle cx="106" cy="122" r="2" fill="#F2EFE8" opacity=".7"/></g>
+<path class="spark sp1" d="M52 70l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="#F2EFE8" opacity="0"/>
+<path class="spark sp2" d="M150 92l2.5 5 5 2.5-5 2.5-2.5 5-2.5-5-5-2.5 5-2.5z" fill="var(--a)" opacity="0"/>
+<path class="spark sp3" d="M58 128l2.5 5 5 2.5-5 2.5-2.5 5-2.5-5-5-2.5 5-2.5z" fill="#F2EFE8" opacity="0"/>
+</g>
+<!-- 幕二:髮妝模擬 -->
+<g class="a2">
+<rect class="pane" x="52" y="48" width="96" height="112" rx="10"/>
+<circle cx="100" cy="98" r="26" fill="#232C36"/>
+<g class="hairA"><path d="M74 96 Q74 66 100 66 Q126 66 126 96 L120 84 Q112 74 100 74 Q88 74 80 84Z" fill="var(--a)"/></g>
+<g class="hairB"><path d="M74 96 Q72 64 100 64 Q128 64 126 96 Q128 112 120 118 L118 96 Q114 76 100 76 Q86 76 82 96 L80 118 Q72 112 74 96Z" fill="var(--a)" opacity=".85"/></g>
+<circle cx="91" cy="98" r="2.6" fill="#F2EFE8"/><circle cx="109" cy="98" r="2.6" fill="#F2EFE8"/>
+<path d="M94 110q6 4 12 0" stroke="#F2EFE8" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle class="blush" cx="86" cy="106" r="4" fill="var(--a)" opacity="0"/>
+<circle class="blush" cx="114" cy="106" r="4" fill="var(--a)" opacity="0"/>
+<g class="wand"><path d="M138 74L156 58" stroke="#F2EFE8" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M156 58l2.2 4.5 4.5 2.2-4.5 2.2-2.2 4.5-2.2-4.5-4.5-2.2 4.5-2.2z" fill="var(--a)"/></g>
+</g>
+<!-- 幕三:場景生成 -->
+<g class="a3">
+<rect class="pane" x="24" y="50" width="152" height="104" rx="9"/>
+<g class="scene">
+<rect x="30" y="56" width="140" height="92" rx="6" fill="#1C232B"/>
+<circle cx="150" cy="74" r="9" fill="var(--a)" opacity=".8"/>
+<path d="M30 122l26-22 20 18 16-14 28 24v20H30z" fill="#2F3945"/>
+<path d="M60 56v92M60 84h110" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+<path d="M44 148V96q0-14 12-14" stroke="var(--a)" stroke-width="2.4" fill="none" opacity=".8"/>
+</g>
+<g class="couple"><path d="M96 148v-22M108 148v-22" stroke="#F2EFE8" stroke-width="4.5" stroke-linecap="round"/>
+<circle cx="96" cy="118" r="5" fill="#F2EFE8"/><circle cx="108" cy="118" r="5" fill="#F2EFE8"/>
+<path d="M99 132h6" stroke="#F2EFE8" stroke-width="2.4" stroke-linecap="round"/></g>
+</g>
+<!-- 幕四:AI 接客 -->
+<g class="a4">
+<g class="q1"><rect x="22" y="54" width="92" height="20" rx="10" fill="#1C232B"/><rect class="txt" x="32" y="61" width="62" height="5" rx="2.5"/></g>
+<g class="q2"><rect x="70" y="82" width="106" height="24" rx="10" fill="var(--a)"/>
+<rect x="80" y="89" width="74" height="5" rx="2.5" fill="#0E1216" opacity=".55"/>
+<rect x="80" y="97" width="44" height="4" rx="2" fill="#0E1216" opacity=".35"/></g>
+<rect class="pane" x="22" y="116" width="156" height="42" rx="9"/>
+<rect class="mut" x="32" y="126" width="46" height="6" rx="3"/>
+<rect class="mut" x="32" y="140" width="70" height="5" rx="2.5" opacity=".6"/>
+<path class="hb" d="M150 130c-3-3.4-8.4-2.6-10 1-1.2 2.8 0 5.6 3.2 8.4l6.8 5.6 6.8-5.6c3.2-2.8 4.4-5.6 3.2-8.4-1.6-3.6-7-4.4-10-1z" fill="var(--a)" opacity="0"/>
+<path class="okv line" d="M116 136l4.5 4.5 8-9.5" stroke="#65E0BC" stroke-width="2.6"/>
+</g>
+<circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
+<circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
+</svg></span>
         <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#E06B9C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">WEDDING</span></div>
         <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Wedding Pro</h3>
         <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
