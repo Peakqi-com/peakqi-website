@@ -21,8 +21,18 @@ const HOOKS = ['[data-wrap]', '[data-stage]', '[data-scrim]', '[data-st]', '[dat
   '[data-tstep]', '[data-dot]', '[data-tline]', '[data-console]', '[data-echo]',
   '[data-spot]', '[data-tilt]', '[data-cta]', '[data-arrow]', '[data-divider]'];
 
+// Nav 的浮動 CTA 也帶 data-cta,且只在捲動過門檻後出現 → 會污染契約計數。
+// 契約計數一律排除任何位於 position:fixed 容器內的元素。
+const inFixed = el => {
+  for (let p = el; p && p !== document.body; p = p.parentElement) {
+    if (getComputedStyle(p).position === 'fixed') return true;
+  }
+  return false;
+};
 const hooks = {};
-for (const h of HOOKS) hooks[h.slice(6, -1)] = n(h);
+for (const h of HOOKS) {
+  hooks[h.slice(6, -1)] = [...document.querySelectorAll(h)].filter(el => !inFixed(el)).length;
+}
 
 // 巢狀契約
 const nest = {
@@ -62,6 +72,40 @@ for (const el of document.querySelectorAll('p,span,li,a,h1,h2,h3,h4,div')) {
   if (small.length > 14) break;
 }
 
+// 對比稽核:抓「淺底淺字 / 深底深字」造成的隱形文字(P5 曾在 #relay 踩到)
+const parseRGB = c => (c.match(/[\d.]+/g) || []).map(Number);
+const lum = ([r, g, b]) => {
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+};
+const bgOf = el => {
+  for (let p = el; p && p !== document.documentElement; p = p.parentElement) {
+    const c = parseRGB(getComputedStyle(p).backgroundColor);
+    if (c.length >= 3 && (c[3] === undefined || c[3] > 0.6)) return c;
+  }
+  return [255, 255, 255];
+};
+const lowContrast = [];
+for (const el of document.querySelectorAll('p,span,li,a,h1,h2,h3,h4')) {
+  let t = '';
+  for (const c of el.childNodes) if (c.nodeType === 3) t += c.textContent.trim();
+  if (t.length < 4) continue;
+  const cs = getComputedStyle(el);
+  if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.5) continue;
+  const fg = parseRGB(cs.color);
+  if (fg.length < 3) continue;
+  const a = fg[3] === undefined ? 1 : fg[3];
+  const bg = bgOf(el);
+  // 前景帶 alpha 時先與底色混合
+  const mixed = [0, 1, 2].map(i => fg[i] * a + bg[i] * (1 - a));
+  const L1 = lum(mixed), L2 = lum(bg);
+  const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  if (ratio < 3) {
+    lowContrast.push(ratio.toFixed(2) + ':1 "' + t.slice(0, 20) + '"');
+    if (lowContrast.length > 10) break;
+  }
+}
+
 // 觸控區
 const tiny = [];
 for (const el of document.querySelectorAll('a,button,[role="tab"],[role="button"]')) {
@@ -86,5 +130,6 @@ return JSON.stringify({
     ? 'OVERFLOW ' + document.documentElement.scrollWidth : 'ok',
   overflowCulprits: over,
   smallText: small,
+  lowContrast: lowContrast,
   tinyTouch: tiny
 }, null, 1);

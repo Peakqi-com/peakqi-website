@@ -9,8 +9,9 @@ BASE = {'wrap': 4, 'stage': 4, 'scrim': 1, 'st': 4, 'chip': 6, 'win': 5, 'dep': 
         'dmeter': 5, 'dcount': 5, 'dtake': 1, 'dscan': 1, 'live-panel': 6,
         'live-item': 6, 'live-link': 1, 'rstation': 6, 'rchip': 6, 'rfill': 1,
         'orbcard': 6, 'count': 9, 'caseimg': 3, 'sweeper': 1, 'tstep': 5, 'dot': 5,
-        'tline': 1, 'console': 1, 'echo': 3, 'spot': 1, 'tilt': 10, 'cta': 11,
-        'arrow': 9, 'divider': 3}
+        'tline': 1, 'console': 1, 'echo': 3, 'spot': 1, 'tilt': 10,
+        # cta/arrow 基準在 P5 由 11/9 調為 12/10:流程 X 光新增一顆主 CTA(刻意變動)
+        'cta': 12, 'arrow': 10, 'divider': 3}
 
 raw = io.open(sys.argv[1], encoding='utf-8', errors='replace').read()
 dec = json.JSONDecoder()
@@ -57,6 +58,9 @@ p('  data-* 契約(44 項):', ' 全部一致' if not drift else '!! 漂移 ' + s
 
 p('== 字級 <14px ==')
 for t in (d['smallText'] or ['(none)'])[:14]:
+    p('  ', t)
+p('== 對比 <3:1(隱形文字)==')
+for t in (d.get('lowContrast') or ['(none)'])[:10]:
     p('  ', t)
 p('== 觸控 <40px ==')
 for t in (d['tinyTouch'] or ['(none)'])[:10]:

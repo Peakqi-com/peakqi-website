@@ -7,9 +7,11 @@ const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const [, , url, out, wS, hS, pStr, probeFile] = process.argv;
 const W = +wS || 1440, H = +hS || 900, P = parseFloat(pStr || '0');
 const mobile = W < 900;
-const PORT = 9411;
-const PROF = 'C:/tmp/cdpprof-peakops';
-fs.rmSync(PROF, { recursive: true, force: true });
+// 每次獨立的 port 與 profile:前一輪的 Chrome 可能還沒完全退出,
+// 共用目錄會 EPERM,共用 port 會 attach 到別人的分頁
+const PORT = 9400 + (process.pid % 90);
+const PROF = 'C:/tmp/cdpprof-peakops-' + process.pid;
+process.on('exit', () => { try { fs.rmSync(PROF, { recursive: true, force: true }); } catch (e) { /* Chrome 尚未釋放 */ } });
 
 const args = ['--headless=new', `--remote-debugging-port=${PORT}`,
   '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--hide-scrollbars',
