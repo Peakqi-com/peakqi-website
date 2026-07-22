@@ -13,6 +13,8 @@ BASE = {'wrap': 4, 'stage': 4, 'scrim': 1, 'st': 4, 'chip': 6, 'win': 5, 'dep': 
         # cta/arrow 基準在 P5 由 11/9 調為 12/10:流程 X 光新增一顆主 CTA(刻意變動)
         'cta': 12, 'arrow': 10, 'divider': 3}
 
+if len(sys.argv) > 2 and sys.argv[2] == 'about':
+    BASE.clear()
 raw = io.open(sys.argv[1], encoding='utf-8', errors='replace').read()
 dec = json.JSONDecoder()
 objs, i = [], 0
@@ -54,7 +56,11 @@ bad = [k for k, v in d['nest'].items() if not v]
 p('  巢狀契約:', 'OK' if not bad else '!! 破損 ' + str(bad))
 
 drift = {k: (BASE[k], d['hooks'].get(k)) for k in BASE if BASE[k] != d['hooks'].get(k)}
-p('  data-* 契約(44 項):', ' 全部一致' if not drift else '!! 漂移 ' + str(drift))
+p('  data-* 契約:', (' 全部一致(%d 項)' % len(BASE)) if not drift else '!! 漂移 ' + str(drift))
+if not BASE:
+    p('  hooks:', d['hooks'])
+    if d.get('heroApi'): p('  __pqHero:', d['heroApi'])
+    if d.get('aboutHeroApi'): p('  __pqAboutHero:', d['aboutHeroApi'])
 
 p('== 字級 <14px ==')
 for t in (d['smallText'] or ['(none)'])[:14]:

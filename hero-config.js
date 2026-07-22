@@ -83,21 +83,22 @@ export const heroConfig = {
   },
   about: {
     key: 'about', paint: 'about',
-    story: 'BUILT FROM REAL WORKFLOWS:流程碎片 → 30+ 連線 → 8+ 產業分群 → 導入流程 → DAY 0–10 → 案例網路 → 品牌核心',
-    totalVh: { desktop: 360, tablet: 280, mobile: 190 },
+    // 原本 7 幕(frag/link/group/pipe/days/net/core)有兩個問題:幕數過多、且 pipe/days
+    // 與頁面下方的六步驟方法區重複講同一件事。收斂為 4 幕,對應四段敘事:
+    // 看見碎片 → 找出斷點 → 建立流程 → 開始運作。
+    // 沿用 about-hero.js 既有的 L.frag / L.link / L.group / L.net 佈局,引擎不動。
+    story: 'BUILT FROM REAL WORKFLOWS:看見碎片 → 找出斷點 → 建立流程 → 開始運作',
+    totalVh: { desktop: 250, tablet: 205, mobile: 160 },
     scenes: [
-      { id: 'frag',  label: '流程碎片',   kicker: 'SCENE 01 · FRAGMENTS',   line: 'LINE、CRM、報價、專案與網站畫面的細小局部——每一片都來自實際系統。', d: [0, .13],   m: [0, .2] },
-      { id: 'link',  label: '30+ 連線',   kicker: 'SCENE 02 · CONNECTED',   line: '案例畫面沿資料線連起來:30+ 支已上線系統與網站。',                    d: [.13, .27], m: [.2, .42] },
-      { id: 'group', label: '8+ 產業',    kicker: 'SCENE 03 · BY INDUSTRY', line: '依產業重新分群:8+ 個產業別實戰經驗。',                              d: [.27, .42], m: null },
-      { id: 'pipe',  label: '導入流程',   kicker: 'SCENE 04 · WORKFLOW',    line: '理解場景 → 整理資料 → 建置模組 → 測試校準 → 上線。',                 d: [.42, .57], m: [.42, .62] },
-      { id: 'days',  label: '10 個工作天', kicker: 'SCENE 05 · TEN DAYS',    line: 'DAY 0 到 DAY 10,節點克制地排開——最快 10 個工作天上線。',            d: [.57, .71], m: null },
-      { id: 'net',   label: '案例網路',   kicker: 'SCENE 06 · THE NETWORK', line: '真實案例互相連成一張營運系統網;點節點可進對應案例。',               d: [.71, .88], m: [.62, .88] },
-      { id: 'core',  label: '收束成核心', kicker: 'SCENE 07 · THE CORE',    line: '網路收束成 PeakQi 營運核心。讓我們先看你的流程。',                   d: [.88, 1],   m: [.88, 1] }
+      { id: 'frag',  label: '看見碎片', kicker: '場景 01 / 04', line: '一次詢問,要在聊天、表單、試算表與內部訊息之間反覆搬運。', d: [0, .26],   m: [0, .28] },
+      { id: 'link',  label: '找出斷點', kicker: '場景 02 / 04', line: '找出重複輸入、容易漏追、責任不清與資料無法流動的節點。',   d: [.26, .52], m: [.28, .55] },
+      { id: 'group', label: '建立流程', kicker: '場景 03 / 04', line: 'AI 協助分類、摘要與草稿;重要判斷、敏感內容與例外仍由人確認。', d: [.52, .78], m: [.55, .8] },
+      { id: 'net',   label: '開始運作', kicker: '場景 04 / 04', line: '完成第一階段驗證後,再依成效逐步擴大。',                     d: [.78, 1],   m: [.8, 1] }
     ],
-    reduced: ['frag', 'link', 'pipe', 'net', 'core'],
+    reduced: ['frag', 'link', 'group', 'net'],
     ctas: [
-      { kind: 'primary', label: '讓我們先看你的流程', href: 'Demo.dc.html', track: 'hero_demo_click' },
-      { kind: 'ghost', label: '查看案例與作品', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'primary', label: '看我們如何合作', href: '#a-method', track: 'about_method_click' },
+      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
     ],
     flags: {}
   },

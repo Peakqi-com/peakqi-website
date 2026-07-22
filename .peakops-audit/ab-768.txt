@@ -1,0 +1,83 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: the server responded with a status of 404 (File not found)"
+ ],
+ "probeError": null
+}
+{
+ "vw": 768,
+ "vh": 1024,
+ "rendered": true,
+ "heroApi": {
+  "scenes": 4,
+  "mode": "lite",
+  "ok": true
+ },
+ "aboutHeroApi": {
+  "mode": "on"
+ },
+ "docH": 9793,
+ "missingSections": [],
+ "missingIds": [],
+ "nest": {
+  "heroWrapStage": true,
+  "heroCopyInStage": true,
+  "shotwallInStage": true,
+  "methodPin": true,
+  "stripPin": true,
+  "sceneStage": true
+ },
+ "hooks": {
+  "hero-wrap": 1,
+  "hero-stage": 1,
+  "hero-copy": 1,
+  "hero-canvas": 1,
+  "hero-scenestage": 1,
+  "hero-scene": 4,
+  "hero-cta": 1,
+  "hero-primary": 1,
+  "hero-progress": 1,
+  "ashotwall": 1,
+  "alines": 1,
+  "shot": 12,
+  "clu": 12,
+  "aclust": 4,
+  "acore": 1,
+  "count": 2,
+  "wrap": 2,
+  "stage": 2,
+  "mfill": 1,
+  "mstep": 6,
+  "mconsole-text": 1,
+  "strack": 1,
+  "spec": 4,
+  "cta": 1,
+  "arrow": 1
+ },
+ "overflowX": "ok",
+ "overflowCulprits": [],
+ "smallText": [
+  "9.0px \"奇鋒國際\"",
+  "13.5px \"預約 AI 導入評估\"",
+  "12.0px \"15 MIN\"",
+  "13.0px \"場景 01 / 04 ・ 看見碎片\"",
+  "13.0px \"場景 02 / 04 ・ 找出斷點\"",
+  "13.0px \"場景 03 / 04 ・ 建立流程\"",
+  "13.0px \"場景 04 / 04 ・ 開始運作\"",
+  "13.5px \"背景節點皆為實際交付的系統與網站畫面\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\"",
+  "13.0px \"CASE ↗\""
+ ],
+ "lowContrast": [
+  "2.89:1 \"FROM CHAOS TO CONTRO\"",
+  "2.89:1 \"AI OPERATING SYSTEM \""
+ ],
+ "tinyTouch": [
+  "PeakQi\n       =36"
+ ]
+}
