@@ -44,11 +44,11 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
-            <span style="color:#F2EFE8;font-weight:700">預約 Demo</span>
+            <span style="color:#F2EFE8;font-weight:700">導入草稿</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR DEMO SCENE</span>
-          <h1 style="margin:0;font:900 clamp(2rem,4.4vw,3.8rem)/1.3 'Noto Sans TC',sans-serif">把你現在<span style="color:#FF6B2C">最卡的流程</span>,<br>交給我們跑一次。</h1>
-          <p style="margin:0;max-width:560px;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不推銷、不用先懂 AI。先把目前最卡的流程告訴我們。</p>
+          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
+          <h1 style="margin:0;font:900 clamp(2.2rem,3.8vw,3.8rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
+          <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">先選產業、工作流程與現有工具,我們會整理建議能力、人工確認邊界,以及正式評估前仍需釐清的條件。</p>
           <div style="position:relative;margin-top:2px" aria-hidden="true">
             <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
               <path data-hero-line="wait" d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
@@ -61,55 +61,43 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
             <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
             <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
           </div>
-          <div data-hero-scenestage style="position:relative;min-height:122px">
-            <div data-hero-scene="wait" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 01 · WAITING</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">等待你的場景</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">一條未完成的資料線、一座空白控制台——等待輸入你的場景。</p>
+          <div data-hero-scenestage style="position:relative;min-height:96px">
+            <div data-hero-scene="ind" style="position:relative;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 1 / 4 ・ 選擇情境</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">選產業或使用情境——案例、用語與流程示意會跟著更新。</p>
             </div>
-            <div data-hero-scene="ind" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 02 · INDUSTRY</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">產業節點</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚禮、室內設計、房仲、美業、電商、活動、ESG、社區、教育、品牌、其他。</p>
+            <div data-hero-scene="flow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF">任務 2 / 4 ・ 找出卡點</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">勾選目前最卡的流程,右側草稿即時加入對應節點。</p>
             </div>
-            <div data-hero-scene="flow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · FRICTION</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">流程問題</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">LINE 客服、名單追蹤、報價提案、行銷內容、專案管理、數據報表、客製流程。</p>
+            <div data-hero-scene="build" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 3 / 4 ・ 組合第一階段</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">確認建議能力與人工確認邊界,組成第一版導入草稿。</p>
             </div>
-            <div data-hero-scene="build" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · ASSEMBLE</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">你來組裝</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">在右側控制台選一個產業、一個流程——鍵盤與觸控都可以。</p>
-            </div>
-            <div data-hero-scene="match" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · SIMILAR</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">相似場景</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">有對應案例就直接看真實截圖;沒有就用通用流程 UI,不虛構客戶。</p>
-            </div>
-            <div data-hero-scene="sum" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 06 · SUMMARY</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">準備摘要</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">產業、問題、可能展示的模組、希望聯絡時間——不做成果保證。</p>
-            </div>
-            <div data-hero-scene="go" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · TO FORM</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">導向表單</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">資料流接到表單,兩分鐘填完。選好的內容已自動帶入。</p>
+            <div data-hero-scene="go" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC">任務 4 / 4 ・ 確認並送出</span>
+              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">草稿自動帶入表單,補上聯絡方式就能送出討論。</p>
             </div>
           </div>
+          <p style="margin:0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.52)">你的選擇會被保留,並自動帶入最後的需求摘要。</p>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始填寫需求</a>
-            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先查看相似案例</a>
+            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始組合導入草稿</a>
+            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看相近案例</a>
           </div>
         </div>
         <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px)">
           <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
             <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-            <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">PEAKQI DEMO CONSOLE</span>
+            <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
             <span role="status" style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
           <div style="padding:14px 16px;display:flex;flex-direction:column;gap:13px;flex:1">
+            <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
+              <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
+                <span style="font:600 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>
+                <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">選擇產業與流程後,這裡會即時產生第一版導入情境。</span>
+              </div>
+            </sc-if>
             <div data-hero-m="ind..go" role="group" aria-label="選你的產業(單選)" style="display:flex;flex-direction:column;gap:8px">
               <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 選你的產業</span>
               <div style="display:flex;flex-wrap:wrap;gap:6px">
@@ -126,7 +114,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                 </sc-for>
               </div>
             </div>
-            <div data-hero-m="match..go" aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
+            <div data-hero-m="build..go" aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
               <sc-if value="{{ heroHasCase }}" hint-placeholder-val="{{ false }}">
                 <div role="img" aria-label="{{ heroCaseAlt }}" style="{{ heroCaseImgStyle }}"></div>
                 <div style="padding:10px 13px;display:flex;flex-direction:column;gap:2px">
@@ -145,8 +133,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                 </div>
               </sc-if>
             </div>
-            <div data-hero-m="sum..go" style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">DEMO 準備摘要</span>
+            <div data-hero-m="build..go" style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
+              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">草稿摘要</span>
               <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">產業:<b>{{ heroSumInd }}</b>・流程:<b>{{ heroSumFlow }}</b></span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
                 <span style="font:500 12.5px 'Noto Sans TC',sans-serif">可能展示:</span>
@@ -156,10 +144,10 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
                 <sc-if value="{{ heroNoMods }}" hint-placeholder-val="{{ true }}"><span style="font:400 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">選流程後帶入對應模組</span></sc-if>
               </div>
               <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">希望聯絡時間:<b>{{ heroTime }}</b></span>
-              <span style="font:400 10.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">摘要僅描述 Demo 內容,不含成效或成果保證。</span>
+              <span style="font:400 12.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍。</span>
             </div>
           </div>
-          <a data-hero-m="go" href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份場景,開始填寫需求 ↓</a>
+          <a data-hero-m="go" href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
@@ -201,6 +189,44 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
           <p style="margin:auto 0 0;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ pipelineNote }}</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div style="max-width:1360px;margin:clamp(32px,4vw,48px) auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,36px)">
+    <div style="min-width:0">
+      <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">目前哪些工具正在使用?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">只用來理解目前資料分布;實際串接方式仍需確認 API、權限與資料結構。</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ toolOpts }}" as="tp" hint-placeholder-count="9">
+          <button onClick="{{ tp.pick }}" aria-pressed="{{ tp.pressed }}" style="{{ tp.style }}">{{ tp.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="min-width:0">
+      <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">哪些動作一定要由真人確認?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">AI 可以準備資料與草稿,但企業仍可決定哪些內容不得自動送出。</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ humanOpts }}" as="hp2" hint-placeholder-count="7">
+          <button onClick="{{ hp2.pick }}" aria-pressed="{{ hp2.pressed }}" style="{{ hp2.style }}">{{ hp2.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1360px;margin:clamp(28px,3.6vw,44px) auto 0">
+    <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">根據你的選擇,建議先處理這些能力</h3>
+    <p style="margin:8px 0 0;max-width:640px;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">建議不等於已加入——按「加入草稿」才會列入;第一階段確認有效後,其餘能力可後續擴充。</p>
+    <div aria-live="polite" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px">
+      <sc-for list="{{ recCards }}" as="rc" hint-placeholder-count="4">
+        <div style="{{ rc.cardStyle }}">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:{{ rc.tagColor }}">{{ rc.tag }}</span>
+          <span style="font:800 clamp(16.5px,1.3vw,18.5px) 'Noto Sans TC',sans-serif">{{ rc.name }}</span>
+          <span style="font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66);text-wrap:pretty">{{ rc.why }}</span>
+          <button onClick="{{ rc.toggle }}" aria-pressed="{{ rc.pressed }}" style="{{ rc.btnStyle }}">{{ rc.btnLabel }}</button>
+        </div>
+      </sc-for>
+      <sc-if value="{{ noRecs }}" hint-placeholder-val="{{ true }}">
+        <span style="font:400 14.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);padding:12px 0">先在上面選流程,建議能力會出現在這裡。</span>
+      </sc-if>
     </div>
   </div>
 </section>
@@ -273,7 +299,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
     </div>
     <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
       <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
-        <h2 style="margin:0;font:900 20px 'Noto Sans TC',sans-serif">先了解你想改善的流程</h2>
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">選出目前最想改善的工作</h2>
+      <p style="margin:12px 0 0;max-width:600px;font:400 clamp(15.5px,1.2vw,17px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">可複選。每選一項,右側流程草稿與建議能力會即時更新。</p>
         <p style="margin:-6px 0 0;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。上面選好的流程與產業已自動帶入。</p>
         <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
@@ -323,10 +350,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
         </label>
         <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.03);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
           <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.5)">送出前摘要</span>
-          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">產業:<b>{{ sumIndustry }}</b></span>
-          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">想改善:<b>{{ sumScenes }}</b></span>
-          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif">聯絡:<b>{{ sumContact }}</b></span>
-          <span style="font:500 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">我們將準備的 Demo 情境:<b style="color:#090B0E">{{ sumDemo }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">產業:<b>{{ sumIndustry }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">想改善:<b>{{ sumScenes }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">目前工具:<b>{{ sumTools }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">已加入草稿的能力:<b>{{ sumMods }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">人工確認邊界:<b>{{ sumHuman }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">聯絡:<b>{{ sumContact }}</b></span>
+          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">第一階段草稿情境:<b style="color:#090B0E">{{ sumDemo }}</b></span>
+          <span style="font:400 13.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍;現有系統、API、權限、資料與時程仍待評估確認。</span>
         </div>
         <button onClick="{{ submit }}" disabled="{{ submitting }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
       </sc-if>
@@ -341,7 +372,8 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
               <path d="M556 20 L559 23 L565 16" stroke="#65E0BC" stroke-width="2" fill="none"></path>
             </svg>
           </div>
-          <h2 style="margin:0;font:900 21px/1.5 'Noto Sans TC',sans-serif">我們會先閱讀你的需求,再安排適合的討論方式。</h2>
+          <h2 style="margin:0;font:900 clamp(21px,1.8vw,25px)/1.45 'Noto Sans TC',sans-serif">導入草稿已送出</h2>
+          <p style="margin:0;font:400 clamp(15px,1.15vw,16px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">我們會先閱讀你的草稿內容,再依你偏好的聯絡方式安排討論;正式模組、時程與費用會在評估後確認。</p>
           <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
             <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;background:#090B0E;color:#F2EFE8;padding:13px 20px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#FF6B2C;color:#090B0E">同步用 Email 寄出需求 →</a>
@@ -361,6 +393,7 @@ class Component extends DCLogic {
   state = {
     d: null, media: null, copied: false,
     scenes: [], indPick: '', heroInd: '', heroFlow: '',
+    tools: [], mods: [], human: [],
     vName: '', vCompany: '', vIndustry: '', vTime: '', vPhone: '', vEmail: '', vLine: '', vNeed: '', hp: '',
     touched: {}, submitting: false, done: false, doneMode: '', failMsg: '', needTouched: false
   };
@@ -413,6 +446,7 @@ class Component extends DCLogic {
       name: s.vName.trim(), company: s.vCompany.trim(), industry: s.vIndustry,
       phone: s.vPhone.trim(), email: s.vEmail.trim(), line: s.vLine.trim(),
       scenes: s.scenes.join('、'),
+      tools: s.tools.join('、'), mods: s.mods.join('、'), human: s.human.join('、'),
       need: s.vNeed.trim(), time: s.vTime, source: 'peakqi-site-demo-form', ts: new Date().toISOString()
     };
   }
@@ -424,6 +458,9 @@ class Component extends DCLogic {
       '公司/品牌:' + (p.company || '(未填)'),
       '產業:' + (p.industry || '(未填)'),
       '想改善的流程:' + (p.scenes || '(未選)'),
+      '目前工具:' + (p.tools || '(未選)'),
+      '已加入草稿的能力:' + (p.mods || '(未加入)'),
+      '人工確認邊界:' + (p.human || '(未選)'),
       '聯絡電話:' + (p.phone || '(未填)'),
       'Email:' + (p.email || '(未填)'),
       'LINE ID:' + (p.line || '(未填)'),
@@ -470,14 +507,15 @@ class Component extends DCLogic {
       this.setState(patch);
     };
     // ---- 場景選擇(複選) ----
+    // key 為既有 option value(payload 相容),desc 為問題描述,steps 進流程草稿
     const sceneDefs = [
-      { key: 'LINE 客服回覆', steps: [{ t: 'AI 接住詢問', d: '30 秒內回應、理解需求' }, { t: '重要轉真人', d: '判斷不了直接轉給你' }] },
-      { key: '名單追蹤', steps: [{ t: 'CRM 建檔', d: '對話自動整理成客戶卡' }, { t: 'DAY 1/3/5/7 跟進', d: '系統提醒,AI 擬好訊息' }] },
-      { key: '報價與提案', steps: [{ t: '線上報價單', d: '自動算稅、PDF/Excel 匯出' }, { t: '提案簡報', d: '需求整理成提案初稿' }] },
-      { key: '行銷內容', steps: [{ t: '貼文草稿', d: '依產業每週產出' }, { t: '排程發布', d: '潤飾確認就上線' }] },
-      { key: '專案管理', steps: [{ t: '任務看板', d: '交辦、進度一眼看清' }, { t: '排程提醒', d: '該做的不會漏' }] },
-      { key: '數據報表', steps: [{ t: '營運儀表板', d: '新客、回覆、轉換集中看' }, { t: 'AI 月報', d: '月底自動生成' }] },
-      { key: '其他客製流程', steps: [{ t: '客製模組', d: 'Demo 時依你的流程規劃' }] }
+      { key: 'LINE 客服回覆', desc: '常見問題重複回覆,資料需要人工整理。', steps: [{ t: 'AI 接住詢問', d: '辨識需求、擬回覆草稿' }, { t: '重要轉真人', d: '判斷不了就轉給負責人' }] },
+      { key: '名單追蹤', desc: '詢問進來後缺少負責人、階段與下一步。', steps: [{ t: 'CRM 建檔', d: '對話整理成客戶卡' }, { t: '依狀態跟進', d: '系統提醒,AI 擬好訊息,人確認送出' }] },
+      { key: '報價與提案', desc: '需求散落在對話中,要重新整理成方案與文件。', steps: [{ t: '報價草稿', d: '需求整理成可確認的報價' }, { t: '提案初稿', d: '整理成提案文件' }] },
+      { key: '行銷內容', desc: '案例、素材與內容需要反覆搜尋和重寫。', steps: [{ t: '內容草稿', d: 'AI 先出草稿,發布由你確認' }, { t: '排程管理', d: '排程與追蹤集中一處' }] },
+      { key: '專案管理', desc: '成交後的需求與承諾容易在交接時遺失。', steps: [{ t: '任務與時程', d: '成交資訊直接進任務' }, { t: '進度提醒', d: '該做的事有清楚負責人' }] },
+      { key: '數據報表', desc: '管理者難以快速看見詢問來源與流程停點。', steps: [{ t: '營運視圖', d: '來源、狀態、停點集中看' }] },
+      { key: '其他客製流程', desc: '上面沒有的流程,先寫下來一起評估。', steps: [{ t: '客製評估', d: '依你的流程另行規劃' }] }
     ];
     const toggleScene = (key) => {
       this.setState(prev => {
@@ -488,16 +526,78 @@ class Component extends DCLogic {
     const sceneOpts = sceneDefs.map(sd => {
       const on = s.scenes.includes(sd.key);
       return {
-        label: sd.key,
+        label: (on ? '✓ ' : '') + sd.key + ' — ' + sd.desc,
         pressed: on ? 'true' : 'false',
         pick: () => toggleScene(sd.key),
         style: {
-          cursor: 'pointer', borderRadius: '999px', padding: '11px 20px',
-          font: "600 14px 'Noto Sans TC',sans-serif",
-          background: on ? '#090B0E' : 'transparent',
+          cursor: 'pointer', borderRadius: '8px', padding: '13px 18px', textAlign: 'left',
+          font: "500 15px/1.55 'Noto Sans TC',sans-serif", minHeight: '44px',
+          background: on ? '#090B0E' : '#FFFFFF',
           color: on ? '#F2EFE8' : '#090B0E',
-          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
+          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.2)',
+          boxShadow: on ? '0 0 0 4px rgba(255,107,44,.1)' : 'none',
           transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        }
+      };
+    });
+    // ---- 目前工具(複選;僅記錄資料分布,不承諾串接) ----
+    const TOOL_OPTS = ['LINE', 'Email', '網站表單', 'CRM', '試算表', 'Notion 或知識工具', '內部系統', '尚未確定', '其他'];
+    const chip = (on, activeBg) => ({
+      cursor: 'pointer', borderRadius: '999px', padding: '12px 20px', minHeight: '44px',
+      font: "600 14.5px 'Noto Sans TC',sans-serif",
+      background: on ? (activeBg || '#090B0E') : '#FFFFFF',
+      color: on ? '#F2EFE8' : '#090B0E',
+      border: on ? '1.5px solid ' + (activeBg || '#090B0E') : '1px solid rgba(9,11,14,.25)',
+      transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+    });
+    const toggleIn = (k, key) => this.setState(prev => ({ [k]: prev[k].includes(key) ? prev[k].filter(x => x !== key) : [...prev[k], key] }));
+    const toolOpts = TOOL_OPTS.map(label => ({
+      label: (s.tools.includes(label) ? '✓ ' : '') + label,
+      pressed: s.tools.includes(label) ? 'true' : 'false',
+      pick: () => toggleIn('tools', label),
+      style: chip(s.tools.includes(label), '#1F63B8')
+    }));
+    // ---- 人工確認邊界(複選;預設不選,反映企業控制權) ----
+    const HUMAN_OPTS = ['價格', '特殊需求', '敏感內容', '低信心回答', '報價送出', '預約確認', '合約或承諾'];
+    const humanOpts = HUMAN_OPTS.map(label => ({
+      label: (s.human.includes(label) ? '✓ ' : '') + label,
+      pressed: s.human.includes(label) ? 'true' : 'false',
+      pick: () => toggleIn('human', label),
+      style: chip(s.human.includes(label), '#0F8A6A')
+    }));
+    // ---- 建議能力:依已選流程推薦;按「加入草稿」才算已加入(推薦 ≠ 已選) ----
+    const REC_MAP = {
+      'LINE 客服回覆': [{ n: '需求辨識', w: '因為你選了 LINE 客服:先辨識問題與需求欄位。' }, { n: '人工轉接', w: '例外與敏感情況交回真人,不自動送出。' }],
+      '名單追蹤': [{ n: 'CRM 基本建檔', w: '因為你選了名單追蹤:對話保存成客戶與案件。' }, { n: '依狀態跟進', w: '依案件狀態提醒下一步,不套固定天數。' }],
+      '報價與提案': [{ n: '報價草稿', w: '因為你選了報價提案:需求整理成可確認的草稿。' }],
+      '行銷內容': [{ n: '內容草稿', w: '因為你選了行銷內容:AI 先出草稿,你確認後發布。' }],
+      '專案管理': [{ n: '任務與時程', w: '因為你選了專案管理:成交資訊直接進任務。' }],
+      '數據報表': [{ n: '營運視圖', w: '因為你選了數據報表:來源與停點集中可見。' }],
+      '其他客製流程': [{ n: '客製評估', w: '你的流程需要另行評估,會列入待確認。' }]
+    };
+    const recsAll = [];
+    s.scenes.forEach(k => (REC_MAP[k] || []).forEach(r => { if (!recsAll.find(x => x.n === r.n)) recsAll.push(r); }));
+    const recCards = recsAll.map(r => {
+      const added = s.mods.includes(r.n);
+      return {
+        name: r.n, why: r.w,
+        tag: added ? '已加入草稿' : '建議第一階段',
+        tagColor: added ? '#0F8A6A' : '#A63A08',
+        pressed: added ? 'true' : 'false',
+        toggle: () => toggleIn('mods', r.n),
+        btnLabel: added ? '✓ 已加入草稿(點擊移除)' : '＋ 加入草稿',
+        btnStyle: {
+          marginTop: 'auto', cursor: 'pointer', borderRadius: '4px', padding: '11px 14px', minHeight: '44px',
+          font: "700 14px 'Noto Sans TC',sans-serif",
+          background: added ? 'rgba(15,138,106,.1)' : '#090B0E',
+          color: added ? '#0F8A6A' : '#F2EFE8',
+          border: added ? '1.5px solid #0F8A6A' : 'none',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        },
+        cardStyle: {
+          border: added ? '1.5px solid rgba(15,138,106,.5)' : '1px solid rgba(9,11,14,.16)',
+          borderRadius: '8px', background: '#FFFFFF', padding: '18px',
+          display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box', minWidth: 0
         }
       };
     });
@@ -587,7 +687,9 @@ class Component extends DCLogic {
     const heroMods = s.heroFlow ? (heroModsMap[s.heroFlow] || []) : [];
     return {
       heroIndOpts, heroFlowOpts,
-      heroConsoleStatus: (!s.heroInd && !s.heroFlow) ? 'WAITING…' : (s.heroInd && s.heroFlow ? 'READY' : 'ASSEMBLING…'),
+      toolOpts, humanOpts, recCards, noRecs: !recCards.length,
+      draftEmpty: !s.heroInd && !s.heroFlow && !s.scenes.length,
+      heroConsoleStatus: (!s.heroInd && !s.heroFlow) ? '尚未開始' : (s.heroInd && s.heroFlow ? '草稿成形' : '組裝中'),
       heroHasCase: !!heroCase,
       heroNoCase: !heroCase,
       heroCaseName: heroCase ? heroCase.name : '',
@@ -652,6 +754,9 @@ class Component extends DCLogic {
       sumScenes: s.scenes.length ? s.scenes.join('、') : '未選(可在說明補充)',
       sumContact: [s.vPhone && '電話', s.vEmail && 'Email', s.vLine && 'LINE'].filter(Boolean).join('/') + (s.vTime ? '・' + s.vTime : '') || '尚未填',
       sumDemo: (s.vIndustry ? s.vIndustry + ' × ' : '') + (s.scenes.length ? s.scenes.join('、') : '依你的說明準備'),
+      sumTools: s.tools.length ? s.tools.join('、') : '未選(可留白)',
+      sumMods: s.mods.length ? s.mods.join('、') : '未加入(建議能力可於上方加入)',
+      sumHuman: s.human.length ? s.human.join('、') : '未選(代表依預設流程)',
       notDone: !s.done,
       done: s.done,
       doneNote: s.doneMode === 'demo'
@@ -659,7 +764,7 @@ class Component extends DCLogic {
         : '我們會在一個工作天內與你聯繫,安排 15 分鐘場景 Demo。',
       mailtoHref: this._mailto(),
       submitting: s.submitting,
-      submitLabel: s.submitting ? '送出中⋯' : '送出導入需求 →',
+      submitLabel: s.submitting ? '送出中⋯' : '送出導入草稿 →',
       submitStyle: {
         background: s.submitting ? 'rgba(9,11,14,.35)' : '#FF6B2C', border: 'none', color: '#090B0E',
         padding: '15px', borderRadius: '2px', font: "700 16px 'Noto Sans TC',sans-serif", letterSpacing: '.04em',

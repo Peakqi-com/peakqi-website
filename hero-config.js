@@ -104,18 +104,15 @@ export const heroConfig = {
   },
   demo: {
     key: 'demo', paint: 'demo',
-    story: 'BUILD YOUR DEMO SCENE:空白控制台 → 產業節點 → 流程節點 → 你來組裝 → 相似案例 → 準備摘要 → 導向表單',
+    story: 'BUILD YOUR FIRST AI FLOW:選擇情境 → 找出卡點 → 組合第一階段 → 確認並送出',
     totalVh: { desktop: 340, tablet: 260, mobile: 175 },
     scenes: [
-      { id: 'wait',  label: '等待你的場景', kicker: 'SCENE 01 · WAITING',    line: '一條未完成的資料線、一座空白控制台——等待輸入你的場景。',            d: [0, .12],   m: [0, .15] },
-      { id: 'ind',   label: '產業節點',     kicker: 'SCENE 02 · INDUSTRY',   line: '婚禮、室內設計、房仲、美業、電商、活動、ESG、社區、教育、品牌、其他。', d: [.12, .27], m: [.15, .4] },
-      { id: 'flow',  label: '流程問題',     kicker: 'SCENE 03 · FRICTION',   line: 'LINE 客服、名單追蹤、報價提案、行銷內容、專案管理、數據報表、客製流程。', d: [.27, .42], m: [.4, .65] },
-      { id: 'build', label: '你來組裝',     kicker: 'SCENE 04 · ASSEMBLE',   line: '在右側控制台選一個產業、一個流程——鍵盤與觸控都可以。',              d: [.42, .57], m: null },
-      { id: 'match', label: '相似場景',     kicker: 'SCENE 05 · SIMILAR',    line: '有對應案例就直接看真實截圖;沒有就用通用流程 UI,不虛構客戶。',       d: [.57, .72], m: null },
-      { id: 'sum',   label: '準備摘要',     kicker: 'SCENE 06 · SUMMARY',    line: '產業、問題、可能展示的模組、希望聯絡時間——不做成果保證。',           d: [.72, .88], m: [.65, .88] },
-      { id: 'go',    label: '導向表單',     kicker: 'SCENE 07 · TO FORM',    line: '資料流接到表單,兩分鐘填完。',                                        d: [.88, 1],   m: [.88, 1] }
+      { id: 'ind',   label: '選擇情境',     kicker: '任務 1 / 4', line: '選產業或使用情境——案例、用語與流程示意會跟著更新。', d: [0, .25],   m: [0, .28] },
+      { id: 'flow',  label: '找出卡點',     kicker: '任務 2 / 4', line: '勾選目前最卡的流程,右側草稿即時加入對應節點。',     d: [.25, .5],  m: [.28, .55] },
+      { id: 'build', label: '組合第一階段', kicker: '任務 3 / 4', line: '確認建議能力與人工確認邊界,組成第一版導入草稿。',   d: [.5, .78],  m: [.55, .8] },
+      { id: 'go',    label: '確認並送出',   kicker: '任務 4 / 4', line: '草稿自動帶入表單,補上聯絡方式就能送出討論。',       d: [.78, 1],   m: [.8, 1] }
     ],
-    reduced: ['wait', 'ind', 'flow', 'sum', 'go'],
+    reduced: ['ind', 'flow', 'build', 'go'],
     ctas: [
       { kind: 'primary', label: '開始填寫需求', href: '#pq-demo-grid', track: 'hero_demo_click' },
       { kind: 'ghost', label: '先查看相似案例', href: 'Cases.dc.html', track: 'hero_case_click' }
