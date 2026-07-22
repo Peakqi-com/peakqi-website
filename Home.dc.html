@@ -681,6 +681,44 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @media (max-width:640px){.pqbrk4 .ico{width:104px;height:139px;top:-48px;right:8px}}
 @media (prefers-reduced-motion:reduce){.pqmB4 *{animation:none!important}
   .pqmB4 .lid4a,.pqmB4 .lid4b{transform:scaleY(0)!important}.pqmB4 .flash4{opacity:0!important}}
+/* ── Step 6:05 機身怪 —— 在線上走鋼索(第五種姿態)。搖晃時雙臂反向配重、
+   自由腳伸出去找平衡;10.1s 差點跌倒 → 風車甩臂 → 穩住。第二列淺 hairline,線色固定淺。 ── */
+/* 置中站位:上方 02 格的規格列左右各有文字、中段是空的 → 站中間才不壓字 */
+.pqbrk5 .ico{position:absolute;top:-55px;left:50%;margin-left:-60px;width:120px;height:150px;z-index:4;transform:none}
+.pqbrk5:hover .ico{transform:none}
+.pqmB5{display:block;width:100%;height:100%;overflow:visible}
+.pqmB5 *{transform-box:view-box}
+/* 重心搖擺 3.6s:以站立腳(58,54)為軸;線的下凹跟重心同拍微幅變化 */
+.pqmB5 .bal5{transform-origin:58px 54px;animation:pqb5Sway 3.6s cubic-bezier(.44,.05,.5,.95) infinite}
+@keyframes pqb5Sway{0%{transform:rotate(4deg)}50%{transform:rotate(-4.5deg)}100%{transform:rotate(4deg)}}
+.pqmB5 .sag5{transform-origin:58px 54px;animation:pqb5Sag 3.6s cubic-bezier(.44,.05,.5,.95) infinite}
+@keyframes pqb5Sag{0%{transform:scaleY(1.14)}25%{transform:scaleY(.9)}50%{transform:scaleY(1.16)}75%{transform:scaleY(.9)}100%{transform:scaleY(1.14)}}
+/* 雙臂:與身體反向配重(同週期、反向),各加 -0.12s 相位差避免完全鏡像 */
+.pqmB5 .armL5{transform-origin:36px 26px;animation:pqb5Arm 3.6s cubic-bezier(.44,.05,.5,.95) infinite}
+.pqmB5 .armR5{transform-origin:80px 26px;animation:pqb5Arm 3.6s cubic-bezier(.44,.05,.5,.95) -.12s infinite}
+@keyframes pqb5Arm{0%{transform:rotate(-7deg)}50%{transform:rotate(8deg)}100%{transform:rotate(-7deg)}}
+/* 自由腳:外層跟重心反向,內層 2.8s 自己找平衡的小幅擺 */
+.pqmB5 .legF5{transform-origin:66px 48px;animation:pqb5LegF 2.8s cubic-bezier(.45,.02,.35,1) infinite}
+@keyframes pqb5LegF{0%{transform:rotate(6deg)}42%{transform:rotate(-9deg)}58%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
+/* 差點跌倒 10.1s:56% 大幅傾斜 → 58-66% 風車甩臂兩圈半 → 70% 反向過衝 → 穩住;
+   同窗腳下線兩側浮現應力短線 */
+.pqmB5 .catch5{transform-origin:58px 54px;animation:pqb5Catch 10.1s cubic-bezier(.5,.05,.3,1) infinite}
+@keyframes pqb5Catch{0%,54%{transform:rotate(0)}57%{transform:rotate(-10deg)}61%{transform:rotate(-7deg)}66%{transform:rotate(3.5deg)}70%{transform:rotate(-1.5deg)}74%,100%{transform:rotate(0)}}
+.pqmB5 .wmL{transform-origin:36px 26px;animation:pqb5Wm 10.1s cubic-bezier(.4,.1,.4,.9) infinite}
+.pqmB5 .wmR{transform-origin:80px 26px;animation:pqb5Wm 10.1s cubic-bezier(.4,.1,.4,.9) -.07s infinite}
+@keyframes pqb5Wm{0%,55%{transform:rotate(0)}58%{transform:rotate(52deg)}61%{transform:rotate(-44deg)}64%{transform:rotate(30deg)}67%{transform:rotate(-14deg)}70%{transform:rotate(5deg)}74%,100%{transform:rotate(0)}}
+.pqmB5 .tick5{opacity:0}
+.pqmB5 .t5L{transform-origin:50px 58px;animation:pqb5Tick 10.1s ease-out infinite}
+.pqmB5 .t5R{transform-origin:66px 58px;animation:pqb5Tick 10.1s ease-out .08s infinite}
+@keyframes pqb5Tick{0%,55%{opacity:0;transform:scale(.5)}58%,68%{opacity:.55;transform:scale(1)}74%,100%{opacity:0;transform:scale(.5)}}
+/* 眼睛:平時直視前方微張望 4.9s;差點跌倒時瞳孔縮小驚恐(10.1s 同窗) */
+.pqmB5 .pup5{animation:pqb5Look 4.9s ease-in-out infinite}
+@keyframes pqb5Look{0%,100%{transform:translateX(0)}32%{transform:translateX(1.8px)}64%{transform:translateX(-1.6px)}}
+.pqmB5 .lid5{transform-origin:61px 30px;transform:scaleY(0);animation:pqb5Blink 5.7s steps(1,end) infinite}
+@keyframes pqb5Blink{0%,64%{transform:scaleY(0)}66%,69%{transform:scaleY(1)}71%,76%{transform:scaleY(0)}78%,81%{transform:scaleY(1)}83%,100%{transform:scaleY(0)}}
+@media (max-width:640px){.pqbrk5 .ico{width:104px;height:130px;top:-48px;margin-left:-52px}}
+@media (prefers-reduced-motion:reduce){.pqmB5 *{animation:none!important}
+  .pqmB5 .lid5{transform:scaleY(0)!important}.pqmB5 .tick5{opacity:0!important}}
 
 /* ══ 雙軌驗證:2D 資訊圖解 ════════════════════════════════════════════
    規格原本指定 React + Framer Motion,但本專案沒有 bundler(且明訂禁止新增),
@@ -2004,16 +2042,30 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 </g>
 </g>
 </svg></span><span class="eye"><u></u>SHUTTER · 快門</span><h3>報價</h3><p>線上報價單、自動算稅、當天送出,不再來回喬。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
-      <div data-reveal class="pq-mod" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
-<rect class="body" x="12" y="26" width="72" height="50" rx="14"/>
-<rect class="body" x="34" y="14" width="28" height="14" rx="5"/>
-<g class="blink"><rect class="paper" x="26" y="38" width="20" height="16" rx="6"/><circle class="ink" cx="36" cy="46" r="4.6"/>
-<rect class="paper" x="52" y="38" width="20" height="16" rx="6"/><circle class="ink" cx="62" cy="46" r="4.6"/></g>
-<path class="line" d="M38 64h20"/>
-<g class="wig" style="transform-origin:12px 50px"><rect class="ink" x="2" y="46" width="12" height="9" rx="4"/></g>
-<g class="wig" style="transform-origin:84px 50px"><rect class="ink" x="82" y="46" width="12" height="9" rx="4"/></g>
-<circle class="paper tw1" cx="72" cy="32" r="3"/>
-<path class="ink" d="M26 76h11v9H26zM59 76h11v9H59z"/></g></svg></span><span class="eye"><u></u>CHASSIS · 機身</span><h3>專案</h3><p>從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
+      <div data-reveal class="pq-mod pqbrk5" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg class="pqmB5" viewBox="0 0 120 150">
+<rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
+<path class="sag5" d="M12 54 Q58 60 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
+<path class="tick5 t5L" d="M50 58l-4 4" stroke="rgba(17,22,27,.4)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<path class="tick5 t5R" d="M66 58l4 4" stroke="rgba(17,22,27,.4)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
+<g class="catch5"><g class="bal5">
+<rect x="50" y="8" width="16" height="9" rx="3.5" fill="#3E9BFF"/>
+<rect x="36" y="14" width="44" height="34" rx="10" fill="#3E9BFF"/>
+<path d="M40 20v22M44.5 20v22" stroke="rgba(17,22,27,.22)" stroke-width="1.6"/>
+<circle cx="39" cy="17" r="1.3" fill="#F2EFE8" opacity=".6"/><circle cx="77" cy="17" r="1.3" fill="#F2EFE8" opacity=".6"/>
+<circle cx="39" cy="45" r="1.3" fill="#F2EFE8" opacity=".6"/><circle cx="77" cy="45" r="1.3" fill="#F2EFE8" opacity=".6"/>
+<rect x="48" y="22" width="26" height="16" rx="4" fill="#11161B"/>
+<g class="pup5"><circle cx="56" cy="30" r="2.9" fill="#F2EFE8"/><circle cx="66" cy="30" r="2.9" fill="#F2EFE8"/></g>
+<path class="lid5" d="M48 22h26v16H48z" fill="#3E9BFF"/>
+<g class="wmL"><g class="armL5"><path d="M36 26L21 20" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="19.5" cy="19.4" r="4.2" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/></g></g>
+<g class="wmR"><g class="armR5"><path d="M80 26L95 20" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
+<circle cx="96.5" cy="19.4" r="4.2" fill="#3E9BFF" stroke="#11161B" stroke-width="2"/></g></g>
+<path d="M54 48L56 53.5" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M51.5 54h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
+<g class="legF5"><path d="M66 48L76 44" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M76 44l6 1.5" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g>
+</g></g>
+</svg></span><span class="eye"><u></u>CHASSIS · 機身</span><h3>專案</h3><p>從報價到執行、交付到結案,一個案子從頭到尾撐得住。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
       <div data-reveal class="pq-mod" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg class="pq-mon" viewBox="0 0 96 96"><g class="bob">
 <rect class="body" x="12" y="18" width="72" height="54" rx="12"/>
 <rect class="ink" x="20" y="26" width="56" height="34" rx="6"/>
