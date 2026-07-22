@@ -1788,6 +1788,39 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pf3Ok{0%,90%{stroke-dashoffset:16}95%,98%{stroke-dashoffset:0}100%{stroke-dashoffset:16}}
 .pf3 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
 .pf3 .c2{animation-delay:2.5s}.pf3 .c3{animation-delay:5s}.pf3 .c4{animation-delay:7.5s}
+
+/* ── 04 AI Interior Pro:空間掃描 → 家具落位 → 風格切換 → 提案簡報,10s 一輪 ── */
+.pf4 .led{animation:pf1Led 1.6s ease-in-out infinite}
+.pf4 .a1,.pf4 .a2,.pf4 .a3,.pf4 .a4{opacity:0}
+.pf4 .a1{animation:pf2A1 10s ease-out infinite}
+.pf4 .a2{animation:pf2A2 10s ease-out infinite}
+.pf4 .a3{animation:pf2A3 10s ease-out infinite}
+.pf4 .a4{animation:pf2A4 10s ease-out infinite}
+/* 幕一:雷射掃描空房(掃描線左右來回,牆角線稿被描出) */
+.pf4 .scanln{animation:pf4Scan 2.2s cubic-bezier(.45,.05,.55,.95) infinite alternate}
+@keyframes pf4Scan{from{transform:translateX(0)}to{transform:translateX(128px)}}
+.pf4 .wire{stroke-dasharray:220;stroke-dashoffset:220;animation:pf4Wire 10s ease-out infinite}
+@keyframes pf4Wire{0%,2%{stroke-dashoffset:220}16%,24%{stroke-dashoffset:0}27%,100%{stroke-dashoffset:220}}
+/* 幕二:家具依序落下就位(帶回彈) */
+.pf4 .fur{opacity:0;animation:pf4Drop 10s cubic-bezier(.35,1.5,.5,1) infinite}
+.pf4 .fu2{animation-delay:.4s}.pf4 .fu3{animation-delay:.8s}.pf4 .fu4{animation-delay:1.2s}
+@keyframes pf4Drop{0%,26%{opacity:0;transform:translateY(-18px)}30%,47%{opacity:1;transform:translateY(0)}51%,100%{opacity:0}}
+/* 幕三:風格 A/B 切換(沙發與掛畫換色,色票輪替按下) */
+.pf4 .stA{animation:pf4StA 10s steps(1,end) infinite}
+.pf4 .stB{opacity:0;animation:pf4StB 10s steps(1,end) infinite}
+@keyframes pf4StA{0%,61%{opacity:1}61.01%,68%{opacity:0}68.01%,100%{opacity:1}}
+@keyframes pf4StB{0%,61%{opacity:0}61.01%,68%{opacity:1}68.01%,100%{opacity:0}}
+.pf4 .sw{transform-origin:center;animation:pf4Sw 10s ease-out infinite}
+.pf4 .sw2{animation-delay:.55s}
+@keyframes pf4Sw{0%,55%{transform:scale(1)}58%{transform:scale(1.28)}61%,100%{transform:scale(1)}}
+/* 幕四:提案簡報翻頁(三頁依序滑入),頁角折起 */
+.pf4 .pg{opacity:0;animation:pf4Pg 10s cubic-bezier(.3,1,.4,1) infinite}
+.pf4 .p2{animation-delay:.5s}.pf4 .p3{animation-delay:1s}
+@keyframes pf4Pg{0%,75%{opacity:0;transform:translateX(26px)}79%,96%{opacity:1;transform:translateX(0)}100%{opacity:0}}
+.pf4 .okp{stroke-dasharray:16;stroke-dashoffset:16;animation:pf4Okp 10s ease-out infinite}
+@keyframes pf4Okp{0%,89%{stroke-dashoffset:16}94%,97%{stroke-dashoffset:0}100%{stroke-dashoffset:16}}
+.pf4 .cue{fill:#2A323B;animation:pf1Cue 10s steps(1,end) infinite}
+.pf4 .c2{animation-delay:2.5s}.pf4 .c3{animation-delay:5s}.pf4 .c4{animation-delay:7.5s}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -2659,7 +2692,69 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
         <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#E06B9C">了解更多 →</span>
       </a>
-      <a data-reveal data-brand href="https://aiinteriorpro.com" target="_blank" rel="noopener" style="--a:#65E0BC;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s">
+      <a data-reveal data-brand href="https://aiinteriorpro.com" target="_blank" rel="noopener" style="--a:#65E0BC;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf4" aria-hidden="true"><svg viewBox="0 0 200 200">
+<rect class="bg" width="200" height="200"/>
+<g stroke="rgba(255,255,255,.05)" stroke-width="1">
+<path d="M0 40h200M0 80h200M0 120h200M0 160h200M40 0v200M80 0v200M120 0v200M160 0v200"/></g>
+<rect class="pane" x="14" y="14" width="172" height="24" rx="7"/>
+<circle class="led" cx="27" cy="26" r="4" fill="var(--a)"/>
+<rect class="mut" x="38" y="22" width="54" height="7" rx="3.5"/>
+<rect class="mut" x="148" y="22" width="26" height="7" rx="3.5" opacity=".6"/>
+<!-- 幕一:掃描空房 -->
+<g class="a1">
+<rect class="pane" x="26" y="50" width="148" height="104" rx="9"/>
+<path class="wire" d="M40 140V78l34-16v78M74 62l86 10v68M40 140h120M74 96h30M120 90v50" fill="none" stroke="var(--a)" stroke-width="1.6" stroke-linejoin="round" opacity=".85"/>
+<g class="scanln"><rect x="32" y="52" width="3" height="100" rx="1.5" fill="var(--a)" opacity=".55"/></g>
+</g>
+<!-- 幕二:家具落位 -->
+<g class="a2">
+<rect class="pane" x="26" y="50" width="148" height="104" rx="9"/>
+<path d="M34 142h132" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>
+<g class="fur fu1"><rect x="44" y="112" width="52" height="18" rx="5" fill="var(--a)"/>
+<rect x="40" y="104" width="12" height="26" rx="4" fill="var(--a)" opacity=".75"/>
+<rect x="88" y="104" width="12" height="26" rx="4" fill="var(--a)" opacity=".75"/>
+<path d="M46 142v-6M92 142v-6" stroke="#0E1216" stroke-width="3"/></g>
+<g class="fur fu2"><rect x="118" y="118" width="34" height="4" rx="2" fill="#F2EFE8" opacity=".85"/>
+<path d="M135 122v20M124 142h22" stroke="rgba(242,239,232,.7)" stroke-width="2.6"/></g>
+<g class="fur fu3"><path d="M160 142v-30" stroke="rgba(242,239,232,.6)" stroke-width="2.4"/>
+<circle cx="160" cy="104" r="8" fill="var(--a)" opacity=".9"/></g>
+<g class="fur fu4"><rect x="52" y="66" width="30" height="22" rx="3" fill="none" stroke="rgba(242,239,232,.5)" stroke-width="2"/>
+<path d="M56 82l8-8 6 6 6-9" stroke="var(--a)" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+</g>
+<!-- 幕三:風格切換 -->
+<g class="a3">
+<rect class="pane" x="26" y="50" width="148" height="88" rx="9"/>
+<g class="stA"><rect x="40" y="96" width="56" height="20" rx="5" fill="var(--a)"/>
+<rect x="112" y="66" width="34" height="24" rx="3" fill="none" stroke="var(--a)" stroke-width="2"/></g>
+<g class="stB"><rect x="40" y="96" width="56" height="20" rx="5" fill="#3E9BFF"/>
+<rect x="112" y="66" width="34" height="24" rx="3" fill="none" stroke="#3E9BFF" stroke-width="2"/></g>
+<path d="M34 124h132" stroke="rgba(255,255,255,.12)" stroke-width="1.4"/>
+<g class="sw sw1"><circle cx="66" cy="156" r="8" fill="var(--a)"/></g>
+<g class="sw sw2"><circle cx="92" cy="156" r="8" fill="#3E9BFF"/></g>
+<circle cx="118" cy="156" r="8" fill="#F2EFE8" opacity=".5"/>
+<circle cx="144" cy="156" r="8" fill="#2A323B"/>
+</g>
+<!-- 幕四:提案簡報 -->
+<g class="a4">
+<g class="pg p1"><rect x="30" y="58" width="84" height="60" rx="5" fill="#1C232B"/>
+<rect class="mut" x="38" y="66" width="40" height="6" rx="3"/>
+<rect x="38" y="80" width="68" height="30" rx="3" fill="#232C36"/>
+<path d="M42 104l10-10 8 7 9-12 12 15" stroke="var(--a)" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+<g class="pg p2"><rect x="52" y="72" width="84" height="60" rx="5" fill="#1C232B" stroke="rgba(255,255,255,.09)" stroke-width="1"/>
+<rect class="mut" x="60" y="80" width="34" height="6" rx="3"/>
+<rect x="60" y="94" width="30" height="30" rx="3" fill="var(--a)" opacity=".8"/>
+<rect class="mut" x="96" y="94" width="32" height="5" rx="2.5" opacity=".7"/>
+<rect class="mut" x="96" y="104" width="26" height="5" rx="2.5" opacity=".5"/></g>
+<g class="pg p3"><rect x="74" y="86" width="84" height="60" rx="5" fill="#151A20" stroke="var(--a)" stroke-width="1.6"/>
+<path d="M158 86l-14 0 14 14z" fill="var(--a)" opacity=".7"/>
+<rect class="mut" x="84" y="98" width="44" height="7" rx="3.5"/>
+<rect class="mut" x="84" y="112" width="60" height="5" rx="2.5" opacity=".6"/>
+<rect class="mut" x="84" y="122" width="52" height="5" rx="2.5" opacity=".5"/>
+<path class="okp line" d="M136 132l4.5 4.5 8-9.5" stroke="#65E0BC" stroke-width="2.6"/></g>
+</g>
+<circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
+<circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
+</svg></span>
         <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#1e9a72"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#1e9a72">INTERIOR</span></div>
         <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Interior Pro</h3>
         <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
