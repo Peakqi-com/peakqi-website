@@ -316,26 +316,26 @@ export function createHomeEngine() {
     // 用來把 renderedScrollPx 分段線性映射回舊軸 → 既有的 sub(p,…) 全部原樣可用,
     // 但每個場景的實際捲動距離改由本表決定(舊軸是等比切割,這才是跳段的根因)。
     const CINEMA_SCENES = [
-      { id: 'hero',            group: 'intro',       legacy: [0.000, 0.040], desktopVh: 165, touchVh: 210 },
-      { id: 'lens',            group: 'camera-part', legacy: [0.040, 0.080], desktopVh: 140, touchVh: 200 },
-      { id: 'mainboard',       group: 'camera-part', legacy: [0.080, 0.120], desktopVh: 140, touchVh: 200 },
-      { id: 'sensor',          group: 'camera-part', legacy: [0.120, 0.160], desktopVh: 140, touchVh: 200 },
-      { id: 'shutter',         group: 'camera-part', legacy: [0.160, 0.200], desktopVh: 140, touchVh: 200 },
-      { id: 'chassis-rainbow', group: 'camera-part', legacy: [0.200, 0.240], desktopVh: 300, touchVh: 390 },
-      { id: 'blueprint-intro', group: 'white',       legacy: [0.240, 0.290], desktopVh: 180, touchVh: 240 },
-      { id: 'study-01',        group: 'white-part',  legacy: [0.290, 0.332], desktopVh: 135, touchVh: 190 },
-      { id: 'study-02',        group: 'white-part',  legacy: [0.332, 0.374], desktopVh: 135, touchVh: 190 },
-      { id: 'study-03',        group: 'white-part',  legacy: [0.374, 0.416], desktopVh: 135, touchVh: 190 },
-      { id: 'study-04',        group: 'white-part',  legacy: [0.416, 0.458], desktopVh: 135, touchVh: 190 },
-      { id: 'study-05',        group: 'white-part',  legacy: [0.458, 0.500], desktopVh: 135, touchVh: 190 },
-      { id: 'reassembly',      group: 'white',       legacy: [0.500, 0.578], desktopVh: 250, touchVh: 320 },
-      { id: 'summary',         group: 'transition',  legacy: [0.578, 0.700], desktopVh: 160, touchVh: 220 },
-      { id: 'video-01',        group: 'video',       legacy: [0.700, 0.744], desktopVh: 135, touchVh: 190 },
-      { id: 'video-02',        group: 'video',       legacy: [0.744, 0.788], desktopVh: 135, touchVh: 190 },
-      { id: 'video-03',        group: 'video',       legacy: [0.788, 0.832], desktopVh: 135, touchVh: 190 },
-      { id: 'video-04',        group: 'video',       legacy: [0.832, 0.876], desktopVh: 135, touchVh: 190 },
-      { id: 'video-05',        group: 'video',       legacy: [0.876, 0.920], desktopVh: 162, touchVh: 228 },
-      { id: 'cta',             group: 'outro',       legacy: [0.920, 1.000], desktopVh: 145, touchVh: 180 }
+      { id: 'hero',            group: 'intro',       legacy: [0.000, 0.040], desktopVh: 165, touchVh: 120 },
+      { id: 'lens',            group: 'camera-part', legacy: [0.040, 0.080], desktopVh: 140, touchVh: 100 },
+      { id: 'mainboard',       group: 'camera-part', legacy: [0.080, 0.120], desktopVh: 140, touchVh: 100 },
+      { id: 'sensor',          group: 'camera-part', legacy: [0.120, 0.160], desktopVh: 140, touchVh: 100 },
+      { id: 'shutter',         group: 'camera-part', legacy: [0.160, 0.200], desktopVh: 140, touchVh: 100 },
+      { id: 'chassis-rainbow', group: 'camera-part', legacy: [0.200, 0.240], desktopVh: 300, touchVh: 215 },
+      { id: 'blueprint-intro', group: 'white',       legacy: [0.240, 0.290], desktopVh: 180, touchVh: 130 },
+      { id: 'study-01',        group: 'white-part',  legacy: [0.290, 0.332], desktopVh: 135, touchVh: 100 },
+      { id: 'study-02',        group: 'white-part',  legacy: [0.332, 0.374], desktopVh: 135, touchVh: 100 },
+      { id: 'study-03',        group: 'white-part',  legacy: [0.374, 0.416], desktopVh: 135, touchVh: 100 },
+      { id: 'study-04',        group: 'white-part',  legacy: [0.416, 0.458], desktopVh: 135, touchVh: 100 },
+      { id: 'study-05',        group: 'white-part',  legacy: [0.458, 0.500], desktopVh: 135, touchVh: 100 },
+      { id: 'reassembly',      group: 'white',       legacy: [0.500, 0.578], desktopVh: 250, touchVh: 180 },
+      { id: 'summary',         group: 'transition',  legacy: [0.578, 0.700], desktopVh: 160, touchVh: 115 },
+      { id: 'video-01',        group: 'video',       legacy: [0.700, 0.744], desktopVh: 135, touchVh: 100 },
+      { id: 'video-02',        group: 'video',       legacy: [0.744, 0.788], desktopVh: 135, touchVh: 100 },
+      { id: 'video-03',        group: 'video',       legacy: [0.788, 0.832], desktopVh: 135, touchVh: 100 },
+      { id: 'video-04',        group: 'video',       legacy: [0.832, 0.876], desktopVh: 135, touchVh: 100 },
+      { id: 'video-05',        group: 'video',       legacy: [0.876, 0.920], desktopVh: 162, touchVh: 120 },
+      { id: 'cta',             group: 'outro',       legacy: [0.920, 1.000], desktopVh: 145, touchVh: 105 }
     ];
     const isTouch = (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) || (navigator.maxTouchPoints || 0) > 0;
     let sceneLayout = [], sceneById = Object.create(null), totalScrollPx = 0;
@@ -1078,7 +1078,7 @@ export function createHomeEngine() {
         const damped = renderedScrollPx + (targetScrollPx - renderedScrollPx) * (1 - Math.exp(-lambda * dt));
         // 追趕上限:太低的話快速滾輪一次捲過好幾個場景,畫面會落後好幾個場景才追上,
         // 看起來就像「第一次捲相機比較小」(其實是還停在前一個較小的場景)。
-        const maxStep = stableVh * (isTouch ? 4.0 : 8.0) * dt;
+        const maxStep = stableVh * (isTouch ? 6.0 : 8.0) * dt; // 觸控 4.0→6.0:手機快滑時追趕更快,消除滯重感
         renderedScrollPx += clamp(damped - renderedScrollPx, -maxStep, maxStep);
       }
       const snapping = snapFrames > 0;
