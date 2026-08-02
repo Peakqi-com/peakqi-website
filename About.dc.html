@@ -312,20 +312,33 @@ nav[aria-label="breadcrumb"]{align-items:center}
         </div>
       </sc-for>
     </div>
-    <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:clamp(14px,1.8vw,20px)">
-      <sc-for list="{{ teamSlots }}" as="ts" hint-placeholder-count="4">
-        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
-          <div aria-hidden="true" style="aspect-ratio:4/5;border-radius:6px;border:1px solid rgba(242,239,232,.14);background:linear-gradient(160deg,#1A1F26,#12161B);display:flex;align-items:center;justify-content:center">
-            <span style="font:600 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.3)">PHOTO</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <span style="font:800 clamp(16px,1.3vw,18px) 'Noto Sans TC',sans-serif">{{ ts.name }}</span>
-            <span style="font:400 clamp(14px,1.05vw,15px)/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ ts.role }}</span>
-          </div>
+    <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(16px,2vw,24px)">
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;background:rgba(242,239,232,.03);padding:clamp(20px,2.2vw,26px);display:flex;flex-direction:column;gap:14px;box-sizing:border-box;min-width:0">
+        <svg viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><circle cx="100" cy="30" r="6" fill="#FF6B2C"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#FF6B2C" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#20262E" stroke="#FF6B2C" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#20262E" stroke="#FF6B2C" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#20262E" stroke="#FF6B2C" stroke-width="2.5"/><circle cx="80" cy="88" r="9" fill="#F2EFE8"/><circle cx="120" cy="88" r="9" fill="#F2EFE8"/><circle cx="82" cy="88" r="4" fill="#090B0E"/><circle cx="122" cy="88" r="4" fill="#090B0E"/><path d="M84 116q16 12 32 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M100 148l-9 14h18z" fill="#FF6B2C"/><rect x="94" y="162" width="12" height="16" rx="3" fill="#FF6B2C" opacity=".8"/></svg>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">FOUNDER ・ 創辦人</span>
+          <span style="font:900 clamp(20px,1.7vw,24px) 'Noto Sans TC',sans-serif">Jacky(吳昭奇)</span>
+          <p style="margin:4px 0 0;font:400 clamp(14.5px,1.1vw,15.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">深耕商務開發與專案管理,橫跨都市更新、國際貿易、科技新創與音樂產業。曾任危老重建工作站站長,帶領 80 位以上推動師、推動 2 案事業計畫送審;具企業採購與海外市場拓展實戰經驗,專長商務開發、資源整合與團隊領導。</p>
         </div>
-      </sc-for>
+      </div>
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;background:rgba(242,239,232,.03);padding:clamp(20px,2.2vw,26px);display:flex;flex-direction:column;gap:14px;box-sizing:border-box;min-width:0">
+        <svg viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><circle cx="100" cy="30" r="6" fill="#3E9BFF"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#3E9BFF" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#1C2430" stroke="#3E9BFF" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#1C2430" stroke="#3E9BFF" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#1C2430" stroke="#3E9BFF" stroke-width="2.5"/><rect x="38" y="76" width="10" height="26" rx="5" fill="#3E9BFF"/><rect x="152" y="76" width="10" height="26" rx="5" fill="#3E9BFF"/><path d="M46 74q54-30 108 0" stroke="#3E9BFF" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M72 92q8-10 16 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M112 92q8-10 16 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M82 116q18 14 36 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="100" cy="160" r="10" fill="none" stroke="#3E9BFF" stroke-width="3"/><circle cx="100" cy="160" r="3.5" fill="#3E9BFF"/></svg>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">COO ・ 共同創辦人暨營運長</span>
+          <span style="font:900 clamp(20px,1.7vw,24px) 'Noto Sans TC',sans-serif">Allen</span>
+          <p style="margin:4px 0 0;font:400 clamp(14.5px,1.1vw,15.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">10 年跨域內容與產品經驗,橫跨文化、科技、AI 產品。曾任文化部影視及流行音樂產業專案辦公室、相信音樂企劃;金鐘獎入圍、全國美展新媒體藝術入選;主導 10+ 個數位產品從 0 到上線。</p>
+        </div>
+      </div>
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;background:rgba(242,239,232,.03);padding:clamp(20px,2.2vw,26px);display:flex;flex-direction:column;gap:14px;box-sizing:border-box;min-width:0">
+        <svg viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><circle cx="100" cy="30" r="6" fill="#65E0BC"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#65E0BC" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#1A2A26" stroke="#65E0BC" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#1A2A26" stroke="#65E0BC" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#1A2A26" stroke="#65E0BC" stroke-width="2.5"/><rect x="64" y="76" width="30" height="24" rx="6" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><rect x="106" y="76" width="30" height="24" rx="6" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><path d="M94 88h12" stroke="#F2EFE8" stroke-width="3.5"/><circle cx="79" cy="88" r="4" fill="#65E0BC"/><circle cx="121" cy="88" r="4" fill="#65E0BC"/><path d="M82 118h24" stroke="#F2EFE8" stroke-width="4" stroke-linecap="round"/><rect x="110" y="114" width="8" height="8" fill="#65E0BC"><animate attributeName="opacity" values="1;0;1" dur="1.4s" repeatCount="indefinite"/></rect><path d="M78 156l-10 8 10 8M122 156l10 8-10 8" stroke="#65E0BC" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">CTO ・ 技術長</span>
+          <span style="font:900 clamp(20px,1.7vw,24px) 'Noto Sans TC',sans-serif">TZ(丁家麒)</span>
+          <p style="margin:4px 0 0;font:400 clamp(14.5px,1.1vw,15.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">10 年以上全端開發經驗(React/Vue/Next.js/Node.js),擅長 Chatbot 系統(LINE/FB Messenger/Discord)與產品從 0 到 1。曾任前端技術主管帶領 5 人團隊,規劃專案架構與開發時程。</p>
+        </div>
+      </div>
     </div>
-    <p style="margin:clamp(20px,2.6vw,28px) 0 0;max-width:700px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">成員介紹整理中,以上先以角色佔位;實際參與的成員與人數依專案範圍安排,專案開始前會確認各角色的對口與聯絡方式。</p>
+    <p style="margin:clamp(20px,2.6vw,28px) 0 0;max-width:700px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">成員照片整理中,先以機器人頭貼代替。實際參與的成員與人數依專案範圍安排,專案開始前會確認各角色的對口與聯絡方式。</p>
   </div>
 </section>
 
@@ -406,13 +419,6 @@ class Component extends DCLogic {
       { n: 'ROLE 02', c: '#3E9BFF', t: 'UX 與系統設計', d: '將複雜工作整理成團隊真正能使用的介面與操作方式。' },
       { n: 'ROLE 03', c: '#65E0BC', t: 'AI 與系統工程', d: '負責模型、資料、API、權限、後端與既有工具串接。' },
       { n: 'ROLE 04', c: 'rgba(242,239,232,.8)', t: '導入與持續優化', d: '協助測試、上線、蒐集使用回饋與後續調整。' }
-    ];
-    // 團隊成員佔位:實際姓名/照片待使用者提供,先預留版位,文案明示整理中
-    const teamSlots = [
-      { name: '成員介紹整理中', role: '流程與產品策略' },
-      { name: '成員介紹整理中', role: 'UX 與系統設計' },
-      { name: '成員介紹整理中', role: 'AI 與系統工程' },
-      { name: '成員介紹整理中', role: '導入與持續優化' }
     ];
     const governance = [
       { t: '資料範圍需要被定義', d: '先確認 AI 可以使用哪些資料,以及哪些資料不得進入模型流程。' },
@@ -583,7 +589,7 @@ class Component extends DCLogic {
     }).filter(Boolean);
     return {
       whyResults, principles,
-      roles, governance, teamSlots,
+      roles, governance,
       aboutShots, spectrumRows,
       bigNums, indNodes, method, stripThumbs,
       previewAlt: selCase ? selCase.cover.alt : '此產業案例素材整理中',
