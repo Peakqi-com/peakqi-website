@@ -273,7 +273,8 @@ export const planAdds = {
 export const demoIndustries = [...industries, '其他'];
 export const contactTimes = ['不限,方便就好', '平日上午', '平日下午', '平日晚上', '週末'];
 // API endpoint 集中設定:接上正式後端時填入 URL;null = 預覽 demo submission
-export const submitConfig = { endpoint: null };
+// 表單收件:/api/submit(Vercel 函式)→ Google 試算表(SHEET_WEBHOOK_URL)等出口,見 FORM-SETUP.md
+export const submitConfig = { endpoint: '/api/submit' };
 
 export function faqJsonLd(list) {
   return {
