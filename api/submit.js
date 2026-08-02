@@ -68,7 +68,15 @@ module.exports = async (req, res) => {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ ...s, ts: when }),
       redirect: 'follow'
-    }).then(r => ({ sink: 'sheet', ok: r.ok })).catch(() => ({ sink: 'sheet', ok: false })));
+    }).then(async (r) => {
+      // 診斷:Apps Script 權限沒開「任何人」時會 302 到 Google 登入頁(狀態碼卻是 200),
+      // 必須用最終網址與內文判斷,不能只看 r.ok
+      const finalUrl = r.url || '';
+      const text = (await r.text().catch(() => '')).slice(0, 120);
+      const loginWall = finalUrl.includes('accounts.google.com') || text.includes('accounts.google.com');
+      return { sink: 'sheet', ok: r.ok && !loginWall,
+        status: r.status, loginWall, hint: text.replace(/\s+/g, ' ').slice(0, 80) };
+    }).catch((e) => ({ sink: 'sheet', ok: false, hint: String(e && e.message).slice(0, 80) })));
   }
 
   // ── 出口 3:Notion 資料庫(欄位名固定,建庫規格見 FORM-SETUP.md)
