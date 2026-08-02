@@ -86,20 +86,20 @@ nav[aria-label="breadcrumb"]{align-items:center}
             <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看相近案例</a>
           </div>
         </div>
-        <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px)">
+        <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px);max-height:min(82vh,820px)">
           <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
             <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
             <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
             <span role="status" style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
-          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:13px;flex:1">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0;overflow-y:auto">
             <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
               <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
                 <span style="font:600 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>
                 <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">選擇產業與流程後,這裡會即時產生第一版導入情境。</span>
               </div>
             </sc-if>
-            <div data-hero-m="ind..go" role="group" aria-label="選你的產業(單選)" style="display:flex;flex-direction:column;gap:8px">
+            <div role="group" aria-label="選你的產業(單選)" style="display:flex;flex-direction:column;gap:8px">
               <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 選你的產業</span>
               <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <sc-for list="{{ heroIndOpts }}" as="n" hint-placeholder-count="11">
@@ -107,7 +107,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
                 </sc-for>
               </div>
             </div>
-            <div data-hero-m="flow..go" role="group" aria-label="最卡的流程(單選)" style="display:flex;flex-direction:column;gap:8px">
+            <div role="group" aria-label="最卡的流程(單選)" style="display:flex;flex-direction:column;gap:8px">
               <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">02 最卡的流程</span>
               <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <sc-for list="{{ heroFlowOpts }}" as="n" hint-placeholder-count="7">
@@ -115,7 +115,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
                 </sc-for>
               </div>
             </div>
-            <div data-hero-m="build..go" aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
+            <div aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
               <sc-if value="{{ heroHasCase }}" hint-placeholder-val="{{ false }}">
                 <div role="img" aria-label="{{ heroCaseAlt }}" style="{{ heroCaseImgStyle }}"></div>
                 <div style="padding:10px 13px;display:flex;flex-direction:column;gap:2px">
@@ -134,7 +134,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
                 </div>
               </sc-if>
             </div>
-            <div data-hero-m="build..go" style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
+            <div style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
               <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">草稿摘要</span>
               <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">產業:<b>{{ heroSumInd }}</b>・流程:<b>{{ heroSumFlow }}</b></span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
@@ -148,7 +148,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
               <span style="font:400 12.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍。</span>
             </div>
           </div>
-          <a data-hero-m="go" href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
+          <a href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
