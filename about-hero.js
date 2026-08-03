@@ -26,6 +26,35 @@ export function mountAboutHero() {
     const BY = (y) => band.y0 + (band.y1 - band.y0) * y / 100;
     const CX = mobile ? 50 : 69, CYr = BY(46);
 
+    // 手機分層鐵律:牆永遠從文案實際底部以下開始,不與文字/CTA 交錯(收合時跟著上移)
+    let syncTmr = 0;
+    function syncWallBand() {
+      if (!mobile) return;
+      const stage = root.querySelector('[data-hero-stage]');
+      const copy = root.querySelector('[data-hero-copy]');
+      if (!stage || !copy) return;
+      const st = stage.getBoundingClientRect();
+      const cb = copy.getBoundingClientRect().bottom - st.top;
+      const top = Math.max(st.height * .28, Math.min(cb + 12, st.height - 150));
+      wall.style.top = top + 'px';
+      wall.style.height = Math.max(150, st.height - top - 6) + 'px';
+    }
+    if (mobile) {
+      syncWallBand();
+      const copyColEl = root.querySelector('.pq-clp') && root.querySelector('.pq-clp').parentElement;
+      try {
+        const mo = new MutationObserver(() => {
+          clearTimeout(syncTmr);
+          syncTmr = setTimeout(syncWallBand, 60);
+          setTimeout(syncWallBand, 300);
+          setTimeout(syncWallBand, 520);
+        });
+        if (copyColEl) mo.observe(copyColEl, { attributes: true, attributeFilter: ['class'] });
+        ctx.add(() => { try { mo.disconnect(); } catch (e2) {} clearTimeout(syncTmr); });
+      } catch (e2) {}
+      setTimeout(syncWallBand, 400);
+      setTimeout(syncWallBand, 1200);
+    }
     const L = {};
     // S1 FRAGMENTS:5 片細小局部
     const fragPos = mobile

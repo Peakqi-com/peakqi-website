@@ -140,7 +140,7 @@ export function makeDraw(g) {
 function paintSolutions(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
-  const s = clamp(Math.min(z.w / 500, z.h / 360), .5, mobile ? 1.3 : 1.7);
+  const s = clamp(Math.min(z.w / 500, z.h / 360), mobile ? .95 : .5, mobile ? 1.3 : 1.7); // 手機字級下限:動畫文字必須可讀
   const kS = k('sig'), kL = k('layers'), kC = k('cap'), kF = k('fol'), kN = k('nur'), kA = k('align'), kO = k('console');
   const colW = mobile ? z.w * .92 : z.w * .56;
   const colX = z.x + (mobile ? z.w * .04 : 4);
@@ -229,15 +229,18 @@ function paintSolutions(g, e) {
     const a = ez(kC);
     g.save(); g.globalAlpha = a;
     const bw = Math.min(158 * s, colW * .44);
-    d.rr(l0x + 12, l0y + lh * .34, bw, Math.max(20 * s, lh * .42), 5);
+    const lbY = mobile ? l0y + lh * .16 : l0y + lh * .34;
+    d.rr(l0x + 12, lbY, bw, Math.max(20 * s, lh * (mobile ? .34 : .42)), 5);
     g.fillStyle = 'rgba(101,224,188,.14)'; g.fill();
     g.strokeStyle = 'rgba(101,224,188,.45)'; g.lineWidth = 1; g.stroke();
-    d.han('LINE:想約週五下午', l0x + 20, l0y + lh * .34 + Math.max(14 * s, lh * .27), 10.5 * s, 'rgba(242,239,232,.88)', 600);
+    d.han('LINE:想約週五下午', l0x + 20, lbY + Math.max(14 * s, lh * (mobile ? .22 : .27)), 10.5 * s, 'rgba(242,239,232,.88)', 600);
+    let cpx = mobile ? l0x + 12 : l0x + 12 + bw + 8;
     ['需求', '服務', '時間', '真人?'].forEach((tx, j) => {
       const ka = ez(clamp(kC * 4 - 1 - j * .5, 0, 1));
       if (ka <= 0) return;
       g.globalAlpha = a * ka;
-      d.chip(l0x + 12 + bw + 8 + j * 50 * s, l0y + lh * .4, tx, ka > .7, 9.5 * s);
+      if (mobile) { cpx += d.chip(cpx, l0y + lh * .62, tx, ka > .7, 9.5 * s) + 6; } // 手機:第二列自然流排
+      else d.chip(l0x + 12 + bw + 8 + j * 50 * s, l0y + lh * .4, tx, ka > .7, 9.5 * s);
     });
     g.restore();
   }
@@ -290,18 +293,21 @@ function paintSolutions(g, e) {
       const ka = ez(clamp(kN * 3.4 - j * .5, 0, 1));
       if (ka <= 0) return;
       g.globalAlpha = a * ka;
-      xx += d.chip(xx, l2y + lh * .34, tx, ka > .75, 9.5 * s) + 6;
+      xx += d.chip(xx, l2y + lh * (mobile ? .14 : .34), tx, ka > .75, 9.5 * s) + 6;
     });
     g.globalAlpha = a;
     ['案例', '優惠', '貼文'].forEach((tx, j) => {
       const ka = ez(clamp(kN * 3 - .8 - j * .5, 0, 1));
       if (ka <= 0) return;
-      const sw = Math.min(56 * s, colW * .16), sx = l2x + colW - (sw + 8) * (3 - j) - 6, sy2 = l2y + lh * .3;
+      const sw = Math.min(56 * s, colW * .16);
+      const sx = mobile ? l2x + 12 + j * (sw + 8) : l2x + colW - (sw + 8) * (3 - j) - 6; // 手機:下列左排,不與狀態晶片同列互撞
+      const sy2 = l2y + lh * (mobile ? .5 : .3);
+      const sh2 = lh * (mobile ? .4 : .5);
       g.globalAlpha = a * ka;
-      d.rr(sx, sy2, sw, lh * .5, 3);
+      d.rr(sx, sy2, sw, sh2, 3);
       g.fillStyle = 'rgba(101,224,188,.08)'; g.fill();
       g.strokeStyle = 'rgba(101,224,188,.4)'; g.lineWidth = 1; g.stroke();
-      d.han(tx, sx + 8, sy2 + lh * .32, 9.5 * s, 'rgba(242,239,232,.75)', 600);
+      d.han(tx, sx + 8, sy2 + sh2 * .62, 9.5 * s, 'rgba(242,239,232,.75)', 600);
     });
     g.restore();
   }
