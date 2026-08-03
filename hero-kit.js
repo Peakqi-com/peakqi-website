@@ -111,7 +111,7 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
       if (copyEl) {
         const cb = rectIn(copyEl).y + copyEl.offsetHeight + 14;
         const top = Math.min(Math.max(z.y, cb), H - 150);
-        z = { x: z.x, y: top, w: z.w, h: Math.max(140, H - top - 12) };
+        z = { x: z.x, y: top, w: z.w, h: Math.max(140, Math.min(H - top - 12, Math.round(H * 0.56))) };
       }
     }
     const pad = 6;
@@ -409,6 +409,7 @@ function ensureMobileCollapseCss() {
   const st = document.createElement('style');
   st.textContent = '@media (max-width:899px){' +
     '[data-hero-stage]{align-items:flex-start!important}' +
+    '[data-hero-stage]:has(.pq-hero-compact) [data-shotwall],[data-hero-stage]:has(.pq-hero-compact) [data-ashotwall]{top:40%!important;height:60%!important;transition:top .45s cubic-bezier(.16,1,.3,1),height .45s cubic-bezier(.16,1,.3,1)}' +
     '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +
     '.pq-hero-compact .pq-clp{opacity:0;max-height:0!important;margin:0!important;pointer-events:none}' +
     '.pq-hero-compact .pq-clp.pq-clp-keep{opacity:1;max-height:300px!important;pointer-events:auto}' +

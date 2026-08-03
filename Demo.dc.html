@@ -60,7 +60,11 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:13.5px!important}
 [data-hero-media]{min-height:25svh!important}
+[data-hero-progress]{display:none!important}
 }
+@media (max-width:659px){#pq-ind-grid2{grid-template-columns:1fr!important}}
+@media (max-width:399px){[role="status"]{font-size:9px!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
+@media (max-width:899px){[data-hero-media] div[style*="overflow-y:auto"],[data-hero-media] div[style*="overflow-y: auto"]{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent)}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -129,7 +133,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
             <span role="status" style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
-          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0;overflow-y:auto">
+          <div style="padding:14px 16px 22px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0;overflow-y:auto">
             <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
               <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
                 <span style="font:600 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>

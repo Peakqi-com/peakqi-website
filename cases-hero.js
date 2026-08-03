@@ -23,7 +23,7 @@ export function mountCasesHero() {
     const chips = Array.from(wall.querySelectorAll('[data-featchip]'));
     const statsC = Array.from(wall.querySelectorAll('[data-statcard]'));
     const meta = shots.map((el, i) => ({ el, cat: el.getAttribute('data-cat') || cats[0], feat: el.getAttribute('data-feat') === '1' || i < 4 }));
-    const band = mobile ? { y0: 50, y1: 98 } : { y0: 0, y1: 100 }; // mobile:牆佔下半帶,文字在上
+    const band = mobile ? { y0: 4, y1: 96 } : { y0: 0, y1: 100 }; // mobile:鋪滿整面牆;垂直讓位交給頁面 CSS 的牆帶(靜止 56%/收合 37%),避免雙重壓帶
     const BY = (y) => band.y0 + (band.y1 - band.y0) * y / 100;
     const N = mobile ? 8 : shots.length;
 
@@ -73,7 +73,7 @@ export function mountCasesHero() {
       return { o: 1, x: (mobile ? 2 : 42) + col * (mobile ? 25 : 14.4), y: BY((mobile ? 8 : 5) + row * (mobile ? 46 : 23.5)), w: mobile ? 22 : 13, z: 2, dim: 0 };
     });
     // S7 CTA:網格退為背景
-    L.cta = L.index.map((p, i) => ({ o: p.o * (meta[i].feat ? .75 : .45), x: p.x, y: p.y, w: p.w, z: p.z, dim: .2 }));
+    L.cta = L.index.map((p, i) => ({ o: p.o * (mobile ? (meta[i].feat ? .3 : .12) : (meta[i].feat ? .75 : .45)), x: p.x, y: p.y, w: p.w, z: p.z, dim: .2 })); // 手機終幕:縮圖退為淡背景,不壓 NEXT 框
 
     function apply(id) {
       const lay = L[id] || L.index;

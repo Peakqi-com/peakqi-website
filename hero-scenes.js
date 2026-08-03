@@ -160,7 +160,7 @@ function paintSolutions(g, e) {
     { fx: .1, fy: .55, w: 96, dep: .9, lab: '報價' },
     { fx: .46, fy: .7, w: 86, dep: 1.14, lab: '工作視窗' }
   ];
-  const winFade = 1 - ez(sb(kL, .35, 1));
+  const winFade = 1 - ez(sb(Math.max(kL, kC, kF, kN, kA, kO), .08, .42)); // 任一後續場景一啟動就快速清場,不殘留疊卡
   wins.forEach((w2, i) => {
     if (mobile && i > 2) return;
     const a = ez(clamp(kS * 3 - i * .35, 0, 1)) * winFade;
@@ -268,7 +268,12 @@ function paintSolutions(g, e) {
       const nx = l1x + 24 + (colW - 60) * j / 3;
       const on = kF * 4 - .4 > j;
       d.node(nx, ty, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', 1, !on);
-      d.label(tx, nx - 14 * s, ty + 14 * s, 8.5 * s, on ? C.blue : 'rgba(242,239,232,.4)', 1);
+      if (j === 3) { // d.label 逐字自 x 左起繪(忽略 textAlign),右對齊必須直接 fillText
+        g.save(); g.font = '600 ' + Math.max(8, 8.5 * s) + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = on ? C.blue : 'rgba(242,239,232,.4)'; g.textAlign = 'right'; g.textBaseline = 'alphabetic';
+        g.fillText(tx, l1x + colW - 8, ty + 14 * s); g.restore();
+      }
+      else d.label(tx, nx - 14 * s, ty + 14 * s, 8.5 * s, on ? C.blue : 'rgba(242,239,232,.4)', 1);
       if (j < 3) d.line(nx + 5, ty, l1x + 24 + (colW - 60) * (j + 1) / 3 - 5, ty, clamp(kF * 4 - .5 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
     });
     const hint = ['補齊需求', '提供案例', '確認反應', '決定下一步'][clamp(Math.floor(kF * 4), 0, 3)];
@@ -420,7 +425,7 @@ function paintPricing(g, e) {
   ];
   meta.forEach((m, i) => {
     const a = ez(clamp(kR * 3 - i * .45, 0, 1)) * fadeO;
-    if (a <= 0.01) return;
+    if (a <= 0.12) return; // 終幕淡出末端 gh/slotH 會變負(IndexSizeError → canvas 全滅),提早跳出
     const x = rx(i), hot = ez(m.kk);
     g.save(); g.globalAlpha = a;
     const gh = rh * (0.3 + 0.7 * a);
@@ -428,10 +433,10 @@ function paintPricing(g, e) {
     d.rr(x, gy, rw, gh, 6);
     g.fillStyle = 'rgba(20,23,28,' + (0.42 + 0.35 * Math.max(hot, kO * .8)).toFixed(2) + ')'; g.fill();
     g.strokeStyle = hot > .08 ? m.c : 'rgba(242,239,232,.24)'; g.lineWidth = 1 + hot * .8; g.stroke();
-    d.label(m.en, x + 9, gy + 14 * s, 8.5 * s, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
-    d.han(m.zh, x + 9, gy + 29 * s, 11.5 * s, C.ivory, 800);
+    d.label(m.en, x + 9, gy + Math.max(12, 14 * s), 8.5 * s, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
+    d.han(m.zh, x + 9, gy + Math.max(29, 29 * s) + 2, 11.5 * s, C.ivory, 800);
     if (m.badge && hot > .5) { g.globalAlpha = a * ez(sb(m.kk, .5, 1)); d.chip(x + rw - 62 * s, gy + 6, m.badge, true, 8.5 * s); g.globalAlpha = a; }
-    const slotStep = gh * .6 / 4, slotTop = gy + gh * .34, slotH = slotStep - 7;
+    const slotStep = Math.max(9, gh * .6 / 4), slotTop = gy + gh * .34, slotH = Math.max(4, slotStep - 7);
     for (let u = 0; u < 4; u++) {
       g.strokeStyle = 'rgba(242,239,232,.1)'; g.lineWidth = 1;
       g.beginPath(); g.moveTo(x + 8, slotTop + (u + 1) * slotStep - 4); g.lineTo(x + rw - 8, slotTop + (u + 1) * slotStep - 4); g.stroke();
@@ -455,7 +460,7 @@ function paintPricing(g, e) {
       const km = ez(clamp(m.kk * 4 - rowIdx * .5, 0, 1));
       if (km <= 0) return;
       const sy = slotTop + rowIdx * slotStep;
-      const sxOff = (1 - km) * 24;
+      const sxOff = Math.min((1 - km) * 24, 8); // 滑入位移夾限,晶片不出卡框
       g.globalAlpha = a * km;
       d.rr(x + 8 + sxOff, sy, rw - 16, slotH, 3);
       g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.12)' : 'rgba(255,107,44,.12)'; g.fill();
@@ -465,7 +470,7 @@ function paintPricing(g, e) {
       g.globalAlpha = a;
     });
     const kp = Math.max(ez(sb(m.kk, .55, 1)), ez(kC));
-    if (kp > 0) {
+    if (kp > 0 && !mobile) { // 手機:牌高塞不下兩行必疊印,CTA 下方 DOM 晶片已有同資訊
       const py = ry + rh + 8;
       g.globalAlpha = a * kp;
       d.rr(x + 2, py, rw - 4, 38 * s, 4);
@@ -476,7 +481,7 @@ function paintPricing(g, e) {
       d.label(m.mo, x + 10, py + 30 * s, 8.5 * s, m.c === C.blue ? C.blue : C.orange, .3);
       g.globalAlpha = a;
     }
-    if (kC > 0 && fadeO > 0.05) {
+    if (kC > 0 && fadeO > 0.05 && !mobile) {
       g.globalAlpha = ez(kC) * fadeO;
       d.tick(x + 8, ry + rh + 56 * s, 5.5 * s, C.green, 1);
       d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 18, ry + rh + 59 * s, 8.5 * s, 'rgba(242,239,232,.65)', .6);
@@ -496,7 +501,7 @@ function paintPricing(g, e) {
       g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
       g.setLineDash([]); g.lineDashOffset = 0;
     }
-    d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - 7 * s, 8.5 * s, C.green, 1.2);
+    d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
     const k2u = ez(sb(kU, .15, 1));
     d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
     for (let m2 = 1; m2 <= 8; m2++) {
@@ -506,7 +511,7 @@ function paintPricing(g, e) {
       g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
       g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
     }
-    d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + 15 * s, 8.5 * s, C.blue, 1.2);
+    d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + Math.max(16, 15 * s), 8.5 * s, C.blue, 1.2);
     meta.forEach((m, i) => {
       const ax = rx(i) + rw / 2;
       d.line(ax, ry + rh + 70 * s, ax, ly1 - 5, ez(sb(kU, i * .15, .6 + i * .15)), 'rgba(242,239,232,.25)', 1);
@@ -598,7 +603,7 @@ function paintAbout(g, e) {
   }
   if (kG > 0 && kP < 1) {
     g.globalAlpha = ez(kG) * (1 - ez(kP));
-    d.label('8+ INDUSTRIES — GROUPED', z.x + 4, z.y + z.h - 12, 9.5 * s, C.blue, 1.8);
+    g.save(); g.globalAlpha *= (1 - ez(kN)); d.label('8+ INDUSTRIES — GROUPED', z.x + 4, z.y + z.h - 12, 9.5 * s, C.blue, 1.8); g.restore();
     g.globalAlpha = 1;
   }
   // S4 導入流程資料線
@@ -699,7 +704,7 @@ function paintDemo(g, e) {
       const ka = ez(clamp(kI * 3 - i * .3, 0, 1));
       d.node(z.x - 14, z.y + z.h * .18 + i * 12 * s, 2.2, C.orange, a * ka);
     }
-    d.label('INDUSTRY', z.x - 14, z.y + z.h * .18 - 10 * s, 7.5 * s, C.orange, 1.2);
+    if (!mobile) d.label('INDUSTRY', z.x - 14, z.y + z.h * .18 - 10 * s, 7.5 * s, C.orange, 1.2);
     g.restore();
   }
   if (kF > 0 && kB < 1) {
@@ -709,7 +714,7 @@ function paintDemo(g, e) {
       const ka = ez(clamp(kF * 3 - i * .3, 0, 1));
       d.node(z.x - 14, z.y + z.h * .52 + i * 12 * s, 2.2, C.blue, a * ka);
     }
-    d.label('FRICTION', z.x - 14, z.y + z.h * .52 - 10 * s, 7.5 * s, C.blue, 1.2);
+    if (!mobile) d.label('FRICTION', z.x - 14, z.y + z.h * .52 - 10 * s, 7.5 * s, C.blue, 1.2);
     g.restore();
   }
   // S4 組裝連線
@@ -770,7 +775,7 @@ function paintMethod(g, e) {
   // S1 盤點:散落的來源面板被掃描線�во掃過,問題清單逐列成形
   if (kM > 0) {
     // d.panel/head/chip 內部會覆寫 globalAlpha,整幕淡出必須摺進每個 alpha 參數
-    const fd = 1 - ez(sb(kG, .12, .55)) * .93;
+    const fd = 1 - ez(sb(kG, .06, .38)) * .97; // S2 一啟動就快速讓位(PHASE 框虛線會經過清單列)
     const a = ez(kM) * fd;
     g.save(); g.globalAlpha = a;
     const srcs = [['LINE', .06, .06], ['表單', .58, .02], ['試算表', .1, .4], ['CRM', .62, .34]];
@@ -785,13 +790,14 @@ function paintMethod(g, e) {
     });
     const scanY = z.y + z.h * (.06 + .5 * (0.5 + 0.5 * Math.sin(t * 1.1)));
     if (fd > .3) d.line(z.x, scanY, z.x + z.w * .92, scanY, ez(sb(kM, .15, .5)) * fd, 'rgba(255,107,44,' + (.35 * fd).toFixed(2) + ')', 1.2, [5, 7]);
-    const lw = z.w * .5, lx = cx - lw * .18, ly0 = z.y + z.h * .58;
-    d.panel(lx, ly0, lw, z.h * .34, ez(sb(kM, .3, .7)) * fd, true);
-    d.head(lx, ly0, lw, 'PROBLEM LIST — 問題清單', ez(sb(kM, .35, .75)) * fd, C.orange);
+    const lw = z.w * (mobile ? .86 : .5), lx = mobile ? z.x + z.w * .06 : cx - lw * .18, ly0 = z.y + z.h * .58;
+    const lbh = z.h * .34; // 手機:面板加寬(標題才裝得下)、列距隨面板高分配(原固定 26*s 會全擠在上緣)
+    d.panel(lx, ly0, lw, lbh, ez(sb(kM, .3, .7)) * fd, true);
+    d.head(lx, ly0, lw, mobile ? '問題清單' : 'PROBLEM LIST — 問題清單', ez(sb(kM, .35, .75)) * fd, C.orange);
     ['重複輸入 ×3', '漏追節點 ×2', '責任不清 ×1'].forEach((tx, i) => {
       const kr = ez(sb(kM, .45 + i * .12, .75 + i * .12));
       if (kr <= 0) return;
-      const ry = ly0 + 40 * s + i * 26 * s;
+      const ry = ly0 + lbh * .3 + i * lbh * .23;
       d.node(lx + 14, ry - 4, 2.6, C.orange, kr * a, false);
       g.globalAlpha = a * kr;
       d.han(tx, lx + 26, ry, 11 * s, 'rgba(242,239,232,.75)', 500);

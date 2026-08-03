@@ -1843,6 +1843,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* 回頂部:電影卷軸很長,深捲後給一條快速回頭路(左下,避開右下浮動 CTA) */
 #pq-backtop{position:fixed;left:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:140;display:none;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(9,11,14,.82);color:#F2EFE8;border:1px solid rgba(242,239,232,.3);font:700 18px 'Space Grotesk',sans-serif;text-decoration:none;backdrop-filter:blur(6px)}
 #pq-backtop:hover{border-color:#FF6B2C;color:#FF6B2C}
+@media (max-width:899px){#pq-backtop{left:auto;right:5px;bottom:calc(92px + env(safe-area-inset-bottom,0px));width:38px;height:38px;font-size:14px}}
+/* [2] 360 窄幅:相機模型的 4K 貼字與 H1 行尾黏連,鏡頭右移讓開 */
+@media (max-width:374px){#pq-hero-gl{transform:translateX(12px)}}
 body[data-pq-top="1"] #pq-backtop{display:flex}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->

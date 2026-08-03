@@ -188,7 +188,7 @@ export function createHeroEngine({ refs, manifest }) {
       const tk = ez(sub(q, pos.d0 + 0.055, pos.d0 + 0.075)) * (1 - ez(sub(q, pos.d0 + 0.13, pos.d0 + 0.16)));
       if (tk > 0.02) {
         ctx.save(); ctx.globalAlpha = tk;
-        const tx = pos.x, ty = pos.y - pos.h / 2 - S(16);
+        const tx = pos.x, ty = isMobile ? pos.y + pos.h / 2 + S(15) : pos.y - pos.h / 2 - S(16); // 手機:上方是鄰窗底邊(會疊字),改掛窗下
         ctx.font = F(600, px(11)); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         const tw = ctx.measureText('✓ ' + win.tick).width + S(20);
         ctx.fillStyle = 'rgba(101,224,188,.14)'; rr(tx - tw / 2, ty - S(11), tw, S(22), S(11)); ctx.fill();
@@ -581,7 +581,7 @@ export function createHeroEngine({ refs, manifest }) {
           lastScrimK = key;
           scrimEl.style.opacity = oMax.toFixed(2);
           scrimEl.style.background = o5 > 0.01
-            ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.88) 40%,rgba(9,11,14,' + (0.5 + 0.34 * o5).toFixed(2) + ') 62%,rgba(9,11,14,' + (0.66 * o5).toFixed(2) + ') 100%)'
+            ? 'linear-gradient(180deg,rgba(9,11,14,.96) 0%,rgba(9,11,14,.92) 40%,rgba(9,11,14,' + (0.5 + 0.47 * o5).toFixed(2) + ') 62%,rgba(9,11,14,' + (0.92 * o5).toFixed(2) + ') 100%)'
             : 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)';
         }
       }
