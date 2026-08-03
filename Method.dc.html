@@ -41,6 +41,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (max-width:1099px){#m-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:719px){#m-grid{grid-template-columns:minmax(0,1fr)!important}}
 nav[aria-label="breadcrumb"]{align-items:center}
+/* 捲動提示膠囊:箭頭輕彈,捲 320px 內淡出(不支援 scroll-timeline 則常駐) */
+@media (prefers-reduced-motion: no-preference){
+[data-scrollhint] [data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}
+@supports (animation-timeline: scroll()){[data-scrollhint]{animation:pqShFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}
+}
+@keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@keyframes pqShFade{to{opacity:0;visibility:hidden}}
+@media (max-width:899px){[data-scrollhint]{display:none!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -86,6 +94,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
             <a data-hero-primary data-track="hero_demo_click" href="Demo.dc.html" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 15.5px 'Noto Sans TC',sans-serif;padding:15px 28px;border-radius:2px;min-height:44px;display:inline-flex;align-items:center">預約 AI 導入評估</a>
             <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif;padding:14px 24px;border:1px solid rgba(242,239,232,.32);border-radius:2px;min-height:44px;display:inline-flex;align-items:center" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+          
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,看四個導入階段</span></div>
           </div>
         </div>
         <div data-hero-media style="position:relative;z-index:2;min-height:clamp(320px,52vh,480px)" aria-hidden="true"></div>

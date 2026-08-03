@@ -44,6 +44,14 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (min-width:900px){#p-cmp-mob{display:none!important}}
 @media (min-width:900px) and (max-height:760px){#p-hero-racks{display:none!important}}
 nav[aria-label="breadcrumb"]{align-items:center}
+/* 捲動提示膠囊:箭頭輕彈,捲 320px 內淡出(不支援 scroll-timeline 則常駐) */
+@media (prefers-reduced-motion: no-preference){
+[data-scrollhint] [data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}
+@supports (animation-timeline: scroll()){[data-scrollhint]{animation:pqShFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}
+}
+@keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@keyframes pqShFade{to{opacity:0;visibility:hidden}}
+@media (max-width:899px){[data-scrollhint]{display:none!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -114,7 +122,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
               <a data-hero-primary data-track="hero_case_click" href="#p-selector" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">找出適合我的起步方案</a>
               <a data-track="hero_demo_click" href="#p-compare" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">比較三種方案</a>
-            </div>
+            
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,看三種導入起點</span></div>
+          </div>
             <div aria-label="三種方案速覽" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px">
               <span style="border:1px solid rgba(242,239,232,.25);border-radius:4px;padding:6px 10px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">A 接客 <b style="color:#FF6B2C">依需求報價</b></span>
               <span style="border:1px solid rgba(242,239,232,.25);border-radius:4px;padding:6px 10px;font:600 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">B 業務助理 <b style="color:#FF6B2C">依需求報價</b></span>

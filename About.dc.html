@@ -78,6 +78,14 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqBotSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 @keyframes pqBotCursor{0%,49%{opacity:1}50%,100%{opacity:0}}
 @keyframes pqBotLook{0%,32%,100%{transform:translateX(0)}42%,58%{transform:translateX(3px)}68%,84%{transform:translateX(-3px)}}
+/* 捲動提示膠囊:箭頭輕彈,捲 320px 內淡出(不支援 scroll-timeline 則常駐) */
+@media (prefers-reduced-motion: no-preference){
+[data-scrollhint] [data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}
+@supports (animation-timeline: scroll()){[data-scrollhint]{animation:pqShFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}
+}
+@keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@keyframes pqShFade{to{opacity:0;visibility:hidden}}
+@media (max-width:899px){[data-scrollhint]{display:none!important}}
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
@@ -141,6 +149,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
             <a data-hero-primary data-track="about_method_click" href="#a-method" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 15.5px 'Noto Sans TC',sans-serif;padding:15px 28px;border-radius:2px;min-height:44px;display:inline-flex;align-items:center">看我們如何合作</a>
             <a data-track="hero_case_click" href="Cases.dc.html" style="color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif;padding:14px 24px;border:1px solid rgba(242,239,232,.32);border-radius:2px;min-height:44px;display:inline-flex;align-items:center" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際案例</a>
+          
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,認識團隊與工作原則</span></div>
           </div>
           <p style="margin:0;max-width:520px;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">從問題定義、流程設計到上線後調整,由同一個團隊負責。</p>
           

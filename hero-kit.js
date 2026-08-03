@@ -37,7 +37,7 @@ export function HeroScene(cfg, isMobile) {
       out[s.id] = r ? ezSmooth(sub(p, r[0], r[1])) : 1;
     });
     const f = included[0]; // 首場景底僴:p=0 也有完整構圖,不空白開場
-    if (f) out[f.id] = 0.45 + 0.55 * out[f.id];
+    if (f) out[f.id] = 0.62 + 0.38 * out[f.id]; // 靜止首屏就要看得到構圖(檢測:0.45 太淡)
     return out;
   };
   const activeIdx = (p) => {
