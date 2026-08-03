@@ -112,6 +112,14 @@ nav[aria-label="breadcrumb"]{align-items:center}
 #a-hero [data-anote]{display:none!important}
 #a-hero h1{font-size:clamp(1.5rem,6.6vw,1.95rem)!important}
 }
+/* 手機 hero 空間預算:舞台內距縮小+場景列緊湊,配合捲動收合讓視覺帶放大 */
+@media (max-width:899px){
+[data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
+[data-hero-copy]>div{gap:9px!important}
+[data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
+[data-hero-cta] a{padding:12px 18px!important;font-size:13.5px!important}
+[data-hero-media]{min-height:25svh!important}
+}
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->

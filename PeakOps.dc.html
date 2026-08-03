@@ -93,6 +93,8 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @media (prefers-reduced-motion: no-preference){[data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
+/* 手機三層流程卡:加大卡距,不要黏成一疊 */
+@media (max-width:899px){#flow [data-deck]{gap:30px!important}#flow [data-layer]{box-shadow:0 10px 28px rgba(9,11,14,.12)!important}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}

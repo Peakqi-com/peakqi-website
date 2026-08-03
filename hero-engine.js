@@ -9,7 +9,7 @@ export function createHeroEngine({ refs, manifest }) {
   const F = (wt, px) => wt + ' ' + px + 'px "Space Grotesk","Noto Sans TC",sans-serif';
 
   let canvas = null, ctx = null, wrap = null, stage = null;
-  let scrimEl = null, lastScrimK = -1;
+  let scrimEl = null, lastScrimK = '';
   let W = 0, H = 0, DPR = 1, SC = 1, OX = 0, OY = 0, isMobile = false, mAnimH = 0, mScW = 0, mScD = 0;
   let wrapTop = 0, wrapH = 1, vh = 1;
   let p = 0, sp = 0, raf = 0, t0 = performance.now();
@@ -574,11 +574,14 @@ export function createHeroEngine({ refs, manifest }) {
       // 跑完動畫最後才遮罩:平時上深下透(流程秀在下半),最後文字(t5)淡入時
       // 遮罩往下延伸,把收攏的件層拼貼壓成文字底下的暗紋理
       if (scrimEl) {
-        const k5 = Math.round(o5 * 50) / 50;
-        if (k5 !== lastScrimK) {
-          lastScrimK = k5;
-          scrimEl.style.background = k5 > 0.01
-            ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.88) 40%,rgba(9,11,14,' + (0.5 + 0.34 * k5).toFixed(2) + ') 62%,rgba(9,11,14,' + (0.66 * k5).toFixed(2) + ') 100%)'
+        // 第一章純圖不上遮罩:遮罩透明度跟「目前文字塊」透明度連動;t5 才往下加深
+        const oMax = Math.max(o1, o2, o3, o4, o5);
+        const key = Math.round(o5 * 50) + '|' + Math.round(oMax * 50);
+        if (key !== lastScrimK) {
+          lastScrimK = key;
+          scrimEl.style.opacity = oMax.toFixed(2);
+          scrimEl.style.background = o5 > 0.01
+            ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.88) 40%,rgba(9,11,14,' + (0.5 + 0.34 * o5).toFixed(2) + ') 62%,rgba(9,11,14,' + (0.66 * o5).toFixed(2) + ') 100%)'
             : 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)';
         }
       }
@@ -635,7 +638,7 @@ export function createHeroEngine({ refs, manifest }) {
       }
     });
     const scrim = stage.querySelector('[data-scrim]');
-    scrimEl = scrim; lastScrimK = -1;
+    scrimEl = scrim; lastScrimK = '';
     if (scrim) {
       scrim.style.background = isMobile
         ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)'

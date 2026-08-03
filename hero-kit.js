@@ -393,6 +393,41 @@ export function ReducedMotionScene(ctx, root, cfg, mobile) {
   if (cvMain) cvMain.style.opacity = '0';
 }
 
+// ---------- HeroMobileCollapse:手機捲動即收合(靜止=完整文案;捲動=場景敘事+大視覺;尾景 CTA 回歸) ----------
+let _mClpCss = false;
+function ensureMobileCollapseCss() {
+  if (_mClpCss) return; _mClpCss = true;
+  const st = document.createElement('style');
+  st.textContent = '@media (max-width:899px){' +
+    '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +
+    '.pq-hero-compact .pq-clp{opacity:0;max-height:0!important;margin:0!important;pointer-events:none}' +
+    '.pq-hero-compact .pq-clp.pq-clp-keep{opacity:1;max-height:300px!important;pointer-events:auto}' +
+    '}';
+  document.head.appendChild(st);
+}
+function HeroMobileCollapse(ctx, root, canvasCtl) {
+  ensureMobileCollapseCss();
+  // 各頁 copy 結構不同:有的 [data-hero-copy] 本身就是欄,有的多包一層 div —— 找「直屬 h1 的那層」
+  let copyCol = root.querySelector('[data-hero-copy]');
+  if (copyCol && !copyCol.querySelector(':scope > h1')) {
+    const inner = Array.from(copyCol.children).find(c => c.querySelector && c.querySelector(':scope > h1'));
+    if (inner) copyCol = inner;
+  }
+  if (!copyCol || !copyCol.querySelector(':scope > h1')) return null;
+  const els = Array.from(copyCol.querySelectorAll(':scope > h1, :scope > p'));
+  const cta = copyCol.querySelector('[data-hero-cta]');
+  const all = cta ? els.concat([cta]) : els;
+  all.forEach(el => { el.classList.add('pq-clp'); }); // max-height 由 CSS 靜態給(模板非同步渲染,init 量 scrollHeight 會量到 0)
+  let compact = null, keep = null, tmr = 0;
+  const reflow = () => { clearTimeout(tmr); tmr = setTimeout(() => { try { canvasCtl && canvasCtl.resize(); } catch (e) {} }, 480); };
+  return { update(p) {
+    const c = p > 0.045;
+    const k = p >= 0.9;
+    if (c !== compact) { compact = c; copyCol.classList.toggle('pq-hero-compact', c); reflow(); }
+    if (cta && k !== keep) { keep = k; cta.classList.toggle('pq-clp-keep', k); reflow(); }
+  } };
+}
+
 // ---------- InnerPageHero:每頁入口(骨架 + config → 完整 Hero;含斷點重建與清理) ----------
 export function InnerPageHero(root, cfg) {
   const ctx = createMotionContext('hero:' + cfg.key);
@@ -419,7 +454,9 @@ export function InnerPageHero(root, cfg) {
   const cta = HeroCTAStage(ctx, root, cfg, model, cfg.key);
   const canvas = flags.canvas ? HeroCanvas(ctx, root.querySelector('[data-hero-canvas]'), stage, cfg, model, { tier, mobile, flags }) : null;
   if (!canvas) HeroFallback(root);
+  const collapse = mobile ? HeroMobileCollapse(ctx, root, canvas) : null;
   ScrollStage(ctx, wrap, (p) => {
+    if (collapse) collapse.update(p);
     copy.update(p);
     if (media) media.update(p);
     if (lines) lines.update(p);
