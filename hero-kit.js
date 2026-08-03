@@ -105,6 +105,15 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
     if (!z || z.w < 120 || z.h < 120) z = opt.mobile
       ? { x: W * .04, y: H * .5, w: W * .92, h: H * .46 }
       : { x: W * .5, y: H * .14, w: W * .46, h: H * .72 };
+    if (opt.mobile) {
+      // 手機:繪圖區永遠從「文案實際底部」開始,不與文字搶同一塊(收合時 resize 會重算)
+      const copyEl = stage.querySelector('[data-hero-copy]');
+      if (copyEl) {
+        const cb = rectIn(copyEl).y + copyEl.offsetHeight + 14;
+        const top = Math.min(Math.max(z.y, cb), H - 150);
+        z = { x: z.x, y: top, w: z.w, h: Math.max(140, H - top - 12) };
+      }
+    }
     const pad = 6;
     zone = { x: z.x + pad, y: z.y + pad, w: Math.max(60, z.w - pad * 2), h: Math.max(60, z.h - pad * 2) };
   }
@@ -399,6 +408,7 @@ function ensureMobileCollapseCss() {
   if (_mClpCss) return; _mClpCss = true;
   const st = document.createElement('style');
   st.textContent = '@media (max-width:899px){' +
+    '[data-hero-stage]{align-items:flex-start!important}' +
     '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +
     '.pq-hero-compact .pq-clp{opacity:0;max-height:0!important;margin:0!important;pointer-events:none}' +
     '.pq-hero-compact .pq-clp.pq-clp-keep{opacity:1;max-height:300px!important;pointer-events:auto}' +
@@ -414,8 +424,11 @@ function HeroMobileCollapse(ctx, root, canvasCtl) {
     if (inner) copyCol = inner;
   }
   if (!copyCol || !copyCol.querySelector(':scope > h1')) return null;
-  const els = Array.from(copyCol.querySelectorAll(':scope > h1, :scope > p'));
   const cta = copyCol.querySelector('[data-hero-cta]');
+  const els = Array.from(copyCol.children).filter(el =>
+    el !== cta &&
+    !el.hasAttribute('data-hero-scenestage') &&
+    el.tagName !== 'NAV' && el.tagName !== 'SPAN');
   const all = cta ? els.concat([cta]) : els;
   all.forEach(el => { el.classList.add('pq-clp'); }); // max-height 由 CSS 靜態給(模板非同步渲染,init 量 scrollHeight 會量到 0)
   let compact = null, keep = null, tmr = 0;
