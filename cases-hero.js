@@ -32,7 +32,7 @@ export function mountCasesHero() {
     L.detail = meta.map((m, i) => {
       if (!m.feat || i > 2) return { o: 0, x: 50, y: BY(30), w: 30, z: 1 };
       const spots = mobile
-        ? [{ x: 8, y: 2, w: 84 }, { x: 30, y: 44, w: 70 }, { x: -6, y: 72, w: 62 }]
+        ? [{ x: 4, y: 0, w: 86 }, { x: 10, y: 34, w: 86 }, { x: 4, y: 68, w: 86 }]
         : [{ x: 43, y: -9, w: 50 }, { x: 68, y: 40, w: 38 }, { x: 38, y: 66, w: 33 }];
       const s2 = spots[i];
       return { o: 1, x: s2.x, y: mobile ? BY(s2.y) : s2.y, w: s2.w, z: 3 + i, dim: 0 };
@@ -42,9 +42,13 @@ export function mountCasesHero() {
       if (i >= N) return { o: 0, x: 50, y: BY(40), w: 18, z: 1 };
       const col = i % 4, row = (i - col) / 4;
       const dep = [1, .82, .92, .72][(col + row) % 4];
-      const x = (mobile ? 2 : 3) + col * (mobile ? 25 : 24.5) + (row % 2) * 2.4;
-      const y = BY((mobile ? 4 : 3) + row * (mobile ? 46 : 24.5));
-      return { o: .45 + .55 * dep, x, y, w: (mobile ? 22 : 17) * dep, z: Math.round(dep * 4), dim: 1 - dep };
+      if (mobile) { // 手機:整齊 4x2、同尺寸滿佈帶區(深度差只留透明度,不縮小到碎點)
+        const x = 2 + col * 24.5, y = BY(8 + row * 46);
+        return { o: .7 + .3 * dep, x, y, w: 23, z: 3, dim: (1 - dep) * .5 };
+      }
+      const x = 3 + col * 24.5 + (row % 2) * 2.4;
+      const y = BY(3 + row * 24.5);
+      return { o: .45 + .55 * dep, x, y, w: 17 * dep, z: Math.round(dep * 4), dim: 1 - dep };
     });
     // S3 SORTED:四類別直欄(每欄最多 4 張)
     L.sort = meta.map((m, i) => {
@@ -62,7 +66,7 @@ export function mountCasesHero() {
     L.focus = meta.map((m, i) => {
       if (m.feat && fi < 4) { const f = FOC[fi++]; return { o: 1, x: f.x, y: mobile ? BY(f.y) : f.y, w: f.w, z: 6, dim: 0 }; }
       const p = L.sort[i];
-      return { o: i >= N ? 0 : .1, x: p.x, y: p.y, w: p.w, z: 1, dim: .4 };
+      return { o: (i >= N || mobile) ? 0 : .1, x: p.x, y: p.y, w: p.w, z: 1, dim: .4 }; // 手機:非重點全退,不留幽靈殘影
     });
     // S5 PROOF:同 FOCUS,數字卡配對顯示
     L.proof = L.focus;
@@ -70,7 +74,7 @@ export function mountCasesHero() {
     L.index = meta.map((m, i) => {
       if (i >= N) return { o: 0, x: 50, y: BY(40), w: 13, z: 1 };
       const col = i % 4, row = (i - col) / 4;
-      return { o: 1, x: (mobile ? 2 : 42) + col * (mobile ? 25 : 14.4), y: BY((mobile ? 8 : 5) + row * (mobile ? 46 : 23.5)), w: mobile ? 22 : 13, z: 2, dim: 0 };
+      return { o: 1, x: (mobile ? 2 : 42) + col * (mobile ? 24.5 : 14.4), y: BY((mobile ? 8 : 5) + row * (mobile ? 46 : 23.5)), w: mobile ? 23 : 13, z: 2, dim: 0 };
     });
     // S7 CTA:網格退為背景
     L.cta = L.index.map((p, i) => ({ o: p.o * (mobile ? (meta[i].feat ? .3 : .12) : (meta[i].feat ? .75 : .45)), x: p.x, y: p.y, w: p.w, z: p.z, dim: .2 })); // 手機終幕:縮圖退為淡背景,不壓 NEXT 框
