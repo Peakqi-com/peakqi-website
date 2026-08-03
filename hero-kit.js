@@ -110,7 +110,7 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
       const copyEl = stage.querySelector('[data-hero-copy]');
       if (copyEl) {
         const cb = rectIn(copyEl).y + copyEl.offsetHeight + 14;
-        const top = Math.min(Math.max(z.y, cb), H - 150);
+        const top = Math.min(Math.max(cb, H * .25), H - 170); // 直接貼文案底(收合後跟上來),保底 170px 可見
         z = { x: z.x, y: top, w: z.w, h: Math.max(140, Math.min(H - top - 12, Math.round(H * 0.56))) };
       }
     }

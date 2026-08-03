@@ -70,7 +70,46 @@ export function createHome2() {
     const takeover = q('#diagnostic [data-dtake]');
     const closing = q('#diagnostic [data-dclose]');
     const scan = q('#diagnostic [data-dscan]');
-    if (ctx.reduced || ctx.mobile) return; // 模板預設=接管後狀態+結語
+    const applyDiag = (p) => {
+      const mess = ez(sub(p, 0.04, 0.55));
+      const take = ez(sub(p, 0.6, 0.78));
+      meters.forEach((m, i) => {
+        const fill = m.firstElementChild;
+        const bad = ez(sub(p, 0.05 + i * 0.06, 0.5 + i * 0.06));
+        if (fill) {
+          if (take > 0.5) { fill.style.width = (60 + 40 * take).toFixed(0) + '%'; fill.style.background = '#65E0BC'; }
+          else { fill.style.width = (8 + bad * 84).toFixed(1) + '%'; fill.style.background = bad > 0.5 ? '#FF6B2C' : 'rgba(242,239,232,.55)'; }
+        }
+        const c = counts[i];
+        if (c) {
+          const max = parseInt(c.getAttribute('data-max') || '7', 10);
+          let s2, col;
+          if (take > 0.5) { s2 = 'AI 已接手 ✓'; col = '#65E0BC'; }
+          else { s2 = Math.max(1, Math.round(max * bad)) + ' ' + (c.getAttribute('data-u') || ''); col = bad > 0.5 ? '#FF6B2C' : 'rgba(242,239,232,.7)'; }
+          if (c.textContent !== s2) c.textContent = s2;
+          c.style.color = col;
+        }
+      });
+      if (takeover) takeover.style.opacity = String(take);
+    };
+    if (ctx.reduced) return; // 模板預設=接管後狀態+結語
+    if (ctx.mobile) {
+      // 手機未釘住,捲動驅動一入眼就是終態 → 改為入視口播一次 3.4s 時間軸(問題升高→AI 接管轉綠)
+      let played = false;
+      const watchEl = (meters[0] && meters[0].parentElement) || q('#diagnostic'); // 觀察面板本體,不是整個長 section(否則面板進眼前動畫已播完)
+      ctx.io(watchEl, es => {
+        if (played || !(es[0] && es[0].isIntersecting)) return;
+        played = true;
+        const t0 = performance.now();
+        const stepFn = (now) => {
+          const p2 = Math.min(1, (now - t0) / 3400);
+          applyDiag(p2);
+          if (p2 < 1) requestAnimationFrame(stepFn);
+        };
+        requestAnimationFrame(stepFn);
+      }, { threshold: 0.4 });
+      return;
+    }
     pin(wrap, stage, 100);
     if (takeover) takeover.style.opacity = '0';
     if (closing) { closing.style.opacity = '0'; closing.style.transform = 'translateY(16px)'; }

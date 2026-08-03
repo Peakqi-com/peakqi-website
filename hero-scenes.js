@@ -138,235 +138,209 @@ export function makeDraw(g) {
 
 // ---------- Solutions:ONE SYSTEM, THREE OPERATIONS(7 scenes) ----------
 function paintSolutions(g, e) {
+  // 站點旅程重設計(2026-08):七站沿左軌直列,編號 01-07 等寬對齊(與文案 kicker 同基準);
+  // 訊息 token 沿軌滑行;當前站展開內容小景,完成站收緊湊列+綠勾,未來站灰待命。
+  // 桌機/手機同一語言,只差尺寸;所有字級帶下限(手機可讀鐵律)。
+  // 注意:d.panel/head/chip 會覆寫 globalAlpha,每次畫前要重設。
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
-  const s = clamp(Math.min(z.w / 500, z.h / 360), mobile ? .95 : .5, mobile ? 1.3 : 1.7); // 手機字級下限:動畫文字必須可讀
-  const kS = k('sig'), kL = k('layers'), kC = k('cap'), kF = k('fol'), kN = k('nur'), kA = k('align'), kO = k('console');
-  const colW = mobile ? z.w * .92 : z.w * .56;
-  const colX = z.x + (mobile ? z.w * .04 : 4);
-  const lh = z.h * (mobile ? .17 : .2), gapY = z.h * .065;
-  const ly = (i) => z.y + z.h * .12 + i * (lh + gapY);
-  const off = (i) => (1 - ez(kA)) * [22, -12, 16][i] * s;
-  const layers = [
-    { lab: 'CAPTURE', zh: '接客', c: C.orange, kk: kC },
-    { lab: 'FOLLOW', zh: '追客', c: C.blue, kk: kF },
-    { lab: 'NURTURE', zh: '養客', c: C.green, kk: kN }
-  ];
-  // S1 散落視窗(三深度層,layers 時收攏)
-  const wins = [
-    { fx: .04, fy: .02, w: 92, dep: 1.08, lab: 'LINE' },
-    { fx: .5, fy: 0, w: 78, dep: .82, lab: 'EXCEL' },
-    { fx: .68, fy: .3, w: 84, dep: .95, lab: '表單' },
-    { fx: .1, fy: .55, w: 96, dep: .9, lab: '報價' },
-    { fx: .46, fy: .7, w: 86, dep: 1.14, lab: '工作視窗' }
-  ];
-  const winFade = 1 - ez(sb(Math.max(kL, kC, kF, kN, kA, kO), .08, .42)); // 任一後續場景一啟動就快速清場,不殘留疊卡
-  wins.forEach((w2, i) => {
-    if (mobile && i > 2) return;
-    const a = ez(clamp(kS * 3 - i * .35, 0, 1)) * winFade;
-    if (a <= 0.015) return;
-    const ww = w2.w * s * w2.dep, wh = ww * .6;
-    const li = i % 3;
-    const gk = ez(kL);
-    const gx = lerp(z.x + z.w * w2.fx, colX + colW * .5 - ww / 2, gk);
-    const gy = lerp(z.y + z.h * w2.fy, ly(li) + lh / 2 - wh / 2, gk);
-    const drift = e.tier === 'full' ? Math.sin(t * (0.6 + i * .17) + i * 2) * 3 * (w2.dep - .7) : 0;
-    g.save(); g.globalAlpha = a * (0.5 + 0.5 * sb(w2.dep, .8, 1.15));
-    d.rr(gx, gy + drift, ww, wh, 5);
-    g.fillStyle = 'rgba(20,23,28,.92)'; g.fill();
-    g.strokeStyle = 'rgba(242,239,232,.24)'; g.lineWidth = 1; g.stroke();
-    g.strokeStyle = 'rgba(242,239,232,.13)';
-    g.beginPath(); g.moveTo(gx, gy + drift + 16 * s); g.lineTo(gx + ww, gy + drift + 16 * s); g.stroke();
-    d.label(w2.lab, gx + 7, gy + drift + 12 * s, 9.5 * s, 'rgba(242,239,232,.62)', 1);
-    [.42, .6, .78].forEach((fy2, j) => {
-      g.fillStyle = 'rgba(242,239,232,' + (0.2 - j * .045).toFixed(3) + ')';
-      g.fillRect(gx + 7, gy + drift + wh * fy2, ww * (0.72 - j * .16), 2.6);
-    });
-    g.restore();
+  const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .6, 1.25);
+  const fs = Math.max(12, 12.5 * S);      // 站名
+  const fsS = Math.max(9.5, 10 * S);      // 輔助/編號
+  const fsB = Math.max(11, 11.5 * S);     // 站內內容
+
+  const IDS = ['sig', 'layers', 'cap', 'fol', 'nur', 'align', 'console'];
+  const NAMES = ['詢問進來', '辨識需求', '回應與建檔', '安排下一步', '延續脈絡', '流程接通', '營運視圖'];
+  const ks = IDS.map(id => k(id));
+  // 當前站 = 最後一個 k>0.02 的站;其 k 即展開進度
+  let cur = 0;
+  ks.forEach((v, i) => { if (v > 0.02) cur = i; });
+
+  const railX = z.x + Math.max(30, z.w * .07);
+  const bodyX = railX + Math.max(34, 26 * S);
+  const bodyW = z.x + z.w - bodyX - Math.max(8, z.w * .02);
+  const top = z.y + Math.max(10, z.h * .02);
+  const botPad = Math.max(8, z.h * .02);
+  const availH = z.h - (top - z.y) - botPad;
+
+  // 站高:當前站展開(大),其餘緊湊 —— 高度以動畫比例平滑分配
+  const wErr = ks.map((v, i) => {
+    const openK = i === cur ? ez(sb(v, .05, .35)) : (i < cur ? 1 - ez(sb(ks[cur], .0, .3)) * 0 : 0);
+    return i === cur ? ez(sb(v, .04, .3)) : 0;
   });
-  // S2 三個透明系統層 + 中斷/接通
-  layers.forEach((L, i) => {
-    const a = ez(clamp(kL * 3 - i * .5, 0, 1));
-    if (a <= 0) return;
-    const x = colX + off(i), y = ly(i);
-    const hot = ez(L.kk);
-    g.save(); g.globalAlpha = a;
-    d.rr(x, y, colW, lh, 7);
-    g.fillStyle = 'rgba(20,23,28,' + (0.48 + 0.34 * Math.max(hot, kO)).toFixed(2) + ')'; g.fill();
-    g.strokeStyle = hot > .1 ? L.c : 'rgba(242,239,232,.22)';
-    g.lineWidth = 1 + hot * .7; g.stroke();
-    d.label(L.lab, x + 12, y + 16 * s, 10 * s, hot > .1 ? L.c : 'rgba(242,239,232,.55)', 1.8);
-    d.han(L.zh, x + colW - 36 * s, y + 17 * s, 11 * s, 'rgba(242,239,232,.78)', 700);
-    g.restore();
-    if (i < 2) {
-      const midX = colX + colW * .5 + (off(i) + off(i + 1)) / 2;
-      const y1 = y + lh + 3, y2 = ly(i + 1) - 3;
-      const broken = (1 - ez(kA)) * ez(sb(kL, .5, 1));
-      if (broken > 0.02) {
-        g.save(); g.globalAlpha = broken * .85;
-        g.setLineDash([3, 6]); g.strokeStyle = 'rgba(242,239,232,.32)'; g.lineWidth = 1.2;
-        g.beginPath(); g.moveTo(midX, y1); g.lineTo(midX, y2); g.stroke();
-        g.setLineDash([]);
-        const my = (y1 + y2) / 2;
-        g.strokeStyle = 'rgba(242,239,232,.55)'; g.lineWidth = 1.4;
-        g.beginPath(); g.moveTo(midX - 4, my - 4); g.lineTo(midX + 4, my + 4);
-        g.moveTo(midX + 4, my - 4); g.lineTo(midX - 4, my + 4); g.stroke();
-        g.restore();
-      }
-      if (kA > 0) {
-        const cc = i === 0 ? C.orange : C.blue;
-        d.line(midX, y1, midX, y2, kA, cc, 1.8);
-        if (kA > .9) {
-          const pk = e.tier === 'full' ? (t * .45 + i * .5) % 1 : .5;
-          d.node(midX, lerp(y1, y2, pk), 2.8, cc, .95);
-        }
+  const rowH = Math.max(26, Math.min(34, availH / 10.5));
+  const openH = Math.min(availH - rowH * (IDS.length - 1), Math.max(rowH * 3.4, availH * .34));
+  const hs = ks.map((v, i) => rowH + (openH - rowH) * (i === cur ? ez(sb(v, .04, .28)) : 0));
+  const ys = [];
+  let acc = top;
+  hs.forEach(h => { ys.push(acc); acc += h; });
+
+  // 左軌 + token
+  g.save();
+  g.strokeStyle = 'rgba(242,239,232,.14)'; g.lineWidth = 1.4;
+  g.beginPath(); g.moveTo(railX, top + 6); g.lineTo(railX, acc - 6); g.stroke();
+  // token 位置:目前站中心往下一站漸進
+  const curProg = ez(sb(ks[cur], .0, 1));
+  const tokY = ys[cur] + Math.min(hs[cur] * .5, rowH * .5) + (cur < IDS.length - 1 ? 0 : 0);
+  const glow = .5 + .5 * Math.sin(t * 2.6);
+  g.globalAlpha = .35 * glow;
+  g.beginPath(); g.arc(railX, tokY, 9, 0, TAU); g.fillStyle = C.orange; g.fill();
+  g.globalAlpha = 1;
+  g.beginPath(); g.arc(railX, tokY, 4.2, 0, TAU); g.fillStyle = C.orange; g.fill();
+
+  // 每站:編號(等寬右對齊)+ 名稱 + 狀態
+  IDS.forEach((id, i) => {
+    const v = ks[i];
+    const y0 = ys[i], h0 = hs[i];
+    const isCur = i === cur, done = i < cur, future = i > cur;
+    const aRow = future ? .38 : 1;
+    const cy = y0 + Math.min(h0 * .5, rowH * .5);
+    // 節點
+    d.node(railX, cy, done ? 3.4 : (isCur ? 0 : 2.4), done ? C.green : 'rgba(242,239,232,.35)', done ? 1 : (future ? .5 : 0), !done);
+    // 編號:monospace 右對齊到固定欄(數字對齊)
+    g.globalAlpha = aRow;
+    g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+    g.fillStyle = isCur ? C.orange : (done ? 'rgba(101,224,188,.85)' : 'rgba(242,239,232,.4)');
+    g.textAlign = 'right';
+    g.fillText('0' + (i + 1), railX - 12, cy + fsS * .36);
+    g.textAlign = 'left';
+    // 站名
+    g.font = (isCur ? '800 ' : '600 ') + fs + 'px "Noto Sans TC",sans-serif';
+    g.fillStyle = isCur ? C.ivory : (done ? 'rgba(242,239,232,.78)' : 'rgba(242,239,232,.45)');
+    g.fillText(NAMES[i], bodyX, cy + fs * .36);
+    // 完成勾
+    if (done) d.tick(bodyX + g.measureText(NAMES[i]).width + 16, cy, Math.max(5, 5.5 * S), C.green, 1);
+    g.globalAlpha = 1;
+
+    // 當前站展開內容(內容區從站名下一行開始)
+    if (isCur) {
+      const openA = ez(sb(v, .1, .4));
+      if (openA > 0.02 && h0 > rowH * 1.6) {
+        const ix = bodyX, iy = y0 + rowH * 1.05, iw = bodyW, ih = h0 - rowH * 1.15;
+        g.save(); g.globalAlpha = openA;
+        d.rr(ix, iy, iw, ih, 8);
+        g.fillStyle = 'rgba(20,23,28,.82)'; g.fill();
+        g.strokeStyle = 'rgba(255,107,44,.45)'; g.lineWidth = 1.2; g.stroke();
+        drawStation(i, ix, iy, iw, ih, v, openA);
+        g.restore(); g.globalAlpha = 1;
       }
     }
   });
-  // S3 CAPTURE:LINE 進線 → 辨識 → CRM 卡
-  const l0x = colX + off(0), l0y = ly(0);
-  if (kC > 0) {
-    const a = ez(kC);
-    g.save(); g.globalAlpha = a;
-    const bw = Math.min(158 * s, colW * .44);
-    const lbY = mobile ? l0y + lh * .16 : l0y + lh * .34;
-    d.rr(l0x + 12, lbY, bw, Math.max(20 * s, lh * (mobile ? .34 : .42)), 5);
-    g.fillStyle = 'rgba(101,224,188,.14)'; g.fill();
-    g.strokeStyle = 'rgba(101,224,188,.45)'; g.lineWidth = 1; g.stroke();
-    d.han('LINE:想約週五下午', l0x + 20, lbY + Math.max(14 * s, lh * (mobile ? .22 : .27)), 10.5 * s, 'rgba(242,239,232,.88)', 600);
-    let cpx = mobile ? l0x + 12 : l0x + 12 + bw + 8;
-    ['需求', '服務', '時間', '真人?'].forEach((tx, j) => {
-      const ka = ez(clamp(kC * 4 - 1 - j * .5, 0, 1));
-      if (ka <= 0) return;
-      g.globalAlpha = a * ka;
-      if (mobile) { cpx += d.chip(cpx, l0y + lh * .62, tx, ka > .7, 9.5 * s) + 6; } // 手機:第二列自然流排
-      else d.chip(l0x + 12 + bw + 8 + j * 50 * s, l0y + lh * .4, tx, ka > .7, 9.5 * s);
-    });
-    g.restore();
-  }
-  // CRM 卡:CAPTURE 生成 → FOLLOW 沿 DAY 軌移動
-  const cardBorn = ez(sb(kC, .55, 1));
-  if (cardBorn > 0) {
-    const cw = Math.min(120 * s, colW * .3), chh = 34 * s;
-    const l1x = colX + off(1), l1y = ly(1);
-    const tx0 = l0x + colW - cw - 10, ty0 = l0y + lh - chh - 6;
-    const dayK = ez(kF);
-    const trackX0 = l1x + 16, trackX1 = l1x + colW - cw - 12;
-    const cx = lerp(tx0, lerp(trackX0, trackX1, dayK), ez(sb(kF, 0, .25)));
-    const cy = lerp(ty0, l1y + lh * .5 - chh / 2, ez(sb(kF, 0, .25)));
-    g.save(); g.globalAlpha = cardBorn;
-    d.rr(cx, cy, cw, chh, 4);
-    g.fillStyle = '#F2EFE8'; g.fill();
-    g.strokeStyle = C.orange; g.lineWidth = 1.3; g.stroke();
-    d.han('王小姐', cx + 8, cy + 14 * s, 10 * s, '#090B0E', 800);
-    d.label(dayK > 0 ? 'FOLLOWING' : 'CRM CARD', cx + 8, cy + chh - 7 * s, 7.5 * s, '#D14E12', 1);
-    g.restore();
-  }
-  // S4 FOLLOW:狀態導向四步(補齊需求→提供案例→確認反應→決定下一步)
-  if (kF > 0) {
-    const a = ez(kF), l1x = colX + off(1), l1y = ly(1);
-    const ty = l1y + lh * .78;
-    g.save(); g.globalAlpha = a;
-    ['補齊需求', '提供案例', '確認反應', '決定下一步'].forEach((tx, j) => {
-      const nx = l1x + 24 + (colW - 60) * j / 3;
-      const on = kF * 4 - .4 > j;
-      d.node(nx, ty, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', 1, !on);
-      if (j === 3) { // d.label 逐字自 x 左起繪(忽略 textAlign),右對齊必須直接 fillText
-        g.save(); g.font = '600 ' + Math.max(8, 8.5 * s) + 'px "Noto Sans TC",sans-serif';
-        g.fillStyle = on ? C.blue : 'rgba(242,239,232,.4)'; g.textAlign = 'right'; g.textBaseline = 'alphabetic';
-        g.fillText(tx, l1x + colW - 8, ty + 14 * s); g.restore();
-      }
-      else d.label(tx, nx - 14 * s, ty + 14 * s, 8.5 * s, on ? C.blue : 'rgba(242,239,232,.4)', 1);
-      if (j < 3) d.line(nx + 5, ty, l1x + 24 + (colW - 60) * (j + 1) / 3 - 5, ty, clamp(kF * 4 - .5 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
-    });
-    const hint = ['補齊需求', '提供案例', '確認反應', '決定下一步'][clamp(Math.floor(kF * 4), 0, 3)];
-    // kF < .85:王小姐卡滑到右端後不再畫 chip,避免兩者疊字(1280 寬實測會撞)
-    if (kF > .2 && kF < .85 && !mobile) d.chip(l1x + colW - 86 * s, l1y + 8, hint, true, 9 * s);
-    g.restore();
-  }
-  // S5 NURTURE:分群標籤 + 內容排程
-  if (kN > 0) {
-    const a = ez(kN), l2x = colX + off(2), l2y = ly(2);
-    g.save(); g.globalAlpha = a;
-    let xx = l2x + 12;
-    ['新客', '考慮中', '老客'].forEach((tx, j) => {
-      const ka = ez(clamp(kN * 3.4 - j * .5, 0, 1));
-      if (ka <= 0) return;
-      g.globalAlpha = a * ka;
-      xx += d.chip(xx, l2y + lh * (mobile ? .14 : .34), tx, ka > .75, 9.5 * s) + 6;
-    });
+  g.restore();
+
+  // ── 各站小景(畫在展開盒內;p = 該站 k)
+  function drawStation(i, x, y, w, h, kv, a) {
+    const pad = Math.max(10, 12 * S);
+    const cx2 = x + pad, cw = w - pad * 2;
+    const line1 = y + pad + fsB * .9;
+    const kk = ez(sb(kv, .18, .8));
     g.globalAlpha = a;
-    ['案例', '優惠', '貼文'].forEach((tx, j) => {
-      const ka = ez(clamp(kN * 3 - .8 - j * .5, 0, 1));
-      if (ka <= 0) return;
-      const sw = Math.min(56 * s, colW * .16);
-      const sx = mobile ? l2x + 12 + j * (sw + 8) : l2x + colW - (sw + 8) * (3 - j) - 6; // 手機:下列左排,不與狀態晶片同列互撞
-      const sy2 = l2y + lh * (mobile ? .5 : .3);
-      const sh2 = lh * (mobile ? .4 : .5);
-      g.globalAlpha = a * ka;
-      d.rr(sx, sy2, sw, sh2, 3);
-      g.fillStyle = 'rgba(101,224,188,.08)'; g.fill();
-      g.strokeStyle = 'rgba(101,224,188,.4)'; g.lineWidth = 1; g.stroke();
-      d.han(tx, sx + 8, sy2 + sh2 * .62, 9.5 * s, 'rgba(242,239,232,.75)', 600);
-    });
-    g.restore();
-  }
-  // S6 六模組組裝(desktop 右欄 2×3;mobile 底部一列)
-  const modsList = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
-  if (kA > 0) {
-    if (!mobile) {
-      const mx = z.x + z.w * .62, mw = z.w * .36;
-      const cellW = (mw - 10) / 2, cellH = Math.min(44 * s, z.h * .1);
-      const gy0 = z.y + z.h * .5 - (cellH * 3 + 20) / 2;
-      d.line(colX + colW + 4, z.y + z.h * .5, mx - 6, z.y + z.h * .5, ez(kA), 'rgba(242,239,232,.3)', 1.2);
-      modsList.forEach((m, i) => {
-        const ka = ez(clamp(kA * 5 - i * .55, 0, 1));
-        if (ka <= 0) return;
-        const col = i % 2, row = (i - col) / 2;
-        const bx = mx + col * (cellW + 10) + (1 - ka) * 34, by = gy0 + row * (cellH + 10);
-        g.save(); g.globalAlpha = ka;
-        d.rr(bx, by, cellW, cellH, 4);
-        g.fillStyle = 'rgba(255,107,44,' + (0.05 + 0.05 * kO).toFixed(3) + ')'; g.fill();
-        g.strokeStyle = kO > .5 ? 'rgba(255,107,44,.6)' : 'rgba(242,239,232,.26)'; g.lineWidth = 1; g.stroke();
-        d.label('0' + (i + 1), bx + 8, by + 14 * s, 8 * s, C.orange, .5);
-        d.han(m, bx + 8, by + cellH - 9 * s, 11 * s, 'rgba(242,239,232,.85)', 700);
-        g.restore();
+    if (i === 0) { // 詢問進來:LINE 泡泡 + 來源列
+      bub(cx2, y + pad, Math.min(cw * .86, 300), '請問到府服務多少錢?', 'rgba(101,224,188,.14)', 'rgba(101,224,188,.5)');
+      g.globalAlpha = a * kk;
+      d.label('LINE・網站表單・電話', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+    } else if (i === 1) { // 辨識需求:欄位晶片逐一亮
+      let xx = cx2;
+      ['需求:到府清潔', '時段:週五下午', '價格:待人工'].forEach((tx2, j) => {
+        const kc = ez(sb(kv, .15 + j * .18, .4 + j * .18));
+        if (kc <= 0.02) return;
+        g.globalAlpha = a * kc;
+        xx += d.chip(xx, line1 - fsS, tx2, j === 2, fsS) + 8;
+        if (xx > cx2 + cw - 60) { xx = cx2; }
       });
-    } else {
-      const by = ly(2) + lh + 14;
-      modsList.forEach((m, i) => {
-        const ka = ez(clamp(kA * 5 - i * .4, 0, 1));
-        if (ka <= 0) return;
-        g.globalAlpha = ka;
-        d.chip(colX + i * (colW / 6), by, m, kO > .5, 8.5 * s);
-        g.globalAlpha = 1;
+      g.globalAlpha = a * ez(sb(kv, .6, .9));
+      d.label('AI 辨識・敏感項標記待確認', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+    } else if (i === 2) { // 回應與建檔:回覆泡泡 + CRM 卡生成
+      bub(cx2, y + pad, Math.min(cw * .9, 320), '已為您保留時段,細節由專人確認', 'rgba(255,107,44,.12)', 'rgba(255,107,44,.5)');
+      const kc = ez(sb(kv, .4, .75));
+      if (kc > 0.02) {
+        const cw2 = Math.min(150 * S, cw * .6), chy = y + h - pad - Math.max(30, 32 * S);
+        g.globalAlpha = a * kc;
+        d.rr(cx2, chy, cw2, Math.max(28, 30 * S), 4);
+        g.fillStyle = '#F2EFE8'; g.fill();
+        g.strokeStyle = C.orange; g.lineWidth = 1.2; g.stroke();
+        g.font = '800 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = '#090B0E';
+        g.fillText('王小姐', cx2 + 8, chy + Math.max(12, 12 * S));
+        g.font = '600 ' + Math.max(8.5, 8.5 * S) + 'px "Space Grotesk",sans-serif'; g.fillStyle = '#D14E12';
+        g.fillText('CRM CARD ・ 負責人已指定', cx2 + 8, chy + Math.max(23, 24 * S));
+      }
+    } else if (i === 3) { // 安排下一步:四步點軌
+      const m0 = cx2 + 6, m1 = cx2 + cw - 6, ty2 = y + h * .46;
+      ['補齊需求', '提供案例', '確認反應', '決定下一步'].forEach((tx2, j) => {
+        const nx = m0 + (m1 - m0) * j / 3;
+        const on = kv * 3.2 - .3 > j;
+        d.node(nx, ty2, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
+        g.globalAlpha = a;
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = on ? C.blue : 'rgba(242,239,232,.45)';
+        g.textAlign = j === 0 ? 'left' : (j === 3 ? 'right' : 'center');
+        g.fillText(tx2, j === 0 ? nx - 4 : (j === 3 ? nx + 4 : nx), ty2 + Math.max(16, 17 * S));
+        g.textAlign = 'left';
+        if (j < 3) d.line(nx + 5, ty2, m0 + (m1 - m0) * (j + 1) / 3 - 5, ty2, clamp(kv * 3.2 - .45 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
+      });
+      g.globalAlpha = a * ez(sb(kv, .7, .95));
+      d.label('AI 擬稿・人確認才送出', cx2, y + h - pad * .7, fsS, 'rgba(101,224,188,.8)', .8);
+    } else if (i === 4) { // 延續脈絡:同一份脈絡 → 三個用途
+      g.globalAlpha = a;
+      d.han('同一份客戶脈絡', cx2, line1, fsB, 'rgba(242,239,232,.85)', 700);
+      let xx = cx2;
+      ['報價', '案例', '後續服務'].forEach((tx2, j) => {
+        const kc = ez(sb(kv, .25 + j * .18, .5 + j * .18));
+        if (kc <= 0.02) return;
+        g.globalAlpha = a * kc;
+        xx += d.chip(xx, y + h * .52, tx2, true, fsS) + 8;
+      });
+    } else if (i === 5) { // 流程接通:模組節點連線
+      const mods = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
+      const m0 = cx2 + 8, m1 = cx2 + cw - 8, my = y + h * .5;
+      mods.forEach((tx2, j) => {
+        const nx = m0 + (m1 - m0) * j / 5;
+        const on = kv * 5.4 - .3 > j;
+        if (j < 5) d.line(nx + 4, my, m0 + (m1 - m0) * (j + 1) / 5 - 4, my, clamp(kv * 5.4 - .4 - j, 0, 1), 'rgba(101,224,188,.45)', 1.2);
+        d.node(nx, my, on ? 3 : 2, on ? C.green : 'rgba(242,239,232,.3)', a, !on);
+        g.globalAlpha = a * (on ? 1 : .45);
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = on ? 'rgba(242,239,232,.85)' : 'rgba(242,239,232,.4)';
+        g.textAlign = 'center';
+        g.fillText(tx2, nx, my + Math.max(16, 17 * S));
+        g.textAlign = 'left';
+      });
+      g.globalAlpha = a * ez(sb(kv, .75, .95));
+      d.label('既有工具保留・資料線後方接通', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+    } else { // 營運視圖:三個統計膠囊(呼吸)
+      const st = [['12', '今日新客', C.ivory], ['28s', '平均回覆', C.blue], ['18%', '本週轉換', C.green]];
+      const gw2 = (cw - 16) / 3;
+      st.forEach((r, j) => {
+        const kc = ez(sb(kv, .15 + j * .16, .4 + j * .16));
+        if (kc <= 0.02) return;
+        const bx = cx2 + j * (gw2 + 8);
+        g.globalAlpha = a * kc;
+        d.rr(bx, y + pad, gw2, h - pad * 2, 6);
+        g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
+        g.strokeStyle = 'rgba(242,239,232,.16)'; g.lineWidth = 1; g.stroke();
+        g.font = '700 ' + Math.max(15, 17 * S) + 'px "Space Grotesk",sans-serif';
+        g.fillStyle = r[2];
+        g.textAlign = 'center';
+        g.fillText(r[0], bx + gw2 / 2, y + h * .46);
+        g.font = '500 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.55)';
+        g.fillText(r[1], bx + gw2 / 2, y + h * .46 + Math.max(15, 16 * S));
+        g.textAlign = 'left';
       });
     }
+    g.globalAlpha = a;
   }
-  // S7 控制台成形
-  if (kO > 0) {
-    const a = ez(kO);
-    const fx = colX - 10, fy = z.y + z.h * .045;
-    const fw = (mobile ? colW : z.x + z.w * .98 - fx) + 6, fh = z.h * .93;
-    g.save(); g.globalAlpha = a;
-    d.rr(fx, fy, fw, fh, 10);
-    g.strokeStyle = 'rgba(255,107,44,.6)'; g.lineWidth = 1.5; g.stroke();
-    g.strokeStyle = 'rgba(242,239,232,.14)'; g.lineWidth = 1;
-    g.beginPath(); g.moveTo(fx, fy + 24 * s); g.lineTo(fx + fw, fy + 24 * s); g.stroke();
-    d.label('PEAKQI OS · 營運控制台', fx + 12, fy + 16 * s, 9.5 * s, C.orange, 1.8);
-    [C.green, C.blue, C.orange].forEach((cc, i) => {
-      const on = e.tier === 'full' ? .55 + .45 * (Math.sin(t * 2 + i * 2.1) * .5 + .5) : 1;
-      d.node(fx + fw - 14 - i * 14, fy + 12 * s, 2.6, cc, a * on);
-    });
-    if (!mobile) {
-      d.tick(fx + 14, fy + fh - 13 * s, 7 * s, C.green, a);
-      d.label('ONE SYSTEM · THREE OPERATIONS · 24/7', fx + 26, fy + fh - 10 * s, 9 * s, 'rgba(242,239,232,.6)', 1.6);
-    }
-    g.restore();
+  function bub(x, y, w2, txt, fill, stroke) {
+    const bh = Math.max(26, 28 * S);
+    d.rr(x, y, w2, bh, 10);
+    g.fillStyle = fill; g.fill();
+    g.strokeStyle = stroke; g.lineWidth = 1; g.stroke();
+    g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif';
+    g.fillStyle = 'rgba(242,239,232,.9)';
+    g.fillText(txt, x + 10, y + bh * .66);
   }
 }
 
-// ---------- Cases:PROOF IN MOTION 註記層(截圖牆為 DOM,canvas 只做膠卷/框/索引註記) ----------
 function paintCases(g, e) {
   const { zone: z, k, C, d, mobile } = e;
   const s = clamp(Math.min(z.w / 780, z.h / 520), .5, 1.2);

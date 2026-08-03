@@ -97,6 +97,26 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
 @media (max-width:899px){[data-tlwrap]{overflow-x:visible!important}}
+/* INPUT→整合→OUTPUT 帶:手機三列流式,標籤不再吊在帶外被切 */
+@media (max-width:899px){
+[data-hio]{display:flex;flex-direction:column;gap:8px;height:auto!important;padding:6px 0}
+[data-hio]>span{position:static!important;transform:none!important}
+[data-hio]>span:nth-of-type(2){align-self:center;order:0}
+[data-hio]>span:nth-of-type(1){align-self:flex-start;order:-1}
+[data-hio]>span:nth-of-type(3){align-self:flex-end;order:1}
+[data-hio] svg{order:0;height:120px!important}
+}
+/* 情報散落拼貼:手機改整齊階梯(桌機百分比座標窄幅會亂疊) */
+@media (max-width:899px){
+[data-win]{width:74%!important;left:auto!important;right:auto!important}
+[data-win]:nth-of-type(1){left:2%!important;top:2%!important;transform:rotate(-2deg)!important}
+[data-win]:nth-of-type(2){right:2%!important;top:22%!important;transform:rotate(2deg)!important}
+[data-win]:nth-of-type(3){left:4%!important;top:44%!important;transform:rotate(-1.5deg)!important}
+[data-win]:nth-of-type(4){right:4%!important;top:66%!important;transform:rotate(1.5deg)!important}
+[data-win]:nth-of-type(5){left:8%!important;top:76%!important;transform:rotate(-2deg)!important}
+}
+/* 追客/養客卡距 v2:完全分離 */
+@media (max-width:899px){#flow [data-deck]{gap:44px!important}#flow [data-layer]{padding-bottom:26px!important}}
 /* 手機三層流程卡:加大卡距,不要黏成一疊 */
 @media (max-width:899px){#flow [data-deck]{gap:36px!important}#flow [data-layer]{box-shadow:0 12px 30px rgba(9,11,14,.16)!important;padding-bottom:20px!important}}
 </style>
@@ -226,7 +246,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <p style="margin:16px 0 0;max-width:680px;font:400 clamp(16px,1.25vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72);text-wrap:pretty">左邊是現在的樣子:訊息在 LINE、名單在試算表、報價在 PDF、待辦在備忘錄。右邊是接起來之後:同一筆詢問只輸入一次,後面每個環節都讀得到。<br><span style="color:rgba(242,239,232,.55)">中間那條線就是這件事——不是換掉工具,是把工具之間的搬運交給系統。</span></p>
         <div style="display:none">
         </div>
-        <div style="position:relative;margin-top:clamp(30px,3.4vw,44px)" aria-hidden="true">
+        <div data-hio style="position:relative;margin-top:clamp(30px,3.4vw,44px)" aria-hidden="true">
           <svg viewBox="0 0 1200 220" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;overflow:visible">
             <path id="pqHpA" data-hpath d="M8 30 C 260 30, 300 110, 600 110 S 940 190, 1192 190" stroke="#FF6B2C" stroke-width="2"></path>
             <path id="pqHpB" data-hpath d="M8 190 C 260 190, 300 110, 600 110 S 940 30, 1192 30" stroke="#3E9BFF" stroke-width="1.6" opacity=".8"></path>
@@ -859,7 +879,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <div role="tablist" aria-label="六個核心模組" onKeyDown="{{ orbitKeys }}" style="position:relative;height:470px">
         <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 600 460" fill="none" preserveAspectRatio="xMidYMid meet">
           <ellipse cx="300" cy="230" rx="238" ry="164" stroke="rgba(9,11,14,.22)" stroke-dasharray="3 8"></ellipse>
-          <line ref="{{ orbLine }}" x1="300" y1="230" x2="300" y2="230" stroke="#FF6B2C" stroke-width="1.5" stroke-dasharray="4 6"></line>
+          <line x1="300" y1="230" x2="300" y2="230" stroke="#FF6B2C" stroke-width="1.5" stroke-dasharray="4 6"></line>
         </svg>
         <div ref="{{ orbitCore }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:152px;height:152px;border-radius:50%;border:2px solid #FF6B2C;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:1;text-align:center">
           <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">PEAKQI</span>
@@ -1348,8 +1368,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 class Component extends DCLogic {
   state = { d: null, featSel: 0, planSel: 1, tipOpen: -1 };
   _applyOrb() {
-    const el = this.ref('orbLine');
-    if (el && this._orbPt) { el.setAttribute('x2', this._orbPt[0]); el.setAttribute('y2', this._orbPt[1]); }
+    // DC 的 ref 在 lifecycle 期不保證是元素,直接查 DOM(orbit 只有這一條虛線)
+    const el = document.querySelector('#pq-orbit line[stroke-dasharray]');
+    if (el && el.setAttribute && this._orbPt) { el.setAttribute('x2', this._orbPt[0]); el.setAttribute('y2', this._orbPt[1]); }
   }
   componentDidUpdate() { this._applyOrb(); }
   componentDidMount() {
@@ -1638,7 +1659,6 @@ class Component extends DCLogic {
       galNextClick: () => galNav(1),
       planTabs, planKeys, planViz, vizConsole,
       compareCards,
-      orbLine: this.ref('orbLine'),
       _syncOrb: (this._orbPt = selPt, 0),
       selN: selMod.n, selName: selMod.name, selTag: selMod.tag, selItems: selMod.items,
       heroWrap: this.ref('wrap'),
