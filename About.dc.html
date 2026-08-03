@@ -101,14 +101,16 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
-/* 手機 hero:縮圖牆降為隱約質感(桌機放射遮罩只護左側,窄幅時縮圖會壓到文案);
-   底部加墊讓 CTA 脫離懸浮 CTA 藥丸的覆蓋區 */
+/* 手機 hero 上下分區:文字在上、縮圖牆收進下半帶全亮展示(不再墊在文字底下硬壓暗);
+   遮罩只護頂部文字區;標題縮級避免五行 */
 @media (max-width:899px){
-[data-ascrim]{background:linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.9) 55%,rgba(9,11,14,.82) 100%)!important}
+[data-ascrim]{background:linear-gradient(180deg,rgba(9,11,14,.78) 0%,rgba(9,11,14,.55) 46%,rgba(9,11,14,.26) 66%,rgba(9,11,14,0) 80%)!important}
+#a-hero [data-hero-cta] a:not([data-hero-primary]){background:#090B0E!important}
+#a-hero [data-ashotwall]{top:56%!important;height:44%!important}
 #a-hero [data-hero-stage]{padding-bottom:150px!important}
 #a-hero [data-aclust]{opacity:0!important}
-#a-hero [data-ashotwall] a{filter:brightness(.45)!important}
 #a-hero [data-anote]{display:none!important}
+#a-hero h1{font-size:clamp(1.5rem,6.6vw,1.95rem)!important}
 }
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>

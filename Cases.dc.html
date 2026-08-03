@@ -57,8 +57,9 @@ nav[aria-label="breadcrumb"]{align-items:center}
 /* 手機 hero:縮圖牆降為隱約質感(放射遮罩只護左側,窄幅時縮圖/晶片會壓到場景字卡);
    BEFORE/SYSTEM/RESULT 晶片與統計卡在手機直接隱藏 */
 @media (max-width:899px){
-[data-wscrim]{background:linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.9) 55%,rgba(9,11,14,.82) 100%)!important}
-#wall [data-shotwall] [data-shot]{filter:brightness(.45)!important}
+[data-wscrim]{background:linear-gradient(180deg,rgba(9,11,14,.78) 0%,rgba(9,11,14,.55) 46%,rgba(9,11,14,.26) 66%,rgba(9,11,14,0) 80%)!important}
+#wall [data-hero-cta] a:not([data-hero-primary]){background:#090B0E!important}
+#wall [data-shotwall]{top:56%!important;height:44%!important}
 #wall [data-featchip],#wall [data-statcard],#wall [data-catlabel]{opacity:0!important}
 }
 </style>
