@@ -1,0 +1,12 @@
+await new Promise(r=>setTimeout(r,3000));
+const hdr=document.querySelector('header');
+const out={};
+out.top0=Math.round(hdr.getBoundingClientRect().top);
+scrollTo(0,1500); await new Promise(r=>setTimeout(r,500));
+out.top1500=Math.round(hdr.getBoundingClientRect().top);
+const stage=document.querySelector('[data-hero-stage]');
+out.stageTop=stage?Math.round(stage.getBoundingClientRect().top):null;
+out.ofx=document.documentElement.scrollWidth-document.documentElement.clientWidth;
+scrollTo(0,0); await new Promise(r=>setTimeout(r,300));
+out.contentStart=Math.round((document.querySelector('main,section')||document.body).getBoundingClientRect().top);
+return JSON.stringify(out);
