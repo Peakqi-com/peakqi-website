@@ -1,0 +1,226 @@
+[
+ {
+  "page": "Home",
+  "w": 390,
+  "pos": "hero@0.98",
+  "sev": "high",
+  "desc": "寬390 hero@0.98:左下固定「↑」返回頂部圓鈕(48x48,fixed 於 left:18/top:778,opacity:1,z-index:140)完全遮住卡片03標題 <h2>「把看見的,變成下一次用得上的資訊」第二行行首「變」字(標題自 x=43 起排,鈕右緣達 x=66,垂直重疊 y778–807)。所有卡片標題與內文均自 x≈43–45 靠左起排,凡文字落入視窗左下即與此鈕相撞(hero@0.5 卡01內文行首、hero@0.6「對準」的「對」同因),屬系統性遮擋而非過場殘影。"
+ },
+ {
+  "page": "Home",
+  "w": 360,
+  "pos": "body@55%",
+  "sev": "high",
+  "desc": "「↑」返回頂部圓鈕(#pq-backtop,Home.dc.html:1844)固定於視窗左下角(left:18px、bottom:18px、46-48px 圓形、深色 82% 不透明、z-index:140),而手機版文字欄左緣約在 x=20px,兩者重疊——因此任何捲動深度下,落在視窗左下角的標題/內文行首 1-2 個字都會被遮住。body@55% 時:360 寬遮住模組卡 05 標題「從成交到交付,不再靠人工轉貼資訊」行首「從」與下一行內文行首;390 寬依捲動偏移遮住「05」大編號左半或模組 04 內文行首。建議改置右下角或增加自動淡出,避免壓在文字欄起點上。"
+ },
+ {
+  "page": "Home",
+  "w": 360,
+  "pos": "hero@0.25",
+  "sev": "med",
+  "desc": "360 寬 hero@0.25 時,H1 首行「把 AI 接進你的」行尾與相機圖內建的白色「4K」貼字同基線黏連(嚴格說是 3–4px 緊貼而非像素相疊),兩者同為白色且字高相近,視覺讀成「把 AI 接進你的4K」;390 寬時 4K 上移至 kicker 行「企業流程」旁僅緊貼未疊。「4K」為 hero 圖像內容、非 DOM 元素,修法需調整 hero 圖定位/裁切或在 H1 區域加遮罩,而非調 z-index。"
+ },
+ {
+  "page": "PeakOps",
+  "w": 390,
+  "pos": "hero@0.75",
+  "sev": "high",
+  "desc": "PeakOps 手機版(390px)hero 捲動進度約 0.7~0.8 時,客服面板左下角的綠色狀態字「AI 已回覆・時段已保留」被報價視窗的綠色打勾藥丸「✓ 產生報價單」直接壓住,兩者同為滿版不透明的薄荷綠、筆畫完全交錯,兩行皆不可讀;約 0.85 進度後才分離。此非過場殘影:兩者皆由 hero-engine.js 於 canvas 繪製且由捲動位置驅動,停留在該進度 settle 1.5 秒仍維持疊字。成因:藥丸畫在報價視窗頂邊上方(hero-engine.js:191,ty = pos.y - pos.h/2 - S(16)),而客服狀態字畫在客服面板底邊(hero-engine.js:228,y + h - S(10)),手機版佈局中報價視窗停靠位置的頂邊恰與客服面板底邊重合。"
+ },
+ {
+  "page": "PeakOps",
+  "w": 360,
+  "pos": "hero@0.75",
+  "sev": "high",
+  "desc": "360 寬、hero 進度 0.75(scrollY≈1628)時,浮動藥丸「✓ 產生報價單」跨壓在「客服」卡片下邊框上,其文字直接疊在卡內綠色狀態列「AI 已回覆・時段已保留」的後半段(約「時段已保留」五字)上;兩層皆全不透明,settle 1500ms 後仍不消失,為穩定版面疊字而非動畫過場。複驗證據:.peakops-audit/ev/ua-PeakOps-hero075-360-recheck.png 及其 3x 放大 ua-PeakOps-hero075-360-recheck-badgecrop.png。"
+ },
+ {
+  "page": "PeakOps",
+  "w": 390,
+  "pos": "body@90%",
+  "sev": "med",
+  "desc": "PeakOps 手機版(390px)「上線流程」直式時間軸:5 個節點圓點(10px 寬)每顆左側 4px(40%)被裁切,呈現平切左緣貼在灰色軸線上;橘色進度線 [data-tline](2px 寬,位於容器左緣外 x=18–20)整條被完全裁掉不可見。根因:line 82 mobile CSS 將 [data-dot] 設 left:-6px!important、[data-tline] 設 left:-2px!important,但 line 1206 外層容器 overflow-x:auto 會裁掉內容左緣(x=20)以左的所有內容。複驗證據:.peakops-audit/ev/rv-PeakOps-tl-390.png(settle 1500ms 後拍攝,缺陷穩定存在)。"
+ },
+ {
+  "page": "PeakOps",
+  "w": 390,
+  "pos": "hero@0.98",
+  "sev": "low",
+  "desc": "PeakOps 手機版(390x844)hero@0.98(scrollY≈2218):收尾白色說明文字「帶一個目前最花時間、最容易漏掉的流程,我們先確認第一階段可以怎麼做。」的後兩行直接壓在殘留的儀表板柱狀圖上;柱色實測藍(21,45,70)、綠(29,57,51)、橘(68,33,20),背景(8,10,13),殘留可見度約 25-30%,settle 1800ms 後仍不消失。白字對比仍可讀,但文字底下藍/綠/橘柱清楚可辨、背景吵雜——hero 收尾遮罩(shutter/mask)壓不夠深,建議把該階段遮罩加深至柱色通道 <30(約 <10% 可見度)或在文字區塊後加實色底。"
+ },
+ {
+  "page": "Solutions",
+  "w": 390,
+  "pos": "hero@0.98",
+  "sev": "med",
+  "desc": "FOLLOW 卡時間軸第 4 標籤「決定下一步」右端溢出:390 寬時標籤末字「步」右緣(x≈353)超過藍色卡框線(x=350)與 PEAKQI OS 橘色外框線(x=346),藍框線直接切過「步」字中段、字形跨到橘框外約 7px;第 4 節點圓點與「決」字頂部重疊。成因在 hero-scenes.js:267–271 canvas 繪製:第 4 節點 nx=l1x+colW-36,標籤自 nx-14*s 左對齊繪出,5 個中文字(8.5px+字距)約 47px 寬,必然超出卡片右緣。屬決定性佈局問題:hero@0.5(灰色未點亮態)至 0.98 全程存在,settle 1600ms 後不消失。"
+ },
+ {
+  "page": "Solutions",
+  "w": 360,
+  "pos": "hero@0.75",
+  "sev": "med",
+  "desc": "360 寬 hero@0.75:FOLLOW 卡第四步標籤「決定下一步」尾字「步」被卡片藍色右框線縱向切過——框線(x≈321)穿過「步」字中間,右半約 4–5px 突出到框外;「一」字仍在框內。全亮度非殘影,settle 1600ms 後仍存在。來源為 hero-scenes.js:267-271 canvas 標籤定位(第 4 步 nx=l1x+24+(colW-60),標籤自 nx-14*s 起繪,5 字寬度超過卡右緣)。證據:.peakops-audit/ev/rv-sol-hero075-360.png、rv-sol-hero075-360-zoom.png。"
+ },
+ {
+  "page": "Solutions",
+  "w": 390,
+  "pos": "hero@0.25",
+  "sev": "med",
+  "desc": "Solutions 手機版(390×844)hero 捲動至 25%(階段 03/07・建檔,scrollY≈279):前場景(S1 散落視窗)未淡出即進入 CAPTURE 場景,canvas 上三個視窗永久殘留——(1) LINE 視窗(約 70–80% 不透明度,標題與骨架線清晰)橫跨 CAPTURE 卡橙色上框線,壓在 CAPTURE 標籤左上方;(2) EXCEL 視窗(約 40%)連同一枚極淡「需求」chip 疊在 CAPTURE 卡內容區、「LINE:想約週五下午」訊息右側;(3) 表單視窗(約 50%)疊在 FOLLOW 卡內容區中央偏右。settle 1600ms 與 3000ms 重拍畫面完全相同,證明為捲動位置決定的持久狀態而非過場:hero-scenes.js paintSolutions 中 winFade 僅由 kL('layers')捲動鍵驅動(1-ez(sb(kL,.35,1)),line 163),與 kC('cap')時間窗重疊且無時間衰減,停在此位置殘留永不消失。證據:.peakops-audit/ev/rv-Solutions-hero025-390-s1600.png、rv-Solutions-hero025-390-s3000.png。"
+ },
+ {
+  "page": "Solutions",
+  "w": 360,
+  "pos": "hero@0.25",
+  "sev": "med",
+  "desc": "360x800、hero@0.25(階段 03/07「建檔」幀,settle ≥1500ms 後靜止狀態):前一場景的通路晶片未被清場,持續殘留在本幀 CAPTURE/FOLLOW 卡上——(1) LINE 晶片(含灰色假文列)橫跨 CAPTURE 卡左上角橘色框線,標籤亮度 maxL=144 vs 卡內背景 42,完全清晰;(2) EXCEL 晶片疊在 CAPTURE 卡內、「LINE:想約週五下午」訊息泡右側(接客列下方),maxL=89,約半透明但文字可讀;(3) 表單晶片疊在 FOLLOW 卡內中央,maxL=94,同樣可讀。三者為穩定渲染狀態(重拍與原證據逐像素一致),屬場景切換未清除舊晶片的疊層缺陷,非過場瞬間或 <20% 極淡殘影。證據:.peakops-audit/ev/rv-Solutions-hero025-360-vp.png、rv-Solutions-hero025-360-zoom.png。"
+ },
+ {
+  "page": "Solutions",
+  "w": 390,
+  "pos": "body@36%",
+  "sev": "low",
+  "desc": "Solutions 頁「PROJECT & SERVICE」卡的 BEFORE/AFTER 示意圖(Solutions.dc.html:452-458):右下角 AFTER 標籤寫死 color:#fff,但其底下的青藍漸層層以 pqWipe 動畫(3.6s 無限循環)由左至右擦入,每個循環約前 40%(~1.4 秒)右側只剩極淺灰白斜紋底(rgba(9,11,14,.07)/.02 疊 #fff),白色 AFTER 對比趨近 1:1 完全不可讀;左側 BEFORE 用深色 rgba(9,11,14,.55) 不受影響。建議給 AFTER 加深色描邊/陰影或半透明深色底,或改用隨擦除層一起出現的配色。"
+ },
+ {
+  "page": "Method",
+  "w": 360,
+  "pos": "hero@0.25",
+  "sev": "med",
+  "desc": "Method 頁 hero 為 canvas 繪製(非 DOM):PROBLEM LIST 卡標題「PROBLEM LIST — 問題清單」超出卡片右框線。360 寬、hero 進度 0.25、settle 1500ms 後像素量測:右框線 x=306,標題末字「單」繪到 x=316,超框約 10px(持續存在,非過場)。390 寬時末字貼框(x≈328 vs 框線 333,右側零內距、視覺擁擠)但未跨線。根因:hero-scenes.js:788-790 面板寬 lw=z.w*.5 隨視口縮放,d.head 卻以固定 10px 字級+1.4 字距繪標題、無寬度限制,窄視口必然溢出。附帶觀察:標題列與第一列「重複輸入 ×3」垂直重疊(分隔線壓到第一列),為另一獨立問題。"
+ },
+ {
+  "page": "Method",
+  "w": 390,
+  "pos": "hero@0.25",
+  "sev": "med",
+  "desc": "Method 頁 hero canvas 的 PROBLEM LIST 卡(paintMethod S1):390 寬手機版,標題「PROBLEM LIST — 問題清單」字帶(y603-611)與第一項「重複輸入 ×3」字帶(y614-622)淨間距僅約 2px,其餘項目間距約 8px,第一項明顯黏在標題下;且標題列分隔線(ly0+22,實測 y618)從第一項文字中間穿過。原描述的座標(標題帶 y596-597)實為卡片頂框位置,黏連本身屬實且 settle 1500ms 後仍存在。根因:hero-scenes.js 中 d.head 的標題/分隔線用固定像素 offset,列項卻用 40*s+i*26*s 縮放(s≈0.65)而字型被 Math.max(10,11*s) 固定在 10px,小尺寸下第一行侵入標題列。"
+ },
+ {
+  "page": "Method",
+  "w": 390,
+  "pos": "hero@0.25",
+  "sev": "low",
+  "desc": "Method 頁 hero S1「PROBLEM LIST — 問題清單」canvas 卡片:外框高度用 z.h*.34(隨 zone 高度縮放,手機直式約 147px),但內容(標題 + 3 項)用固定間距 40*s+i*26*s(s 在 390px 約 0.7)只佔頂部約 66px,卡片下半約 55% 恆為空白,看起來像清單沒載完;另 S2「PHASE 1 SCOPE」虛線框的綠色勾勾(d.tick at bx+bw-26, by+bh-20)落在卡片右緣、壓到第二項文字。根因:hero-scenes.js paintMethod 行 788-798,面板高應改為隨內容列數計算(如 40*s+列數*26*s+padding)而非 z.h*.34。"
+ },
+ {
+  "page": "Cases",
+  "w": 390,
+  "pos": "hero@0.25",
+  "sev": "high",
+  "desc": "Cases 頁 Scene02(THE WALL)hero@0.25、390×844:文案「更多真實截圖…(P.24–53)」底部 y≈264 到第一排縮圖頂 y≈609 之間有 345px(約 41% 視口)純黑空洞,僅中央有極淡的「PROOF IN MOTION · P.24–53」小字;8 張作品牆縮圖(每張僅約 33–40px 高、64–88px 寬,opacity 0.85–1)分兩排擠在視口底部 ~28%(y=609–757),且第二排會被浮動「用我的場景看 Demo」藥丸部分遮壓。縮圖並未被視口下緣裁半(settle 後 clippedBelow=0)。狀態穩定(settle 1500ms 不變),根因為 #wall [data-shotwall]{top:56%!important;height:44%!important}(Cases.dc.html:62)把作品牆整帶壓到視口下半,縮圖又集中在帶內下緣。"
+ },
+ {
+  "page": "Cases",
+  "w": 390,
+  "pos": "hero@0.5",
+  "sev": "high",
+  "desc": "Cases 頁 hero@0.5(390x844):Scene04「重點案例」文案結束於 y≈253 後,出現約 360px 的全黑空洞(其間僅有 y≈470 的極淡虛線進度條「PROOF IN MOTION · P.24-53」);案例卡實為 2x2 網格(非兩張),網格頂緣始於 y≈612,上排兩卡完整可見,下排兩卡被視口底緣裁掉約下半,且被浮動「用我的場景看 Demo」藥丸再遮一層。settle 1500ms 與 2500ms 兩次截圖完全一致,為穩定狀態非過場殘影。"
+ },
+ {
+  "page": "Cases",
+  "w": 390,
+  "pos": "hero@0.98",
+  "sev": "med",
+  "desc": "Cases 頁 hero@0.98(390 寬):Scene06 縮圖網格未隨場景切換淡出,兩列全不透明縮圖(第一列 y≈610-660、第二列 y≈715-775)跨壓在 Scene07 橘色「NEXT: YOUR WORKFLOW →」外框的左右框線上,框線直接穿過縮圖圖面;左下角計數器「05 / 05」(位於 x≈20, y≈813)以全不透明疊在灰色描邊 PEAKQ 字樣與底列縮圖上,且被視窗底緣裁到。settle 1500ms 後狀態不變,為持續性疊壓而非過場瞬間。"
+ },
+ {
+  "page": "Cases",
+  "w": 390,
+  "pos": "body@30%",
+  "sev": "med",
+  "desc": "Cases 頁(390 寬,body@30%,y≈6489)「05 / 4F 房仲業務系統『冒泡』」樓層:灰色內文(bubble.tw — 房仲版垂直品牌。獨立名字、獨立官網、獨立定價、獨立客群。)無任何 scrim/遮罩,右半段直接疊在奶油色 3D 塔樓 canvas 上——第一行尾「。獨立名字、獨」在亮色塔身上幾乎不可見,第二行尾「立客群。」亦低對比;標題尾字「冒泡」壓在亮色玻璃塔上對比同樣下降(但因白色大字仍勉強可讀)。settle 1500ms 後依然存在,非過場殘影。"
+ },
+ {
+  "page": "Cases",
+  "w": 390,
+  "pos": "body@15%",
+  "sev": "med",
+  "desc": "Cases 頁品牌屋 3D 導覽(Steampunk/peakqi-story.html iframe,Cases.dc.html:203 嵌入)「01 / 引擎室」段落:固定疊層 #secHead 無任何底色/scrim/text-shadow(peakqi-story.html:64),.sub 文案為 rgba(255,255,255,.6) 13px(:67),直接壓在 WebGL canvas 上。手機 390 寬、body@15% 時鏡頭掃過亮色銅金機具/亮房間,整行「整棟樓的動力來源。一套引擎、多個品牌、雙軌驗證。」被亮背景洗白難讀;settle 1700ms 後仍如此,為持續性對比缺陷。建議給 #secHead 加半透明深色 scrim 或 text-shadow(同 body@30% 文字壓 canvas 的通案修法)。"
+ },
+ {
+  "page": "Pricing",
+  "w": 390,
+  "pos": "hero@0.5",
+  "sev": "high",
+  "desc": "Pricing 手機版(390w)hero@0.5 與 0.75:三張卡底部價格牌內三層文字疊印——白字「依需求報價」(10px 字級下限)上緣突出牌頂框,其正下方橘/藍「預約諮詢」疊進白字字腳並壓到牌底框,牌外「✓ 4 模組/8 模組(含A)/12 模組(含B)」淡字再疊在牌底框上;三卡皆然、全不透明、settle 1500ms 後不消失。根因:hero-scenes.js 471-482 牌高與行距全乘 s(手機 s≈0.5,牌僅約 19px 高、兩行基線差 14*s≈7px),但字級有 9-10px 下限不隨之縮,模組列 y=ry+rh+59*s 恰落在牌底邊(ry+rh+27)上。"
+ },
+ {
+  "page": "Pricing",
+  "w": 390,
+  "pos": "hero@0.25",
+  "sev": "high",
+  "desc": "Pricing 頁手機版(390/360 寬)hero 三張方案卡頂部,中文標題(接客/業務助理/營運平台,ivory 粗體)與英文小標(CAPTURE/ASSISTANT/PLATFORM,熱門場景為全飽和橘/藍)垂直疊壓約 2-4px,兩層文字互相穿插皆清晰可讀;英文小標的上半部同時溢出卡片圓角頂框之外。settle 1500ms 後仍存在,整段 hero 捲動全程(0.05-0.98)皆同。根因:hero-scenes.js:431-432 兩行文字基線距為 15*s(s 在 390 寬被 clamp 至 0.5 → 僅 7.5px),但 d.label(:39)與 d.han(:45)各有 9px/10px 字級下限不隨 s 縮小,字高大於行距導致必然疊字。"
+ },
+ {
+  "page": "Pricing",
+  "w": 390,
+  "pos": "hero@0.92",
+  "sev": "med",
+  "desc": "Pricing 手機版(390 寬)hero 終幕 SCENE 07 canvas 全滅:進度 ≥0.92 時 paintPricing 在 hero-scenes.js:445(d.rr→arcTo)因 slotH 變負擲 IndexSizeError——手機 zone 高被壓到 140px、終幕 fadeO 使機櫃高 gh 縮小,slotH=gh*0.6/4-7<0(hero-scenes.js:434)。hero-kit.js:129-141 draw() 吞錯 4 次後將 canvas opacity 設為 0 且永久停畫(捲回也不恢復),導致大字「系統上線,開始運作」、三藥丸、心跳線(hero-scenes.js:516-560)從未被畫出,視口下方約 60% 為持續性黑色空洞(0.92 與 0.98 皆然,settle 後不消失;settle ≥1200ms 時 canvas computed opacity=0,原述 opacity=1 是 1000ms settle 拍在 700ms 淡出中途)。修法方向:makeDraw.rr 對 w/h/r 取下限(r=Math.max(0,Math.min(...)))或 slotH 加 Math.max(0,...),並考慮讓 draw() 的 catch 記 log 而非靜默熄畫。"
+ },
+ {
+  "page": "Pricing",
+  "w": 390,
+  "pos": "hero@0.75",
+  "sev": "med",
+  "desc": "Pricing 手機版(390px)hero@0.75:藍色 USAGE-BASED 水平軌線與 8 根刻度短線截過「USAGE-BASED — 圖片・影片,用多少算多少」標籤字頂。根因是雙重擠壓:(1) hero-scenes.js:410 的 s 在窄幅下被 clamp 到 .5,標籤基線只放在線下 15*s≈7.5px(hero-scenes.js:509);(2) d.label(hero-scenes.js:39)將字級下限鎖為 9px,CJK 字頂(ascender ≈8-9px)因此高過線位 ly2,再被 ly2±4px 的刻度(hero-scenes.js:502-508)戳進字面約 4px。靜態(kU=1)持續存在,非過場殘影。修法方向:mobile 時把標籤 y 改為 ly2 + max(15*s, 13) 左右,或刻度只往上畫(ly2-4 到 ly2)。"
+ },
+ {
+  "page": "Pricing",
+  "w": 360,
+  "pos": "hero@0.25",
+  "sev": "low",
+  "desc": "Pricing 手機版(360/390w)hero@0.25 附近:卡片內模組晶片以 sxOff=(1-km)*24 從右滑入,但晶片本體僅內縮 8px(畫在 x+8+sxOff、寬 rw-16),故 km<2/3 時晶片右緣超出卡片右邊框最多 16px 且無 clip 裁切(hero-scenes.js:458-460)。實測 hero@0.25 時第三張 PLATFORM 卡藍色晶片超出右框 7px,第二張 ASSISTANT 卡橘色晶片亦戳進卡間隙。狀態由捲動位置驅動(sp 收斂至 p),駐留該捲動位置時永久呈現,settle 1500ms 後不消失。修法建議:繪製晶片列前對卡片矩形做 g.clip(),或將滑入改為 sxOff 上限 8px / 以透明度替代位移。"
+ },
+ {
+  "page": "Demo",
+  "w": 360,
+  "pos": "hero@0.05",
+  "sev": "med",
+  "desc": "Demo 頁(360 寬、hero@0.05):釘在 sticky hero 舞台底部的進度頁腳(position:absolute、z-index 4)「01 / 04」文字與橘色短線,直接疊壓在「02 最卡的流程」晶片列第一顆「LINE 客服」晶片上——「01 / 04」span(rect 20,769,52x13)與晶片 button(rect 37,768,84x37)重疊約 35x13px,晶片圓角外框弧線從「04」字下方穿過;兩者皆全不透明,settle 1500ms 後仍存在,為真實疊壓而非過場殘影。"
+ },
+ {
+  "page": "Demo",
+  "w": 390,
+  "pos": "body@18%",
+  "sev": "med",
+  "desc": "Demo 頁手機版(390 寬)捲動至 body@18% 靜止 1.5 秒後,深色 hero 面板(overflow-y:hidden,底緣 y≈241)將最後一列「客製流程」晶片水平切半(晶片文字 top=227/bottom=246、opacity=1,底部約 5px 文字加藥丸下緣被裁),「04 / 04」橘色進度線同時橫壓在該晶片列上緣;hero 序列自身結尾(hero@0.98)同樣裁切,故此列晶片在任何捲動位置皆無法完整顯示。"
+ },
+ {
+  "page": "Demo",
+  "w": 390,
+  "pos": "hero@0.5",
+  "sev": "med",
+  "desc": "Demo 頁 hero 中段(mobile 390/360、進度約 0.28–0.55),hero-scenes.js paintDemo(695–714 行)在底層 canvas 於卡片區左外側 14px 處繪製側標:d.label('INDUSTRY', z.x-14)(橘)與 d.label('FRICTION', z.x-14)(藍)各附一欄 5 顆圓點。手機版 DOM 控制台卡片左緣在 x=20,蓋住 canvas 上 x≥20 的部分,兩個單字只剩前 ~14px(約 1.5 個字母「IN」「FL」)露在溝槽裡,第二個字母被卡片左緣垂直切半;圓點欄完整可見。裁切來源是不透明卡片壓在 canvas 上(右側被蓋),不是視口左邊緣。桌機因卡片左側留白足夠,單字完整可讀;修法方向:mobile 時改繪短代號、移入卡片內,或直接不畫這兩個側標。"
+ },
+ {
+  "page": "Demo",
+  "w": 360,
+  "pos": "hero@0.75",
+  "sev": "low",
+  "desc": "Demo 頁 hero 主控台卡片(「第一階段導入草稿・AI FLOW DRAFT」)標題列右側的狀態徽章「尚未開始」(Demo.dc.html:130,role=\"status\" span,10px/letter-spacing .18em)在 360 寬被折成兩行「尚未開/始」:該 span 為 flex item 且未設 white-space:nowrap 與 flex-shrink:0,被左側標題擠壓至約 35px 寬(四字約需 47px)。此為卡片固定表頭,hero 各滾動位置(0.05–0.98)截圖皆同樣呈現。"
+ },
+ {
+  "page": "Demo",
+  "w": 390,
+  "pos": "body@45%",
+  "sev": "low",
+  "desc": "「02 你的產業」區(#pq-ind-grid2)在 390 寬仍為固定兩欄(computed 183px + 149px,gap 18px):11 顆產業晶片被擠成單顆直排佔左欄(高 584px),右欄案例預覽卡僅 149px 寬,說明文字內容盒 104px、每行約 7-8 字折成 4 行;卡片高僅 297px,其下方右欄留出約 290px 高的整片空白。根因:Demo.dc.html:279 內聯 grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr) 無行動版斷點覆寫。"
+ },
+ {
+  "page": "About",
+  "w": 390,
+  "pos": "body@35%",
+  "sev": "high",
+  "desc": "About.dc.html 第 301 行 #a-msteps 的行內樣式 grid-template-columns:repeat(3,minmax(0,1fr)) 蓋掉了第 64–65 行的 @media (max-width:1099px)/(max-width:719px) 降欄規則(無 !important,行內樣式優先),導致手機寬(390/360)METHOD 六張 STEP 卡仍排 3 欄:每卡實測僅 107px(360 寬時 97px),四字標題全部硬斷成兩行(「了解現/況」等),內文每行僅 2–5 字呈細長條。settle 1500ms 後仍存在,非過場瞬間。"
+ },
+ {
+  "page": "About",
+  "w": 360,
+  "pos": "hero@0.75",
+  "sev": "low",
+  "desc": "手機版(360/390 寬)About hero 於 net 場景(進度約 0.75–1.0)期間,canvas 繪製的青色標籤「8+ INDUSTRIES — GROUPED」(hero-scenes.js:601,畫在 zone 左下)本應在 group→pipe 過場淡出,但因 about 場景表已移除 'pipe'(hero-config.js:92-97)而淡出係數 k('pipe') 恆為 0,標籤永不消失;settle 後穩定狀態下其尾端「OUPED」被 z-index 4 的 DOM 縮圖(320M EXPO 卡)蓋住並混入淺色底,難以閱讀(過場瞬間遮蔽範圍更大,可短暫只剩「8+ INDU」可見)。修法:淡出條件改用實際存在的下一幕(如 k('net'))或在 net 場景強制歸零 alpha。"
+ }
+]

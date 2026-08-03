@@ -1,0 +1,11 @@
+await new Promise(r=>setTimeout(r,3500));
+const F=0.92;
+const wrap=document.querySelector('[data-hero-wrap]');
+const top=wrap?wrap.getBoundingClientRect().top+scrollY:0;
+const end=wrap?Math.max(wrap.offsetHeight-innerHeight,innerHeight):Math.min(3000,document.documentElement.scrollHeight*0.25);
+for(let i=1;i<=16;i++){scrollTo(0,top+end*F*i/16);await new Promise(r=>requestAnimationFrame(r));}
+await new Promise(r=>setTimeout(r,1000));
+const cv=document.querySelector('[data-hero-canvas]');
+const cs=cv?getComputedStyle(cv):null;
+const r1=cv?cv.getBoundingClientRect():null;
+return 'y='+scrollY+' end='+end+' wrapH='+(wrap?wrap.offsetHeight:0)+' canvasOpacity='+(cs?cs.opacity:'none')+' canvasRect='+(r1?Math.round(r1.top)+','+Math.round(r1.height):'none');
