@@ -39,6 +39,13 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
+/* 手機 hero:縮圖牆降為隱約質感(放射遮罩只護左側,窄幅時縮圖/晶片會壓到場景字卡);
+   BEFORE/SYSTEM/RESULT 晶片與統計卡在手機直接隱藏 */
+@media (max-width:899px){
+[data-wscrim]{background:linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.9) 55%,rgba(9,11,14,.82) 100%)!important}
+#wall [data-shotwall] [data-shot]{filter:brightness(.45)!important}
+#wall [data-featchip],#wall [data-statcard],#wall [data-catlabel]{opacity:0!important}
+}
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
@@ -75,7 +82,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
         </sc-for>
       </div>
-      <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:radial-gradient(130% 130% at 10% 32%,rgba(9,11,14,.95) 0%,rgba(9,11,14,.78) 32%,rgba(9,11,14,.24) 56%,rgba(9,11,14,0) 74%);pointer-events:none"></div>
+      <div data-wscrim aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:radial-gradient(130% 130% at 10% 32%,rgba(9,11,14,.95) 0%,rgba(9,11,14,.78) 32%,rgba(9,11,14,.24) 56%,rgba(9,11,14,0) 74%);pointer-events:none"></div>
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:3;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div data-hero-copy data-whead style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
         <div style="max-width:560px;display:flex;flex-direction:column;gap:15px">

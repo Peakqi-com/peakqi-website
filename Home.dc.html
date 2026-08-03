@@ -324,6 +324,8 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-intro{display:flex;flex-direction:column;gap:20px}
 .pq-cine-scrollcue{display:inline-flex;align-items:center;gap:14px;font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.88);text-decoration:none;width:fit-content}
 .pq-cine-scrollcue i{width:40px;height:40px;border:1px solid rgba(242,239,232,.28);display:grid;place-items:center;color:#FF6B2C;font-style:normal;animation:pqDrop 2s ease-in-out infinite}
+@supports (animation-timeline: scroll()){@media (prefers-reduced-motion: no-preference){.pq-cine-scrollcue{animation:pqCueFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}}
+@keyframes pqCueFade{to{opacity:0;visibility:hidden}}
 .pq-cine-card{border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.62);backdrop-filter:blur(14px);padding:26px 26px 28px}
 .pq-cine-card .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
 .pq-cine-card .top b{color:#FF6B2C;font:700 15px 'Space Grotesk',sans-serif}

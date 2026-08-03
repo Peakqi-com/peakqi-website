@@ -217,14 +217,16 @@
       // preserveDrawingBuffer keeps the last frame readable after
       // compositing (toDataURL / drawImage) — it's what lets the
       // screenshot tools capture the scene instead of a blank canvas.
+      // 手機降負載:DPR 2~3 的手機在此場景每幀成本過高,會出現捲動凍結(卡住)
+      const isTouchDevice = (navigator.maxTouchPoints || 0) > 0 && Math.min(screen.width, screen.height) < 900;
       const renderer = new THREE.WebGLRenderer({
-        antialias: true,
+        antialias: !isTouchDevice,
         alpha: true,
         preserveDrawingBuffer: true,
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.25 : 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFShadowMap;
+      renderer.shadowMap.type = isTouchDevice ? THREE.BasicShadowMap : THREE.PCFShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       this._renderer = renderer;

@@ -540,9 +540,9 @@ export function createHeroEngine({ refs, manifest }) {
     return o;
   }
   function updateText(q) {
-    fadeBlock(refs.t1, q, -0.2, 0, 0.09, 0.145);
-    fadeBlock(refs.t2, q, 0.145, 0.19, 0.225, 0.275);
-    fadeBlock(refs.t3, q, 0.26, 0.3, 0.41, 0.455);
+    const o1 = fadeBlock(refs.t1, q, -0.2, 0, 0.09, 0.145);
+    const o2 = fadeBlock(refs.t2, q, 0.145, 0.19, 0.225, 0.275);
+    const o3 = fadeBlock(refs.t3, q, 0.26, 0.3, 0.41, 0.455);
     if (refs.t3) {
       const rows = refs.t3.querySelectorAll('[data-st]');
       rows.forEach((row, i) => {
@@ -553,7 +553,6 @@ export function createHeroEngine({ refs, manifest }) {
         if (dot) dot.style.background = on >= 1 ? GREEN : ORANGE;
       });
     }
-    fadeBlock(refs.t4, q, 0.445, 0.495, 0.565, 0.615);
     if (refs.t4) {
       const chips = refs.t4.querySelectorAll('[data-chip]');
       chips.forEach((ch, i) => {
@@ -562,8 +561,19 @@ export function createHeroEngine({ refs, manifest }) {
         ch.style.transform = 'translateY(' + ((1 - on) * 10).toFixed(1) + 'px)';
       });
     }
+    const o4 = fadeBlock(refs.t4, q, 0.445, 0.495, 0.565, 0.615);
     const o5 = fadeBlock(refs.t5, q, 0.9, 0.95, 9, 10);
     if (refs.t5) refs.t5.style.pointerEvents = o5 > 0.6 ? 'auto' : 'none';
+    // 手機五個字塊共用同一個版位:交叉淡化的重疊窗會變成字疊字,改為只顯示權重最高的一塊
+    if (isMobile) {
+      const blocks = [[refs.t1, o1], [refs.t2, o2], [refs.t3, o3], [refs.t4, o4], [refs.t5, o5]].filter(x => x[0]);
+      let best = null;
+      blocks.forEach(x => { if (!best || x[1] > best[1]) best = x; });
+      blocks.forEach(x => { if (x !== best && x[1] > 0.001) { x[0].style.opacity = '0'; x[0].style.visibility = 'hidden'; } });
+      // 長文字場景(t2/t5)可高達 85% 視高,scrim 下半段刻意透光 → 改壓 canvas 本身,
+      // 儀表板拼貼在這兩景退成 25% 亮度,其餘場景維持全亮
+      if (canvas) canvas.style.opacity = (1 - 0.75 * Math.max(o2, o5)).toFixed(3);
+    }
     if (refs.hint) refs.hint.style.opacity = (1 - sub(q, 0.012, 0.05)).toFixed(3);
   }
 
@@ -618,7 +628,7 @@ export function createHeroEngine({ refs, manifest }) {
     const scrim = stage.querySelector('[data-scrim]');
     if (scrim) {
       scrim.style.background = isMobile
-        ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)'
+        ? 'linear-gradient(180deg,rgba(9,11,14,.95) 0%,rgba(9,11,14,.9) 46%,rgba(9,11,14,.72) 66%,rgba(9,11,14,.28) 82%,rgba(9,11,14,.05) 100%)' // 手機文案區塊可長達 85% 視高,遮罩要跟著蓋到底,磚才不會穿過文字
         : 'linear-gradient(90deg,rgba(9,11,14,.85) 0%,rgba(9,11,14,.5) 32%,rgba(9,11,14,0) 58%)';
     }
   }
