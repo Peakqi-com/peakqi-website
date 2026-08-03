@@ -8,17 +8,17 @@ export const contact = {
 };
 
 export const navigation = [
-  { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
-  { href: 'Method.dc.html', key: 'method', label: '導入方法' },
-  { href: 'Cases.dc.html', key: 'cases', label: '案例' },
+  { href: '/solutions', key: 'solutions', label: '解決方案' },
+  { href: '/method', key: 'method', label: '導入方法' },
+  { href: '/cases', key: 'cases', label: '案例' },
   { key: 'product', label: '產品', children: [
-    { href: 'PeakOps.dc.html', label: 'Peak Ops', desc: '通用 AI 業務工具' },
+    { href: '/peakops', label: 'Peak Ops', desc: '通用 AI 業務工具' },
     { href: 'https://www.aiweddingpro360.com/', label: 'AI Wedding Pro', desc: '婚禮 AI', ext: true },
     { href: 'https://www.aiinteriorpro360.com/', label: 'AI Interior Pro', desc: '室內設計 AI', ext: true },
     { href: 'https://bubble.tw', label: '冒泡', desc: '房仲 AI', ext: true },
-    { href: 'Pricing.dc.html', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' }
+    { href: '/pricing', label: '方案說明', desc: 'Peak Ops 三種規劃與導入範圍' }
   ] },
-  { href: 'About.dc.html', key: 'about', label: '關於我們' }
+  { href: '/about', key: 'about', label: '關於我們' }
 ];
 
 export const stats = [

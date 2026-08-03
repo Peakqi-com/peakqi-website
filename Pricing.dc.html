@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PeakQi 奇鋒國際">
 <meta property="og:locale" content="zh_TW">
@@ -10,6 +13,87 @@
 <meta property="og:description" content="三種導入起點:AI 接客起步、AI 業務流程、AI 營運整合。按流程深度選擇,不按公司大小。費用由導入費、月費與使用量費組成,客製需求另行評估。">
 <meta property="og:url" content="https://www.peakqi.com/pricing">
 <link rel="canonical" href="https://www.peakqi.com/pricing">
+<!-- FAQ 結構化資料:內容須與 content.js faqPricing 同步 -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "報價主要取決於哪些因素?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "啟用的模組數量、流程設定範圍、資料整理程度、既有工具串接、權限角色與是否需要客製介面。Demo 之後會列出具體項目。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "導入費、月費與使用費有什麼差別?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "導入費是第一階段的一次性專案費(設定、資料、串接);月費涵蓋系統使用、維運與標準文字 AI 用量;圖片影片等高成本 AI 依實際用量計費。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "三種方案可以後續升級嗎?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "可以。A → B → C 是能力累加,升級時保留既有資料與設定,只補上新增模組的導入工作。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "可以只先做一個模組嗎?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "可以。建議從最影響營運的一段流程開始,確認有效再擴大。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "既有 LINE、CRM 或表單可以保留嗎?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "可以。我們處理的是工具之間原本需要人工搬運的部分;實際串接方式依工具、API 與權限評估。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "什麼情況需要客製開發?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "需要串接多套現有系統、資料遷移、多部門權限、特殊審核流程或專屬介面時,客製項目會與標準方案分開評估與報價。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "第一階段通常包含什麼?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "目標與範圍確認、模組設定、資料整理、內部測試與上線交接;細項會寫在提案裡。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "媒體用量超過之後怎麼計費?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "圖片與影片類依實際使用量計費;導入前會依你的流程先估算範圍,避免意外帳單。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "合作期間與取消方式?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "合約期限、最低合作期間與調整條件依方案而定,簽約前會逐條說明。"
+   }
+  }
+ ]
+}
+</script>
 <meta property="og:image" content="https://www.peakqi.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -172,7 +256,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
           <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
             <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
-              <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+              <a href="/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
               <span>/</span>
               <span style="color:#F2EFE8;font-weight:700">方案說明</span>
             </nav>
@@ -247,7 +331,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
           <div style="display:flex;gap:14px;align-items:center;border-top:1px solid rgba(242,239,232,.14);padding-top:14px">
             <span style="font:700 clamp(1.15rem,1.9vw,1.5rem)/1 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ r.quote }}</span>
-            <a href="Demo.dc.html" data-cta style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:9px 15px;border-radius:2px;font:700 12.5px 'Noto Sans TC',sans-serif;text-decoration:none;white-space:nowrap" style-hover="border-color:#FF6B2C;color:#FF6B2C">預約諮詢 <span data-arrow>→</span></a>
+            <a href="/demo" data-cta style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:9px 15px;border-radius:2px;font:700 12.5px 'Noto Sans TC',sans-serif;text-decoration:none;white-space:nowrap" style-hover="border-color:#FF6B2C;color:#FF6B2C">預約諮詢 <span data-arrow>→</span></a>
           </div>
           <div style="display:flex;gap:5px" aria-hidden="true">
             <sc-for list="{{ r.slots }}" as="s" hint-placeholder-count="6">
@@ -485,7 +569,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="border:1px solid rgba(242,239,232,.18);border-radius:6px;background:rgba(242,239,232,.04);padding:16px 18px;font:500 clamp(15px,1.15vw,16.5px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.82)">是否有高可用性或特殊資安要求</span>
     </div>
     <p style="margin:18px 0 0;max-width:680px;font:400 clamp(14.5px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">標準模組無法直接覆蓋時,我們會將客製項目、交付範圍與費用獨立列出——不會混在方案月費裡。</p>
-    <p style="margin:18px 0 0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);max-width:640px">{{ customCred }} <a href="Cases.dc.html#index">看客製實績 →</a></p>
+    <p style="margin:18px 0 0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65);max-width:640px">{{ customCred }} <a href="/cases#index">看客製實績 →</a></p>
       </div>
     </div>
   </div>
@@ -586,7 +670,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(64px,8vw,100px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
     <h2 style="margin:0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.3 'Noto Sans TC',sans-serif">不確定選哪個?<br>用你的需求直接比。</h2>
-    <a href="Demo.dc.html?case=方案選擇與報價評估" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">用我的需求比較方案 <span data-arrow>→</span></a>
+    <a href="/demo?case=方案選擇與報價評估" data-cta style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">用我的需求比較方案 <span data-arrow>→</span></a>
   </div>
 </section>
 
@@ -727,7 +811,7 @@ class Component extends DCLogic {
       selUpgrade: cur.upgrade ?? '',
       selFeatured: !!cur.featured, selHasBase: !!cur.base, selBase: cur.base,
       selItems: cur.items ?? [],
-      selDemoHref: 'Demo.dc.html?case=' + encodeURIComponent('方案選擇與報價評估(' + cur.name + ')'),
+      selDemoHref: '/demo?case=' + encodeURIComponent('方案選擇與報價評估(' + cur.name + ')'),
       compareRows, compareCards,
       usageNote: d?.usageNote ?? '',
       customs: (d?.customRanges ?? []).map((c, i) => ({

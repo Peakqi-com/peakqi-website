@@ -36,8 +36,8 @@ export const heroConfig = {
     ],
     reduced: ['sig', 'layers', 'cap', 'fol', 'console'],
     ctas: [
-      { kind: 'primary', label: '用我的流程跑一次', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' },
-      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'primary', label: '用我的流程跑一次', href: '/demo?case=接客追客養客整合流程', track: 'hero_demo_click' },
+      { kind: 'ghost', label: '查看實際案例', href: '/cases', track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -57,7 +57,7 @@ export const heroConfig = {
     reduced: ['detail', 'wall', 'focus', 'proof', 'index'],
     ctas: [
       { kind: 'primary', label: '查看所有案例', href: '#index', track: 'hero_case_click' },
-      { kind: 'ghost', label: '把這個流程套用到我的公司', href: 'Demo.dc.html?case=接客追客養客整合流程', track: 'hero_demo_click' }
+      { kind: 'ghost', label: '把這個流程套用到我的公司', href: '/demo?case=接客追客養客整合流程', track: 'hero_demo_click' }
     ],
     flags: {}
   },
@@ -77,7 +77,7 @@ export const heroConfig = {
     reduced: ['racks', 'plat', 'cmp', 'use', 'run'],
     ctas: [
       { kind: 'primary', label: '用我的需求比較方案', href: '#p-selector', track: 'hero_case_click' },
-      { kind: 'ghost', label: '預約 15 分鐘 Demo', href: 'Demo.dc.html', track: 'hero_demo_click' }
+      { kind: 'ghost', label: '預約 15 分鐘 Demo', href: '/demo', track: 'hero_demo_click' }
     ],
     flags: {}
   },
@@ -98,7 +98,7 @@ export const heroConfig = {
     reduced: ['frag', 'link', 'group', 'net'],
     ctas: [
       { kind: 'primary', label: '看我們如何合作', href: '#a-method', track: 'about_method_click' },
-      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'ghost', label: '查看實際案例', href: '/cases', track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -114,8 +114,8 @@ export const heroConfig = {
     ],
     reduced: ['map', 'goal', 'pilot', 'live'],
     ctas: [
-      { kind: 'primary', label: '預約 AI 導入評估', href: 'Demo.dc.html', track: 'hero_demo_click' },
-      { kind: 'ghost', label: '查看實際案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'primary', label: '預約 AI 導入評估', href: '/demo', track: 'hero_demo_click' },
+      { kind: 'ghost', label: '查看實際案例', href: '/cases', track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -132,7 +132,7 @@ export const heroConfig = {
     reduced: ['ind', 'flow', 'build', 'go'],
     ctas: [
       { kind: 'primary', label: '開始填寫需求', href: '#pq-demo-grid', track: 'hero_demo_click' },
-      { kind: 'ghost', label: '先查看相似案例', href: 'Cases.dc.html', track: 'hero_case_click' }
+      { kind: 'ghost', label: '先查看相似案例', href: '/cases', track: 'hero_case_click' }
     ],
     flags: {}
   }

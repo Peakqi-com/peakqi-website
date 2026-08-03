@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PeakQi 奇鋒國際">
 <meta property="og:locale" content="zh_TW">
@@ -111,7 +114,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <div data-hero-copy data-whead style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
         <div style="max-width:560px;display:flex;flex-direction:column;gap:15px">
           <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
-            <a href="Home.dc.html" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
+            <a href="/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
           </nav>
@@ -171,7 +174,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
             <a data-hero-primary data-track="hero_case_click" href="#stories" aria-label="查看精選案例" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看精選案例</a>
-            <a data-track="hero_demo_click" href="Demo.dc.html?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" aria-label="討論我的營運流程" style-hover="border-color:#FF6B2C;color:#FF6B2C">討論我的營運流程</a>
+            <a data-track="hero_demo_click" href="/demo?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" aria-label="討論我的營運流程" style-hover="border-color:#FF6B2C;color:#FF6B2C">討論我的營運流程</a>
           
             <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,看實際導入案例</span></div>
           </div>
@@ -357,7 +360,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
     <h2 style="margin:0;font:900 clamp(1.8rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 如何接進你的流程?</h2>
-    <a href="Demo.dc.html" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
+    <a href="/demo" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
     <a href="#stories" aria-label="查看相近產業案例" style="display:inline-flex;align-items:center;gap:8px;margin-left:14px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看相近產業案例</a>
   </div>
 </section>
@@ -477,8 +480,8 @@ class Component extends DCLogic {
         slug: f.slug, industry: f.industry, type: f.type, title: narr.title ?? f.name,
         stuck: narr.stuck ?? '', did: narr.did ?? '', human: narr.human ?? '', metrics: narr.metrics ?? [],
         sourcePage: (f.sourcePage || '').toUpperCase(),
-        detailHref: 'Case.dc.html?slug=' + f.slug,
-        demoHref: 'Demo.dc.html?case=' + encodeURIComponent(narrMap[f.slug]),
+        detailHref: '/case?slug=' + f.slug,
+        demoHref: '/demo?case=' + encodeURIComponent(narrMap[f.slug]),
         shots: f.gallery.slice(0, 3).map((g, i) => ({
           alt: g.alt,
           style: {

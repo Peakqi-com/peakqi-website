@@ -92,6 +92,10 @@
     {
       "source": "/privacy",
       "destination": "/Privacy.dc.html"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon-32.png"
     }
   ]
 }

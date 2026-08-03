@@ -2,14 +2,14 @@
 // 部署時把 SITE 換成正式網域;各 .dc.html 對應正式路由。
 const SITE = 'https://peakqi.com';
 const ROUTES = {
-  home: { path: '/', file: 'Home.dc.html', name: '首頁' },
-  solutions: { path: '/solutions', file: 'Solutions.dc.html', name: '解決方案' },
-  cases: { path: '/cases', file: 'Cases.dc.html', name: '案例與作品' },
-  pricing: { path: '/pricing', file: 'Pricing.dc.html', name: '方案說明' },
-  about: { path: '/about', file: 'About.dc.html', name: '關於 PeakQi' },
-  method: { path: '/method', file: 'Method.dc.html', name: '導入方法' },
-  peakops: { path: '/peakops', file: 'PeakOps.dc.html', name: 'Peak Ops' },
-  demo: { path: '/demo', file: 'Demo.dc.html', name: '預約 Demo' }
+  home: { path: '/', file: '/', name: '首頁' },
+  solutions: { path: '/solutions', file: '/solutions', name: '解決方案' },
+  cases: { path: '/cases', file: '/cases', name: '案例與作品' },
+  pricing: { path: '/pricing', file: '/pricing', name: '方案說明' },
+  about: { path: '/about', file: '/about', name: '關於 PeakQi' },
+  method: { path: '/method', file: '/method', name: '導入方法' },
+  peakops: { path: '/peakops', file: '/peakops', name: 'Peak Ops' },
+  demo: { path: '/demo', file: '/demo', name: '預約 Demo' }
 };
 function el(tag, attrs) {
   const n = document.createElement(tag);

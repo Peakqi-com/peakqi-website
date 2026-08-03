@@ -409,6 +409,7 @@ function ensureMobileCollapseCss() {
   const st = document.createElement('style');
   st.textContent = '@media (max-width:899px){' +
     '[data-hero-stage]{align-items:flex-start!important}' +
+    '[data-hero-progress]{display:none!important}' +
     '[data-hero-stage]:has(.pq-hero-compact) [data-shotwall],[data-hero-stage]:has(.pq-hero-compact) [data-ashotwall]{top:40%!important;height:60%!important;transition:top .45s cubic-bezier(.16,1,.3,1),height .45s cubic-bezier(.16,1,.3,1)}' +
     '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +
     '.pq-hero-compact .pq-clp{opacity:0;max-height:0!important;margin:0!important;pointer-events:none}' +
@@ -469,6 +470,25 @@ export function InnerPageHero(root, cfg) {
   const canvas = flags.canvas ? HeroCanvas(ctx, root.querySelector('[data-hero-canvas]'), stage, cfg, model, { tier, mobile, flags }) : null;
   if (!canvas) HeroFallback(root);
   const collapse = mobile ? HeroMobileCollapse(ctx, root, canvas) : null;
+  if (mobile) { // 手機合併景會讓「階段 01→03」跳號:依實際場景數重編 kicker
+    const total = model.included.length;
+    model.included.forEach((sc, i) => {
+      const el = root.querySelector('[data-hero-scene="' + sc.id + '"]');
+      const kick = el && el.querySelector('span');
+      if (!kick) return;
+      const walk = (node) => {
+        node.childNodes.forEach(ch => {
+          if (ch.nodeType === 3 && /\d/.test(ch.textContent)) {
+            ch.textContent = ch.textContent
+              .replace(/(\d+)(\s*\/\s*)(\d+)/, (m, x, sep, y) =>
+                String(i + 1).padStart(x.length, '0') + sep + String(total).padStart(y.length, '0'))
+              .replace(/^(\s*)(\d+)(\s*[·・])/, (m, sp, x, dot) => sp + String(i + 1).padStart(x.length, '0') + dot);
+          } else if (ch.nodeType === 1) walk(ch);
+        });
+      };
+      walk(kick);
+    });
+  }
   ScrollStage(ctx, wrap, (p) => {
     if (collapse) collapse.update(p);
     copy.update(p);

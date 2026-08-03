@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PeakQi 奇鋒國際">
 <meta property="og:locale" content="zh_TW">
@@ -10,6 +13,20 @@
 <meta property="og:description" content="PeakQi 協助企業從客服、CRM、報價、行銷到專案管理,盤點適合導入 AI 的流程,建立可驗證方案並串接既有工具、資料與系統。從單一高價值場景開始,保留權限、審核與人工接手。">
 <meta property="og:url" content="https://www.peakqi.com/">
 <link rel="canonical" href="https://www.peakqi.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "奇鋒國際有限公司",
+  "alternateName": "PeakQi",
+  "url": "https://www.peakqi.com/",
+  "logo": "https://www.peakqi.com/og.png",
+  "email": "jacky@peakqi.com",
+  "telephone": "+886-2-6609-3699",
+  "sameAs": ["https://lin.ee/saa67pr"],
+  "description": "PeakQi 協助台灣中小企業從客服、CRM、報價、行銷到專案管理,盤點適合導入 AI 的流程,建立可驗證方案並串接既有工具與系統。"
+}
+</script>
 <meta property="og:image" content="https://www.peakqi.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -1194,7 +1211,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .76s,transform .9s cubic-bezier(.16,1,.3,1) .76s}
 .pq-mos.is-in .pq-mos-say span,.pq-mos.is-in .pq-mos-say h2,.pq-mos.is-in .pq-mos-say p{opacity:1;transform:none}
 @media (max-width:900px){
-  .pq-mos-grid{grid-template-columns:repeat(6,1fr);aspect-ratio:6/7}
+  .pq-mos-grid{grid-template-columns:repeat(6,1fr);aspect-ratio:6/10} /* 磚維持正方,不變形;滿版 */
   .pq-mos-grid i::before,.pq-mos-grid i::after{animation-duration:calc(var(--d2,26s) * 1.6)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -1540,7 +1557,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .76s,transform .9s cubic-bezier(.16,1,.3,1) .76s}
 .pq-mos.is-in .pq-mos-say span,.pq-mos.is-in .pq-mos-say h2,.pq-mos.is-in .pq-mos-say p{opacity:1;transform:none}
 @media (max-width:900px){
-  .pq-mos-grid{grid-template-columns:repeat(6,1fr);aspect-ratio:6/7}
+  .pq-mos-grid{grid-template-columns:repeat(6,1fr);aspect-ratio:6/10} /* 磚維持正方,不變形;滿版 */
   .pq-mos-grid i.rot::after,.pq-mos-grid i.rot2::after{animation-duration:40s}
 }
 @media (prefers-reduced-motion:reduce){
@@ -1901,8 +1918,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.24 'Noto Sans TC',sans-serif">把 AI 接進你的<br><span style="color:#FF6B2C">真實營運流程</span></h1>
       <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">從客服、CRM、報價、行銷到專案管理,我們先盤點企業目前的工作方式,再用可驗證的導入方案,串接你正在使用的工具、資料與人員流程。<b style="color:#F2EFE8;font-weight:700">把你現在最卡的流程,先交給我們跑一次。</b></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px">
-        <a href="Demo.dc.html" aria-label="預約 AI 導入評估,先用 15 分鐘確認問題與適用場景" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 AI 導入評估 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
-        <a href="Cases.dc.html" aria-label="查看實際導入案例" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
+        <a href="/demo" aria-label="預約 AI 導入評估,先用 15 分鐘確認問題與適用場景" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 AI 導入評估 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+        <a href="/cases" aria-label="查看實際導入案例" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
       </div>
       <p style="margin:2px 0 0;max-width:520px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">先用 15 分鐘確認問題與適用場景,不會直接推銷整套系統。</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:8px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
@@ -2529,7 +2546,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <p style="margin:0;max-width:360px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套底層引擎,換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
     </div>
     <div style="margin-top:clamp(24px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px" id="pq-brand-grid">
-      <a data-reveal data-brand href="PeakOps.dc.html" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf1" aria-hidden="true"><svg viewBox="0 0 200 200">
+      <a data-reveal data-brand href="/peakops" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf1" aria-hidden="true"><svg viewBox="0 0 200 200">
 <rect class="bg" width="200" height="200"/>
 <g stroke="rgba(255,255,255,.05)" stroke-width="1">
 <path d="M0 40h200M0 80h200M0 120h200M0 160h200M40 0v200M80 0v200M120 0v200M160 0v200"/></g>
@@ -2828,7 +2845,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">房仲不動產</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">回覆 → 30 秒・名單 ↑ 20%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">串 LINE 自動回物件、每週省 8 小時排程</span></div>
       <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">美業</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">報價 ↑ 3X・決策 ↓ 60%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">髮色試換、妝容模擬,消費前先看成果</span></div>
     </div>
-    <a data-reveal href="Cases.dc.html" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif" style-hover="color:#FF6B2C">看更多實績與作品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+    <a data-reveal href="/cases" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif" style-hover="color:#FF6B2C">看更多實績與作品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
   </div>
 </section>
 
@@ -2842,7 +2859,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <h2 style="margin:0;font:900 clamp(2rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">有一個流程<br>想用 AI 改善?</h2>
       <p style="margin:0;max-width:480px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不需要先準備完整規格。只要告訴我們目前的工作方式與卡住的位置,我們會協助判斷 AI 是否適合,以及第一階段可以從哪裡開始。<br><span style="color:rgba(242,239,232,.5);font-size:14px">商業合作、媒體與投資、加入團隊,歡迎來信 jacky@peakqi.com。</span></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-        <a href="Demo.dc.html" aria-label="預約 AI 導入評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 AI 導入評估</a>
+        <a href="/demo" aria-label="預約 AI 導入評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 AI 導入評估</a>
         <a href="Products.dc.html" aria-label="查看產品 Demo" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看產品 Demo</a>
       </div>
     </div>

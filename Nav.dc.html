@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -15,7 +18,7 @@
 </helmet>
 <header style="position:fixed;top:0;left:0;right:0;height:68px;box-sizing:border-box;z-index:100;background:rgba(242,239,232,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(9,11,14,.12)">
   <div style="max-width:1400px;margin:0 auto;padding:0 clamp(16px,4vw,48px);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-    <a href="Home.dc.html" aria-label="PeakQi 奇鋒國際 首頁" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
+    <a href="/" aria-label="PeakQi 奇鋒國際 首頁" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
       <img src="assets/logo.png" alt="PeakQi" width="32" height="32" style="display:block">
       <span style="display:flex;flex-direction:column;gap:2px;line-height:1">
         <span style="font:800 16px 'Space Grotesk',sans-serif;letter-spacing:.01em">PeakQi</span>
@@ -42,7 +45,7 @@
           </div>
         </sc-if>
       </sc-for>
-      <a href="Demo.dc.html" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="預約 AI 導入評估" style-hover="background:#090B0E;color:#F2EFE8">預約 AI 導入評估</a>
+      <a href="/demo" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 13.5px 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="預約 AI 導入評估" style-hover="background:#090B0E;color:#F2EFE8">預約 AI 導入評估</a>
     </nav>
     <button id="pq-burger" ref="{{ burgerRef }}" onClick="{{ toggle }}" aria-label="開啟選單" aria-expanded="{{ menuExpanded }}" style="flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:1px solid rgba(9,11,14,.2);border-radius:2px;cursor:pointer;padding:0 10px">
       <span style="display:block;height:2px;background:#090B0E"></span>
@@ -80,7 +83,7 @@
         </sc-if>
       </sc-for>
     </nav>
-    <a href="Demo.dc.html" style="margin-top:32px;display:flex;align-items:center;justify-content:center;background:#FF6B2C;color:#090B0E;padding:16px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;letter-spacing:.06em;text-decoration:none">預約 15 分鐘場景 Demo</a>
+    <a href="/demo" style="margin-top:32px;display:flex;align-items:center;justify-content:center;background:#FF6B2C;color:#090B0E;padding:16px;border-radius:2px;font:700 16px 'Noto Sans TC',sans-serif;letter-spacing:.06em;text-decoration:none">預約 15 分鐘場景 Demo</a>
     <div style="margin-top:auto;padding-top:40px;display:flex;flex-direction:column;gap:6px;font:400 13px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">
       <a href="mailto:jacky@peakqi.com" style="color:rgba(242,239,232,.75);text-decoration:none">jacky@peakqi.com</a>
       <a href="tel:0266093699" style="color:rgba(242,239,232,.75);text-decoration:none">(02) 6609-3699</a>
@@ -149,11 +152,11 @@ class Component extends DCLogic {
       padding: '4px 2px', transition: 'color .15s'
     };
     const items = this.state.nav ?? [
-      { href: 'Solutions.dc.html', key: 'solutions', label: '解決方案' },
-      { href: 'Method.dc.html', key: 'method', label: '導入方法' },
-      { href: 'Cases.dc.html', key: 'cases', label: '案例' },
-      { href: 'PeakOps.dc.html', key: 'product', label: '產品' },
-      { href: 'About.dc.html', key: 'about', label: '關於我們' }
+      { href: '/solutions', key: 'solutions', label: '解決方案' },
+      { href: '/method', key: 'method', label: '導入方法' },
+      { href: '/cases', key: 'cases', label: '案例' },
+      { href: '/peakops', key: 'product', label: '產品' },
+      { href: '/about', key: 'about', label: '關於我們' }
     ];
     const childStyle = {
       display: 'flex', flexDirection: 'column', gap: '2px', textDecoration: 'none',
@@ -229,7 +232,7 @@ class Component extends DCLogic {
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
       // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
       // 母品牌首頁主要下一步 = 預約 AI 導入評估;其他頁維持產品導向的 Demo 入口
-      ctaHref: active === 'home' ? 'Demo.dc.html' : 'Demo.dc.html',
+      ctaHref: active === 'home' ? '/demo' : '/demo',
       // 產品頁(PeakOps)的浮動 CTA 與該頁全部主 CTA 統一為「用我的流程跑一次」;
       // 首頁維持「預約 AI 導入評估」,其餘頁面維持原文案,避免單頁需求外溢到全站
       ctaLabel: active === 'home' || active === 'about' ? '預約 AI 導入評估'
