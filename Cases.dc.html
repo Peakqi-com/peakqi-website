@@ -59,6 +59,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
 /* 手機 hero:縮圖牆降為隱約質感(放射遮罩只護左側,窄幅時縮圖/晶片會壓到場景字卡);
    BEFORE/SYSTEM/RESULT 晶片與統計卡在手機直接隱藏 */
+#wall [data-shotwall],#wall [data-wscrim]{display:none!important} /* 無圖方針:縮圖牆退役,canvas 場域情境接手 */
 @media (max-width:899px){
 [data-wscrim]{background:linear-gradient(180deg,rgba(9,11,14,.78) 0%,rgba(9,11,14,.55) 46%,rgba(9,11,14,.26) 66%,rgba(9,11,14,0) 80%)!important}
 #wall [data-hero-cta] a:not([data-hero-primary]){background:#090B0E!important}
@@ -136,40 +137,30 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <circle data-hero-node="focus" cx="593" cy="7" r="2.5" fill="#FF6B2C"></circle>
           </svg>
           <div data-hero-scenestage style="position:relative;min-height:122px">
-            <div data-hero-scene="detail" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 01 · CLOSE-UP</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">先看細節</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">先看 3 張案例截圖的局部細節——都是實際上線的畫面。</p>
+            <div data-hero-scene="wed" style="position:relative;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 01 / 05 ・ 婚禮婚慶</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">接住每一筆檔期詢問</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">半夜的「還有檔期嗎?」也有回應——AI 保留檔期,專人確認細節。</p>
             </div>
-            <div data-hero-scene="wall" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 02 · THE WALL</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">鏡頭拉開</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">更多真實截圖以不同深度組成作品牆,全部取自實績頁(P.24–53)。</p>
+            <div data-hero-scene="int" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 02 / 05 ・ 室內設計</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">需求先變成案件卡</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">風格、坪數與預算整理好,設計師接手時脈絡完整。</p>
             </div>
-            <div data-hero-scene="sort" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#3E9BFF">SCENE 03 · SORTED</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">依類別排列</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">AI 系統、客製平台、品牌網站、營運工具,各自歸位。</p>
+            <div data-hero-scene="rea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">場域 03 / 05 ・ 房仲不動產</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">物件與帶看自動對上</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">「這間還在嗎?」對上物件、排進帶看時段,不再漏接。</p>
             </div>
-            <div data-hero-scene="focus" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 04 · FOCUS</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">重點案例</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">婚禮、室內設計、社群、房仲——BEFORE / SYSTEM / RESULT。</p>
+            <div data-hero-scene="bea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 04 / 05 ・ 美業預約</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">預約與提醒自動完成</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">預約、改期、前一日提醒——位子不再空轉。</p>
             </div>
-            <div data-hero-scene="proof" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#65E0BC">SCENE 05 · PROOF</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">成果配對</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">成果數字與對應截圖配對;僅列該案例實際數據。</p>
-            </div>
-            <div data-hero-scene="index" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:rgba(242,239,232,.6)">SCENE 06 · INDEX</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">作品索引</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">透視牆收整成清楚網格——PeakQi 作品索引。</p>
-            </div>
-            <div data-hero-scene="cta" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C">SCENE 07 · YOUR TURN</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">換你的流程</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">查看所有案例,或把這個流程套用到你的公司。</p>
+            <div data-hero-scene="sum" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 05 / 05 ・ 換你的流程</span>
+              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">同一套系統,不同場域</p>
+              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">把這個流程換成你的產業,跑一次看看。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
@@ -178,7 +169,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           
             <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,看實際導入案例</span></div>
           </div>
-          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">牆上每一格都是實際交付的產品與網站畫面(取自 Sales Kit 實績頁)。</p>
+          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上為場域流程示意動畫;完整案例與實際畫面請見下方案例列表。</p>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:5;display:none;flex-wrap:wrap"></div>

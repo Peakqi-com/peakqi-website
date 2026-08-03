@@ -342,68 +342,239 @@ function paintSolutions(g, e) {
 }
 
 function paintCases(g, e) {
-  const { zone: z, k, C, d, mobile } = e;
-  const s = clamp(Math.min(z.w / 780, z.h / 520), .5, 1.2);
-  const kd = k('detail'), kw = k('wall'), ks = k('sort'), kf = k('focus'), ki = k('index'), kc = k('cta');
-  // 膠卷齒孔軌(特寫/牆),類別排列後淡出
-  const railA = ez(Math.max(kd, kw)) * (1 - ez(ks)) * (1 - ez(kf));
-  if (railA > 0.02) {
-    [z.y + 4, z.y + z.h - 12].forEach((ry) => {
-      g.globalAlpha = railA * .7;
-      g.strokeStyle = 'rgba(242,239,232,.22)'; g.lineWidth = 1;
-      g.beginPath(); g.moveTo(z.x, ry); g.lineTo(z.x + z.w * ez(kw), ry); g.stroke();
-      for (let x = z.x + 6; x < z.x + z.w * ez(kw) - 8; x += 26 * s) g.strokeRect(x, ry + 3, 9 * s, 5 * s);
-      g.globalAlpha = 1;
-    });
-    g.globalAlpha = railA;
-    d.label('PROOF IN MOTION · P.24–53', z.x + 2, z.y + 26, 9.5 * s, 'rgba(242,239,232,.5)', 1.8);
-    g.globalAlpha = 1;
-  }
-  // FOCUS:右區四角取景框
-  const brA = ez(kf) * (1 - ez(ki));
-  if (brA > 0.02 && !mobile) {
-    g.save(); g.globalAlpha = brA;
-    g.strokeStyle = C.orange; g.lineWidth = 1.6;
-    const fx = z.x + z.w * .02, fy = z.y + z.h * .03, fw = z.w * .96, fh = z.h * .94, cl = 18 * s;
-    [[fx, fy, 1, 1], [fx + fw, fy, -1, 1], [fx, fy + fh, 1, -1], [fx + fw, fy + fh, -1, -1]].forEach(([cx, cy, dx, dy]) => {
-      g.beginPath(); g.moveTo(cx + dx * cl, cy); g.lineTo(cx, cy); g.lineTo(cx, cy + dy * cl); g.stroke();
-    });
-    d.label('FEATURED — BEFORE / SYSTEM / RESULT', fx, fy - 7 * s, 9 * s, C.orange, 1.6);
-    g.restore();
-  }
-  // INDEX:索引註記
-  if (ki > 0) {
-    g.globalAlpha = ez(ki) * (1 - ez(kc) * .4);
-    d.line(z.x + 2, z.y + z.h - 30 * s, z.x + 2 + 200 * s * ez(ki), z.y + z.h - 30 * s, 1, 'rgba(242,239,232,.3)', 1);
-    d.label('PEAKQI WORK INDEX — 29 PUBLISHED', z.x + 2, z.y + z.h - 14 * s, 9.5 * s, 'rgba(242,239,232,.6)', 1.8);
-    g.globalAlpha = 1;
-  }
-  // CTA:橘框收束
-  if (kc > 0) {
-    if (e.mobile) { // 手機:大空框只會是一個空箱,改為置中小徽章 + 底線
-      const a2 = ez(kc);
-      g.globalAlpha = a2;
-      g.font = '600 ' + Math.max(10, 10 * s) + 'px "Space Grotesk","Noto Sans TC",sans-serif';
-      const tt = 'NEXT: YOUR WORKFLOW →';
-      const tw = g.measureText(tt).width + 26;
-      const bx = z.x + (z.w - tw) / 2, by2 = z.y + z.h * .42;
-      d.rr(bx, by2, tw, 30, 15);
-      g.fillStyle = 'rgba(255,107,44,.12)'; g.fill();
-      g.strokeStyle = 'rgba(255,107,44,.6)'; g.lineWidth = 1.2; g.stroke();
-      g.fillStyle = C.orange;
-      g.fillText(tt, bx + 13, by2 + 19.5);
-      d.line(z.x + z.w * .18, by2 + 46, z.x + z.w * .82, by2 + 46, a2, 'rgba(255,107,44,.4)', 1.2, [5, 6]);
-    } else {
-      g.globalAlpha = ez(kc) * .9;
-      g.strokeStyle = 'rgba(255,107,44,.55)'; g.lineWidth = 1.2;
-      g.strokeRect(z.x + 2, z.y + 2, (z.w - 4) * ez(kc), z.h - 4);
-      d.label('NEXT: YOUR WORKFLOW →', z.x + 12, z.y + 22 * s, 10 * s, C.orange, 1.8);
+  // 場域情境舞台(2026-08 無圖重設計):五景同構——產業徽章+幾何場域圖+對話帶+狀態晶片。
+  // 純 canvas 幾何,不用截圖;桌機/手機同語言;字級帶下限;交叉切換乾淨(前景快退)。
+  const { zone: z, k, C, d, mobile, t } = e;
+  const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
+  const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .62, 1.25);
+  const fs = Math.max(12, 12.5 * S), fsS = Math.max(9.5, 10 * S), fsB = Math.max(11, 11.5 * S);
+  const ks = { wed: k('wed'), int: k('int'), rea: k('rea'), bea: k('bea'), sum: k('sum') };
+  const pw = Math.min(z.w * .94, 430);
+  const px0 = z.x + (z.w - pw) / 2;
+  const py0 = z.y + Math.max(8, z.h * .02);
+  const ph = Math.min(z.h - (py0 - z.y) - Math.max(8, z.h * .02), Math.max(300, z.h * .9));
+
+  const order = ['wed', 'int', 'rea', 'bea', 'sum'];
+  const NAME = { wed: '婚禮婚慶', int: '室內設計', rea: '房仲不動產', bea: '美業預約', sum: 'YOUR TURN' };
+  const HUE = { wed: C.orange, int: C.orange, rea: C.blue, bea: C.green, sum: C.green };
+
+  order.forEach((id, idx) => {
+    const kv = ks[id];
+    if (kv <= 0.02) return;
+    const nxt = order[idx + 1];
+    const fd = nxt ? 1 - ez(sb(ks[nxt], .04, .3)) * .97 : 1;
+    const a = ez(sb(kv, .02, .3)) * fd;
+    if (a <= 0.02) return;
+    g.save();
+    // 外框面板
+    d.rr(px0, py0, pw, ph, 10);
+    g.globalAlpha = a * .96;
+    g.fillStyle = 'rgba(17,20,24,.9)'; g.fill();
+    g.strokeStyle = id === 'sum' ? 'rgba(101,224,188,.5)' : 'rgba(255,107,44,.4)';
+    g.lineWidth = 1.3; g.stroke();
+    // 徽章列:編號(等寬)+ 產業名 + 律動點
+    const hy = py0 + Math.max(20, 22 * S);
+    g.globalAlpha = a;
+    g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+    g.fillStyle = HUE[id];
+    g.fillText('0' + (idx + 1) + ' / 05', px0 + 14, hy);
+    g.font = '800 ' + fs + 'px "Noto Sans TC",sans-serif';
+    g.fillStyle = C.ivory;
+    g.fillText(NAME[id], px0 + 14 + Math.max(58, 62 * S), hy);
+    d.node(px0 + pw - 18, hy - fs * .32, 3, HUE[id], a * (.5 + .5 * Math.sin(t * 2.4 + idx)), false);
+    // 場域圖形區(中段)與對話帶(下段)
+    const gy = hy + Math.max(10, 12 * S);
+    const gh = ph * .44;
+    const cy2 = py0 + ph - Math.max(12, 14 * S);
+    drawScene(id, kv, a, px0 + 14, gy, pw - 28, gh);
+    convo(id, kv, a, px0 + 14, gy + gh + Math.max(8, 10 * S), pw - 28, cy2 - (gy + gh) - Math.max(26, 30 * S));
+    chips(id, kv, a, px0 + 14, cy2);
+    g.restore(); g.globalAlpha = 1;
+  });
+
+  // ── 場域圖形(幾何純繪,kv 驅動建構)
+  function drawScene(id, kv, a, x, y, w, h) {
+    const kk = ez(sb(kv, .1, .5));
+    const cx2 = x + w / 2;
+    g.globalAlpha = a * kk;
+    g.lineWidth = Math.max(1.4, 1.6 * S);
+    if (id === 'wed') { // 拱門+彩點+日期卡
+      g.strokeStyle = C.orange;
+      g.beginPath(); g.arc(cx2, y + h * .95, h * .78, Math.PI, Math.PI * 2 * (0.5 + 0.5 * kk) ); g.stroke();
+      g.beginPath(); g.arc(cx2, y + h * .95, h * .58, Math.PI, Math.PI + Math.PI * kk); g.stroke();
+      for (let i = 0; i < 7; i++) {
+        const ang = Math.PI + (i + .5) / 7 * Math.PI;
+        const rr2 = h * .68, bx = cx2 + Math.cos(ang) * rr2, by = y + h * .95 + Math.sin(ang) * rr2;
+        const tw = ez(sb(kv, .25 + i * .06, .45 + i * .06));
+        d.node(bx, by, 2.4 + (i % 3) * .7, [C.orange, C.green, C.blue][i % 3], a * tw * (.6 + .4 * Math.sin(t * 3 + i)), false);
+      }
+      const dk = ez(sb(kv, .4, .7));
+      if (dk > .02) {
+        g.globalAlpha = a * dk;
+        const cw2 = Math.max(86, 96 * S);
+        d.rr(cx2 - cw2 / 2, y + h * .4, cw2, Math.max(30, 34 * S), 5);
+        g.fillStyle = 'rgba(9,11,14,.9)'; g.fill();
+        g.strokeStyle = 'rgba(255,107,44,.55)'; g.stroke();
+        g.textAlign = 'center';
+        g.font = '800 ' + Math.max(13, 14 * S) + 'px "Space Grotesk",sans-serif';
+        g.fillStyle = C.ivory; g.fillText('6 / 14', cx2, y + h * .4 + Math.max(14, 15 * S));
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.6)'; g.fillText('檔期已保留', cx2, y + h * .4 + Math.max(26, 29 * S));
+        g.textAlign = 'left';
+      }
+    } else if (id === 'int') { // 房間線框:牆/窗/沙發/光
+      g.strokeStyle = C.orange;
+      const rx = x + w * .18, rw2 = w * .64, ry = y + h * .12, rh2 = h * .74;
+      g.strokeRect(rx, ry, rw2 * kk, rh2);
+      if (kk > .5) {
+        const k2 = ez(sb(kv, .3, .6));
+        g.globalAlpha = a * k2;
+        g.strokeRect(rx + rw2 * .08, ry + rh2 * .14, rw2 * .3, rh2 * .3); // 窗
+        g.beginPath(); // 沙發
+        g.moveTo(rx + rw2 * .5, ry + rh2 * .72);
+        g.lineTo(rx + rw2 * .92, ry + rh2 * .72);
+        g.stroke();
+        d.rr(rx + rw2 * .52, ry + rh2 * .54, rw2 * .34, rh2 * .18, 4); g.stroke();
+        const lk = ez(sb(kv, .5, .8));
+        g.globalAlpha = a * lk * (.5 + .5 * Math.sin(t * 2));
+        g.fillStyle = 'rgba(255,107,44,.16)';
+        g.beginPath(); g.moveTo(rx + rw2 * .23, ry + rh2 * .14);
+        g.lineTo(rx + rw2 * .05, ry + rh2 * .95); g.lineTo(rx + rw2 * .45, ry + rh2 * .95);
+        g.closePath(); g.fill();
+      }
+    } else if (id === 'rea') { // 房子+定位釘+時段
+      g.strokeStyle = C.blue;
+      const hw = Math.min(w * .4, h * 1.1), hx = cx2 - hw / 2, hy2 = y + h * .3, hh = h * .55;
+      g.beginPath();
+      g.moveTo(hx, hy2 + hh * .35 + hh * .65 * (1 - kk));
+      g.lineTo(hx, hy2 + hh); g.lineTo(hx + hw, hy2 + hh); g.lineTo(hx + hw, hy2 + hh * .35);
+      g.stroke();
+      const rk = ez(sb(kv, .25, .5));
+      g.globalAlpha = a * rk;
+      g.beginPath(); g.moveTo(hx - hw * .1, hy2 + hh * .38); g.lineTo(cx2, hy2 - h * .08); g.lineTo(hx + hw * 1.1, hy2 + hh * .38); g.stroke();
+      const pk = ez(sb(kv, .45, .7));
+      if (pk > .02) {
+        g.globalAlpha = a * pk;
+        const py2 = hy2 - h * .28 - Math.sin(t * 2.2) * 3;
+        g.fillStyle = C.blue;
+        g.beginPath(); g.arc(cx2, py2, Math.max(5, 6 * S), 0, TAU); g.fill();
+        g.beginPath(); g.moveTo(cx2 - 5, py2 + 3); g.lineTo(cx2, py2 + Math.max(12, 14 * S)); g.lineTo(cx2 + 5, py2 + 3); g.closePath(); g.fill();
+        g.textAlign = 'center';
+        g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.85)';
+        g.fillText('週六 14:00 帶看', cx2, hy2 + hh + Math.max(16, 18 * S));
+        g.textAlign = 'left';
+      }
+    } else if (id === 'bea') { // 預約時段格:2x3,一格點亮+勾
+      const cols = 3, rows = 2;
+      const gw2 = (w * .8) / cols, gh2 = h * .36;
+      const gx0 = x + w * .1, gy0 = y + h * .12;
+      let n = 0;
+      for (let r2 = 0; r2 < rows; r2++) for (let c2 = 0; c2 < cols; c2++) {
+        const kc = ez(sb(kv, .12 + n * .07, .3 + n * .07));
+        if (kc > .02) {
+          const bx = gx0 + c2 * gw2, by = gy0 + r2 * (gh2 + 8);
+          const hot = n === 4;
+          g.globalAlpha = a * kc;
+          d.rr(bx + 3, by, gw2 - 6, gh2, 5);
+          g.fillStyle = hot ? 'rgba(101,224,188,.16)' : 'rgba(242,239,232,.05)'; g.fill();
+          g.strokeStyle = hot ? 'rgba(101,224,188,.6)' : 'rgba(242,239,232,.18)'; g.stroke();
+          g.textAlign = 'center';
+          g.font = '600 ' + fsS + 'px "Space Grotesk",sans-serif';
+          g.fillStyle = hot ? C.green : 'rgba(242,239,232,.55)';
+          g.fillText(['10:00', '11:30', '14:00', '15:30', '17:00', '19:00'][n], bx + gw2 / 2, by + gh2 * .58);
+          g.textAlign = 'left';
+          if (hot) {
+            const tk = ez(sb(kv, .5, .75));
+            if (tk > .02) d.tick(bx + gw2 - 14, by + 12, Math.max(4.5, 5 * S), C.green, a * tk);
+          }
+        }
+        n++;
+      }
+      const rk2 = ez(sb(kv, .6, .85));
+      if (rk2 > .02) {
+        g.globalAlpha = a * rk2;
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(101,224,188,.85)';
+        g.fillText('前一日 18:00 自動提醒已排', gx0, gy0 + rows * (gh2 + 8) + Math.max(14, 16 * S));
+      }
+    } else { // sum:四場域小徽章 → 中央合流
+      const icons = ['婚', '裝', '房', '美'];
+      icons.forEach((tx2, i) => {
+        const ang = -Math.PI / 2 + i * Math.PI / 2;
+        const rr2 = Math.min(w, h) * .34;
+        const kc = ez(sb(kv, .1 + i * .08, .3 + i * .08));
+        const conv = ez(sb(kv, .45, .75));
+        const bx = cx2 + Math.cos(ang) * rr2 * (1 - conv * .55);
+        const by = y + h * .5 + Math.sin(ang) * rr2 * (1 - conv * .55);
+        if (kc <= .02) return;
+        g.globalAlpha = a * kc;
+        g.beginPath(); g.arc(bx, by, Math.max(13, 15 * S), 0, TAU);
+        g.fillStyle = 'rgba(9,11,14,.9)'; g.fill();
+        g.strokeStyle = [C.orange, C.orange, C.blue, C.green][i]; g.lineWidth = 1.4; g.stroke();
+        g.textAlign = 'center';
+        g.font = '700 ' + fsB + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.9)';
+        g.fillText(tx2, bx, by + fsB * .36);
+        g.textAlign = 'left';
+        d.line(bx, by, cx2, y + h * .5, ez(sb(kv, .5, .8)), 'rgba(101,224,188,.35)', 1);
+      });
+      const ck = ez(sb(kv, .6, .85));
+      if (ck > .02) {
+        g.globalAlpha = a * ck;
+        g.beginPath(); g.arc(cx2, y + h * .5, Math.max(9, 10 * S) * (1 + .08 * Math.sin(t * 2.6)), 0, TAU);
+        g.fillStyle = 'rgba(101,224,188,.2)'; g.fill();
+        g.strokeStyle = C.green; g.lineWidth = 1.6; g.stroke();
+      }
     }
-    g.globalAlpha = 1;
+    g.globalAlpha = a;
+  }
+
+  // ── 對話帶:詢問(左)→ AI 回覆(右)
+  function convo(id, kv, a, x, y, w, h) {
+    const Q = { wed: '請問 6 月還有檔期嗎?', int: '三房想改北歐風,怎麼算?', rea: '這間還在嗎?想約看屋', bea: '週五染髮有位子嗎?', sum: '把這流程換成你的產業?' };
+    const A2 = { wed: '已保留 6/14,細節專人確認', int: '已建檔,設計師今日回覆', rea: '已排週六 14:00 帶看', bea: '已預約,改期直接回這裡', sum: '15 分鐘,用你的場景跑一次' };
+    const bh = Math.max(24, 26 * S);
+    const k1 = ez(sb(kv, .18, .42));
+    if (k1 > .02) {
+      g.globalAlpha = a * k1;
+      bubble(x, y, Math.min(w * .78, 250), bh, Q[id], 'rgba(242,239,232,.08)', 'rgba(242,239,232,.25)', false);
+    }
+    const k2 = ez(sb(kv, .42, .68));
+    if (k2 > .02) {
+      g.globalAlpha = a * k2;
+      const bw2 = Math.min(w * .82, 270);
+      bubble(x + w - bw2, y + bh + 8, bw2, bh, A2[id], 'rgba(101,224,188,.13)', 'rgba(101,224,188,.5)', true);
+    }
+  }
+  function bubble(x, y, w, h, txt, fill, stroke, ai) {
+    d.rr(x, y, w, h, 9);
+    g.fillStyle = fill; g.fill();
+    g.strokeStyle = stroke; g.lineWidth = 1; g.stroke();
+    g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif';
+    g.fillStyle = ai ? 'rgba(212,244,232,.95)' : 'rgba(242,239,232,.85)';
+    g.fillText(txt, x + 10, y + h * .66);
+  }
+
+  // ── 底部狀態晶片列(統一位置=數字/狀態對齊)
+  function chips(id, kv, a, x, yBase) {
+    const rows = {
+      wed: ['檔期詢問 ✓', '保留 ✓', '專人確認'],
+      int: ['需求整理 ✓', '案件卡 ✓', '設計師接手'],
+      rea: ['物件比對 ✓', '帶看排程 ✓', '回報屋主'],
+      bea: ['預約 ✓', '提醒已排 ✓', '回頭客名單'],
+      sum: ['接住詢問', '自動建檔', '持續跟進']
+    }[id];
+    let xx = x;
+    rows.forEach((tx2, j) => {
+      const kc = ez(sb(kv, .55 + j * .1, .78 + j * .1));
+      if (kc <= .02) return;
+      g.globalAlpha = a * kc;
+      xx += d.chip(xx, yBase - Math.max(18, 20 * S), tx2, j === rows.length - 1, fsS) + 7;
+    });
   }
 }
 
-// ---------- Pricing:CONFIGURE YOUR OPERATING SYSTEM(7 scenes 機架組裝) ----------
 function paintPricing(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);

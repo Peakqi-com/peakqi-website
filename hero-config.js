@@ -43,16 +43,14 @@ export const heroConfig = {
   },
   cases: {
     key: 'cases', paint: 'cases',
-    story: 'PROOF IN MOTION:特寫 → 截圖牆 → 類別排列 → 重點案例 → 成果配對 → 作品索引 → CTA',
-    totalVh: { desktop: 400, tablet: 300, mobile: 200 },
+    story: 'PROOF IN MOTION:婚禮 → 室內設計 → 房仲 → 美業 → 換你的流程(場域情境,無截圖)',
+    totalVh: { desktop: 340, tablet: 260, mobile: 210 },
     scenes: [
-      { id: 'detail', label: '先看細節',   kicker: 'SCENE 01 · CLOSE-UP', line: '先看 3 張案例截圖的局部細節——都是實際上線的畫面。',            d: [0, .14],   m: [0, .2] },
-      { id: 'wall',   label: '鏡頭拉開',   kicker: 'SCENE 02 · THE WALL', line: '更多真實截圖以不同深度組成作品牆,全部取自實績頁。',            d: [.14, .3],  m: [.2, .45] },
-      { id: 'sort',   label: '依類別排列', kicker: 'SCENE 03 · SORTED',   line: 'AI 系統、客製平台、品牌網站、營運工具,各自歸位。',              d: [.3, .46],  m: null },
-      { id: 'focus',  label: '重點案例',   kicker: 'SCENE 04 · FOCUS',    line: '婚禮、室內設計、社群、房仲——BEFORE / SYSTEM / RESULT。',        d: [.46, .62], m: [.45, .72] },
-      { id: 'proof',  label: '成果配對',   kicker: 'SCENE 05 · PROOF',    line: '成果數字與對應截圖配對;僅列該案例實際數據。',                  d: [.62, .78], m: null },
-      { id: 'index',  label: '作品索引',   kicker: 'SCENE 06 · INDEX',    line: '透視牆收整成清楚網格——PeakQi 作品索引。',                      d: [.78, .91], m: [.72, .9] },
-      { id: 'cta',    label: '換你的流程', kicker: 'SCENE 07 · YOUR TURN', line: '查看所有案例,或把這個流程套用到你的公司。',                    d: [.91, 1],   m: [.9, 1] }
+      { id: 'wed', label: '婚禮婚慶',   kicker: '場域 01 · 婚禮婚慶',   line: '檔期詢問半夜也進得來——AI 接住、保留檔期,細節由專人確認。',   d: [0, .2],    m: [0, .2] },
+      { id: 'int', label: '室內設計',   kicker: '場域 02 · 室內設計',   line: '需求與預算先整理成案件卡,設計師接手時脈絡完整。',             d: [.2, .4],   m: [.2, .4] },
+      { id: 'rea', label: '房仲不動產', kicker: '場域 03 · 房仲不動產', line: '「這間還在嗎?」自動對上物件與帶看時段,不再漏接。',            d: [.4, .6],   m: [.4, .6] },
+      { id: 'bea', label: '美業預約',   kicker: '場域 04 · 美業預約',   line: '預約、改期與前一日提醒自動完成,位子不再空轉。',               d: [.6, .8],   m: [.6, .8] },
+      { id: 'sum', label: '換你的流程', kicker: '場域 05 · 換你的流程', line: '同一套系統,接住不同場域的生意——換你的流程跑一次。',           d: [.8, 1],    m: [.8, 1] }
     ],
     reduced: ['detail', 'wall', 'focus', 'proof', 'index'],
     ctas: [
