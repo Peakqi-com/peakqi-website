@@ -101,13 +101,14 @@ export function ScrollChapter(ctx, el, onProgress, { pinned = false } = {}) {
 }
 
 // ---------- StickyProductStage:pin 包裝(wrap 高度+sticky stage) ----------
-export function StickyProductStage(ctx, wrap, stage, { distanceVh = 120, top = 0 } = {}) {
+export function StickyProductStage(ctx, wrap, stage, { distanceVh = 120, top = 68 } = {}) {
+  // top 預設 68:NAV 全站固定於頂,釘住舞台整段讓位,內容不被蓋
   if (!wrap || !stage || ctx.reduced) return { pinned: false, revert: () => {} };
   const vh = window.innerHeight || 1;
   wrap.style.height = (vh + vh * distanceVh / 100) + 'px';
   stage.style.position = 'sticky';
   stage.style.top = top + 'px';
-  stage.style.minHeight = '100vh';
+  stage.style.minHeight = 'calc(100vh - ' + top + 'px)';
   stage.style.boxSizing = 'border-box';
   const revert = () => {
     wrap.style.height = '';

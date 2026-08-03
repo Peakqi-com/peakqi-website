@@ -409,6 +409,7 @@ function paintPricing(g, e) {
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const s = clamp(Math.min(z.w / 720, z.h / 520), .5, 1.15);
   const kR = k('racks'), k1 = k('cap'), k2 = k('assist'), k3 = k('plat'), kC = k('cmp'), kU = k('use'), kO = k('run');
+  const fadeO = 1 - ez(sb(kO, 0, .45)) * .98; // 終幕:kO 到 0.45 前舊圖層就要全退,不拖尾
   const gap = z.w * .05, rw = (z.w - gap * 2) / 3;
   const ry = z.y + z.h * .05, rh = z.h * (mobile ? .48 : .56);
   const rx = (i) => z.x + i * (rw + gap);
@@ -418,8 +419,8 @@ function paintPricing(g, e) {
     { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: '依需求報價', mo: '預約諮詢', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
   ];
   meta.forEach((m, i) => {
-    const a = ez(clamp(kR * 3 - i * .45, 0, 1));
-    if (a <= 0) return;
+    const a = ez(clamp(kR * 3 - i * .45, 0, 1)) * fadeO;
+    if (a <= 0.01) return;
     const x = rx(i), hot = ez(m.kk);
     g.save(); g.globalAlpha = a;
     const gh = rh * (0.3 + 0.7 * a);
@@ -475,17 +476,17 @@ function paintPricing(g, e) {
       d.label(m.mo, x + 10, py + 30 * s, 8.5 * s, m.c === C.blue ? C.blue : C.orange, .3);
       g.globalAlpha = a;
     }
-    if (kC > 0) {
-      g.globalAlpha = ez(kC);
+    if (kC > 0 && fadeO > 0.05) {
+      g.globalAlpha = ez(kC) * fadeO;
       d.tick(x + 8, ry + rh + 56 * s, 5.5 * s, C.green, 1);
       d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 18, ry + rh + 59 * s, 8.5 * s, 'rgba(242,239,232,.65)', .6);
       g.globalAlpha = 1;
     }
     g.restore();
   });
-  if (kC > 0) d.line(z.x, ry + rh + 66 * s, z.x + z.w, ry + rh + 66 * s, ez(kC), 'rgba(242,239,232,.16)', 1);
-  if (kU > 0) {
-    const a = ez(kU), ly1 = z.y + z.h * (mobile ? .84 : .82), ly2 = ly1 + z.h * .08;
+  if (kC > 0 && fadeO > 0.05) d.line(z.x, ry + rh + 66 * s, z.x + z.w, ry + rh + 66 * s, ez(kC) * fadeO, 'rgba(242,239,232,.16)', 1);
+  if (kU > 0 && fadeO > 0.05) {
+    const a = ez(kU) * fadeO, ly1 = z.y + z.h * (mobile ? .84 : .82), ly2 = ly1 + z.h * .08;
     const lx0 = z.x + 4, lx1 = z.x + z.w - 4;
     g.save(); g.globalAlpha = a;
     d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
@@ -513,17 +514,55 @@ function paintPricing(g, e) {
     g.restore();
   }
   if (kO > 0) {
+    // 終幕重設計:大字、大藥丸、心跳線(原三櫃小字全部讓位,不再擁擠)
     const a = ez(kO);
+    const cx = z.x + z.w / 2;
     g.save(); g.globalAlpha = a;
-    d.rr(z.x + 1, z.y + 1, z.w - 2, z.h - 2, 10);
-    g.strokeStyle = 'rgba(255,107,44,.55)'; g.lineWidth = 1.4; g.stroke();
-    d.label('PEAKQI OS — CONFIGURED', z.x + 12, z.y + 15 * s, 9 * s, C.orange, 1.8);
+    d.rr(z.x + 1, z.y + 1, z.w - 2, z.h - 2, 12);
+    g.strokeStyle = 'rgba(255,107,44,' + (0.35 + 0.2 * Math.sin(t * 1.6)).toFixed(2) + ')'; g.lineWidth = 1.6; g.stroke();
+    // 狀態列:呼吸綠點 + 大標
+    const inK = ez(sb(kO, .35, .75));
+    g.globalAlpha = a * inK;
+    const hy = z.y + z.h * (mobile ? .2 : .24);
+    const pulse = .55 + .45 * Math.sin(t * 2.4);
+    d.node(cx - (mobile ? 74 : 96) * s, hy - 6 * s, 4.5 * s, C.green, a * pulse);
+    g.textAlign = 'center';
+    d.label('PEAKQI OS · RUNNING', cx + 10 * s, hy - z.h * .085, Math.max(10, 11 * s), C.orange, 2.2);
+    d.han('系統上線,開始運作', cx, hy, Math.max(16, 21 * s), C.ivory, 900);
+    g.textAlign = 'left';
+    // 三個大藥丸:方案名 + 綠勾(逐一亮起)
+    const pw = Math.min(rw, 190 * s), ph = Math.max(34, 42 * s);
+    const py = z.y + z.h * (mobile ? .38 : .42);
     meta.forEach((m, i) => {
-      const on = e.tier === 'full' ? .5 + .5 * (Math.sin(t * 2.2 + i * 1.4) * .5 + .5) : 1;
-      d.node(rx(i) + rw - 12, ry + rh * .44 + 8, 2.6, C.green, a * on);
+      const ka = ez(sb(kO, .42 + i * .12, .68 + i * .12));
+      if (ka <= 0.01) return;
+      const px2 = z.x + i * (rw + gap) + (rw - pw) / 2;
+      g.globalAlpha = a * inK * ka;
+      d.rr(px2, py, pw, ph, ph / 2);
+      g.fillStyle = 'rgba(20,23,28,.85)'; g.fill();
+      g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.7)' : 'rgba(255,107,44,.7)'; g.lineWidth = 1.4; g.stroke();
+      d.tick(px2 + 16 * s, py + ph / 2 + 1, Math.max(5, 6.5 * s), C.green, a * ka);
+      d.han(m.zh, px2 + 30 * s, py + ph / 2 + 5 * s, Math.max(11.5, 13 * s), C.ivory, 800);
+      g.globalAlpha = a;
     });
-    d.tick(z.x + 12, z.y + z.h - 14 * s, 6 * s, C.green, a);
-    d.label('RUNNING 24/7 · 不綁約 · 30 天保證', z.x + 26, z.y + z.h - 11 * s, 8.5 * s, 'rgba(242,239,232,.6)', 1.4);
+    // 心跳線:運作中的生命感(整條隨時間流動)
+    const wy = z.y + z.h * (mobile ? .66 : .7);
+    const seg = 44;
+    g.globalAlpha = a * inK;
+    g.strokeStyle = 'rgba(101,224,188,.75)'; g.lineWidth = 2; g.beginPath();
+    for (let i2 = 0; i2 <= seg; i2++) {
+      const fx2 = i2 / seg;
+      const px3 = z.x + z.w * .06 + z.w * .88 * fx2;
+      const beat = Math.exp(-Math.pow(((fx2 * 3 + (e.tier === 'full' ? t * .5 : 0)) % 1) - .5, 2) * 90);
+      const py3 = wy - beat * z.h * .06 * (1 + .15 * Math.sin(t * 3));
+      if (i2 === 0) g.moveTo(px3, py3); else g.lineTo(px3, py3);
+    }
+    g.stroke();
+    // 底部說明:誠實中性(移除未經確認的 24/7/不綁約/保證字樣)
+    g.textAlign = 'center';
+    d.label('FIRST PHASE LIVE', cx, z.y + z.h * (mobile ? .8 : .82), Math.max(8.5, 9.5 * s), 'rgba(242,239,232,.5)', 2);
+    d.han('第一階段上線・依實際使用持續調整', cx, z.y + z.h * (mobile ? .87 : .89), Math.max(11, 12.5 * s), 'rgba(242,239,232,.75)', 600);
+    g.textAlign = 'left';
     g.restore();
   }
 }

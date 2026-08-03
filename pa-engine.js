@@ -11,7 +11,9 @@ function makeCtxTools(ctx) {
   const pin = (id, vh) => {
     const wrap = q('#' + id + ' [data-wrap]'), stage = q('#' + id + ' [data-stage]');
     if (!wrap || !stage || ctx.reduced || ctx.mobile) return null;
-    StickyProductStage(ctx, wrap, stage, { distanceVh: vh });
+    const ctl = StickyProductStage(ctx, wrap, stage, { distanceVh: vh });
+    // 內容比視口高就放棄釘住(回自然高度,整段可見不被裁);互動退化為按鈕切換
+    if (stage.scrollHeight > (window.innerHeight - 68) + 8) { ctl.revert(); return null; }
     return wrap;
   };
   return { q, qa, pin };

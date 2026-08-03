@@ -67,6 +67,84 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
+/* GO-LIVE:幽靈序號填空間、步驟逐張浮現、節點脈動(reduced 直接顯示) */
+.pq-tl2-ghost{position:absolute;right:10px;top:8px;font:700 clamp(44px,4.6vw,64px) 'Space Grotesk',sans-serif;color:rgba(9,11,14,.07);letter-spacing:-.02em;pointer-events:none}
+#pq-tl2 [data-dot]{width:12px!important;height:12px!important;top:-7px!important}
+@media (prefers-reduced-motion: no-preference){
+#pq-tl2 [data-dot]{animation:pqTlPulse 2.2s ease-in-out infinite}
+.pq-tl2-step:nth-child(3) [data-dot]{animation-delay:.3s}.pq-tl2-step:nth-child(4) [data-dot]{animation-delay:.6s}
+.pq-tl2-step:nth-child(5) [data-dot]{animation-delay:.9s}.pq-tl2-step:nth-child(6) [data-dot]{animation-delay:1.2s}
+@supports (animation-timeline: view()){
+.pq-tl2-step{animation:pqRise2 both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 5% entry 42%}
+.pq-tl2-step:nth-child(3){animation-range:entry 12% entry 50%}.pq-tl2-step:nth-child(4){animation-range:entry 19% entry 58%}
+.pq-tl2-step:nth-child(5){animation-range:entry 26% entry 66%}.pq-tl2-step:nth-child(6){animation-range:entry 33% entry 74%}
+}}
+@keyframes pqTlPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,44,.45)}50%{box-shadow:0 0 0 9px rgba(255,107,44,0)}}
+@keyframes pqRise2{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+/* COMPARE:整體放大 + 逐列進場 + 推薦欄框光呼吸 */
+#p-cmp-desk [data-crow]>div{padding:20px 22px!important;font-size:15.5px!important}
+#p-cmp-desk>div:first-child>div{padding:20px 22px!important;font-size:15.5px!important}
+#p-cmp-desk [data-crow]>div:first-child{font-size:14px!important}
+@media (prefers-reduced-motion: no-preference){
+@supports (animation-timeline: view()){
+#p-cmp-desk [data-crow]{animation:pqRise2 both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 0% entry 46%}
+#p-cmp-desk [data-crow]:nth-of-type(3){animation-range:entry 8% entry 54%}
+#p-cmp-desk [data-crow]:nth-of-type(4){animation-range:entry 16% entry 62%}
+#p-cmp-desk [data-crow]:nth-of-type(5){animation-range:entry 24% entry 70%}
+}
+#p-cmp-desk>div:first-child>div:last-child{animation:pqColGlow 3s ease-in-out infinite}
+}
+@keyframes pqColGlow{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,107,44,0)}50%{box-shadow:inset 0 -3px 18px rgba(255,107,44,.35)}}
+/* PRICE SUMMARY:放大呼吸(原 380px 小盒 13px 字太擠) */
+#p-faq [data-pvsum]{max-width:none!important;padding:26px 28px!important;gap:14px!important}
+#p-faq [data-pvsum] [data-pvname]{font-size:15.5px!important}
+#p-faq [data-pvsum] [data-pvfee]{font-size:13.5px!important}
+/* 選擇器六磚主題小動畫:亮框(new 橘/on 綠)才啟動,off 隱藏;reduced 全停 */
+#pq-console-mods>div{position:relative}
+.pq-ma{position:absolute;right:12px;top:10px;width:46px;height:28px;opacity:0;transition:opacity .35s;color:#65E0BC;pointer-events:none}
+#pq-console-mods>div[data-state="new"] .pq-ma{opacity:1;color:#FF6B2C}
+#pq-console-mods>div[data-state="on"] .pq-ma{opacity:1}
+#pq-console-mods>div[data-state="off"] .pq-ma *{animation-play-state:paused!important}
+.pq-ma i,.pq-ma b{position:absolute;display:block;background:currentColor}
+[data-ma="cs"] i{width:6px;height:6px;border-radius:50%;bottom:6px}
+[data-ma="cs"] i:nth-child(1){left:6px;animation:pqMaDot 1.2s infinite}
+[data-ma="cs"] i:nth-child(2){left:18px;animation:pqMaDot 1.2s .15s infinite}
+[data-ma="cs"] i:nth-child(3){left:30px;animation:pqMaDot 1.2s .3s infinite}
+[data-ma="crm"] i{width:14px;height:22px;background:none;border:1px solid currentColor;opacity:.5;border-radius:3px;top:3px}
+[data-ma="crm"] i:nth-child(1){left:4px}[data-ma="crm"] i:nth-child(2){left:28px}
+[data-ma="crm"] b{width:8px;height:8px;border-radius:2px;top:10px;left:7px;animation:pqMaHop 1.9s ease-in-out infinite}
+[data-ma="mkt"] i{width:7px;bottom:3px;border-radius:1px;transform-origin:bottom}
+[data-ma="mkt"] i:nth-child(1){left:8px;height:11px;animation:pqMaBar 1.6s ease-in-out infinite}
+[data-ma="mkt"] i:nth-child(2){left:20px;height:17px;animation:pqMaBar 1.6s .2s ease-in-out infinite}
+[data-ma="mkt"] i:nth-child(3){left:32px;height:23px;animation:pqMaBar 1.6s .4s ease-in-out infinite}
+[data-ma="quote"] i{height:3px;border-radius:2px;left:4px;transform-origin:left}
+[data-ma="quote"] i:nth-child(1){top:7px;width:30px;animation:pqMaLine 2.2s infinite}
+[data-ma="quote"] i:nth-child(2){top:14px;width:22px;animation:pqMaLine 2.2s .3s infinite}
+[data-ma="quote"] b{right:2px;bottom:0;background:none;font:800 13px 'Noto Sans TC',sans-serif;animation:pqMaPop 2.2s infinite}
+[data-ma="proj"] i{width:11px;height:24px;background:none;border:1px dashed currentColor;opacity:.5;border-radius:2px;top:2px}
+[data-ma="proj"] i:nth-child(1){left:2px}[data-ma="proj"] i:nth-child(2){left:18px}[data-ma="proj"] i:nth-child(3){left:34px}
+[data-ma="proj"] b{width:7px;height:6px;border-radius:1px;top:6px;left:4px;animation:pqMaProj 2.6s ease-in-out infinite}
+[data-ma="data"] i{left:2px;right:2px;bottom:9px;height:2px;opacity:.35}
+[data-ma="data"] b{width:7px;height:7px;border-radius:50%;bottom:6px;left:2px;animation:pqMaScan 2.2s linear infinite}
+@keyframes pqMaDot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-7px);opacity:1}}
+@keyframes pqMaHop{0%,35%{transform:translateX(0)}65%,100%{transform:translateX(24px)}}
+@keyframes pqMaBar{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+@keyframes pqMaLine{0%{transform:scaleX(.15)}45%,100%{transform:scaleX(1)}}
+@keyframes pqMaPop{0%,45%{opacity:0;transform:scale(.4)}68%,100%{opacity:1;transform:scale(1)}}
+@keyframes pqMaProj{0%,22%{transform:translate(0,0)}42%,58%{transform:translate(16px,5px)}80%,100%{transform:translate(32px,10px)}}
+@keyframes pqMaScan{0%{left:2px;transform:translateY(0)}25%{transform:translateY(-8px)}50%{transform:translateY(-3px)}75%{transform:translateY(-10px)}100%{left:calc(100% - 9px);transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.pq-ma *{animation:none!important}}
+/* 選擇器一屏瘦身:釘住時整段(標題+控制台+摘要)完整落在視口內 */
+@media (min-width:900px){
+#p-selector [data-stage]{padding-top:28px!important;padding-bottom:28px!important;justify-content:flex-start!important}
+#p-selector h2{font-size:clamp(1.8rem,2.6vw,2.4rem)!important}
+#pq-console-mods{padding:14px!important;gap:8px!important}
+#pq-console-mods>div{padding:10px 12px!important}
+}
+@media (min-width:900px) and (max-height:840px){
+#p-selector [data-stage] p{display:none}
+#pq-sel-grid{margin-top:14px!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -220,12 +298,12 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">{{ selCode }}</span>
             </div>
             <div id="pq-console-mods" style="padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1">
-              <div style="{{ mb0.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb0.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb0.title }}</span><span style="{{ mb0.flagStyle }}">{{ mb0.flag }}</span></div>
-              <div style="{{ mb1.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb1.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb1.title }}</span><span style="{{ mb1.flagStyle }}">{{ mb1.flag }}</span></div>
-              <div style="{{ mb2.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb2.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb2.title }}</span><span style="{{ mb2.flagStyle }}">{{ mb2.flag }}</span></div>
-              <div style="{{ mb3.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb3.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb3.title }}</span><span style="{{ mb3.flagStyle }}">{{ mb3.flag }}</span></div>
-              <div style="{{ mb4.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb4.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb4.title }}</span><span style="{{ mb4.flagStyle }}">{{ mb4.flag }}</span></div>
-              <div style="{{ mb5.boxStyle }}"><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb5.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb5.title }}</span><span style="{{ mb5.flagStyle }}">{{ mb5.flag }}</span></div>
+              <div data-state="{{ mb0.state }}" style="{{ mb0.boxStyle }}"><span class="pq-ma" data-ma="cs" aria-hidden="true"><i></i><i></i><i></i></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb0.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb0.title }}</span><span style="{{ mb0.flagStyle }}">{{ mb0.flag }}</span></div>
+              <div data-state="{{ mb1.state }}" style="{{ mb1.boxStyle }}"><span class="pq-ma" data-ma="crm" aria-hidden="true"><i></i><i></i><b></b></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb1.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb1.title }}</span><span style="{{ mb1.flagStyle }}">{{ mb1.flag }}</span></div>
+              <div data-state="{{ mb2.state }}" style="{{ mb2.boxStyle }}"><span class="pq-ma" data-ma="mkt" aria-hidden="true"><i></i><i></i><i></i></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb2.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb2.title }}</span><span style="{{ mb2.flagStyle }}">{{ mb2.flag }}</span></div>
+              <div data-state="{{ mb3.state }}" style="{{ mb3.boxStyle }}"><span class="pq-ma" data-ma="quote" aria-hidden="true"><i></i><i></i><b>✓</b></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb3.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb3.title }}</span><span style="{{ mb3.flagStyle }}">{{ mb3.flag }}</span></div>
+              <div data-state="{{ mb4.state }}" style="{{ mb4.boxStyle }}"><span class="pq-ma" data-ma="proj" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb4.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb4.title }}</span><span style="{{ mb4.flagStyle }}">{{ mb4.flag }}</span></div>
+              <div data-state="{{ mb5.state }}" style="{{ mb5.boxStyle }}"><span class="pq-ma" data-ma="data" aria-hidden="true"><i></i><b></b></span><span style="font:700 10.5px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ mb5.num }}</span><span style="font:800 14px 'Noto Sans TC',sans-serif">{{ mb5.title }}</span><span style="{{ mb5.flagStyle }}">{{ mb5.flag }}</span></div>
             </div>
             <sc-if value="{{ hasAdds }}" hint-placeholder-val="{{ true }}">
               <div style="margin:0 18px 16px;border:1px solid rgba(255,107,44,.5);border-radius:6px;background:rgba(255,107,44,.08);padding:13px 16px;display:flex;flex-direction:column;gap:4px">
@@ -417,10 +495,11 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <div id="pq-tl2" style="display:flex;min-width:820px;position:relative">
         <span data-tline aria-hidden="true" style="position:absolute;left:0;top:-2px;width:100%;height:2px;background:#FF6B2C;transform-origin:left center;z-index:1"></span>
         <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
-          <div data-tstep style="flex:1;border-top:2px solid rgba(9,11,14,.14);position:relative;padding:22px 20px 0 2px">
+          <div data-tstep class="pq-tl2-step" style="flex:1;border-top:2px solid rgba(9,11,14,.14);position:relative;padding:26px 18px 26px 2px">
             <span data-dot style="{{ s.dotStyle }}"></span>
-            <div style="font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:#FF6B2C">{{ s.d }}</div>
-            <p style="margin:8px 0 0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);max-width:200px">{{ s.t }}</p>
+            <span class="pq-tl2-ghost" aria-hidden="true">{{ s.n }}</span>
+            <div style="font:700 clamp(16px,1.4vw,19px) 'Space Grotesk',sans-serif;letter-spacing:.1em;color:#FF6B2C">{{ s.d }}</div>
+            <p style="margin:10px 0 0;font:400 clamp(14.5px,1.1vw,15.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.72);max-width:210px">{{ s.t }}</p>
           </div>
         </sc-for>
       </div>
@@ -469,12 +548,12 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">FAQ</span>
       <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">價格相關的常見問題</h2>
       <p style="margin:18px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:380px">還有其他想確認的?15 分鐘 Demo 裡直接用你的場景回答。</p>
-      <div style="margin-top:22px;border:1.5px solid #FF6B2C;border-radius:8px;background:#090B0E;color:#F2EFE8;padding:20px;display:flex;flex-direction:column;gap:10px;max-width:380px">
+      <div data-pvsum style="margin-top:22px;border:1.5px solid #FF6B2C;border-radius:8px;background:#090B0E;color:#F2EFE8;padding:20px;display:flex;flex-direction:column;gap:10px;max-width:380px">
         <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">PRICE SUMMARY</span>
         <sc-for list="{{ faqPlans }}" as="fp" hint-placeholder-count="3">
           <div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid rgba(242,239,232,.12);padding-top:9px">
-            <span style="font:600 13px 'Noto Sans TC',sans-serif">{{ fp.code }}・{{ fp.name }}</span>
-            <span style="font:400 12px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">{{ fp.setup }}<span style="color:#FF6B2C"> +{{ fp.monthly }}/月起</span></span>
+            <span data-pvname style="font:600 13px 'Noto Sans TC',sans-serif">{{ fp.code }}・{{ fp.name }}</span>
+            <span data-pvfee style="font:400 12px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">{{ fp.setup }}<span style="color:#FF6B2C"> +{{ fp.monthly }}/月起</span></span>
           </div>
         </sc-for>
         <span style="font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ usageNote }}</span>
@@ -584,6 +663,7 @@ class Component extends DCLogic {
       const isNew = on && addsInfo.adds.includes(f2.name);
       return {
         num: f2.n, title: f2.name,
+        state: isNew ? 'new' : (on ? 'on' : 'off'),
         flag: isNew ? '新增' : (on ? '啟用 ✓' : '未含'),
         boxStyle: {
           border: isNew ? '1.5px solid #FF6B2C' : on ? '1px solid rgba(101,224,188,.45)' : '1px dashed rgba(242,239,232,.18)',
@@ -652,6 +732,7 @@ class Component extends DCLogic {
       customCred: d?.customCred ?? '',
       steps: (d?.timeline ?? []).map((s, i, arr) => ({
         ...s,
+        n: '0' + (i + 1),
         dotStyle: { position: 'absolute', top: '-6px', left: 0, width: '10px', height: '10px', borderRadius: '50%', background: i === arr.length - 1 ? '#65E0BC' : '#FF6B2C' }
       })),
       timelineNote: d?.timelineNote ?? '',
