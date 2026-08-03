@@ -22,25 +22,29 @@ export function mountAboutHero() {
     const clusts = Array.from(wall.querySelectorAll('[data-aclust]'));
     const core = wall.querySelector('[data-acore]');
     const N = mobile ? 8 : nodes.length;
-    const band = mobile ? { y0: 48, y1: 98 } : { y0: 0, y1: 100 };
+    const band = mobile ? { y0: 4, y1: 96 } : { y0: 0, y1: 100 }; // mobile:鋪滿整面牆;垂直讓位交給頁面 CSS 牆帶,避免雙重壓帶
     const BY = (y) => band.y0 + (band.y1 - band.y0) * y / 100;
     const CX = mobile ? 50 : 69, CYr = BY(46);
 
     const L = {};
     // S1 FRAGMENTS:5 片細小局部
     const fragPos = mobile
-      ? [{ x: 6, y: 4, w: 30 }, { x: 62, y: 2, w: 26 }, { x: 30, y: 36, w: 24 }, { x: 68, y: 54, w: 26 }, { x: 10, y: 70, w: 24 }]
+      ? [{ x: 4, y: 4, w: 44 }, { x: 52, y: 0, w: 44 }, { x: 4, y: 50, w: 44 }, { x: 52, y: 46, w: 44 }]
       : [{ x: 58, y: -5, w: 16 }, { x: 84, y: 16, w: 12 }, { x: 55, y: 36, w: 11 }, { x: 76, y: 58, w: 14 }, { x: 51, y: 78, w: 12 }];
-    L.frag = nodes.map((n, i) => i < 5
+    L.frag = nodes.map((n, i) => i < fragPos.length
       ? { o: 1, x: fragPos[i].x, y: mobile ? BY(fragPos[i].y) : fragPos[i].y, w: fragPos[i].w, z: 3, dim: 0 }
-      : { o: 0, x: 60, y: BY(40), w: 12, z: 1, dim: 0 });
+      : { o: 0, x: 60, y: BY(40), w: 12, z: 1, dim: 0 }); // 手機:2x2 秩序網格帶微錯位,不散亂
     // S2 CONNECTED:沿資料線的鏈
     L.link = nodes.map((n, i) => {
       if (i >= N) return { o: 0, x: 60, y: BY(40), w: 11, z: 1 };
+      if (mobile) { // 手機:2x4 整齊鏈(連線走 Z 字),不擠成一團
+        const col = i % 4, row = (i - col) / 4;
+        return { o: 1, x: 2 + col * 24.5, y: BY(10 + row * 46), w: 23, z: 3, dim: 0 };
+      }
       const t = i / Math.max(1, N - 1);
-      const x = (mobile ? 4 : 42) + t * (mobile ? 72 : 50);
+      const x = 42 + t * 50;
       const y = BY(12 + Math.sin(t * Math.PI) * 52 + (i % 2) * 8);
-      return { o: 1, x, y, w: mobile ? 20 : 10.5, z: 3, dim: 0 };
+      return { o: 1, x, y, w: 10.5, z: 3, dim: 0 };
     });
     // S3 BY INDUSTRY:四群
     const quad = mobile
@@ -51,7 +55,7 @@ export function mountAboutHero() {
       const within = nodes.filter((o, j) => j < i && (parseInt(o.getAttribute('data-clu') || '0', 10) % 4) === clu).length;
       if (i >= N || within > 2) return { o: 0, x: quad[clu].x, y: BY(quad[clu].y), w: 10, z: 1 };
       const col = within % 2, row = (within - col) / 2;
-      return { o: 1, x: quad[clu].x + col * (mobile ? 22 : 12.6), y: BY(quad[clu].y + 6 + row * 20), w: mobile ? 20 : 11.5, z: 3, dim: 0 };
+      return { o: 1, x: quad[clu].x + col * (mobile ? 23.5 : 12.6), y: BY(quad[clu].y + 4 + row * (mobile ? 22 : 20)), w: mobile ? 22 : 11.5, z: 3, dim: 0 };
     });
     // S4/S5:退為底(canvas 前景畫導入流程與 DAY 0–10)
     L.pipe = L.group.map(p => ({ o: p.o * .14, x: p.x, y: p.y, w: p.w, z: 1, dim: .5 }));
