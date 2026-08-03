@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://peakqi.com/sitemap.xml
+Sitemap: https://www.peakqi.com/sitemap.xml
