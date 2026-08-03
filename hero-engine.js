@@ -570,9 +570,6 @@ export function createHeroEngine({ refs, manifest }) {
       let best = null;
       blocks.forEach(x => { if (!best || x[1] > best[1]) best = x; });
       blocks.forEach(x => { if (x !== best && x[1] > 0.001) { x[0].style.opacity = '0'; x[0].style.visibility = 'hidden'; } });
-      // 長文字場景(t2/t5)可高達 85% 視高,scrim 下半段刻意透光 → 改壓 canvas 本身,
-      // 儀表板拼貼在這兩景退成 25% 亮度,其餘場景維持全亮
-      if (canvas) canvas.style.opacity = (1 - 0.75 * Math.max(o2, o5)).toFixed(3);
     }
     if (refs.hint) refs.hint.style.opacity = (1 - sub(q, 0.012, 0.05)).toFixed(3);
   }
@@ -628,7 +625,7 @@ export function createHeroEngine({ refs, manifest }) {
     const scrim = stage.querySelector('[data-scrim]');
     if (scrim) {
       scrim.style.background = isMobile
-        ? 'linear-gradient(180deg,rgba(9,11,14,.95) 0%,rgba(9,11,14,.9) 46%,rgba(9,11,14,.72) 66%,rgba(9,11,14,.28) 82%,rgba(9,11,14,.05) 100%)' // 手機文案區塊可長達 85% 視高,遮罩要跟著蓋到底,磚才不會穿過文字
+        ? 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)'
         : 'linear-gradient(90deg,rgba(9,11,14,.85) 0%,rgba(9,11,14,.5) 32%,rgba(9,11,14,0) 58%)';
     }
   }

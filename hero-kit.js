@@ -74,9 +74,9 @@ export function StickyVisual(ctx, wrap, stage, totalVh) {
   keep(wrap); keep(stage);
   wrap.style.height = totalVh + 'vh';
   stage.style.position = 'sticky';
-  stage.style.top = '0px';
-  stage.style.height = '100vh';
-  try { stage.style.height = '100svh'; if (!stage.style.height) stage.style.height = '100vh'; } catch (e) {}
+  stage.style.top = '68px'; // NAV 固定於頂,舞台整段讓位,動畫不被蓋
+  stage.style.height = 'calc(100vh - 68px)';
+  try { stage.style.height = 'calc(100svh - 68px)'; if (!stage.style.height) stage.style.height = 'calc(100vh - 68px)'; } catch (e) {}
   stage.style.overflow = 'hidden';
   stage.style.boxSizing = 'border-box';
   stage.style.alignItems = 'safe center'; // 內容高於視窗時頂部優先,不裁 h1(不支援時維持 center)
