@@ -1,25 +1,97 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    { "source": "/Home.dc.html", "destination": "/", "permanent": true },
-    { "source": "/Solutions.dc.html", "destination": "/solutions", "permanent": true },
-    { "source": "/Method.dc.html", "destination": "/method", "permanent": true },
-    { "source": "/Cases.dc.html", "destination": "/cases", "permanent": true },
-    { "source": "/Case.dc.html", "destination": "/case", "permanent": true },
-    { "source": "/Pricing.dc.html", "destination": "/pricing", "permanent": true },
-    { "source": "/About.dc.html", "destination": "/about", "permanent": true },
-    { "source": "/Demo.dc.html", "destination": "/demo", "permanent": true },
-    { "source": "/PeakOps.dc.html", "destination": "/peakops", "permanent": true }
+    {
+      "source": "/Home.dc.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/Solutions.dc.html",
+      "destination": "/solutions",
+      "permanent": true
+    },
+    {
+      "source": "/Method.dc.html",
+      "destination": "/method",
+      "permanent": true
+    },
+    {
+      "source": "/Cases.dc.html",
+      "destination": "/cases",
+      "permanent": true
+    },
+    {
+      "source": "/Case.dc.html",
+      "destination": "/case",
+      "permanent": true
+    },
+    {
+      "source": "/Pricing.dc.html",
+      "destination": "/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/About.dc.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/Demo.dc.html",
+      "destination": "/demo",
+      "permanent": true
+    },
+    {
+      "source": "/PeakOps.dc.html",
+      "destination": "/peakops",
+      "permanent": true
+    },
+    {
+      "source": "/Privacy.dc.html",
+      "destination": "/privacy",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/Home.dc.html" },
-    { "source": "/solutions", "destination": "/Solutions.dc.html" },
-    { "source": "/method", "destination": "/Method.dc.html" },
-    { "source": "/cases", "destination": "/Cases.dc.html" },
-    { "source": "/case", "destination": "/Case.dc.html" },
-    { "source": "/pricing", "destination": "/Pricing.dc.html" },
-    { "source": "/about", "destination": "/About.dc.html" },
-    { "source": "/demo", "destination": "/Demo.dc.html" },
-    { "source": "/peakops", "destination": "/PeakOps.dc.html" }
+    {
+      "source": "/",
+      "destination": "/Home.dc.html"
+    },
+    {
+      "source": "/solutions",
+      "destination": "/Solutions.dc.html"
+    },
+    {
+      "source": "/method",
+      "destination": "/Method.dc.html"
+    },
+    {
+      "source": "/cases",
+      "destination": "/Cases.dc.html"
+    },
+    {
+      "source": "/case",
+      "destination": "/Case.dc.html"
+    },
+    {
+      "source": "/pricing",
+      "destination": "/Pricing.dc.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/About.dc.html"
+    },
+    {
+      "source": "/demo",
+      "destination": "/Demo.dc.html"
+    },
+    {
+      "source": "/peakops",
+      "destination": "/PeakOps.dc.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/Privacy.dc.html"
+    }
   ]
 }
