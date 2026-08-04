@@ -24,7 +24,7 @@ export const heroConfig = {
   solutions: {
     key: 'solutions', paint: 'solutions',
     story: 'FROM INQUIRY TO OPERATION:一筆詢問 → 辨識回應 → 建檔 → 跟進 → 延續 → 接通 → 營運視圖',
-    totalVh: { desktop: 380, tablet: 280, mobile: 235 },
+    totalVh: { desktop: 380, tablet: 280, mobile: 320 },
     scenes: [
       { id: 'sig',     label: '詢問進來',   kicker: '階段 01 · 進入',    line: '一筆詢問從 LINE、網站或表單進來——原本它會停在聊天室裡等人處理。',        d: [0, .12],   m: [0, .13] },
       { id: 'layers',  label: '辨識需求',   kicker: '階段 02 · 辨識', line: 'AI 辨識需求、補齊欄位;價格與敏感內容標記為待人工確認。',      d: [.12, .28], m: [.13, .28] },
@@ -44,7 +44,7 @@ export const heroConfig = {
   cases: {
     key: 'cases', paint: 'cases',
     story: 'PROOF IN MOTION:婚禮 → 室內設計 → 房仲 → 美業 → 換你的流程(場域情境,無截圖)',
-    totalVh: { desktop: 340, tablet: 260, mobile: 210 },
+    totalVh: { desktop: 340, tablet: 260, mobile: 265 },
     scenes: [
       { id: 'wed', label: '婚禮婚慶',   kicker: '場域 01 · 婚禮婚慶',   line: '檔期詢問半夜也進得來——AI 接住、保留檔期,細節由專人確認。',   d: [0, .2],    m: [0, .2] },
       { id: 'int', label: '室內設計',   kicker: '場域 02 · 室內設計',   line: '需求與預算先整理成案件卡,設計師接手時脈絡完整。',             d: [.2, .4],   m: [.2, .4] },
@@ -62,7 +62,7 @@ export const heroConfig = {
   pricing: {
     key: 'pricing', paint: 'pricing',
     story: 'PLAN YOUR FIRST PHASE:三種起步 → 接住詢問 → 推進案件 → 整合營運 → 並列比較 → 費用三部分通道 → 穩定運作',
-    totalVh: { desktop: 380, tablet: 290, mobile: 190 },
+    totalVh: { desktop: 380, tablet: 290, mobile: 250 },
     scenes: [
       { id: 'racks',  label: '三種起步',   kicker: '起步 01 · 三種範圍',    line: '接住詢問、推進案件、整合營運——三個起步範圍等你選。',                        d: [0, .12],   m: [0, .2] },
       { id: 'cap',    label: 'A 接住詢問', kicker: '起步 02 · A 方案',   line: '裝入知識查詢、回覆草稿、預約與人工轉接——先把詢問接住。', d: [.12, .26], m: null },
@@ -86,7 +86,7 @@ export const heroConfig = {
     // 看見碎片 → 找出斷點 → 建立流程 → 開始運作。
     // 沿用 about-hero.js 既有的 L.frag / L.link / L.group / L.net 佈局,引擎不動。
     story: 'BUILT FROM REAL WORKFLOWS:看見碎片 → 找出斷點 → 建立流程 → 開始運作',
-    totalVh: { desktop: 250, tablet: 205, mobile: 160 },
+    totalVh: { desktop: 250, tablet: 205, mobile: 200 },
     scenes: [
       { id: 'frag',  label: '看見碎片', kicker: '場景 01 / 04', line: '一次詢問,要在聊天、表單、試算表與內部訊息之間反覆搬運。', d: [0, .26],   m: [0, .28] },
       { id: 'link',  label: '找出斷點', kicker: '場景 02 / 04', line: '找出重複輸入、容易漏追、責任不清與資料無法流動的節點。',   d: [.26, .52], m: [.28, .55] },
@@ -103,7 +103,7 @@ export const heroConfig = {
   method: {
     key: 'method', paint: 'method',
     story: 'HOW WE DELIVER:盤點現況 → 定義第一階段 → 建立驗證 → 上線與持續改善',
-    totalVh: { desktop: 300, tablet: 235, mobile: 165 },
+    totalVh: { desktop: 300, tablet: 235, mobile: 250 },
     scenes: [
       { id: 'map',   label: '盤點現況',     kicker: '階段 1 / 4', line: '找出詢問從哪進來、資料在哪重複、案件停在哪裡——產出問題清單。', d: [0, .26],   m: [0, .28] },
       { id: 'goal',  label: '定義第一階段', kicker: '階段 2 / 4', line: '框出第一階段的目標、範圍與人工確認邊界,先做最有價值的一段。', d: [.26, .5],  m: [.28, .55] },
@@ -120,7 +120,7 @@ export const heroConfig = {
   demo: {
     key: 'demo', paint: 'demo',
     story: 'BUILD YOUR FIRST AI FLOW:選擇情境 → 找出卡點 → 組合第一階段 → 確認並送出',
-    totalVh: { desktop: 340, tablet: 260, mobile: 175 },
+    totalVh: { desktop: 340, tablet: 260, mobile: 215 },
     scenes: [
       { id: 'ind',   label: '選擇情境',     kicker: '任務 1 / 4', line: '選產業或使用情境——案例、用語與流程示意會跟著更新。', d: [0, .25],   m: [0, .28] },
       { id: 'flow',  label: '找出卡點',     kicker: '任務 2 / 4', line: '勾選目前最卡的流程,右側草稿即時加入對應節點。',     d: [.25, .5],  m: [.28, .55] },

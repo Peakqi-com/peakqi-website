@@ -1444,16 +1444,22 @@ function paintMethodMobile(g, e, sb, ks) {
   g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
   const chipRows = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1']
     .reduce((acc, tx) => g.measureText(tx).width + 18 + acc, 16) > w - pad * 2 ? 2 : 1;
-  const hOf = (i) => Math.max(130, Math.min(avail, headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad));
-  // 進度軌永遠先畫:尾段 CTA 回歸把空間壓縮時,畫面也不會整塊變空白
-  const cy0 = mRail(g, d, C, t, x, w, z.y + 2 + Math.min(56, Math.max(0, (avail - hOf(cur)) / 2)), 4, cur, fsN);
-  if (avail < 130) return;
+  const needOf = (i) => headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad;
+  // 空間不足時「整組等比縮小」,而不是把列高壓到下限 —— 壓下限會讓每一列的字互相疊在一起
+  // (iPhone 12 mini 這種矮視窗最明顯)。縮到 0.72 為止,再不夠才讓它裁切。
+  const sc = Math.max(0.72, Math.min(1, avail / needOf(cur)));
+  const hOf = (i) => needOf(i);
+  const drawnH = needOf(cur) * sc;
+  const cy0 = mRail(g, d, C, t, x, w, z.y + 2 + Math.min(56, Math.max(0, (avail - drawnH) / 2)), 4, cur, fsN);
+  if (avail < 120) return;
 
   // 母動畫:上一景上飄順旋淡出的同時,這一景由下升起逆旋淡入 —— 交叉換場,不會出現空畫面
   // aP = 卡片本體透明度(先實體到位,擋住上一景殘影);a = 卡內內容透明度(隨後長出來)
   const drawScene = (cur, kv, a, dy, rot, aP) => {
     const h = hOf(cur);
     g.save();
+    // 等比縮小以左上為錨,版面座標維持在「理想尺寸」下計算,列與列之間永遠不會壓到
+    if (sc < 1) { g.translate(x + w / 2, cy0); g.scale(sc, sc); g.translate(-(x + w / 2), -cy0); }
     const cxp = x + w / 2, cyp = cy0 + h / 2;
     g.translate(cxp, cyp + dy);
     g.rotate(rot * Math.PI / 180);

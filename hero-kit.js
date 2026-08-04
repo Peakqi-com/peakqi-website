@@ -94,7 +94,9 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
   const paint = painters[cfg.paint];
   let W = 0, H = 0, zone = null, p = 0, ks = model.kOf(0), dirty = true, errors = 0, shown = false;
   const media = stage.querySelector('[data-hero-canvaszone]') || stage.querySelector('[data-hero-media]');
-  const dpr = () => Math.min(window.devicePixelRatio || 1, HERO_SHARED.dprMax);
+  // 手機多為 3 倍螢幕(iPhone 12 mini 等),上限 1.5 會被放大兩倍 → 整塊 hero 看起來糊,
+  // 而同頁其他 DOM 內容是銳利的,對比更明顯。手機放寬到 2.75(繪製內容是簡單向量,負擔可接受)。
+  const dpr = () => Math.min(window.devicePixelRatio || 1, opt.mobile ? 2.75 : HERO_SHARED.dprMax);
   function rectIn(el) {
     let x = 0, y = 0, n = el;
     while (n && n !== stage) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
