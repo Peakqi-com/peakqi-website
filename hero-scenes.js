@@ -156,6 +156,53 @@ function paintSolutions(g, e) {
   let cur = 0;
   ks.forEach((v, i) => { if (v > 0.02) cur = i; });
 
+  // ── 手機:單景舞台(吸睛版)——進度軌 + 一次一個大場景物件
+  //    母動畫:物件隨捲動 進場(上移+旋轉+淡入)/退場(上飄+反旋+淡出)
+  //    子動畫:物件自身持續動作(打字點/掃描光/浮動/巡遊 token/衛星軌道/接通火花/數字閃爍)
+  if (mobile) {
+    const kv = ks[cur];
+    const nk = cur < IDS.length - 1 ? ks[cur + 1] : 0;
+    const px0 = z.x + Math.max(6, z.w * .015);
+    const pw = z.w - Math.max(12, z.w * .03);
+    // 進度軌:七點 + 等寬計數
+    const ry = z.y + 16;
+    g.save();
+    for (let i = 0; i < IDS.length; i++) {
+      const dx = px0 + 10 + (pw - 86) * i / (IDS.length - 1);
+      const on = i < cur, curD = i === cur;
+      d.node(dx, ry, curD ? 4.4 : 2.6, curD ? C.orange : (on ? C.green : 'rgba(242,239,232,.3)'), curD ? (.7 + .3 * Math.sin(t * 3)) : (on ? .9 : .45), !on && !curD);
+      if (i < IDS.length - 1) d.line(dx + 6, ry, px0 + 10 + (pw - 86) * (i + 1) / (IDS.length - 1) - 6, ry, i < cur ? 1 : 0, 'rgba(101,224,188,.4)', 1);
+    }
+    g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+    g.fillStyle = C.orange; g.textAlign = 'right';
+    g.fillText('0' + (cur + 1) + ' / 07', px0 + pw, ry + fsS * .36);
+    g.textAlign = 'left';
+
+    const vy = ry + 18;
+    const vh2 = Math.min(z.y + z.h - vy - 6, 340); // 面板封頂:構圖緊湊不留空腹
+    if (vh2 < 150) { g.restore(); return; }   // 靜止空間不足:只露進度軌,不硬擠
+
+    // 母動畫變換
+    const eIn = ez(sb(kv, .02, .32));
+    const eOut = ez(sb(nk, .02, .3));
+    const alpha = eIn * (1 - eOut);
+    if (alpha > 0.02) {
+      const cxp = px0 + pw / 2, cyp = vy + vh2 / 2;
+      g.translate(cxp, cyp + (1 - eIn) * 36 - eOut * 40);
+      g.rotate(((1 - eIn) * -3.5 + eOut * 2.5) * Math.PI / 180);
+      g.translate(-cxp, -cyp);
+      g.globalAlpha = alpha;
+      // 舞台面板
+      d.rr(px0, vy, pw, vh2, 12);
+      g.fillStyle = 'rgba(17,20,24,.92)'; g.fill();
+      g.strokeStyle = 'rgba(255,107,44,.35)'; g.lineWidth = 1.2; g.stroke();
+      mScene(cur, kv, alpha, px0 + 14, vy + 12, pw - 28, vh2 - 24);
+    }
+    g.restore(); g.globalAlpha = 1;
+    return;
+  }
+
+
   const railX = z.x + Math.max(30, z.w * .07);
   const bodyX = railX + Math.max(34, 26 * S);
   const bodyW = z.x + z.w - bodyX - Math.max(8, z.w * .02);
@@ -227,6 +274,229 @@ function paintSolutions(g, e) {
     }
   });
   g.restore();
+
+  // ── 手機大場景(吸睛版,子動畫濃度高)
+  function mScene(i, kv, a, x, y, w, h) {
+    const kk = ez(sb(kv, .12, .6));
+    const cx2 = x + w / 2;
+    const bh = Math.max(28, 30 * S);
+    g.globalAlpha = a;
+    if (i === 0) { // 詢問進來:LINE 對話頭 + 打字點 → 泡泡彈入 + 來源晶片浮動
+      g.beginPath(); g.arc(x + 16, y + 14, 12, 0, TAU);
+      g.fillStyle = 'rgba(101,224,188,.2)'; g.fill();
+      g.strokeStyle = C.green; g.lineWidth = 1.4; g.stroke();
+      g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.green;
+      g.textAlign = 'center'; g.fillText('客', x + 16, y + 18); g.textAlign = 'left';
+      d.label('LINE・新訊息', x + 34, y + 18, fsS, 'rgba(242,239,232,.6)', .8);
+      const bk = ez(sb(kv, .18, .42));
+      if (bk < 1) { // 打字點(子動畫)
+        g.globalAlpha = a * (1 - bk);
+        for (let j2 = 0; j2 < 3; j2++) {
+          const bob = Math.sin(t * 6 + j2 * .9) * 3;
+          d.node(x + 20 + j2 * 12, y + 46 + bob, 3, 'rgba(242,239,232,.55)', 1, false);
+        }
+      }
+      if (bk > 0.02) {
+        const pop = 1 + (1 - ez(sb(kv, .18, .5))) * .06; // 彈入 wobble
+        g.save(); g.translate(x + 10, y + 40); g.scale(pop, pop);
+        g.globalAlpha = a * bk;
+        d.rr(0, 0, Math.min(w * .84, 268), bh, 11);
+        g.fillStyle = 'rgba(101,224,188,.16)'; g.fill();
+        g.strokeStyle = 'rgba(101,224,188,.55)'; g.stroke();
+        g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
+        g.fillText('請問到府服務多少錢?可以這週嗎?', 10, bh * .66);
+        g.restore();
+      }
+      let xx = x;
+      ['LINE', '網站表單', '電話'].forEach((tx2, j2) => {
+        const kc = ez(sb(kv, .45 + j2 * .12, .68 + j2 * .12));
+        if (kc <= .02) return;
+        g.globalAlpha = a * kc;
+        const bob = Math.sin(t * 1.8 + j2 * 1.3) * 2.5; // 晶片浮動(子)
+        xx += d.chip(xx, y + h - Math.max(22, 24 * S) + bob, tx2, j2 === 0, fsS) + 8;
+      });
+    } else if (i === 1) { // 辨識需求:掃描卡 + 掃描光束(子) + 欄位落位
+      const cw2 = Math.min(w * .9, 300), ch2 = h * .62, sx = cx2 - cw2 / 2, sy = y + 8;
+      d.rr(sx, sy, cw2, ch2, 8);
+      g.fillStyle = 'rgba(9,11,14,.7)'; g.fill();
+      g.strokeStyle = 'rgba(255,107,44,.4)'; g.stroke();
+      const beamY = sy + ch2 * (0.5 + 0.45 * Math.sin(t * 1.6)); // 掃描光束
+      g.globalAlpha = a * .5;
+      const grd = g.createLinearGradient(0, beamY - 12, 0, beamY + 12);
+      grd.addColorStop(0, 'rgba(255,107,44,0)'); grd.addColorStop(.5, 'rgba(255,107,44,.3)'); grd.addColorStop(1, 'rgba(255,107,44,0)');
+      g.fillStyle = grd; g.fillRect(sx + 2, beamY - 12, cw2 - 4, 24);
+      g.globalAlpha = a;
+      [['需求', '到府清潔'], ['時段', '週五下午'], ['價格', '待人工確認']].forEach((r2, j2) => {
+        const kc = ez(sb(kv, .15 + j2 * .16, .4 + j2 * .16));
+        if (kc <= .02) return;
+        const ry2 = sy + 14 + j2 * (ch2 - 24) / 3;
+        g.globalAlpha = a * kc;
+        d.label(r2[0], sx + 12 + (1 - kc) * 18, ry2 + 8, fsS, j2 === 2 ? C.orange : 'rgba(242,239,232,.5)', .8);
+        d.han(r2[1], sx + 12 + Math.max(52, 56 * S) + (1 - kc) * 18, ry2 + 10, fsB, 'rgba(242,239,232,.9)', 700);
+        d.node(sx + cw2 - 16, ry2 + 4, 2.8, j2 === 2 ? C.orange : C.green, a * kc, kc < 1);
+      });
+      g.globalAlpha = a * ez(sb(kv, .6, .85));
+      d.label('AI 辨識中・敏感項標記給人', x, y + h - 8, fsS, 'rgba(242,239,232,.5)', .8);
+    } else if (i === 2) { // 回應與建檔:回覆泡泡 + CRM 卡蓋章浮動(子)
+      const bk = ez(sb(kv, .12, .38));
+      if (bk > .02) {
+        g.globalAlpha = a * bk;
+        const bw2 = Math.min(w * .9, 290);
+        d.rr(x + w - bw2, y + 6, bw2, bh, 11);
+        g.fillStyle = 'rgba(101,224,188,.15)'; g.fill();
+        g.strokeStyle = 'rgba(101,224,188,.5)'; g.stroke();
+        g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(212,244,232,.95)';
+        g.fillText('已為您保留時段,細節由專人確認', x + w - bw2 + 10, y + 6 + bh * .66);
+      }
+      const ck = ez(sb(kv, .35, .65));
+      if (ck > .02) {
+        const flo = Math.sin(t * 1.6) * 3; // 卡片浮動(子)
+        const cw2 = Math.min(w * .7, 210), chh = Math.max(56, 62 * S);
+        const sx = cx2 - cw2 / 2, sy = y + h * .42 + flo;
+        g.globalAlpha = a * ck;
+        d.rr(sx, sy, cw2, chh, 6);
+        g.fillStyle = '#F2EFE8'; g.fill();
+        g.strokeStyle = C.orange; g.lineWidth = 1.4; g.stroke();
+        g.font = '800 ' + Math.max(13, 14 * S) + 'px "Noto Sans TC",sans-serif'; g.fillStyle = '#090B0E';
+        g.fillText('王小姐・到府清潔', sx + 10, sy + 20);
+        g.font = '600 ' + fsS + 'px "Space Grotesk",sans-serif'; g.fillStyle = '#D14E12';
+        g.fillText('CRM CARD・負責人已指定', sx + 10, sy + chh - 12);
+        const stk = ez(sb(kv, .6, .8)); // 蓋章(子:落下+微震)
+        if (stk > .02) {
+          const drop = (1 - stk) * -14;
+          g.save(); g.translate(sx + cw2 - 26, sy + 22 + drop);
+          g.rotate(-.28 + stk * .1); g.globalAlpha = a * stk;
+          g.strokeStyle = C.green; g.lineWidth = 2;
+          g.beginPath(); g.arc(0, 0, 13, 0, TAU); g.stroke();
+          d.tick(0, 0, 6, C.green, 1);
+          g.restore();
+        }
+      }
+    } else if (i === 3) { // 安排下一步:token 巡遊四站(子:沿線滑行)
+      const m0 = x + 14, m1 = x + w - 14, ty2 = y + h * .34;
+      const steps = ['補齊需求', '提供案例', '確認反應', '決定下一步'];
+      steps.forEach((tx2, j2) => {
+        const nx = m0 + (m1 - m0) * j2 / 3;
+        const on = kv * 3.2 - .3 > j2;
+        d.node(nx, ty2, on ? 3.6 : 2.4, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
+        g.globalAlpha = a;
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = on ? C.blue : 'rgba(242,239,232,.45)';
+        g.textAlign = j2 === 0 ? 'left' : (j2 === 3 ? 'right' : 'center');
+        g.fillText(tx2, j2 === 0 ? nx - 4 : (j2 === 3 ? nx + 4 : nx), ty2 + Math.max(18, 20 * S));
+        g.textAlign = 'left';
+        if (j2 < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (j2 + 1) / 3 - 6, ty2, clamp(kv * 3.2 - .45 - j2, 0, 1), 'rgba(62,155,255,.5)', 1.4);
+      });
+      const tokP = (Math.sin(t * .9) * .5 + .5) * ez(sb(kv, .4, .8)); // token 巡遊(子)
+      const tokX = m0 + (m1 - m0) * Math.min(tokP, clamp((kv * 3.2 - .3) / 3, 0, 1));
+      g.globalAlpha = a * ez(sb(kv, .3, .6));
+      g.beginPath(); g.arc(tokX, ty2, 6, 0, TAU);
+      g.fillStyle = 'rgba(62,155,255,.25)'; g.fill();
+      d.node(tokX, ty2, 3.2, C.blue, 1, false);
+      const rk = ez(sb(kv, .6, .85));
+      if (rk > .02) {
+        g.globalAlpha = a * rk;
+        const shake = Math.sin(t * 10) * ez(sb(kv, .6, .7)) * 1.6; // 鈴鐺微震(子)
+        g.save(); g.translate(x + 8 + shake, y + h - Math.max(24, 26 * S));
+        let xx2 = 0;
+        xx2 += d.chip(0, 0, '提醒已排', true, fsS) + 8;
+        d.chip(xx2, 0, 'AI 擬稿・人確認', false, fsS);
+        g.restore();
+      }
+    } else if (i === 4) { // 延續脈絡:中心檔案 + 三衛星軌道(子:公轉)
+      const oy = y + h * .46, orad = Math.min(w * .3, h * .34);
+      const ck = ez(sb(kv, .12, .4));
+      g.globalAlpha = a * ck;
+      g.beginPath(); g.arc(cx2, oy, Math.max(16, 18 * S), 0, TAU);
+      g.fillStyle = 'rgba(255,107,44,.14)'; g.fill();
+      g.strokeStyle = C.orange; g.lineWidth = 1.6; g.stroke();
+      g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
+      g.textAlign = 'center'; g.fillText('客戶脈絡', cx2, oy + 4); g.textAlign = 'left';
+      g.globalAlpha = a * ck * .5;
+      g.setLineDash([3, 6]);
+      g.beginPath(); g.arc(cx2, oy, orad, 0, TAU); g.strokeStyle = 'rgba(242,239,232,.3)'; g.lineWidth = 1; g.stroke();
+      g.setLineDash([]);
+      ['報價', '案例', '服務'].forEach((tx2, j2) => {
+        const kc = ez(sb(kv, .3 + j2 * .14, .55 + j2 * .14));
+        if (kc <= .02) return;
+        const ang = t * .7 + j2 * Math.PI * 2 / 3; // 公轉(子)
+        const bx = cx2 + Math.cos(ang) * orad, by = oy + Math.sin(ang) * orad * .74;
+        g.globalAlpha = a * kc;
+        g.beginPath(); g.arc(bx, by, Math.max(13, 14 * S), 0, TAU);
+        g.fillStyle = 'rgba(9,11,14,.92)'; g.fill();
+        g.strokeStyle = [C.orange, C.blue, C.green][j2]; g.lineWidth = 1.4; g.stroke();
+        g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.9)';
+        g.textAlign = 'center'; g.fillText(tx2, bx, by + 4); g.textAlign = 'left';
+      });
+      g.globalAlpha = a * ez(sb(kv, .65, .9));
+      d.label('同一份脈絡,不用重新整理', x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
+    } else if (i === 5) { // 流程接通:模組逐一接通 + 火花(子) + 流動虛線(子)
+      const mods = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
+      const m0 = x + 16, m1 = x + w - 16, my = y + h * .42;
+      const conn = kv * 5.4 - .3;
+      mods.forEach((tx2, j2) => {
+        const nx = m0 + (m1 - m0) * j2 / 5;
+        const on = conn > j2;
+        if (j2 < 5 && on) { // 流動虛線(子)
+          g.save(); g.strokeStyle = 'rgba(101,224,188,.55)'; g.lineWidth = 1.4;
+          g.setLineDash([5, 7]); g.lineDashOffset = -t * 26;
+          g.beginPath(); g.moveTo(nx + 5, my); g.lineTo(m0 + (m1 - m0) * (j2 + 1) / 5 - 5, my); g.stroke();
+          g.restore();
+        }
+        d.node(nx, my, on ? 3.4 : 2.2, on ? C.green : 'rgba(242,239,232,.3)', a, !on);
+        if (Math.abs(conn - j2) < .5) { // 接通火花(子)
+          const sp = 1 - Math.abs(conn - j2) * 2;
+          g.globalAlpha = a * Math.max(0, sp);
+          g.beginPath(); g.arc(nx, my, 9 + sp * 5, 0, TAU);
+          g.strokeStyle = 'rgba(101,224,188,.6)'; g.lineWidth = 1; g.stroke();
+        }
+        g.globalAlpha = a * (on ? 1 : .5);
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = on ? 'rgba(242,239,232,.9)' : 'rgba(242,239,232,.4)';
+        g.textAlign = 'center'; g.fillText(tx2, nx, my + Math.max(19, 21 * S)); g.textAlign = 'left';
+      });
+      g.globalAlpha = a * ez(sb(kv, .7, .95));
+      d.label('既有工具保留・資料線後方接通', x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
+    } else { // 營運視圖:三統計磚 + 火花線(子:描繪循環)
+      const st = [['12', '今日新客', C.ivory], ['28s', '平均回覆', C.blue], ['18%', '本週轉換', C.green]];
+      const gw2 = (w - 20) / 3;
+      st.forEach((r2, j2) => {
+        const kc = ez(sb(kv, .1 + j2 * .14, .35 + j2 * .14));
+        if (kc <= .02) return;
+        const bx = x + j2 * (gw2 + 10);
+        g.globalAlpha = a * kc;
+        d.rr(bx, y + 6, gw2, h * .52, 8);
+        g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
+        g.strokeStyle = 'rgba(242,239,232,.18)'; g.stroke();
+        const blink = j2 === 0 ? (Math.sin(t * 3.4) > .92 ? .4 : 1) : 1; // 數字閃爍(子)
+        g.globalAlpha = a * kc * blink;
+        g.font = '700 ' + Math.max(17, 19 * S) + 'px "Space Grotesk",sans-serif';
+        g.fillStyle = r2[2]; g.textAlign = 'center';
+        g.fillText(r2[0], bx + gw2 / 2, y + 6 + h * .28);
+        g.globalAlpha = a * kc;
+        g.font = '500 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.55)';
+        g.fillText(r2[1], bx + gw2 / 2, y + 6 + h * .28 + Math.max(16, 18 * S));
+        g.textAlign = 'left';
+      });
+      const lk = ez(sb(kv, .5, .8)); // 火花線循環(子)
+      if (lk > .02) {
+        const ly2 = y + h * .78;
+        g.globalAlpha = a * lk;
+        g.strokeStyle = 'rgba(101,224,188,.6)'; g.lineWidth = 1.6;
+        g.beginPath();
+        const seg2 = 30;
+        for (let j2 = 0; j2 <= seg2; j2++) {
+          const fx2 = j2 / seg2;
+          const wave = Math.sin(fx2 * 7 + t * 2.4) * h * .05 * (0.4 + 0.6 * fx2);
+          const px2 = x + 8 + (w - 16) * fx2;
+          if (j2 === 0) g.moveTo(px2, ly2 + wave); else g.lineTo(px2, ly2 + wave);
+        }
+        g.stroke();
+      }
+    }
+    g.globalAlpha = a;
+  }
 
   // ── 各站小景(畫在展開盒內;p = 該站 k)
   function drawStation(i, x, y, w, h, kv, a) {
