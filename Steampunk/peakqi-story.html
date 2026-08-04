@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <title>奇鋒國際 PeakQi — 一棟會走路的品牌屋</title>
 <script type="importmap">
 {
@@ -35,13 +37,20 @@
   #spacer h2 { font-size: 22px; margin: 0 0 8px; }
   #spacer p { font-size: 14px; margin: 0 0 6px; max-width: 520px; }
 
+  /* 頂欄疊在 3D 場景上,原本沒有任何底色,副標又只有 50% 白 ——
+     塔身的橘色燈光正好在那一段,字被吃掉。補一層由深到透明的遮罩
+     (不是實心底,才不會把 3D 切掉一塊),副標同時提到 62%。 */
   #topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none;
     display: flex; align-items: center; justify-content: space-between; padding: 18px 28px;
   }
+  #topbar::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 132px; z-index: -1;
+    background: linear-gradient(180deg, rgba(16,13,10,.82) 0%, rgba(16,13,10,.5) 46%, rgba(16,13,10,0) 100%);
+  }
   #topbar .logo { font-weight: 900; font-size: 17px; letter-spacing: .02em; }
   #topbar .logo b { color: #fe6a2d; }
-  #topbar .logo small { display: block; font-size: 10px; font-weight: 500; color: rgba(255,255,255,.5); letter-spacing: .3em; }
+  #topbar .logo small { display: block; font-size: 10px; font-weight: 500; color: rgba(255,255,255,.62); letter-spacing: .3em; }
   #topbar a.viewer { pointer-events: auto; font-size: 12px; font-weight: 500; border: 1px solid rgba(254,106,45,.5); border-radius: 999px; padding: 8px 14px; }
   #progress { position: fixed; top: 0; left: 0; height: 3px; background: #fe6a2d; width: 0; z-index: 11; }
 
