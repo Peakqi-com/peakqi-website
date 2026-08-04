@@ -132,6 +132,11 @@ export function createSectionsEngine({ refs }) {
       pinned: false
     };
     if (reduced || mobile || vh < 640) { flow = null; return; } // 模板預設:垂直堆疊+合併卡
+    // 先記下模板原本的行內樣式:退回堆疊模式時要還原成「原值」,不能設成空字串 ——
+    // padding/boxSizing 本來就寫在模板的 style 屬性裡,清空等於整段上下留白歸零。
+    flow.orig = {};
+    ['position', 'top', 'height', 'padding', 'display', 'flexDirection', 'justifyContent', 'boxSizing', 'overflow']
+      .forEach(k => { flow.orig[k] = stage.style[k]; });
     flow.pinned = true;
     wrap.style.height = '265vh';
     stage.style.position = 'sticky';
@@ -167,7 +172,10 @@ export function createSectionsEngine({ refs }) {
     if (!flow) return;
     const { wrap, stage, deck, mergedCap } = flow;
     wrap.style.height = '';
-    ['position', 'top', 'height', 'padding', 'display', 'flexDirection', 'justifyContent', 'boxSizing', 'overflow'].forEach(k => { stage.style[k] = ''; });
+    // 還原成模板原值(不是空字串):padding 與 boxSizing 原本就在模板行內樣式裡
+    const orig = flow.orig || {};
+    ['position', 'top', 'height', 'padding', 'display', 'flexDirection', 'justifyContent', 'boxSizing', 'overflow']
+      .forEach(k => { stage.style[k] = orig[k] || ''; });
     if (deck) { deck.style.position = 'relative'; deck.style.height = ''; deck.style.display = ''; }
     flow.layers.concat([flow.merged]).forEach(el => {
       if (!el) return;

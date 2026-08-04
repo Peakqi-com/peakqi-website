@@ -81,10 +81,17 @@ export function createPricingFX() {
       const k1 = ez(sub(p, wrap ? 0.08 : 0.18, 0.5)), k2 = ez(sub(p, wrap ? 0.3 : 0.28, wrap ? 0.78 : 0.6));
       if (l1) l1.style.transform = 'scaleX(' + k1.toFixed(3) + ')';
       if (l2) l2.style.transform = 'scaleX(' + k2.toFixed(3) + ')';
+      // 圓點必須貼著「線頭」。原本寫死 4%→94%,但兩條線的實際長度不同
+      // (第二條的底寬只有 38%),於是點和線頭各走各的 —— 看起來就是分家。
+      // 改為直接由該條線的實際寬度推算線頭位置。
       dots.forEach((d, i) => {
+        const bar = i === 0 ? l1 : l2;
         const k = i === 0 ? k1 : k2;
-        d.style.left = (4 + k * 90) + '%';
-        d.style.opacity = k > 0.02 && k < 0.99 ? '1' : '0';
+        if (!bar || !bar.parentElement) return;
+        const trackW = bar.parentElement.clientWidth || 1;
+        const headPct = Math.min(100, (bar.offsetWidth * k / trackW) * 100);
+        d.style.left = headPct.toFixed(2) + '%';
+        d.style.opacity = k > 0.02 && k < 0.995 ? '1' : '0';
       });
     }, { pinned: !!wrap });
   }

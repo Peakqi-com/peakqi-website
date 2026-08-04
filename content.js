@@ -8,6 +8,8 @@ export const contact = {
 };
 
 export const navigation = [
+  // 首頁單獨列一項:手機使用者不一定會意識到左上 Logo 可以點回首頁
+  { href: '/', key: 'home', label: '首頁' },
   { href: '/solutions', key: 'solutions', label: '解決方案' },
   { href: '/method', key: 'method', label: '導入方法' },
   { href: '/cases', key: 'cases', label: '案例' },

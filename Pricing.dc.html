@@ -189,12 +189,56 @@ nav[aria-label="breadcrumb"]{align-items:center}
 .pq-tl2-step:nth-child(5) [data-dot]{animation-delay:.9s}.pq-tl2-step:nth-child(6) [data-dot]{animation-delay:1.2s}
 @supports (animation-timeline: view()){
 .pq-tl2-step{animation:pqComicCut both linear;animation-timeline:view();animation-range:entry 4% entry 46%}
-.pq-tl2-step::after{animation:pqSpeedLine both linear;animation-timeline:view();animation-range:entry 4% entry 46%}
-.pq-tl2-step:nth-child(3),.pq-tl2-step:nth-child(3)::after{animation-range:entry 11% entry 53%}
-.pq-tl2-step:nth-child(4),.pq-tl2-step:nth-child(4)::after{animation-range:entry 18% entry 60%}
-.pq-tl2-step:nth-child(5),.pq-tl2-step:nth-child(5)::after{animation-range:entry 25% entry 67%}
-.pq-tl2-step:nth-child(6),.pq-tl2-step:nth-child(6)::after{animation-range:entry 32% entry 74%}
+.pq-tl2-step:nth-child(3){animation-range:entry 11% entry 53%}
+.pq-tl2-step:nth-child(4){animation-range:entry 18% entry 60%}
+.pq-tl2-step:nth-child(5){animation-range:entry 25% entry 67%}
+.pq-tl2-step:nth-child(6){animation-range:entry 32% entry 74%}
 }}
+/* ── 連續動態(不吃捲動,進場後仍然一直在動)──
+   進場的斜切刷入只跑一次,停下來就沒戲了。這裡再疊四組時間驅動的漫畫動作:
+   速度線一格一格掃過去、網點漂移、序號受擊彈跳、DAY 標籤抽動。 */
+@media (prefers-reduced-motion:no-preference){
+.pq-tl2-step::after{animation:pqSpeedSweep 3.4s cubic-bezier(.35,0,.15,1) infinite}
+.pq-tl2-step:nth-child(3)::after{animation-delay:.22s}
+.pq-tl2-step:nth-child(4)::after{animation-delay:.44s}
+.pq-tl2-step:nth-child(5)::after{animation-delay:.66s}
+.pq-tl2-step:nth-child(6)::after{animation-delay:.88s}
+.pq-tl2-step::before{animation:pqDotDrift 6.5s linear infinite}
+.pq-tl2-step:nth-child(odd)::before{animation-direction:reverse}
+.pq-tl2-ghost{animation:pqNumHit 3.4s cubic-bezier(.2,1.5,.3,1) infinite}
+.pq-tl2-step:nth-child(3) .pq-tl2-ghost{animation-delay:.22s}
+.pq-tl2-step:nth-child(4) .pq-tl2-ghost{animation-delay:.44s}
+.pq-tl2-step:nth-child(5) .pq-tl2-ghost{animation-delay:.66s}
+.pq-tl2-step:nth-child(6) .pq-tl2-ghost{animation-delay:.88s}
+.pq-tl2-step>div{animation:pqDaySnap 3.4s cubic-bezier(.3,1.6,.4,1) infinite}
+.pq-tl2-step:nth-child(3)>div{animation-delay:.22s}
+.pq-tl2-step:nth-child(4)>div{animation-delay:.44s}
+.pq-tl2-step:nth-child(5)>div{animation-delay:.66s}
+.pq-tl2-step:nth-child(6)>div{animation-delay:.88s}
+}
+/* 速度線:平時看不見,輪到這一格時「唰」地掃過去 */
+@keyframes pqSpeedSweep{
+  0%,50%{opacity:0;transform:translateX(-54%) skewX(0deg)}
+  56%{opacity:.6;transform:translateX(-14%) skewX(-2deg)}
+  64%{opacity:.3;transform:translateX(12%) skewX(0deg)}
+  76%,100%{opacity:0;transform:translateX(48%) skewX(0deg)}
+}
+/* ben-day 網點慢速漂移:整片有生命感,但不搶戲 */
+@keyframes pqDotDrift{from{background-position:0 0}to{background-position:36px 27px}}
+/* 序號受擊:被速度線掃到的瞬間彈一下、描邊變亮 */
+@keyframes pqNumHit{
+  0%,52%{transform:scale(1) translateX(0);-webkit-text-stroke-color:rgba(242,239,232,.22)}
+  58%{transform:scale(1.13) translateX(-3px);-webkit-text-stroke-color:rgba(255,107,44,.85)}
+  68%{transform:scale(.98) translateX(1px);-webkit-text-stroke-color:rgba(242,239,232,.4)}
+  80%,100%{transform:scale(1) translateX(0);-webkit-text-stroke-color:rgba(242,239,232,.22)}
+}
+/* DAY 對白框:同一拍抽一下,像被撞到 */
+@keyframes pqDaySnap{
+  0%,52%{transform:skewX(-8deg) translate(0,0) rotate(0deg)}
+  58%{transform:skewX(-13deg) translate(-4px,-2px) rotate(-1.6deg)}
+  68%{transform:skewX(-6deg) translate(2px,1px) rotate(.6deg)}
+  80%,100%{transform:skewX(-8deg) translate(0,0) rotate(0deg)}
+}
 @keyframes pqTlPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,44,.45)}50%{box-shadow:0 0 0 9px rgba(255,107,44,0)}}
 /* 斜切刷入:右緣是一條斜線,像用麥克筆一刀刷過去(硬邊,無漸層) */
 @keyframes pqComicCut{

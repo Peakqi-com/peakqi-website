@@ -185,14 +185,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <!-- ============ 品牌屋 3D 導覽(Steampunk 視差滾動,以父頁捲動驅動 iframe)============ -->
 <section id="brandhouse" data-screen-label="品牌屋 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
-  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px) clamp(20px,3vw,32px)">
-    <div style="display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)">
-      <span style="width:34px;height:1.5px;background:#FF6B2C"></span>BRAND HOUSE · 品牌屋
-    </div>
-    <h2 style="margin:14px 0 0;font:900 clamp(1.55rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
-    <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
-      六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
-  </div>
+  <!-- 這裡原本有一組「BRAND HOUSE・品牌屋 / 一棟會走路的品牌屋 / 六個房間、六門生意…」的段首,
+       但 iframe 裡的 3D 場景開場就是同一組標題與同一句話 —— 捲下去等於連著讀兩次。
+       段首整組移除,直接進場景本身。 -->
   <!-- 捲動跑道(手機與桌機共用):sticky 舞台固定,父頁進度驅動 iframe 內的視差場景。
        節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
        跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、

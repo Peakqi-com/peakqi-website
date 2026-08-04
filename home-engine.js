@@ -445,7 +445,7 @@ export function createHomeEngine() {
       PQ_SENSOR: { id: 'sensor', label: 'IMAGE SENSOR / 知識核心', color: 0x65E0BC },
       PQ_MAINBOARD: { id: 'mainboard', label: 'MAINBOARD / CRM 資料核心', color: 0x3E9BFF },
       PQ_AI_CHIP: { id: 'chip', label: 'PQ-47 AI 處理器', color: 0xFF6B2C },
-      PQ_BATTERY: { id: 'battery', label: '24/7 自動運轉電源', color: 0xF2EFE8 },
+      PQ_BATTERY: { id: 'battery', label: '自動運轉電源', color: 0xF2EFE8 },
       PQ_RIBBON: { id: 'ribbon', label: '產業導入排線', color: 0xFF6B2C }
     };
     function resolveRule(name) {

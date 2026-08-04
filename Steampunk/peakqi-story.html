@@ -157,7 +157,7 @@
   <div class="slogan">別讓瑣碎，耽誤真正重要的事</div>
   <div class="scrollhint">SCROLL</div>
 </div>
-<div id="secHead"><div class="no"></div><h2></h2><div class="sub"></div></div>
+<div id="secHead" style="display:none"><div class="no"></div><h2></h2><div class="sub"></div></div>
 <div id="cards"></div>
 <div id="finale">
   <div class="big">別讓瑣碎，<em>耽誤真正重要的事</em>。</div>
@@ -648,6 +648,7 @@ function mountSection(i) {
   cardsEl.innerHTML = '';
   cardEls = []; dotEls = [];
   if (s.cards) {
+    headEl.style.display = '';                 // 有內容才顯示這張卡
     headEl.querySelector('.no').textContent = s.no;
     headEl.querySelector('h2').textContent = s.title;
     headEl.querySelector('.sub').textContent = s.sub;
@@ -669,6 +670,9 @@ function mountSection(i) {
       cardEls.push(c);
     }
   } else {
+    // 開場/尾聲沒有章節文字:整張卡收起來。
+    // (改成實心卡之後,空的卡會變成一個突兀的黑方塊,原本漸層版看不出來。)
+    headEl.style.display = 'none';
     headEl.querySelector('.no').textContent = '';
     headEl.querySelector('h2').textContent = '';
     headEl.querySelector('.sub').textContent = '';

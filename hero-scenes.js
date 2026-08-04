@@ -901,7 +901,7 @@ function paintPricing(g, e) {
   const kR = k('racks'), k1 = k('cap'), k2 = k('assist'), k3 = k('plat'), kC = k('cmp'), kU = k('use'), kO = k('run');
   const fadeO = 1 - ez(sb(kO, 0, .45)) * .98; // 終幕:kO 到 0.45 前舊圖層就要全退,不拖尾
   const gap = z.w * .05, rw = (z.w - gap * 2) / 3;
-  const ry = z.y + z.h * .05, rh = z.h * (mobile ? .48 : .56);
+  const ry = z.y + z.h * .05, rh = z.h * (mobile ? .48 : .50);   // 桌機收到 .50:下方要放得下價格框與模組數列
   const rx = (i) => z.x + i * (rw + gap);
   const meta = [
     { zh: '接客', en: 'CAPTURE', kk: k1, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['自動回覆', '需求了解', '預約', '轉真人'], base: null },
@@ -956,20 +956,22 @@ function paintPricing(g, e) {
     });
     const kp = Math.max(ez(sb(m.kk, .55, 1)), ez(kC));
     if (kp > 0 && !mobile) { // 手機:牌高塞不下兩行必疊印,CTA 下方 DOM 晶片已有同資訊
-      const py = ry + rh + 8;
+      const py = ry + rh + 10;
+      const boxH = fPrice + fMo + 22;      // 兩行文字 + 上下內距;不再用 38*s(字放大後會掉出框)
       g.globalAlpha = a * kp;
-      d.rr(x + 2, py, rw - 4, 38 * s, 4);
+      d.rr(x + 2, py, rw - 4, boxH, 4);
       g.fillStyle = 'rgba(9,11,14,.88)'; g.fill();
       g.strokeStyle = kC > 0 ? m.c : 'rgba(242,239,232,.25)'; g.lineWidth = 1.2; g.stroke();
       g.font = '700 ' + fPrice + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory;
-      g.fillText(m.price, x + 10, py + fPrice + 3);
-      d.label(m.mo, x + 10, py + fPrice + fMo + 9, fMo, m.c === C.blue ? C.blue : C.orange, .3);
+      g.fillText(m.price, x + 11, py + fPrice + 6);
+      d.label(m.mo, x + 11, py + fPrice + fMo + 13, fMo, m.c === C.blue ? C.blue : C.orange, .3);
       g.globalAlpha = a;
     }
     if (kC > 0 && fadeO > 0.05 && !mobile) {
       g.globalAlpha = ez(kC) * fadeO;
-      d.tick(x + 8, ry + rh + 56 * s, 5.5 * s, C.green, 1);
-      d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 18, ry + rh + 59 * s, Math.max(10.5, 8.5 * s), 'rgba(242,239,232,.72)', .6);
+      const cy3 = ry + rh + 10 + (fPrice + fMo + 22) + 15;   // 接在價格框下方,不再用固定倍率
+      d.tick(x + 9, cy3, Math.max(6, 6.5 * s), C.green, 1);
+      d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 21, cy3 + 4, Math.max(11, 9 * s), 'rgba(242,239,232,.75)', .6);
       g.globalAlpha = 1;
     }
     g.restore();
@@ -1011,17 +1013,29 @@ function paintPricing(g, e) {
     d.rr(z.x + 1, z.y + 1, z.w - 2, z.h - 2, 12);
     g.strokeStyle = 'rgba(255,107,44,' + (0.35 + 0.2 * Math.sin(t * 1.6)).toFixed(2) + ')'; g.lineWidth = 1.6; g.stroke();
     // 狀態列:呼吸綠點 + 大標
+    // d.label 是「逐字往右畫」、不吃 textAlign —— 用它畫置中字會整串從中心往右偏。
+    // 這裡自己量寬度置中(含字距),綠點也改成貼著標題左緣,而不是固定偏移量。
+    const labelC = (txt, ccx, y, px, color, ls) => {
+      g.font = '600 ' + Math.max(9, px) + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+      const w = g.measureText(txt).width + (String(txt).length - 1) * (ls || 0);
+      d.label(txt, ccx - w / 2, y, px, color, ls);
+    };
     const inK = ez(sb(kO, .5, .82));   // 卡片在 kO≈0.46 才退乾淨,終幕晚一步進場才不會疊印
     g.globalAlpha = a * inK;
-    const hy = z.y + z.h * (mobile ? .2 : .24);
+    const hy = z.y + z.h * (mobile ? .2 : .26);
     const pulse = .55 + .45 * Math.sin(t * 2.4);
-    d.node(cx - (mobile ? 74 : 96) * s, hy - 6 * s, 4.5 * s, C.green, a * pulse);
+    const fTitle = mobile ? Math.max(17, 21 * s) : Math.max(23, 25 * s);
+    const fKick = mobile ? Math.max(10, 11 * s) : Math.max(12, 12.5 * s);
+    labelC('PEAKQI OS · RUNNING', cx, hy - fTitle - 14, fKick, C.orange, 2.2);
+    g.font = '900 ' + fTitle + 'px "Noto Sans TC",sans-serif';
+    const tW = g.measureText('系統上線,開始運作').width;
+    d.node(cx - tW / 2 - Math.max(14, 16 * s), hy - fTitle * .3, Math.max(5, 5.5 * s), C.green, a * pulse);
     g.textAlign = 'center';
-    d.label('PEAKQI OS · RUNNING', cx + 10 * s, hy - z.h * .085, Math.max(10, 11 * s), C.orange, 2.2);
-    d.han('系統上線,開始運作', cx, hy, Math.max(16, 21 * s), C.ivory, 900);
+    d.han('系統上線,開始運作', cx, hy, fTitle, C.ivory, 900);
     g.textAlign = 'left';
     // 三個大藥丸:方案名 + 綠勾(逐一亮起)
-    const pw = Math.min(rw, 190 * s), ph = Math.max(34, 42 * s);
+    const fPill = mobile ? Math.max(12, 13 * s) : Math.max(15, 15 * s);
+    const pw = Math.min(rw, 210 * s), ph = Math.max(38, fPill * 2.9);
     const py = z.y + z.h * (mobile ? .38 : .42);
     meta.forEach((m, i) => {
       const ka = ez(sb(kO, .54 + i * .1, .78 + i * .1));
@@ -1031,8 +1045,8 @@ function paintPricing(g, e) {
       d.rr(px2, py, pw, ph, ph / 2);
       g.fillStyle = 'rgba(20,23,28,.85)'; g.fill();
       g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.7)' : 'rgba(255,107,44,.7)'; g.lineWidth = 1.4; g.stroke();
-      d.tick(px2 + 16 * s, py + ph / 2 + 1, Math.max(5, 6.5 * s), C.green, a * ka);
-      d.han(m.zh, px2 + 30 * s, py + ph / 2 + 5 * s, Math.max(11.5, 13 * s), C.ivory, 800);
+      d.tick(px2 + 17, py + ph / 2 + 1, Math.max(5.5, 6.5 * s), C.green, a * ka);
+      d.han(m.zh, px2 + 33, py + ph / 2 + fPill * .36, fPill, C.ivory, 800);
       g.globalAlpha = a;
     });
     // 心跳線:運作中的生命感(整條隨時間流動)
@@ -1049,9 +1063,9 @@ function paintPricing(g, e) {
     }
     g.stroke();
     // 底部說明:誠實中性(移除未經確認的 24/7/不綁約/保證字樣)
+    labelC('FIRST PHASE LIVE', cx, z.y + z.h * (mobile ? .8 : .84), mobile ? Math.max(9, 9.5 * s) : Math.max(10.5, 10.5 * s), 'rgba(242,239,232,.5)', 2);
     g.textAlign = 'center';
-    d.label('FIRST PHASE LIVE', cx, z.y + z.h * (mobile ? .8 : .82), Math.max(8.5, 9.5 * s), 'rgba(242,239,232,.5)', 2);
-    d.han('第一階段上線・依實際使用持續調整', cx, z.y + z.h * (mobile ? .87 : .89), Math.max(11, 12.5 * s), 'rgba(242,239,232,.75)', 600);
+    d.han('第一階段上線・依實際使用持續調整', cx, z.y + z.h * (mobile ? .87 : .91), mobile ? Math.max(11, 12.5 * s) : Math.max(13.5, 13.5 * s), 'rgba(242,239,232,.75)', 600);
     g.textAlign = 'left';
     g.restore();
   }
