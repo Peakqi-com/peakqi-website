@@ -90,19 +90,23 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">導入草稿</span>
           </nav>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
-          <h1 style="margin:0;font:900 clamp(2.2rem,3.8vw,3.8rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
+          <h1 style="margin:0;font:900 clamp(2.05rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
           <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">先選產業、工作流程與現有工具,我們會整理建議能力、人工確認邊界,以及正式評估前仍需釐清的條件。</p>
-          <div style="position:relative;margin-top:2px" aria-hidden="true">
-            <svg viewBox="0 0 1200 90" fill="none" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">
-              <path data-hero-line="wait" d="M8 45 L440 45" stroke="#FF6B2C" stroke-width="2"></path>
-              <circle cx="8" cy="45" r="4" fill="#FF6B2C"></circle>
-              <circle data-hero-node="build" cx="440" cy="45" r="5" fill="#FF6B2C"></circle>
-              <path data-flowline d="M452 45 L1192 45" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" style="animation:pqDash 2.6s linear infinite"></path>
-              <circle cx="1192" cy="45" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5"></circle>
+          <!-- 流程線:標籤改為正常流排版(原本三個 absolute 標籤在窄機會互相重疊),
+               字級用 clamp+vw,iPhone mini(375)也不爆版 -->
+          <div style="margin-top:2px;display:flex;flex-direction:column;gap:5px" aria-hidden="true">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 clamp(9.5px,2.5vw,10.5px) 'Space Grotesk',sans-serif;letter-spacing:.18em">
+              <span style="color:rgba(242,239,232,.55);white-space:nowrap">你的客人</span>
+              <span style="color:#FF6B2C;white-space:nowrap;text-align:right">{{ flowLabel }}</span>
+            </div>
+            <svg viewBox="0 0 1200 24" fill="none" preserveAspectRatio="none" style="width:100%;height:14px;display:block">
+              <path data-flowline d="M6 12 L1194 12" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" vector-effect="non-scaling-stroke" style="animation:pqDash 2.6s linear infinite"></path>
+              <path data-hero-line="wait" d="M6 12 L440 12" stroke="#FF6B2C" stroke-width="2.4" vector-effect="non-scaling-stroke"></path>
+              <circle cx="6" cy="12" r="4" fill="#FF6B2C"></circle>
+              <circle data-hero-node="build" cx="440" cy="12" r="5" fill="#FF6B2C"></circle>
+              <circle cx="1194" cy="12" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
             </svg>
-            <span style="position:absolute;left:0;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.55)">你的客人</span>
-            <span style="position:absolute;left:33%;top:-4px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ flowLabel }}</span>
-            <span style="position:absolute;right:0;bottom:-6px;font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.45)">等你選擇流程與產業,補完這條線 ↓</span>
+            <span style="font:600 clamp(9.5px,2.5vw,10.5px) 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.45);text-align:right">等你選擇流程與產業,補完這條線 ↓</span>
           </div>
           <div data-hero-scenestage style="position:relative;min-height:96px">
             <div data-hero-scene="ind" style="position:relative;display:flex;flex-direction:column;gap:6px">
