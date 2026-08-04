@@ -155,19 +155,68 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
-/* GO-LIVE:幽靈序號填空間、步驟逐張浮現、節點脈動(reduced 直接顯示) */
-.pq-tl2-ghost{position:absolute;right:10px;top:8px;font:700 clamp(44px,4.6vw,64px) 'Space Grotesk',sans-serif;color:rgba(9,11,14,.07);letter-spacing:-.02em;pointer-events:none}
-#pq-tl2 [data-dot]{width:12px!important;height:12px!important;top:-7px!important}
+/* ── GO-LIVE:暗色系 × 美式漫畫分格 ──
+   每一步是一格漫畫:粗實線外框、格與格之間留溝縫、角落 ben-day 網點、
+   序號做成描邊字。轉場走「斜切刷入 + 速度線」的俐落線條,不用柔和淡入。 */
+#p-timeline{background:#0B0D10!important;color:#F2EFE8}
+#p-timeline h2{color:#F2EFE8}
+#p-timeline h2,#p-timeline p,#p-timeline span{color:inherit}
+#p-timeline [data-tlnote]{color:rgba(242,239,232,.55)!important}
+#pq-tl2{gap:14px}                                   /* 分格溝縫 */
+.pq-tl2-step{
+  border:2.5px solid rgba(242,239,232,.92)!important;border-top-width:2.5px!important;
+  background:#12161B;padding:24px 18px 24px 18px!important;position:relative;overflow:hidden;
+  box-shadow:6px 6px 0 rgba(255,107,44,.22);        /* 漫畫式硬陰影,不用模糊 */
+}
+.pq-tl2-step p{color:rgba(242,239,232,.78)!important}
+/* 角落 ben-day 網點 */
+.pq-tl2-step::before{content:'';position:absolute;right:-12px;top:-12px;width:132px;height:132px;pointer-events:none;
+  background-image:radial-gradient(rgba(255,107,44,.6) 1.7px,transparent 1.8px);background-size:9px 9px;
+  -webkit-mask-image:linear-gradient(214deg,#000 8%,transparent 60%);mask-image:linear-gradient(214deg,#000 8%,transparent 60%)}
+/* 速度線(轉場時刷過) */
+.pq-tl2-step::after{content:'';position:absolute;inset:-10%;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(114deg,rgba(242,239,232,.95) 0 2px,transparent 2px 20px)}
+.pq-tl2-ghost{position:absolute;right:12px;top:6px;font:700 clamp(46px,4.8vw,68px) 'Space Grotesk',sans-serif;
+  color:transparent;-webkit-text-stroke:2px rgba(242,239,232,.22);letter-spacing:-.02em;pointer-events:none}
+/* DAY 標:漫畫對白框(硬邊、微斜) */
+.pq-tl2-step>div{display:inline-block;background:#FF6B2C;color:#090B0E!important;padding:5px 11px;
+  transform:skewX(-8deg);border:2px solid #090B0E;box-shadow:2px 2px 0 rgba(242,239,232,.9)}
+#pq-tl2 [data-dot]{width:13px!important;height:13px!important;top:-8px!important;border-radius:0!important;transform:rotate(45deg)}
+#pq-tl2 [data-tline]{height:3px!important}
 @media (prefers-reduced-motion: no-preference){
 #pq-tl2 [data-dot]{animation:pqTlPulse 2.2s ease-in-out infinite}
 .pq-tl2-step:nth-child(3) [data-dot]{animation-delay:.3s}.pq-tl2-step:nth-child(4) [data-dot]{animation-delay:.6s}
 .pq-tl2-step:nth-child(5) [data-dot]{animation-delay:.9s}.pq-tl2-step:nth-child(6) [data-dot]{animation-delay:1.2s}
 @supports (animation-timeline: view()){
-.pq-tl2-step{animation:pqRise2 both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 5% entry 42%}
-.pq-tl2-step:nth-child(3){animation-range:entry 12% entry 50%}.pq-tl2-step:nth-child(4){animation-range:entry 19% entry 58%}
-.pq-tl2-step:nth-child(5){animation-range:entry 26% entry 66%}.pq-tl2-step:nth-child(6){animation-range:entry 33% entry 74%}
+.pq-tl2-step{animation:pqComicCut both linear;animation-timeline:view();animation-range:entry 4% entry 46%}
+.pq-tl2-step::after{animation:pqSpeedLine both linear;animation-timeline:view();animation-range:entry 4% entry 46%}
+.pq-tl2-step:nth-child(3),.pq-tl2-step:nth-child(3)::after{animation-range:entry 11% entry 53%}
+.pq-tl2-step:nth-child(4),.pq-tl2-step:nth-child(4)::after{animation-range:entry 18% entry 60%}
+.pq-tl2-step:nth-child(5),.pq-tl2-step:nth-child(5)::after{animation-range:entry 25% entry 67%}
+.pq-tl2-step:nth-child(6),.pq-tl2-step:nth-child(6)::after{animation-range:entry 32% entry 74%}
 }}
 @keyframes pqTlPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,44,.45)}50%{box-shadow:0 0 0 9px rgba(255,107,44,0)}}
+/* 斜切刷入:右緣是一條斜線,像用麥克筆一刀刷過去(硬邊,無漸層) */
+@keyframes pqComicCut{
+  0%{clip-path:polygon(0 0,0 0,-14% 100%,-14% 100%);transform:translateX(-16px)}
+  62%{clip-path:polygon(0 0,124% 0,110% 100%,-14% 100%);transform:translateX(3px)}
+  100%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:none}
+}
+@keyframes pqSpeedLine{
+  0%{opacity:0;transform:translateX(-46%)}
+  22%{opacity:.5}
+  70%{opacity:.14}
+  100%{opacity:0;transform:translateX(42%)}
+}
+/* 手機:改為直式分格,不橫向捲(一格一格往下看,溝縫維持漫畫感) */
+@media (max-width:899px){
+#pq-tl2{min-width:0!important;flex-direction:column;gap:16px}
+.pq-tl2-step{border-top-width:2.5px!important;padding:20px 16px!important}
+.pq-tl2-step p{max-width:none!important}
+#pq-tl2 [data-tline]{display:none}
+#pq-tl2 [data-dot]{left:16px!important;top:-8px!important}
+.pq-tl2-ghost{font-size:44px}
+}
 @keyframes pqRise2{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 /* COMPARE:整體放大 + 逐列進場 + 推薦欄框光呼吸 */
 #p-cmp-desk [data-crow]>div{padding:20px 22px!important;font-size:15.5px!important}
@@ -580,14 +629,14 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
-<section id="p-timeline" data-screen-label="上線流程" style="background:#F2EFE8">
+<section id="p-timeline" data-screen-label="上線流程" style="background:#0B0D10;color:#F2EFE8">
   <div data-wrap style="position:relative">
     <div data-stage style="padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:center">
       <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">GO-LIVE</span>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-      <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">標準模組最快 10 個工作天完成第一階段上線</h2>
-      <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">{{ timelineNote }}</span>
+      <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">最快 10 個工作天完成第一階段上線</h2>
+      <span data-tlnote style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">{{ timelineNote }}</span>
     </div>
     <div style="margin-top:clamp(28px,4vw,44px);overflow-x:auto;padding-bottom:8px">
       <div id="pq-tl2" style="display:flex;min-width:820px;position:relative">
