@@ -1046,7 +1046,12 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <span style="font:600 10.5px 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ w.cat }}</span>
             </div>
             <span style="font:800 17px/1.35 'Noto Sans TC',sans-serif">{{ w.t }}</span>
-            <span style="font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ w.problem }}<br>→ {{ w.solution }}</span>
+            <sc-if value="{{ w.twoLine }}" hint-placeholder-val="{{ true }}">
+              <span style="font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ w.problem }}<br>→ {{ w.solution }}</span>
+            </sc-if>
+            <sc-if value="{{ w.oneLine }}" hint-placeholder-val="{{ false }}">
+              <span style="font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">{{ w.problem }}</span>
+            </sc-if>
             <div style="display:flex;flex-direction:column;gap:5px">
               <sc-for list="{{ w.results }}" as="r" hint-placeholder-count="0">
                 <span style="display:flex;gap:8px;align-items:baseline;font:600 14px 'Noto Sans TC',sans-serif;color:#65E0BC"><span style="width:4px;height:4px;background:#65E0BC;flex-shrink:0"></span>{{ r }}</span>
@@ -1518,9 +1523,15 @@ class Component extends DCLogic {
         btnHover: on ? 'background:#F2EFE8;color:#090B0E' : 'background:#090B0E;color:#F2EFE8;border-color:#090B0E'
       };
     });
-    const works = (d?.worksFeatured ?? []).map((w, i) => ({
+    // 06 精選作品不重複 05 實際案例:先扣掉 05 已經完整講過的那幾件,
+    // 再用作品集裡「有實際畫面」的其他成品補上,讓兩段各自看到不同的東西。
+    const shownInCases = new Set((d?.caseStudies ?? []).filter(c => c.img).slice(0, 4).map(c => c.slug));
+    const galleryExtra = (d?.portfolioWeb ?? []).filter(w => w.img && !shownInCases.has(w.t))
+      .map(w => ({ t: w.t, cat: w.cat, img: w.img, alt: w.t, problem: w.d, solution: '', results: [], url: w.url }));
+    const works = (d?.worksFeatured ?? []).filter(w => !shownInCases.has(w.t)).concat(galleryExtra).map((w, i) => ({
       ...w,
       hasImg: !!w.img,
+      twoLine: !!w.solution, oneLine: !w.solution,
       imgBoxStyle: {
         width: '100%', height: '150px', backgroundColor: '#171A1F',
         backgroundImage: 'repeating-linear-gradient(45deg, rgba(242,239,232,.05) 0 10px, transparent 10px 20px)',
