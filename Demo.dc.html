@@ -33,6 +33,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
 #pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
@@ -90,7 +94,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">導入草稿</span>
           </nav>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
-          <h1 style="margin:0;font:900 clamp(2.05rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
+          <h1 style="margin:0;font:900 clamp(1.62rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
           <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">先選產業、工作流程與現有工具,我們會整理建議能力、人工確認邊界,以及正式評估前仍需釐清的條件。</p>
           <!-- 流程線:標籤改為正常流排版(原本三個 absolute 標籤在窄機會互相重疊),
                字級用 clamp+vw,iPhone mini(375)也不爆版 -->
@@ -349,7 +353,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
     <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
       <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
-        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(2rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">選出目前最想改善的工作</h2>
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">選出最想改善的工作</h2>
       <p style="margin:12px 0 0;max-width:600px;font:400 clamp(15.5px,1.2vw,17px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">可複選。每選一項,右側流程草稿與建議能力會即時更新。</p>
         <p style="margin:-6px 0 0;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。上面選好的流程與產業已自動帶入。</p>
         <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">

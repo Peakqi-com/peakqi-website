@@ -48,6 +48,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+/* 這兩處標題本來就把每一句包成 span,但 span 是行內元素會連在一起斷 → 各自成行 */
+.pq-cine-studytitle h2 span,#dt-title span{display:block}
+
 #pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
@@ -1915,7 +1921,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <!-- Beat 0:開場 -->
     <div class="pq-cine-intro" data-cine-card="0" data-eyebrow="ENGINE · ONLINE">
       <span class="pq-eyebrow">AI 導入 × 系統整合 × 企業流程</span>
-      <h1 style="margin:0;font:900 clamp(2.1rem,4.6vw,3.9rem)/1.24 'Noto Sans TC',sans-serif">把 AI 接進你的<br><span style="color:#FF6B2C">真實營運流程</span></h1>
+      <h1 style="margin:0;font:900 clamp(1.65rem,4.6vw,3.9rem)/1.24 'Noto Sans TC',sans-serif">把 AI 接進你的<br><span style="color:#FF6B2C">真實營運流程</span></h1>
       <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">從客服、CRM、報價、行銷到專案管理,我們先盤點企業目前的工作方式,再用可驗證的導入方案,串接你正在使用的工具、資料與人員流程。<b style="color:#F2EFE8;font-weight:700">把你現在最卡的流程,先交給我們跑一次。</b></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px">
         <a href="/demo" aria-label="預約 AI 導入評估,先用 15 分鐘確認問題與適用場景" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 AI 導入評估 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
@@ -2123,7 +2129,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="modules" class="pq-sec" style="background:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">SIX MODULES · 六大核心能力模組</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">六個能力模組,<br>對應企業每天在做的<span style="color:#FF6B2C">六件事</span></h2>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">六個能力模組,<br>對應企業每天在做的<span style="color:#FF6B2C">六件事</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">這些是可以組合的核心能力,不是綁在一起的整套系統。導入時通常先選一個高價值場景驗證,再逐步串起其他模組——想從哪一塊開始都可以。</p>
     <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
       <div data-reveal class="pq-mod pqbrk1" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pqmB1" viewBox="0 0 120 160">
@@ -2467,7 +2473,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="onboard" class="pq-sec" style="background:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">ONBOARDING · AI 導入方法</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 導入,<span style="color:#FF6B2C">不必一次換掉所有系統</span></h2>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 導入,<span style="color:#FF6B2C">不必一次換掉所有系統</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">我們先從影響明確、資料可取得、風險可控制的場景開始,驗證有效後,再逐步連接更多流程。第一個場景最快約 10 個工作天就能上線。</p>
     <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px">
       <div data-reveal class="pq-onb" style="--c:#FF6B2C;border-top:2px solid #FF6B2C"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><rect class="st dim" x="12" y="10" width="40" height="44" rx="5"/>
@@ -2504,7 +2510,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="governance" data-screen-label="AI 治理" class="pq-sec" style="background:#0D1115;color:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(242,239,232,.5)">TRUST &amp; CONTROL · AI 治理</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 可以自動處理,<br>但企業仍保有<span style="color:#FF6B2C">控制權</span></h2>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 可以自動處理,<br>但企業仍保有<span style="color:#FF6B2C">控制權</span></h2>
     <p data-reveal style="margin:16px 0 0;max-width:600px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">自動化不代表放手。權限、審核與例外處理都留在你這邊——AI 只在設定好的範圍內運作,重要的事仍由人決定。</p>
     <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
       <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4l10 4v6c0 6-4 10-10 12C10 24 6 20 6 14V8z" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 15l3 3 5-6" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">權限分級</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">依角色與需求設定資料權限,不同人只看到需要的資訊。</p></div>
@@ -2523,7 +2529,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div class="pq-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center">
     <div data-reveal>
       <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">ABOUT · 公司介紹</span></div>
-      <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">從企業每天卡住的<br>流程開始</h2>
+      <h2 style="margin:14px 0 0;font:900 clamp(1.55rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">從企業每天卡住的<br>流程開始</h2>
       <p style="margin:20px 0 0;max-width:460px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">奇鋒國際 PeakQi 不是從 AI 名詞開始,而是從行銷、客服、提案、報價這些每天卡住的流程開始,把它們整合進一套營運系統。連市府級大型活動官網(嘉義市世博會)都如期交付上線。</p>
     </div>
     <div data-reveal style="display:flex;flex-direction:column;gap:0">
@@ -2541,7 +2547,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div data-reveal style="display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between">
       <div>
         <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">BRAND HOUSE</span></div>
-        <h2 style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">旗下品牌</h2>
+        <h2 style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">旗下品牌</h2>
       </div>
       <p style="margin:0;max-width:360px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套底層引擎,換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
     </div>
@@ -2832,7 +2838,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <canvas data-cases-net aria-hidden="true"></canvas>
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">CASE STUDIES</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.8rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">跨產業實戰成效</h2>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">跨產業實戰成效</h2>
     <div style="margin-top:clamp(26px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border-top:1px solid rgba(242,239,232,.14)">
       <div data-reveal style="padding:24px 24px 26px 0"><div class="pq-num" data-to="30" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif">30+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">已上線系統與網站</span></div>
       <div data-reveal style="padding:24px"><div class="pq-num" data-to="8" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#3E9BFF">8+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">產業別實戰經驗</span></div>
@@ -2856,7 +2862,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div class="pq-wrap pq-sec" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,64px);align-items:center">
     <div data-reveal style="display:flex;flex-direction:column;gap:20px">
       <span class="pq-eyebrow">LET'S TALK</span>
-      <h2 style="margin:0;font:900 clamp(2rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">有一個流程<br>想用 AI 改善?</h2>
+      <h2 style="margin:0;font:900 clamp(1.6rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">有一個流程<br>想用 AI 改善?</h2>
       <p style="margin:0;max-width:480px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不需要先準備完整規格。只要告訴我們目前的工作方式與卡住的位置,我們會協助判斷 AI 是否適合,以及第一階段可以從哪裡開始。<br><span style="color:rgba(242,239,232,.5);font-size:14px">商業合作、媒體與投資、加入團隊,歡迎來信 jacky@peakqi.com。</span></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
         <a href="/demo" aria-label="預約 AI 導入評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 AI 導入評估</a>

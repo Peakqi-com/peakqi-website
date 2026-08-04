@@ -33,6 +33,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
 #pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 15px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
@@ -158,7 +162,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">關於 PeakQi</span>
           </nav>
           <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">ABOUT PEAKQI · BUILT FROM REAL WORKFLOWS</span>
-          <h1 style="margin:0;font:900 clamp(2.2rem,3.6vw,3.9rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em">我們不先問你要用哪個 AI,<br>而是先看工作每天<span style="color:#FF6B2C">卡在哪裡</span>。</h1>
+          <h1 style="margin:0;font:900 clamp(1.7rem,3.6vw,3.9rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em">我們不先問你要用哪個 AI,<br>而是先看工作每天<span style="color:#FF6B2C">卡在哪裡</span>。</h1>
           <p style="margin:0;max-width:640px;font:400 clamp(16.5px,1.35vw,19px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.78);text-wrap:pretty">PeakQi 是企業 AI 導入與系統整合團隊。我們把客服、業務、報價、專案與資料流程拆開理解,再用可驗證的方式,把 AI 接進真正有人使用的工作裡。</p>
           <p style="margin:0;max-width:600px;font:400 clamp(15px,1.2vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.56);text-wrap:pretty">不是再增加一套孤立工具,而是讓既有的人、資料與系統真正接起來。</p>
           <div data-hero-scenestage style="position:relative;min-height:128px">
@@ -202,7 +206,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:start">
     <div style="min-width:0">
       <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">WHY WE EXIST</span>
-      <h2 style="margin:16px 0 0;font:900 clamp(2.2rem,4.2vw,3.6rem)/1.18 'Noto Sans TC',sans-serif;text-wrap:pretty">AI 的價值,<br>不在多一個功能。</h2>
+      <h2 style="margin:16px 0 0;font:900 clamp(1.7rem,4.2vw,3.6rem)/1.18 'Noto Sans TC',sans-serif;text-wrap:pretty">AI 的價值,<br>不在多一個功能。</h2>
     </div>
     <div style="min-width:0;display:flex;flex-direction:column;gap:clamp(22px,3vw,30px)">
       <p style="margin:0;max-width:640px;font:400 clamp(17px,1.4vw,20px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.78);text-wrap:pretty">真正有價值的 AI 導入,應該讓企業少一次重複輸入、少一個資訊斷點,也少一筆沒有人接手的工作。</p>
@@ -222,7 +226,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="a-principles" data-screen-label="工作原則" style="padding:clamp(72px,9vw,124px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
   <div style="max-width:1360px;margin:0 auto">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW WE DECIDE</span>
-    <h2 style="margin:16px 0 0;max-width:900px;font:900 clamp(2.2rem,4.2vw,3.6rem)/1.18 'Noto Sans TC',sans-serif;text-wrap:pretty">我們如何判斷<br>一個 AI 專案值不值得做</h2>
+    <h2 style="margin:16px 0 0;max-width:900px;font:900 clamp(1.7rem,4.2vw,3.6rem)/1.18 'Noto Sans TC',sans-serif;text-wrap:pretty">我們如何判斷<br>一個 AI 專案值不值得做</h2>
     <div style="margin-top:clamp(32px,4vw,52px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(16px,2vw,24px)">
       <sc-for list="{{ principles }}" as="pr" hint-placeholder-count="3">
         <div style="border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:clamp(24px,2.6vw,32px);display:flex;flex-direction:column;gap:12px;background:rgba(242,239,232,.03);box-sizing:border-box;min-width:0">
@@ -294,7 +298,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div style="padding:clamp(56px,7vw,96px) clamp(20px,5vw,48px);box-sizing:border-box">
       <div style="max-width:1360px;margin:0 auto;width:100%">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">METHOD</span>
-    <h2 style="margin:12px 0 0;max-width:780px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">同一個團隊,<br>從理解問題到上線後調整</h2>
+    <h2 style="margin:12px 0 0;max-width:780px;font:900 clamp(1.65rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">同一個團隊,<br>從理解問題到上線後調整</h2>
     <p style="margin:16px 0 0;max-width:660px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">每一個階段都有清楚的交付物與確認節點,不會在策略、設計與開發之間反覆轉交。</p>
     <div data-mconsole role="status" style="margin-top:16px;display:inline-flex;align-items:center;gap:10px;background:#090B0E;color:#F2EFE8;border:1px solid rgba(255,107,44,.5);border-radius:6px;padding:11px 16px;font:600 14.5px 'Noto Sans TC',sans-serif;max-width:100%"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;flex-shrink:0;animation:pqPulse 1.8s ease-in-out infinite"></span><span data-mconsole-text>工作台就緒——捲動看每一步在系統裡發生什麼。</span></div>
     <div style="position:relative;margin-top:clamp(28px,4vw,44px);height:3px;background:rgba(9,11,14,.1);border-radius:999px" aria-hidden="true">
@@ -321,7 +325,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div style="padding:clamp(56px,7vw,88px) 0;box-sizing:border-box">
   <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between">
     <div style="min-width:0">
-      <h2 style="margin:0;max-width:760px;font:900 clamp(2rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif;text-wrap:pretty">這些不是效果圖,<br>而是實際交付過的工作畫面</h2>
+      <h2 style="margin:0;max-width:760px;font:900 clamp(1.6rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif;text-wrap:pretty">這些不是效果圖,<br>而是實際交付過的工作畫面</h2>
       <p style="margin:14px 0 0;max-width:660px;font:400 clamp(16px,1.25vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);text-wrap:pretty">以下畫面分別來自客服、CRM、報價、專案、內容與管理系統。完整問題、導入內容與成果,請至案例頁查看。</p>
     </div>
     <a href="/cases" style="font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap">查看全部案例 →</a>
@@ -347,7 +351,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="a-spectrum" data-screen-label="能力光譜" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:rgba(9,11,14,.035)">
   <div style="max-width:1360px;margin:0 auto">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">CAPABILITY SPECTRUM</span>
-    <h2 style="margin:12px 0 0;max-width:820px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">依照問題範圍,<br>我們可以從單一驗證做到完整平台</h2>
+    <h2 style="margin:12px 0 0;max-width:820px;font:900 clamp(1.65rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">從單一流程驗證,<br>做到完整平台</h2>
     <p style="margin:16px 0 0;max-width:660px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">這一區只回答「我們負責到哪一層」。各層的功能細節請見解決方案頁。</p>
     <div style="margin-top:clamp(22px,3vw,36px);display:flex;flex-direction:column">
       <sc-for list="{{ spectrumRows }}" as="sp" hint-placeholder-count="4">
@@ -375,7 +379,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div style="max-width:1360px;margin:0 auto">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">WHO YOU WORK WITH</span>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(24px,4vw,56px);align-items:start;margin-top:16px">
-      <h2 style="margin:0;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">你會和誰<br>一起工作</h2>
+      <h2 style="margin:0;font:900 clamp(1.65rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">你會和誰<br>一起工作</h2>
       <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">AI 導入不是單一工程任務,而是產品、流程、設計、系統與實際使用共同完成的工作。以下是專案中會出現的角色與各自負責的範圍。</p>
     </div>
     <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(14px,1.8vw,20px)">
@@ -419,7 +423,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="a-governance" data-screen-label="合作與治理原則" style="padding:clamp(72px,9vw,124px) clamp(20px,5vw,48px);background:#F2EFE8">
   <div style="max-width:1360px;margin:0 auto">
     <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">HOW WE WORK WITH AI</span>
-    <h2 style="margin:16px 0 0;max-width:860px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">企業保有控制權,<br>AI 才能真正進入工作</h2>
+    <h2 style="margin:16px 0 0;max-width:860px;font:900 clamp(1.65rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">企業保有控制權,<br>AI 才能真正進入工作</h2>
     <div style="margin-top:clamp(30px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(16px,2vw,24px)">
       <sc-for list="{{ governance }}" as="g" hint-placeholder-count="4">
         <div style="border-top:2px solid #FF6B2C;padding:20px 0 0;display:flex;flex-direction:column;gap:10px;box-sizing:border-box;min-width:0">
@@ -435,7 +439,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section data-screen-label="CTA" style="padding:clamp(64px,8vw,100px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
     <div style="min-width:0">
-      <h2 style="margin:0;max-width:640px;font:900 clamp(2.1rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">認識我們之後,<br>下一步先看你的流程。</h2>
+      <h2 style="margin:0;max-width:640px;font:900 clamp(1.65rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">認識我們之後,<br>下一步先看你的流程。</h2>
       <p style="margin:16px 0 0;max-width:600px;font:400 clamp(16px,1.3vw,18px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">帶一個目前最花時間、最容易漏掉,或最想用 AI 改善的工作,我們先確認第一階段值不值得做。</p>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:14px">

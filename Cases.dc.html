@@ -33,6 +33,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
 #pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
@@ -122,7 +126,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
           </nav>
           <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PROOF IN MOTION</span>
-          <h1 data-chero-h1 style="margin:0;font:900 clamp(2rem,4.2vw,3.6rem)/1.25 'Noto Sans TC',sans-serif">不是概念圖,<br>是<span style="color:#FF6B2C">已經運作過</span>的系統。</h1>
+          <h1 data-chero-h1 style="margin:0;font:900 clamp(1.6rem,4.2vw,3.6rem)/1.25 'Noto Sans TC',sans-serif">不是概念圖,<br>是<span style="color:#FF6B2C">已經運作過</span>的系統。</h1>
           <div style="display:flex;gap:clamp(32px,5vw,56px)">
             <div style="display:flex;flex-direction:column;gap:7px">
               <span style="font:700 clamp(1.9rem,3.1vw,2.7rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
@@ -185,7 +189,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div style="display:flex;align-items:center;gap:12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.55)">
       <span style="width:34px;height:1.5px;background:#FF6B2C"></span>BRAND HOUSE · 品牌屋
     </div>
-    <h2 style="margin:14px 0 0;font:900 clamp(1.9rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
+    <h2 style="margin:14px 0 0;font:900 clamp(1.55rem,4vw,3.2rem)/1.18 'Noto Sans TC',sans-serif">一棟會走路的<span style="color:#FF6B2C">品牌屋</span></h2>
     <p style="margin:14px 0 0;max-width:720px;font:400 clamp(14.5px,1.15vw,16.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
       六個房間、六門生意,樓下是同一顆 47 模組 AI 引擎。往下捲動,走進每一層樓。</p>
   </div>
@@ -209,7 +213,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
     </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,<br>三種把 AI 接進流程的方法</h2>
+    <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,<br>三種把 AI 接進流程的方法</h2>
     <p style="margin:14px 0 0;font:400 clamp(16px,1.3vw,18px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">每個案例都從原本的工作方式開始,說明導入了哪些系統、AI 與人如何分工,以及最後改善了什麼。</p>
   </div>
   <sc-for list="{{ stories }}" as="st" hint-placeholder-count="4">
@@ -281,7 +285,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">WORK INDEX — 全部實績</span>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">25+ 件,<br>不只看成品,也看系統怎麼運作</h2>
+      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">不只看成品,也看系統怎麼運作</h2>
       <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">點卡片放大截圖;點背景或關閉鈕關閉,左右可切換</span>
     </div>
     <div role="group" aria-label="類別篩選" style="margin-top:clamp(22px,3vw,32px);display:flex;flex-wrap:wrap;gap:10px">
@@ -335,7 +339,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CUSTOM BUILD</span>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(2rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">從單一流程,<br>到整套企業系統</h2>
+      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">從單一流程,<br>到整套企業系統</h2>
       <p style="margin:0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);max-width:340px">{{ customNote }}</p>
     </div>
     <p style="margin:20px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:640px">{{ customCred }}</p>
@@ -352,7 +356,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
-    <h2 style="margin:0;font:900 clamp(1.8rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 如何接進你的流程?</h2>
+    <h2 style="margin:0;font:900 clamp(1.5rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 如何接進你的流程?</h2>
     <a href="/demo" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
     <a href="#stories" aria-label="查看相近產業案例" style="display:inline-flex;align-items:center;gap:8px;margin-left:14px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看相近產業案例</a>
   </div>

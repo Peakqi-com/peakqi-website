@@ -24,11 +24,13 @@ document.querySelectorAll('h1,h2').forEach((h) => {
     } else if (node.nodeType === 1) node.childNodes.forEach(walk);
   };
   h.childNodes.forEach(walk);
-  // 依 top 分行
+  // 依 top 分行:同一行裡不同字體(例:Space Grotesk 的數字)基線不同,
+  // rect.top 會差好幾 px —— 用行高當分桶單位才不會把同一行拆成兩行(偽陽性來源)。
+  const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2 || 20;
   const lines = [];
   rects.forEach(r => {
-    const L = lines.find(l => Math.abs(l.top - r.top) < 6);
-    if (L) { L.w += r.w; } else lines.push({ top: r.top, w: r.w });
+    const L = lines.find(l => Math.abs(l.top - r.top) < lh * 0.62);
+    if (L) { L.w += r.w; L.top = Math.min(L.top, r.top); } else lines.push({ top: r.top, w: r.w });
   });
   lines.sort((a, b) => a.top - b.top);
   if (!lines.length) return;
