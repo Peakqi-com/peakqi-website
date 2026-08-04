@@ -905,7 +905,7 @@ function paintCases(g, e) {
 // 改成一列一個方案:左方案名 + 模組數、中模組晶片(窄螢幕自動折兩行)、右價格。
 // 字級只跟繪圖區「寬度」走,不再被高度連累。手機維持原欄式(手機本來就不畫字)。
 function pricingRowsDesktop(g, e, ctx) {
-  const z = e.zone, C = e.C, d = e.d;
+  const z = e.zone, C = e.C, d = e.d, mob = !!e.mobile;
   const sb = ctx.sb, meta = ctx.meta, kR = ctx.kR, kC = ctx.kC, kU = ctx.kU, fadeO = ctx.fadeO;
   const sw = clamp(z.w / 560, .72, 1.15);
   const fEn = clamp(10.5 * sw, 9.5, 12);
@@ -921,10 +921,12 @@ function pricingRowsDesktop(g, e, ctx) {
   const rowGap = clamp(z.h * .03, 8, 14);
   const rowsTop = z.y + clamp(z.h * .012, 3, 8);
   const rowsBottom = rowsTop + rowH * 3 + rowGap * 2;
-  const nameW = clamp(z.w * .225, 96, 152);
-  const priceW = clamp(z.w * .205, 92, 140);
-  const chipsX0 = z.x + padX + nameW + 12;
-  const chipsW = (z.x + z.w - padX - priceW - 12) - chipsX0;
+  // 手機繪圖區只有 308-375 寬,中欄放不下五顆晶片(實測只剩 76-143px)。
+  // 改成上下兩段:第一段左名稱右價格,第二段晶片自己一行、吃滿整列寬度。
+  const nameW = mob ? (z.w - padX * 2) * .52 : clamp(z.w * .225, 96, 152);
+  const priceW = mob ? (z.w - padX * 2) * .44 : clamp(z.w * .205, 92, 140);
+  const chipsX0 = mob ? (z.x + padX) : (z.x + padX + nameW + 12);
+  const chipsW = mob ? (z.w - padX * 2) : ((z.x + z.w - padX - priceW - 12) - chipsX0);
   const counts = ['4 模組', '8 模組(含 A)', '12 模組(含 B)'];
 
   meta.forEach(function (m, i) {
@@ -944,16 +946,24 @@ function pricingRowsDesktop(g, e, ctx) {
 
     // 左欄:EN / 中文 / 模組數
     const tx = z.x + padX;
-    const yEn = ry + rowH * .27;
-    const yZh = yEn + fZh + rowH * .09;
-    const yCnt = yZh + fCnt + rowH * .10;
+    const yEn = ry + (mob ? rowH * .21 : rowH * .27);
+    const yZh = yEn + fZh + (mob ? rowH * .06 : rowH * .09);
+    const yCnt = mob ? yZh : (yZh + fCnt + rowH * .10);   // 手機:模組數與中文同一行、靠右
     d.label(m.en, tx, yEn, fEn, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
     d.han(m.zh, tx, yZh, fZh, C.ivory, 800);
     const kc2 = Math.max(ez(sb(m.kk, .5, 1)), ez(kC));
     if (kc2 > .02) {
       g.globalAlpha = a * kc2;
-      d.tick(tx + 5, yCnt - fCnt * .34, clamp(6.5 * sw, 6, 8), C.green, 1);
-      d.label(counts[i], tx + 16, yCnt, fCnt, 'rgba(242,239,232,.75)', .5);
+      if (mob) {   // 與中文同一行、靠右,把左半留給方案名
+        g.font = '600 ' + fCnt + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+        const cw2 = g.measureText(counts[i]).width + (counts[i].length - 1) * .5;
+        const cx2 = z.x + z.w - padX - cw2;
+        d.tick(cx2 - 12, yCnt - fCnt * .34, clamp(6.5 * sw, 6, 8), C.green, 1);
+        d.label(counts[i], cx2, yCnt, fCnt, 'rgba(242,239,232,.75)', .5);
+      } else {
+        d.tick(tx + 5, yCnt - fCnt * .34, clamp(6.5 * sw, 6, 8), C.green, 1);
+        d.label(counts[i], tx + 16, yCnt, fCnt, 'rgba(242,239,232,.75)', .5);
+      }
       g.globalAlpha = a;
     }
 
@@ -981,7 +991,7 @@ function pricingRowsDesktop(g, e, ctx) {
     if (!rows2) rows2 = [chips.map(function (c) { return { t: c.t, dash: c.dash, w: chipsW / chips.length - chipGap }; })];
     if (rows2.length === 2 && rows2[1].length === 1 && rows2[0].length >= 3) rows2[1].unshift(rows2[0].pop());
     const chipsH = rows2.length * chipH + (rows2.length - 1) * lineGap;
-    let cy = ry + (rowH - chipsH) / 2, seq = 0;
+    let cy = mob ? (yZh + rowH * .12) : (ry + (rowH - chipsH) / 2), seq = 0;
     rows2.forEach(function (rowChips) {
       let cx = chipsX0;
       rowChips.forEach(function (c) {
@@ -1010,7 +1020,14 @@ function pricingRowsDesktop(g, e, ctx) {
     // 右欄:價格(兩行都置中;d.label 逐字繪製不吃 textAlign,所以自己量寬)
     const bx = z.x + z.w - padX - priceW;
     const kp = Math.max(ez(sb(m.kk, .5, 1)), ez(kC));
-    if (kp > .02) {
+    if (kp > .02 && mob) {   // 手機:價格不畫外框(高度不夠),放在第一行右側
+      g.globalAlpha = a * kp;
+      g.font = '700 ' + fPrice + 'px "Noto Sans TC",sans-serif';
+      const pw2 = g.measureText(m.price).width;
+      g.fillStyle = m.c === C.blue ? C.blue : C.orange;
+      g.fillText(m.price, z.x + z.w - padX - pw2, yEn + 1);
+      g.globalAlpha = a;
+    } else if (kp > .02) {
       const boxH = fPrice + fMo + 20, by = ry + (rowH - boxH) / 2;
       g.globalAlpha = a * kp;
       d.rr(bx, by, priceW, boxH, 5);
@@ -1025,7 +1042,7 @@ function pricingRowsDesktop(g, e, ctx) {
     }
     // 「最多人選」放在列「內」右上角、價格框正上方的空白帶。
     // 原本做成騎在列縫上的晶片:列縫只有 11px、晶片高 20px,結果又小又被上下兩列切掉。
-    if (m.badge && on > .45) {
+    if (m.badge && on > .45 && !mob) {   // 手機那一行右側已經給了模組數,不再塞徽章
       const bp = clamp(9.5 * sw, 8.5, 11);
       g.font = '600 ' + bp + 'px "Space Grotesk","Noto Sans TC",sans-serif';
       const bw = g.measureText(m.badge).width + (m.badge.length - 1) * .6;
@@ -1088,7 +1105,9 @@ function paintPricing(g, e) {
     { zh: '業務助理', en: 'ASSISTANT', kk: k2, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['CRM', '追蹤', '跟進序列', '分析'], base: '含 A 全部', badge: '最多人選' },
     { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: '依需求報價', mo: '預約諮詢', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
   ];
-  if (mobile) {   // 手機維持原欄式(手機路徑本來就不畫文字,只畫卡框與晶片)
+  // 手機原本走欄式,但欄式在手機只畫卡框與空晶片、一個字都沒有(等於看不懂),
+  // 現在同樣走橫向三列,只是列內改成上下兩段。舊欄式保留在 else 分支不再使用。
+  if (false) {   // 舊欄式(保留備查)
     meta.forEach((m, i) => {
       const a = ez(clamp(kR * 3 - i * .45, 0, 1)) * fadeO;
       if (a <= 0.12) return; // 終幕淡出末端 gh/slotH 會變負(IndexSizeError → canvas 全滅),提早跳出
