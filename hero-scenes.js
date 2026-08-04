@@ -77,24 +77,30 @@ export function makeDraw(g) {
       g.fillStyle = color || C.ivory;
       g.fillText(txt, x, y);
     },
+    // ★ 這三個工具原本結尾寫死 g.globalAlpha = 1,而不是還原呼叫前的值。
+    //   後果:面板正在淡出時,緊接著畫的文字卻用滿版不透明度 ——
+    //   Method 實測「實際使用者測試中」a=1.00 疊在「每週小幅調整」a=0.40 上面。
+    //   改用 save/restore(與 d.tick / d.line 一致),整類疊印問題一次消掉。
     panel(x, y, w, h, a, hot) {
-      g.globalAlpha = a;
+      g.save();
+      g.globalAlpha *= a;
       d.rr(x, y, w, h, 6);
       g.fillStyle = 'rgba(20,23,28,.88)';
       g.fill();
       g.strokeStyle = hot ? 'rgba(255,107,44,.6)' : 'rgba(242,239,232,.18)';
       g.lineWidth = hot ? 1.4 : 1;
       g.stroke();
-      g.globalAlpha = 1;
+      g.restore();
     },
     head(x, y, w, title, a, color) { // 面板標題列
-      g.globalAlpha = a;
+      g.save();
+      g.globalAlpha *= a;
       g.strokeStyle = 'rgba(242,239,232,.14)'; g.lineWidth = 1;
       g.beginPath(); g.moveTo(x, y + 22); g.lineTo(x + w, y + 22); g.stroke();
       g.fillStyle = color || C.orange;
       g.beginPath(); g.arc(x + 8, y + 11, 2.6, 0, TAU); g.fill();
       d.label(title, x + 18, y + 15, 10, 'rgba(242,239,232,.6)', 1.4);
-      g.globalAlpha = 1;
+      g.restore();
     },
     line(x1, y1, x2, y2, k2, color, w2, dash) { // 進度線
       if (k2 <= 0) return;
@@ -121,11 +127,12 @@ export function makeDraw(g) {
       g.stroke();
     },
     node(x, y, r, color, a, hollow) {
+      g.save();
       g.globalAlpha = a;
       g.beginPath(); g.arc(x, y, r, 0, TAU);
       if (hollow) { g.strokeStyle = color; g.lineWidth = 1.4; g.stroke(); }
       else { g.fillStyle = color; g.fill(); }
-      g.globalAlpha = 1;
+      g.restore();
     },
     tick(x, y, sz, color, a) { // ✓
       g.save(); g.globalAlpha = a; g.strokeStyle = color || C.green; g.lineWidth = 1.8; g.lineCap = 'round';
@@ -671,8 +678,11 @@ function paintCases(g, e) {
     const kv = ks[id];
     if (kv <= 0.02) return;
     const nxt = order[idx + 1];
-    const fd = nxt ? 1 - ez(sb(ks[nxt], .04, .3)) * .97 : 1;
-    const a = ez(sb(kv, .02, .3)) * fd;
+    // 卡片全部畫在同一個 px0/py0。原本舊卡淡出與新卡淡入的區間重疊
+    // (實測舊卡 a=0.59、新卡 a=0.48 同時在畫),兩張卡的編號與產業名直接疊印成亂碼。
+    // 改成不重疊的接力:舊卡在下一景 12% 前就退乾淨,新卡 13% 之後才開始進場。
+    const fd = nxt ? 1 - ez(sb(ks[nxt], 0, .12)) : 1;
+    const a = ez(sb(kv, .13, .34)) * fd;
     if (a <= 0.02) return;
     g.save();
     // 空間不足時整組等比縮小(以面板上緣中點為錨),版面座標維持在理想尺寸
@@ -1250,6 +1260,10 @@ function paintAbout(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const s = clamp(Math.min(z.w / 780, z.h / 520), .5, 1.2);
+  // 字級只跟繪圖區「寬度」走(等於 canvas 內的 vw),不跟 s 共用。
+  // s = min(w/W0, h/H0) 在「寬而矮」的區塊會被高度那一項壓垮:本頁桌機實測
+  // s=0.704,9.5*s 只有 6.7px,全靠 d.label 內建的 9px 硬下限才沒有消失。
+  const ts = clamp(z.w / 780, .62, 1.2);
   const kF = k('frag'), kL = k('link'), kG = k('group'), kP = k('pipe'), kD = k('days'), kN = k('net'), kO = k('core');
   // S1 PEAKQI 結構網格大字(隨分群淡出)
   const gridA = ez(kF) * (1 - ez(kG)) * (1 - ez(kP));
@@ -1265,18 +1279,41 @@ function paintAbout(g, e) {
       g.strokeRect(x, z.y + z.h * .58 - fs * .74, g.measureText(ch).width, fs * .8);
       x += g.measureText(ch).width + fs * .08;
     }
-    d.label('BUILT FROM REAL WORKFLOWS', z.x + 4, z.y + 18, 9.5 * s, 'rgba(242,239,232,.45)', 2.2);
+    (() => {   // 疊在截圖牆上,沒有底板等於看不到
+      const fsK = Math.max(10.5, 9.5 * ts);
+      g.font = '600 ' + fsK + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+      const tw = g.measureText('BUILT FROM REAL WORKFLOWS').width + 24 * 2.2;
+      const keep = g.globalAlpha;
+      d.rr(z.x, z.y + 18 - fsK - 5, tw + 16, fsK + 12, 4);
+      g.globalAlpha = keep * .78; g.fillStyle = 'rgba(9,11,14,.9)'; g.fill(); g.globalAlpha = keep;
+      d.label('BUILT FROM REAL WORKFLOWS', z.x + 8, z.y + 18, fsK, 'rgba(242,239,232,.7)', 2.2);
+    })();
     g.restore();
   }
   // S2 計數註記
-  if (kL > 0 && kG < 1) {
-    g.globalAlpha = ez(kL) * (1 - ez(kG));
-    d.label('30+ LIVE SYSTEMS — CONNECTED', z.x + 4, z.y + z.h - 12, 9.5 * s, C.orange, 1.8);
+  // 這兩行原本畫在同一個 y,而且交接期間兩者都是半透明可見 —— 直接疊印成一團亂碼。
+  // 改成硬交接:以 kG 為界,同一時間只會有一行存在,各自在自己的半區淡入淡出。
+  // 另外它們疊在 DOM 截圖牆上,不給底板等於看不到,所以先鋪一塊窄底板再寫字。
+  const noteFs = Math.max(10.5, 9.5 * ts);
+  const notePlate = (txt, ls) => {
+    g.font = '600 ' + noteFs + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+    const w = g.measureText(txt).width + (txt.length - 1) * ls;
+    const bx = z.x, by = z.y + z.h - 12 - noteFs - 5;
+    d.rr(bx, by, w + 16, noteFs + 12, 4);
+    const keep = g.globalAlpha;
+    g.globalAlpha = keep * .82; g.fillStyle = 'rgba(9,11,14,.9)'; g.fill();
+    g.globalAlpha = keep;
+  };
+  const swG = ez(kG);
+  if (kL > 0 && swG < .5) {
+    g.globalAlpha = ez(kL) * (1 - swG * 2);
+    notePlate('30+ LIVE SYSTEMS — CONNECTED', 1.8);
+    d.label('30+ LIVE SYSTEMS — CONNECTED', z.x + 8, z.y + z.h - 12, noteFs, C.orange, 1.8);
     g.globalAlpha = 1;
-  }
-  if (kG > 0 && kP < 1) {
-    g.globalAlpha = ez(kG) * (1 - ez(kP));
-    g.save(); g.globalAlpha *= (1 - ez(kN)); d.label('8+ INDUSTRIES — GROUPED', z.x + 4, z.y + z.h - 12, 9.5 * s, C.blue, 1.8); g.restore();
+  } else if (swG >= .5 && kP < 1) {
+    g.globalAlpha = Math.min(1, (swG - .5) * 2) * (1 - ez(kP)) * (1 - ez(kN));
+    notePlate('8+ INDUSTRIES — GROUPED', 1.8);
+    d.label('8+ INDUSTRIES — GROUPED', z.x + 8, z.y + z.h - 12, noteFs, C.blue, 1.8);
     g.globalAlpha = 1;
   }
   // S4 導入流程資料線
@@ -1294,8 +1331,8 @@ function paintAbout(g, e) {
       const nx = x0 + (x1 - x0) * fx;
       g.globalAlpha = a * ka;
       d.node(nx, py, i === 4 ? 4 * s : 3 * s, i === 4 ? C.green : C.orange, 1, kP < fx);
-      d.han(nm, nx - 26 * s, py + 20 * s, 10.5 * s, 'rgba(242,239,232,.82)', 700);
-      d.label('0' + (i + 1), nx - 6 * s, py - 12 * s, 8 * s, 'rgba(242,239,232,.4)', 1);
+      d.han(nm, nx - 26 * s, py + 20 * s, Math.max(12.5, 10.5 * ts), 'rgba(242,239,232,.82)', 700);
+      d.label('0' + (i + 1), nx - 6 * s, py - 12 * s, Math.max(10.5, 8 * ts), 'rgba(242,239,232,.4)', 1);
       g.globalAlpha = a;
     });
     g.restore();
@@ -1315,12 +1352,12 @@ function paintAbout(g, e) {
       const nx = x0 + (x1 - x0) * fx;
       g.globalAlpha = a * ka;
       d.node(nx, dy, 3 * s, i === 4 ? C.green : C.blue, 1);
-      d.label(nm, nx - 16 * s, dy - 10 * s, 8.5 * s, i === 4 ? C.green : 'rgba(242,239,232,.65)', .8);
+      d.label(nm, nx - 16 * s, dy - 10 * s, Math.max(10.5, 8.5 * ts), i === 4 ? C.green : 'rgba(242,239,232,.65)', .8);
       g.globalAlpha = a;
     });
     d.tick(x0, dy + 20 * s, 6 * s, C.green, a * ez(sb(kD, .7, 1)));
     g.globalAlpha = a * ez(sb(kD, .7, 1));
-    d.han('最快 10 個工作天上線', x0 + 14 * s, dy + 24 * s, 11 * s, C.ivory, 800);
+    d.han('最快 10 個工作天上線', x0 + 14 * s, dy + 24 * s, Math.max(12.5, 11 * ts), C.ivory, 800);
     g.restore();
   }
   // S7 品牌核心
@@ -1330,14 +1367,14 @@ function paintAbout(g, e) {
     g.save(); g.globalAlpha = a;
     d.ring(cx, cy, 46 * s, kO, C.orange, 2.4);
     d.ring(cx, cy, 62 * s, ez(sb(kO, .3, 1)), 'rgba(242,239,232,.2)', 1);
-    g.font = '800 ' + 15 * s + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory; g.textAlign = 'center';
+    g.font = '800 ' + Math.max(15, 15 * ts) + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory; g.textAlign = 'center';
     g.fillText('PEAKQI', cx, cy - 2);
-    g.font = '600 ' + 8 * s + 'px "Space Grotesk",sans-serif'; g.fillStyle = 'rgba(242,239,232,.55)';
+    g.font = '600 ' + Math.max(10.5, 8 * ts) + 'px "Space Grotesk",sans-serif'; g.fillStyle = 'rgba(242,239,232,.55)';
     g.fillText('OPERATING CORE', cx, cy + 14 * s);
     g.textAlign = 'left';
     const on = e.tier === 'full' ? .5 + .5 * (Math.sin(t * 2.4) * .5 + .5) : 1;
     d.node(cx, cy - 26 * s, 2.6, C.green, a * on);
-    d.label('BUILT FROM REAL WORKFLOWS — SINCE DAY ONE OF YOUR PROCESS', z.x + 4, z.y + z.h - 10, 8.5 * s, 'rgba(242,239,232,.5)', 1.4);
+    d.label('BUILT FROM REAL WORKFLOWS — SINCE DAY ONE OF YOUR PROCESS', z.x + 4, z.y + z.h - 10, Math.max(10.5, 8.5 * ts), 'rgba(242,239,232,.5)', 1.4);
     g.restore();
   }
 }
@@ -1347,6 +1384,7 @@ function paintDemo(g, e) {
   const { zone: z, k, C, d, mobile, t, w, h } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const s = clamp(Math.min(z.w / 520, z.h / 420), .5, 1.2);
+  const ts = clamp(z.w / 520, .68, 1.2);   // 字級只跟寬度走,理由同 paintAbout
   const kW = k('wait'), kI = k('ind'), kF = k('flow'), kB = k('build'), kM = k('match'), kS = k('sum'), kG = k('go');
   const midY = z.y + z.h * .28;
   // S1 未完成資料線 → 控制台
@@ -1364,7 +1402,7 @@ function paintDemo(g, e) {
       g.beginPath(); g.moveTo(cx + dx * cl, cy); g.lineTo(cx, cy); g.lineTo(cx, cy + dy * cl); g.stroke();
     });
     if (kI < .3) {
-      d.label('等待輸入你的場景', z.x + 2, z.y - 10 * s, 9.5 * s, 'rgba(242,239,232,.55)', 1.6);
+      d.label('等待輸入你的場景', z.x + 2, z.y - 10 * s, Math.max(10.5, 9.5 * ts), 'rgba(242,239,232,.55)', 1.6);
       if (e.tier === 'full' && Math.sin(t * 3.4) > 0) { g.fillStyle = C.orange; g.fillRect(z.x + 118 * s, z.y - 18 * s, 2, 10 * s); }
     }
     g.restore();
@@ -1377,7 +1415,7 @@ function paintDemo(g, e) {
       const ka = ez(clamp(kI * 3 - i * .3, 0, 1));
       d.node(z.x - 14, z.y + z.h * .18 + i * 12 * s, 2.2, C.orange, a * ka);
     }
-    if (!mobile) d.label('INDUSTRY', z.x - 14, z.y + z.h * .18 - 10 * s, 7.5 * s, C.orange, 1.2);
+    if (!mobile) d.label('INDUSTRY', z.x - 14, z.y + z.h * .18 - 10 * s, Math.max(10.5, 7.5 * ts), C.orange, 1.2);
     g.restore();
   }
   if (kF > 0 && kB < 1) {
@@ -1387,7 +1425,7 @@ function paintDemo(g, e) {
       const ka = ez(clamp(kF * 3 - i * .3, 0, 1));
       d.node(z.x - 14, z.y + z.h * .52 + i * 12 * s, 2.2, C.blue, a * ka);
     }
-    if (!mobile) d.label('FRICTION', z.x - 14, z.y + z.h * .52 - 10 * s, 7.5 * s, C.blue, 1.2);
+    if (!mobile) d.label('FRICTION', z.x - 14, z.y + z.h * .52 - 10 * s, Math.max(10.5, 7.5 * ts), C.blue, 1.2);
     g.restore();
   }
   // S4 組裝連線
@@ -1405,7 +1443,7 @@ function paintDemo(g, e) {
     [[z.x + 2, fy, 1, 1], [z.x + z.w - 2, fy, -1, 1], [z.x + 2, fy + fh, 1, -1], [z.x + z.w - 2, fy + fh, -1, -1]].forEach(([cx, cy, dx, dy]) => {
       g.beginPath(); g.moveTo(cx + dx * cl, cy); g.lineTo(cx, cy); g.lineTo(cx, cy + dy * cl); g.stroke();
     });
-    d.label('SIMILAR SCENE', z.x + 2, fy - 6 * s, 8 * s, C.green, 1.4);
+    d.label('SIMILAR SCENE', z.x + 2, fy - 6 * s, Math.max(10.5, 8 * ts), C.green, 1.4);
     g.restore();
   }
   // S6 摘要勾
@@ -1417,7 +1455,7 @@ function paintDemo(g, e) {
       if (ka <= 0) return;
       g.globalAlpha = a * ka;
       d.tick(z.x + 8 + i * 74 * s, z.y + z.h + 16 * s, 5.5 * s, C.green, 1);
-      d.han(tx, z.x + 18 + i * 74 * s, z.y + z.h + 20 * s, 9.5 * s, 'rgba(242,239,232,.7)', 600);
+      d.han(tx, z.x + 18 + i * 74 * s, z.y + z.h + 20 * s, Math.max(12.5, 9.5 * ts), 'rgba(242,239,232,.7)', 600);
     });
     g.restore();
   }
@@ -1430,7 +1468,7 @@ function paintDemo(g, e) {
     const off = e.tier === 'full' ? Math.sin(t * 2.6) * 3 : 0;
     g.strokeStyle = C.orange; g.lineWidth = 2; g.lineCap = 'round';
     g.beginPath(); g.moveTo(gx - 6 * s, gy1 - 8 * s + off); g.lineTo(gx, gy1 + off); g.lineTo(gx + 6 * s, gy1 - 8 * s + off); g.stroke();
-    d.label('TO FORM', gx + 12 * s, gy1 - 4 * s, 8.5 * s, C.orange, 1.6);
+    d.label('TO FORM', gx + 12 * s, gy1 - 4 * s, Math.max(10.5, 8.5 * ts), C.orange, 1.6);
     d.rr(z.x - 4, z.y - 4, z.w + 8, z.h + 8, 12);
     g.strokeStyle = 'rgba(255,107,44,.5)'; g.lineWidth = 1.4; g.stroke();
     g.restore();
