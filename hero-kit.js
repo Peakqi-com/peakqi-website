@@ -106,13 +106,12 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
       ? { x: W * .04, y: H * .5, w: W * .92, h: H * .46 }
       : { x: W * .5, y: H * .14, w: W * .46, h: H * .72 };
     if (opt.mobile) {
-      // 手機:繪圖區永遠從「文案實際底部」開始,不與文字搶同一塊(收合時 resize 會重算)
+      // 手機:繪圖區滿版寬,自「文案實際底部」起,往下吃到浮動 CTA pill 之上
+      // (pill = fixed bottom:18px + 44px 高 → 保留 74px;不再用 .56H 上限,收合後畫面要大方)
       const copyEl = stage.querySelector('[data-hero-copy]');
-      if (copyEl) {
-        const cb = rectIn(copyEl).y + copyEl.offsetHeight + 14;
-        const top = Math.max(cb, H * .25); // 嚴格貼文案底,絕不上頂(寧可靜止只露一角,不可疊到 CTA)
-        z = { x: z.x, y: top, w: z.w, h: Math.max(140, Math.min(H - top - 12, Math.round(H * 0.56))) };
-      }
+      const cb = copyEl ? rectIn(copyEl).y + copyEl.offsetHeight + 12 : H * .3;
+      const top = Math.max(cb, H * .2);   // 嚴格貼文案底,絕不上頂(寧可靜止只露一角,不可疊到 CTA)
+      z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, H - 74 - top) };
     }
     const pad = 6;
     zone = { x: z.x + pad, y: z.y + pad, w: Math.max(60, z.w - pad * 2), h: Math.max(60, z.h - pad * 2) };
@@ -129,6 +128,7 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
   function draw(now) {
     if (errors > 3) return;
     try {
+      if (opt.mobile) computeZone(); // 收合過渡中文案底部持續上移:zone 每繪一幀跟一次,畫面滑上去而非 480ms 後瞬跳
       g.clearRect(0, 0, W, H);
       paint(g, {
         w: W, h: H, t: now / 1000, p, zone,
@@ -434,10 +434,24 @@ function HeroMobileCollapse(ctx, root, canvasCtl) {
     el.tagName !== 'NAV' && el.tagName !== 'SPAN');
   const all = cta ? els.concat([cta]) : els;
   all.forEach(el => { el.classList.add('pq-clp'); }); // max-height 由 CSS 靜態給(模板非同步渲染,init 量 scrollHeight 會量到 0)
-  let compact = null, keep = null, tmr = 0;
+  let compact = null, keep = null, tmr = 0, measured = false;
   const reflow = () => { clearTimeout(tmr); tmr = setTimeout(() => { try { canvasCtl && canvasCtl.resize(); } catch (e) {} }, 480); };
+  // CSS 的 440px 是「模板非同步渲染時的安全值」,但實際內容常只有兩百多 px ——
+  // 從 440 收到 0,前半段是看不見的空跑,手感就是「按鈕那邊卡一下」。
+  // 展開狀態下量到真實高度後改寫成該值,收合行程才與視覺一致。
+  const measure = () => {
+    if (measured) return;
+    let ok = true;
+    all.forEach((el) => {
+      const hh = el.scrollHeight;
+      if (hh > 0) el.style.maxHeight = hh + 'px'; else ok = false;
+    });
+    measured = ok;
+  };
   return { update(p) {
-    const c = p > 0.045;
+    if (!compact) measure();
+    // 一捲即收(死區會讓人感覺「卡在按鈕那裡」);展開只在幾乎回頂,遲滯防止閾值附近反覆開合
+    const c = compact ? p > 0.004 : p > 0.012;
     const k = p >= 0.9;
     if (c !== compact) { compact = c; copyCol.classList.toggle('pq-hero-compact', c); reflow(); }
     if (cta && k !== keep) { keep = k; cta.classList.toggle('pq-clp-keep', k); reflow(); }

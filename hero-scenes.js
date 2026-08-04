@@ -25,6 +25,34 @@ function getGrain() {
   return c;
 }
 
+// 手機共用進度軌:計數獨立一行右對齊,圓點滿版打到最右(端點半徑內縮才不會被裁)
+// 回傳「內容起始 y」,呼叫端據此往下排版。
+function mRail(g, d, C, t, x, w, y, n, cur, fs) {
+  g.save();
+  g.font = '700 ' + fs + 'px "Space Grotesk",monospace';
+  g.fillStyle = C.orange; g.textAlign = 'right'; g.globalAlpha = 1;
+  g.fillText(String(cur + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0'), x + w, y + fs);
+  g.textAlign = 'left';
+  const ry = y + fs + 16, r0 = 6;
+  const x0 = x + r0, x1 = x + w - r0;
+  for (let i = 0; i < n; i++) {
+    const dx = x0 + (x1 - x0) * i / Math.max(1, n - 1);
+    const on = i < cur, isCur = i === cur;
+    if (i < n - 1) {
+      const nx = x0 + (x1 - x0) * (i + 1) / (n - 1);
+      d.line(dx + r0 + 3, ry, nx - r0 - 3, ry, on ? 1 : 0, 'rgba(101,224,188,.45)', 1.6);
+    }
+    if (isCur) { // 當前站:外圈脈動(子動畫)
+      g.globalAlpha = .18 + .16 * Math.sin(t * 2.8);
+      g.beginPath(); g.arc(dx, ry, r0 + 4.5, 0, TAU); g.fillStyle = C.orange; g.fill();
+      g.globalAlpha = 1;
+    }
+    d.node(dx, ry, isCur ? r0 : 3.6, isCur ? C.orange : (on ? C.green : 'rgba(242,239,232,.32)'), isCur ? 1 : (on ? .95 : .5), !on && !isCur);
+  }
+  g.restore(); g.globalAlpha = 1;
+  return ry + r0 + 14;
+}
+
 // 工具集:綁定 2d context
 export function makeDraw(g) {
   const C = HERO_SHARED.colors;
@@ -145,9 +173,10 @@ function paintSolutions(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .6, 1.25);
-  const fs = Math.max(13.5, 12.5 * S);    // 站名
-  const fsS = Math.max(11, 10 * S);       // 輔助/編號
-  const fsB = Math.max(12.5, 11.5 * S);   // 站內內容(手機可讀鐵律:再拉高)
+  let fs = Math.max(13.5, 12.5 * S);      // 站名
+  let fsS = Math.max(11, 10 * S);         // 輔助/編號
+  let fsB = Math.max(12.5, 11.5 * S);     // 站內內容(手機可讀鐵律:再拉高)
+  if (mobile) { fs = Math.max(17, fs); fsS = Math.max(13, fsS); fsB = Math.max(16, fsB); } // 手機大字方針:大方、爽
 
   const IDS = ['sig', 'layers', 'cap', 'fol', 'nur', 'align', 'console'];
   const NAMES = ['詢問進來', '辨識需求', '回應與建檔', '安排下一步', '延續脈絡', '流程接通', '營運視圖'];
@@ -161,44 +190,38 @@ function paintSolutions(g, e) {
   //    子動畫:物件自身持續動作(打字點/掃描光/浮動/巡遊 token/衛星軌道/接通火花/數字閃爍)
   if (mobile) {
     const kv = ks[cur];
-    const nk = cur < IDS.length - 1 ? ks[cur + 1] : 0;
-    const px0 = z.x + Math.max(6, z.w * .015);
-    const pw = z.w - Math.max(12, z.w * .03);
-    // 進度軌:七點 + 等寬計數
-    const ry = z.y + 16;
-    g.save();
-    for (let i = 0; i < IDS.length; i++) {
-      const dx = px0 + 10 + (pw - 86) * i / (IDS.length - 1);
-      const on = i < cur, curD = i === cur;
-      d.node(dx, ry, curD ? 4.4 : 2.6, curD ? C.orange : (on ? C.green : 'rgba(242,239,232,.3)'), curD ? (.7 + .3 * Math.sin(t * 3)) : (on ? .9 : .45), !on && !curD);
-      if (i < IDS.length - 1) d.line(dx + 6, ry, px0 + 10 + (pw - 86) * (i + 1) / (IDS.length - 1) - 6, ry, i < cur ? 1 : 0, 'rgba(101,224,188,.4)', 1);
-    }
-    g.font = '700 ' + Math.max(12.5, fsS) + 'px "Space Grotesk",monospace';
-    g.fillStyle = C.orange; g.textAlign = 'right';
-    g.fillText('0' + (cur + 1) + ' / 07', px0 + pw, ry + fsS * .4);
-    g.textAlign = 'left';
+    const px0 = z.x + 2;
+    const pw = z.w - 4;
+    // 面板依該景實際內容裁高(有多少畫多少),整組再於可用高度內置中,下方不留大片空白
+    const railH = fsS + 36;
+    const availH = z.h - railH - 6;
+    const vhOf = (i) => Math.min(availH, [176, 258, 258, 196, 258, 196, 248][i]);
+    if (vhOf(cur) < 150) return;   // 靜止空間不足:不硬擠
+    const vy = mRail(g, d, C, t, px0, pw, z.y + 2 + Math.min(56, Math.max(0, (availH - vhOf(cur)) / 2)), IDS.length, cur, fsS);
 
-    const vy = ry + 18;
-    const vh2 = Math.min(z.y + z.h - vy - 6, 340); // 面板封頂:構圖緊湊不留空腹
-    if (vh2 < 150) { g.restore(); return; }   // 靜止空間不足:只露進度軌,不硬擠
-
-    // 母動畫變換
-    const eIn = ez(sb(kv, .02, .32));
-    const eOut = ez(sb(nk, .02, .3));
-    const alpha = eIn * (1 - eOut);
-    if (alpha > 0.02) {
-      const cxp = px0 + pw / 2, cyp = vy + vh2 / 2;
-      g.translate(cxp, cyp + (1 - eIn) * 36 - eOut * 40);
-      g.rotate(((1 - eIn) * -3.5 + eOut * 2.5) * Math.PI / 180);
+    // 母動畫:上一景上飄順旋淡出的同時,這一景由下升起逆旋淡入 —— 交叉換場,不會出現空畫面
+    // aP = 卡片本體透明度(先實體到位,擋住上一景的殘影);aa = 卡內內容透明度(隨後長出來)
+    const stage = (i, kvi, aa, dy, rot, aP) => {
+      const h2 = vhOf(i);
+      g.save();
+      const cxp = px0 + pw / 2, cyp = vy + h2 / 2;
+      g.translate(cxp, cyp + dy);
+      g.rotate(rot * Math.PI / 180);
       g.translate(-cxp, -cyp);
-      g.globalAlpha = alpha;
-      // 舞台面板
-      d.rr(px0, vy, pw, vh2, 12);
-      g.fillStyle = 'rgba(17,20,24,.92)'; g.fill();
+      g.globalAlpha = aP;
+      d.rr(px0, vy, pw, h2, 12);
+      g.fillStyle = 'rgba(15,18,22,.97)'; g.fill();
       g.strokeStyle = 'rgba(255,107,44,.35)'; g.lineWidth = 1.2; g.stroke();
-      mScene(cur, kv, alpha, px0 + 14, vy + 12, pw - 28, vh2 - 24);
+      mScene(i, kvi, aa, px0 + 14, vy + 12, pw - 28, h2 - 24);
+      g.restore(); g.globalAlpha = 1;
+    };
+    const eIn = ez(sb(kv, .02, .28));
+    const card = ez(sb(kv, .005, .1));   // 卡片本體:一進場就成形
+    if (cur > 0) { // 前一景先讓位:壓暗、上飄離場
+      const go = ez(sb(kv, 0, .18));
+      if (1 - go > .02) stage(cur - 1, 1, (1 - go) * .8, -go * 76, go * 3, (1 - go) * .85);
     }
-    g.restore(); g.globalAlpha = 1;
+    if (card > .02) stage(cur, kv, eIn, (1 - card) * 36, (1 - card) * -3.5, card);
     return;
   }
 
@@ -383,7 +406,9 @@ function paintSolutions(g, e) {
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
         g.fillStyle = on ? C.blue : 'rgba(242,239,232,.45)';
         g.textAlign = j2 === 0 ? 'left' : (j2 === 3 ? 'right' : 'center');
-        g.fillText(tx2, j2 === 0 ? nx - 4 : (j2 === 3 ? nx + 4 : nx), ty2 + Math.max(18, 20 * S));
+        // 交錯兩排:窄機(360)四個站名同一排會互相撞在一起
+        g.fillText(tx2, j2 === 0 ? nx - 4 : (j2 === 3 ? nx + 4 : nx),
+          ty2 + (j2 % 2 ? Math.max(38, 40 * S) : Math.max(19, 21 * S)));
         g.textAlign = 'left';
         if (j2 < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (j2 + 1) / 3 - 6, ty2, clamp(kv * 3.2 - .45 - j2, 0, 1), 'rgba(62,155,255,.5)', 1.4);
       });
@@ -1210,6 +1235,7 @@ function paintMethod(g, e) {
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const s = clamp(Math.min(z.w / 520, z.h / 420), .55, 1.15);
   const kM = k('map'), kG = k('goal'), kP = k('pilot'), kL = k('live');
+  if (mobile) { paintMethodMobile(g, e, sb, [kM, kG, kP, kL]); return; }
   const cx = z.x + z.w * .5;
   const pw = Math.min(z.w * .94, 470);
   const px0 = cx - pw / 2;
@@ -1384,6 +1410,227 @@ function paintMethod(g, e) {
       g.restore(); g.globalAlpha = 1;
     }
   }
+}
+
+// ---------- Method 手機:單景大舞台(母動畫=整組物件隨捲動移動/旋轉/淡入出;子動畫=物件自身持續動作) ----------
+function paintMethodMobile(g, e, sb, ks) {
+  const { zone: z, C, d, t } = e;
+  let cur = 0; ks.forEach((v, i) => { if (v > 0.02) cur = i; });
+  const kv = ks[cur], nk = cur < 3 ? ks[cur + 1] : 0;
+  const fsT = 19.5, fsM = 16.5, fsN = 13;     // 手機大字方針:標題/內容/註記
+  const AK = [C.orange, C.orange, C.blue, C.green];
+  const BD = ['rgba(255,107,44,.5)', 'rgba(255,107,44,.5)', 'rgba(62,155,255,.5)', 'rgba(101,224,188,.5)'];
+  const TITLE = ['現況盤點', '定義第一階段', '建立驗證', '上線與改善'];
+  const SUB = ['四個來源匯成一份問題清單', '講清楚做什麼、不做什麼', '一段流程,跑得起來才算數', '先把一段做順,再擴大'];
+  const x = z.x + 2, w = z.w - 4, pad = 16;
+  // 面板依「該景實際內容」裁高(有多少畫多少,空間不足時各列自動壓縮),整組再於可用高度內置中
+  const railH = fsN + 36;
+  const avail = z.h - railH - 6;
+  if (avail < 150) return;
+  const headH = pad + fsT + fsN + 21 + 16;
+  const chipH = fsN * 2.1;
+  g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+  const chipRows = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1']
+    .reduce((acc, tx) => g.measureText(tx).width + 18 + acc, 16) > w - pad * 2 ? 2 : 1;
+  const hOf = (i) => Math.min(avail, headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad);
+  const cy0 = mRail(g, d, C, t, x, w, z.y + 2 + Math.min(56, Math.max(0, (avail - hOf(cur)) / 2)), 4, cur, fsN);
+
+  // 母動畫:上一景上飄順旋淡出的同時,這一景由下升起逆旋淡入 —— 交叉換場,不會出現空畫面
+  // aP = 卡片本體透明度(先實體到位,擋住上一景殘影);a = 卡內內容透明度(隨後長出來)
+  const drawScene = (cur, kv, a, dy, rot, aP) => {
+    const h = hOf(cur);
+    g.save();
+    const cxp = x + w / 2, cyp = cy0 + h / 2;
+    g.translate(cxp, cyp + dy);
+    g.rotate(rot * Math.PI / 180);
+    g.translate(-cxp, -cyp);
+    g.globalAlpha = aP;
+    d.rr(x, cy0, w, h, 14);
+  g.fillStyle = 'rgba(15,18,22,.97)'; g.fill();
+  g.strokeStyle = BD[cur]; g.lineWidth = 1.3; g.stroke();
+
+  g.globalAlpha = a;
+  g.font = '800 ' + fsT + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
+  g.fillText(TITLE[cur], x + pad, cy0 + pad + fsT);
+  g.globalAlpha = a * .58;
+  g.font = '500 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
+  g.fillText(SUB[cur], x + pad, cy0 + pad + fsT + fsN + 9);
+  const hy = cy0 + pad + fsT + fsN + 21;
+  g.globalAlpha = a * .5;
+  g.strokeStyle = 'rgba(242,239,232,.14)'; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(x + pad, hy); g.lineTo(x + w - pad, hy); g.stroke();
+  g.globalAlpha = a;
+
+  const bx = x + pad, bw = w - pad * 2, by = hy + 16, bh = cy0 + h - pad - by;
+
+  if (cur === 0) { // 現況盤點:四來源列 + 掃描光束(子)+ 問題晶片浮動(子)
+    const chipTop = by + bh - chipRows * chipH - (chipRows - 1) * 8;
+    const areaH = chipTop - by - 10;
+    const rh = Math.min(54, areaH / 4);
+    const beam = by + areaH * (.5 + .5 * Math.sin(t * .85));
+    [['LINE 對話', '詢問 ×12'], ['網站表單', '需求 ×5'], ['試算表', '名單 ×3'], ['CRM', '案件 ×8']].forEach((r, i) => {
+      const kr = ez(sb(kv, .1 + i * .09, .38 + i * .09));
+      if (kr <= .01) return;
+      const ry = by + i * rh, slide = (1 - kr) * 26;
+      const near = 1 - Math.min(1, Math.abs(beam - (ry + rh / 2)) / (rh * .95));
+      g.globalAlpha = a * kr * (.08 + .2 * near);
+      d.rr(bx - 8, ry, bw + 16, rh - 6, 8); g.fillStyle = AK[0]; g.fill();
+      g.globalAlpha = a * kr;
+      g.font = '700 ' + fsM + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.94)';
+      g.fillText(r[0], bx + 2 - slide, ry + rh * .58);
+      g.globalAlpha = a * kr * .62;
+      g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+      g.fillStyle = 'rgba(242,239,232,.92)'; g.textAlign = 'right';
+      g.fillText(r[1], bx + bw - 20 + slide, ry + rh * .56); g.textAlign = 'left';
+      d.node(bx + bw - 5, ry + rh * .45, 3.8, kr >= 1 ? C.green : C.orange, a * kr * (.5 + .5 * near), kr < 1);
+    });
+    let chx = bx, chy = chipTop;
+    ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1'].forEach((tx, i) => {
+      const kc = ez(sb(kv, .5 + i * .1, .74 + i * .1));
+      if (kc <= .02) return;
+      g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+      const cw = g.measureText(tx).width + 18;
+      if (chx + cw > bx + bw) { chx = bx; chy += chipH + 8; }  // 不爆版:自動換行
+      g.globalAlpha = a * kc;
+      d.chip(chx, chy + Math.sin(t * 1.7 + i * 1.2) * 2.6, tx, true, fsN);
+      chx += cw + 8;
+    });
+  } else if (cur === 1) { // 第一階段:三條定義 + 行進虛線範圍框(子)+ 打勾落下(子)
+    const rh = Math.min(58, (bh - 44) / 3);
+    g.save();
+    g.globalAlpha = a * ez(sb(kv, .18, .5)) * .85;
+    g.setLineDash([6, 7]); g.lineDashOffset = -t * 18;
+    g.strokeStyle = 'rgba(255,107,44,.6)'; g.lineWidth = 1.2;
+    d.rr(bx - 8, by - 10, bw + 16, rh * 3 + 14, 10); g.stroke();
+    g.restore();
+    [['目標', '回覆不漏接'], ['範圍', 'LINE 客服・一段流程'], ['人工確認', '報價與例外由人把關']].forEach((r, i) => {
+      const kr = ez(sb(kv, .12 + i * .13, .42 + i * .13));
+      if (kr <= .01) return;
+      const ry = by + i * rh, rise = (1 - kr) * 18;
+      g.globalAlpha = a * kr;
+      g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.orange;
+      g.fillText(r[0], bx + 2, ry + fsN + 4 + rise);
+      g.font = '700 ' + fsM + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.95)';
+      g.fillText(r[1], bx + 2, ry + fsN + fsM + 12 + rise);
+    });
+    const kt = ez(sb(kv, .58, .84));
+    if (kt > .02) {
+      const ty = by + rh * 3 + 26 + (1 - kt) * -16 + Math.sin(t * 3.2) * 1.2 * kt;
+      d.tick(bx + 10, ty, 8.5, C.green, a * kt);
+      g.globalAlpha = a * kt;
+      g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(101,224,188,.92)';
+      g.fillText('範圍確認,先做最有價值的一段', bx + 28, ty + 5);
+    }
+  } else if (cur === 2) { // 建立驗證:管線 + token 巡遊經閘門停頓(子)+ 資料線流動(子)
+    const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
+    const py = by + bh * .46;
+    const m0 = bx + 20, m1 = bx + bw - 20;
+    const conn = kv * 3.6 - .35;
+    steps.forEach((tx, i) => {
+      const nx = m0 + (m1 - m0) * i / 3, on = conn > i;
+      if (i < 3) {
+        const nx2 = m0 + (m1 - m0) * (i + 1) / 3;
+        if (on) {
+          g.save(); g.globalAlpha = a;
+          g.strokeStyle = 'rgba(62,155,255,.55)'; g.lineWidth = 1.6;
+          g.setLineDash([5, 7]); g.lineDashOffset = -t * 24;
+          g.beginPath(); g.moveTo(nx + 9, py); g.lineTo(nx2 - 9, py); g.stroke();
+          g.restore();
+        } else d.line(nx + 9, py, nx2 - 9, py, clamp(conn - i, 0, 1), 'rgba(62,155,255,.4)', 1.5);
+      }
+      d.node(nx, py, on ? 5 : 3.4, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
+      g.globalAlpha = a * (on ? 1 : .5);
+      g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
+      g.fillStyle = on ? 'rgba(242,239,232,.92)' : 'rgba(242,239,232,.45)';
+      g.textAlign = i === 0 ? 'left' : (i === 3 ? 'right' : 'center');
+      g.fillText(tx, i === 0 ? nx - 7 : (i === 3 ? nx + 7 : nx), py + 27);
+      g.textAlign = 'left';
+    });
+    const kg = ez(sb(kv, .3, .6));
+    if (kg > .02) {
+      const gx = m0 + (m1 - m0) * 2 / 3, gy = py - 50;
+      g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
+      const gt = '人工確認', gw = g.measureText(gt).width + 22;
+      g.globalAlpha = a * kg * (.1 + .12 * Math.sin(t * 2.4));   // 閘門光暈脈動(子)
+      d.rr(gx - gw / 2 - 6, gy - 5, gw + 12, fsN * 2.1 + 10, 16); g.fillStyle = C.green; g.fill();
+      g.globalAlpha = a * kg;
+      d.rr(gx - gw / 2, gy, gw, fsN * 2.1, fsN);
+      g.fillStyle = 'rgba(101,224,188,.14)'; g.fill();
+      g.strokeStyle = 'rgba(101,224,188,.6)'; g.lineWidth = 1.2; g.stroke();
+      g.fillStyle = 'rgba(101,224,188,.95)';
+      g.fillText(gt, gx - gw / 2 + 11, gy + fsN * 1.45);
+      d.line(gx, gy + fsN * 2.1, gx, py - 9, kg, 'rgba(101,224,188,.5)', 1, [3, 4]);
+      g.globalAlpha = a;
+    }
+    const tk = ez(sb(kv, .25, .55));
+    if (tk > .02) {
+      const cyc = (t * .3) % 1;
+      const f = cyc < .58 ? cyc / .58 * .667 : (cyc < .74 ? .667 : .667 + (cyc - .74) / .26 * .333);
+      const tx2 = m0 + (m1 - m0) * f;
+      g.globalAlpha = a * tk * .3;
+      g.beginPath(); g.arc(tx2, py, 11, 0, TAU); g.fillStyle = C.blue; g.fill();
+      d.node(tx2, py, 4.4, C.blue, a * tk, false);
+    }
+    const kr = ez(sb(kv, .6, .9));
+    if (kr > .02) {
+      const yy = by + bh - 8;
+      d.node(bx + 6, yy - 5, 3.6, C.green, a * kr * (.5 + .5 * Math.sin(t * 2.2)), false);
+      g.globalAlpha = a * kr;
+      g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.82)';
+      g.fillText('實際使用者測試中・回饋直接改流程', bx + 20, yy);
+    }
+  } else { // 上線與改善:三列狀態(勾/呼吸/循環,皆為子動畫)+ 底部波形流動(子)
+    const rh = Math.min(62, (bh - 34) / 3);
+    [['tick', '第一階段上線', '標準模組最快 10 個工作天'],
+     ['pulse', '觀察實際使用與例外', '例外自動記錄'],
+     ['cycle', '每週小幅調整', '依使用數據持續改善']].forEach((r, i) => {
+      const kr = ez(sb(kv, .1 + i * .14, .4 + i * .14));
+      if (kr <= .01) return;
+      const ry = by + i * rh, icx = bx + 12, rise = (1 - kr) * 16, icy = ry + rh * .36 + rise;
+      if (r[0] === 'tick') d.tick(icx, icy, 9, C.green, a * kr);
+      else if (r[0] === 'pulse') {
+        g.globalAlpha = a * kr * (.14 + .18 * Math.sin(t * 2.2));
+        g.beginPath(); g.arc(icx, icy, 12, 0, TAU); g.fillStyle = C.green; g.fill();
+        d.node(icx, icy, 4.2, C.green, a * kr, false);
+      } else {
+        g.save(); g.globalAlpha = a * kr;
+        g.strokeStyle = C.green; g.lineWidth = 1.8; g.lineCap = 'round';
+        const rr = 9.5, a0 = t * 1.4;
+        g.beginPath(); g.arc(icx, icy, rr, a0, a0 + Math.PI * 1.5); g.stroke();
+        g.beginPath(); g.arc(icx + Math.cos(a0 + Math.PI * 1.5) * rr, icy + Math.sin(a0 + Math.PI * 1.5) * rr, 2.3, 0, TAU);
+        g.fillStyle = C.green; g.fill(); g.restore();
+      }
+      g.globalAlpha = a * kr;
+      g.font = '700 ' + fsM + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.95)';
+      g.fillText(r[1], bx + 34, icy + 6);
+      g.globalAlpha = a * kr * .6;
+      g.font = '500 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
+      g.fillText(r[2], bx + 34, icy + fsN + 15);
+    });
+    const lk = ez(sb(kv, .5, .85));
+    if (lk > .02) {
+      const ly = by + bh - 16;
+      g.save(); g.globalAlpha = a * lk;
+      g.strokeStyle = 'rgba(101,224,188,.6)'; g.lineWidth = 1.8; g.lineCap = 'round';
+      g.beginPath();
+      for (let j = 0; j <= 34; j++) {
+        const f = j / 34, px2 = bx + bw * f;
+        const wave = Math.sin(f * 6.5 + t * 2.2) * 9 * (.35 + .65 * f);
+        if (j === 0) g.moveTo(px2, ly + wave); else g.lineTo(px2, ly + wave);
+      }
+      g.stroke(); g.restore();
+    }
+    }
+    g.restore(); g.globalAlpha = 1;
+  };
+
+  const eIn = ez(sb(kv, .02, .28));
+  const card = ez(sb(kv, .005, .1));   // 卡片本體:一進場就成形
+  if (cur > 0) {                       // 前一景先讓位:壓暗、上飄離場
+    const go = ez(sb(kv, 0, .18));
+    if (1 - go > .02) drawScene(cur - 1, 1, (1 - go) * .8, -go * 80, go * 3, (1 - go) * .85);
+  }
+  if (card > .02) drawScene(cur, kv, eIn, (1 - card) * 42, (1 - card) * -3.2, card);
 }
 
 export const painters = {
