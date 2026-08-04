@@ -886,6 +886,176 @@ function paintCases(g, e) {
   }
 }
 
+// ---------- Pricing 桌機:橫向三列(用寬度排,不跟高度硬拚) ----------
+// 舊版三座直立機架擠在「寬而矮」的繪圖區(1440 實測 zone 631x366),實測出四個缺陷:
+//   1. 費用通道兩行標籤 8.5*s -> 5.98px,等於看不到
+//   2. 分隔線畫在 y426,而價格框佔 390-436 -> 線從框中間穿過去
+//   3. rowIdx>3 直接丟掉第四個模組:B 少了「分析」、C 少了「數據」,下面卻寫著 8/12 模組
+//   4. INCLUDED 標籤與模組數列只差 18px,字高 12 -> 疊印
+// 改成一列一個方案:左方案名 + 模組數、中模組晶片(窄螢幕自動折兩行)、右價格。
+// 字級只跟繪圖區「寬度」走,不再被高度連累。手機維持原欄式(手機本來就不畫字)。
+function pricingRowsDesktop(g, e, ctx) {
+  const z = e.zone, C = e.C, d = e.d;
+  const sb = ctx.sb, meta = ctx.meta, kR = ctx.kR, kC = ctx.kC, kU = ctx.kU, fadeO = ctx.fadeO;
+  const sw = clamp(z.w / 560, .72, 1.15);
+  const fEn = clamp(10.5 * sw, 9.5, 12);
+  const fZh = clamp(17 * sw, 15, 19);
+  const fCnt = clamp(11 * sw, 10, 12.5);
+  const fMod0 = clamp(12.5 * sw, 11, 14);
+  const fPrice = clamp(14.5 * sw, 13, 17);
+  const fMo = clamp(11 * sw, 10, 12.5);
+  const fUse = clamp(11.5 * sw, 10.5, 13);
+
+  const padX = clamp(z.w * .022, 10, 18);
+  const rowH = clamp(z.h * .205, 66, 88);
+  const rowGap = clamp(z.h * .03, 8, 14);
+  const rowsTop = z.y + clamp(z.h * .012, 3, 8);
+  const rowsBottom = rowsTop + rowH * 3 + rowGap * 2;
+  const nameW = clamp(z.w * .225, 96, 152);
+  const priceW = clamp(z.w * .205, 92, 140);
+  const chipsX0 = z.x + padX + nameW + 12;
+  const chipsW = (z.x + z.w - padX - priceW - 12) - chipsX0;
+  const counts = ['4 模組', '8 模組(含 A)', '12 模組(含 B)'];
+
+  meta.forEach(function (m, i) {
+    const ka = ez(clamp(kR * 3 - i * .45, 0, 1));
+    const a = ka * fadeO;
+    if (a <= .12) return;
+    const hot = ez(m.kk), on = Math.max(hot, ez(kC));
+    const ry = rowsTop + i * (rowH + rowGap);
+    g.save(); g.globalAlpha = a; g.translate((1 - ka) * -22, 0);   // 母動畫:整列由左滑入
+
+    d.rr(z.x, ry, z.w, rowH, 8);
+    g.fillStyle = 'rgba(20,23,28,' + (.4 + .34 * Math.max(hot, ez(kC) * .7)).toFixed(2) + ')'; g.fill();
+    g.strokeStyle = hot > .08 ? m.c : 'rgba(242,239,232,.2)'; g.lineWidth = 1 + hot * .8; g.stroke();
+    if (hot > .02) {   // 左軌:亮起來代表這一列是現在講的方案
+      g.save(); g.globalAlpha = a * hot; d.rr(z.x, ry, 3.2, rowH, 2); g.fillStyle = m.c; g.fill(); g.restore();
+    }
+
+    // 左欄:EN / 中文 / 模組數
+    const tx = z.x + padX;
+    const yEn = ry + rowH * .27;
+    const yZh = yEn + fZh + rowH * .09;
+    const yCnt = yZh + fCnt + rowH * .10;
+    d.label(m.en, tx, yEn, fEn, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
+    d.han(m.zh, tx, yZh, fZh, C.ivory, 800);
+    const kc2 = Math.max(ez(sb(m.kk, .5, 1)), ez(kC));
+    if (kc2 > .02) {
+      g.globalAlpha = a * kc2;
+      d.tick(tx + 5, yCnt - fCnt * .34, clamp(6.5 * sw, 6, 8), C.green, 1);
+      d.label(counts[i], tx + 16, yCnt, fCnt, 'rgba(242,239,232,.75)', .5);
+      g.globalAlpha = a;
+    }
+
+    // 中欄:模組晶片。含 A/含 B 當第一顆虛線晶片,四個模組全部畫(不再丟第四個)
+    const chips = (m.base ? [{ t: m.base, dash: true }] : []).concat(m.mods.map(function (t2) { return { t: t2, dash: false }; }));
+    const chipH = clamp(rowH * .30, 20, 27);
+    const chipGap = 7, lineGap = 6;
+    let fMod = fMod0, rows2 = null;
+    for (let tryN = 0; tryN < 5 && !rows2; tryN++) {
+      g.font = '600 ' + fMod + 'px "Noto Sans TC",sans-serif';
+      const pad2 = clamp(9 * sw, 7, 11);
+      const ws = chips.map(function (c) { return g.measureText(c.t).width + pad2 * 2; });
+      const out = [[]];
+      let cur = 0, wsum = 0, ok = true;
+      for (let j = 0; j < chips.length; j++) {
+        const need = ws[j] + (out[cur].length ? chipGap : 0);
+        if (wsum + need > chipsW && out[cur].length) {
+          if (cur === 1) { ok = false; break; }   // 只允許兩行,放不下就縮字重試
+          cur = 1; out.push([]); wsum = ws[j];
+        } else wsum += need;
+        out[cur].push({ t: chips[j].t, dash: chips[j].dash, w: ws[j] });
+      }
+      if (ok) rows2 = out; else fMod *= .92;
+    }
+    if (!rows2) rows2 = [chips.map(function (c) { return { t: c.t, dash: c.dash, w: chipsW / chips.length - chipGap }; })];
+    if (rows2.length === 2 && rows2[1].length === 1 && rows2[0].length >= 3) rows2[1].unshift(rows2[0].pop());
+    const chipsH = rows2.length * chipH + (rows2.length - 1) * lineGap;
+    let cy = ry + (rowH - chipsH) / 2, seq = 0;
+    rows2.forEach(function (rowChips) {
+      let cx = chipsX0;
+      rowChips.forEach(function (c) {
+        const km = ez(clamp(m.kk * 4 - seq * .42, 0, 1));
+        seq++;
+        if (km <= .01) { cx += c.w + chipGap; return; }
+        const dx = Math.min((1 - km) * 18, 10);   // 滑入位移夾限,晶片不出中欄
+        g.globalAlpha = a * km;
+        d.rr(cx + dx, cy, c.w, chipH, 4);
+        if (c.dash) {
+          g.setLineDash([3, 4]); g.strokeStyle = 'rgba(242,239,232,.4)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
+          g.fillStyle = 'rgba(242,239,232,.9)';
+        } else {
+          g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.13)' : 'rgba(255,107,44,.13)'; g.fill();
+          g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.6)' : 'rgba(255,107,44,.6)'; g.lineWidth = 1; g.stroke();
+          g.fillStyle = 'rgba(242,239,232,.95)';
+        }
+        g.font = '600 ' + fMod + 'px "Noto Sans TC",sans-serif';
+        g.fillText(c.t, cx + dx + (c.w - g.measureText(c.t).width) / 2, cy + chipH / 2 + fMod * .36);
+        g.globalAlpha = a;
+        cx += c.w + chipGap;
+      });
+      cy += chipH + lineGap;
+    });
+
+    // 右欄:價格(兩行都置中;d.label 逐字繪製不吃 textAlign,所以自己量寬)
+    const bx = z.x + z.w - padX - priceW;
+    const kp = Math.max(ez(sb(m.kk, .5, 1)), ez(kC));
+    if (kp > .02) {
+      const boxH = fPrice + fMo + 20, by = ry + (rowH - boxH) / 2;
+      g.globalAlpha = a * kp;
+      d.rr(bx, by, priceW, boxH, 5);
+      g.fillStyle = 'rgba(9,11,14,.9)'; g.fill();
+      g.strokeStyle = kC > 0 ? m.c : 'rgba(242,239,232,.28)'; g.lineWidth = 1.2; g.stroke();
+      g.font = '700 ' + fPrice + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
+      g.fillText(m.price, bx + (priceW - g.measureText(m.price).width) / 2, by + fPrice + 7);
+      g.font = '600 ' + fMo + 'px "Noto Sans TC",sans-serif';
+      g.fillStyle = m.c === C.blue ? C.blue : C.orange;
+      g.fillText(m.mo, bx + (priceW - g.measureText(m.mo).width) / 2, by + fPrice + fMo + 12);
+      g.globalAlpha = a;
+    }
+    // 「最多人選」放在列「內」右上角、價格框正上方的空白帶。
+    // 原本做成騎在列縫上的晶片:列縫只有 11px、晶片高 20px,結果又小又被上下兩列切掉。
+    if (m.badge && on > .45) {
+      const bp = clamp(9.5 * sw, 8.5, 11);
+      g.font = '600 ' + bp + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+      const bw = g.measureText(m.badge).width + (m.badge.length - 1) * .6;
+      g.globalAlpha = a * ez(sb(on, .45, .85));
+      d.label(m.badge, bx + priceW - bw, ry + rowH * .16, bp, C.orange, .6);
+      g.globalAlpha = a;
+    }
+    g.restore();
+  });
+
+  // 費用通道:整段移到三列之下,不再與價格框打架;標籤字級 10.5-13(舊版 5.98px)
+  if (kU > 0 && fadeO > .05) {
+    const a = ez(kU) * fadeO;
+    const step = clamp(((z.y + z.h) - rowsBottom) * .32, 30, 42);
+    const ly1 = rowsBottom + step, ly2 = ly1 + step;
+    const lx0 = z.x + 2, lx1 = z.x + z.w - 2;
+    g.save(); g.globalAlpha = a;
+    d.line(z.x, rowsBottom + 12, z.x + z.w, rowsBottom + 12, 1, 'rgba(242,239,232,.14)', 1);
+    d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
+    if (e.tier === 'full' && kU >= .98) {
+      g.setLineDash([6, 10]); g.lineDashOffset = -e.t * 30;
+      g.strokeStyle = 'rgba(101,224,188,.9)'; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
+      g.setLineDash([]); g.lineDashOffset = 0;
+    }
+    d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - 9, fUse, C.green, 1.1);
+    const k2u = ez(sb(kU, .15, 1));
+    d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
+    for (let m2 = 1; m2 <= 8; m2++) {
+      const fx2 = m2 / 9;
+      if (fx2 > k2u) break;
+      const mx = lx0 + (lx1 - lx0) * fx2;
+      g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
+    }
+    d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + fUse + 5, fUse, C.blue, 1.1);
+    g.restore();
+  }
+}
+
 function paintPricing(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
@@ -908,102 +1078,106 @@ function paintPricing(g, e) {
     { zh: '業務助理', en: 'ASSISTANT', kk: k2, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['CRM', '追蹤', '跟進序列', '分析'], base: '含 A 全部', badge: '最多人選' },
     { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: '依需求報價', mo: '預約諮詢', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
   ];
-  meta.forEach((m, i) => {
-    const a = ez(clamp(kR * 3 - i * .45, 0, 1)) * fadeO;
-    if (a <= 0.12) return; // 終幕淡出末端 gh/slotH 會變負(IndexSizeError → canvas 全滅),提早跳出
-    const x = rx(i), hot = ez(m.kk);
-    g.save(); g.globalAlpha = a;
-    const gh = rh * (0.3 + 0.7 * a);
-    const gy = ry + rh - gh;
-    d.rr(x, gy, rw, gh, 6);
-    g.fillStyle = 'rgba(20,23,28,' + (0.42 + 0.35 * Math.max(hot, kO * .8)).toFixed(2) + ')'; g.fill();
-    g.strokeStyle = hot > .08 ? m.c : 'rgba(242,239,232,.24)'; g.lineWidth = 1 + hot * .8; g.stroke();
-    d.label(m.en, x + 9, gy + Math.max(13, 14 * s), fEn, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
-    d.han(m.zh, x + 9, gy + Math.max(32, 29 * s) + 2, fZh, C.ivory, 800);
-    if (m.badge && hot > .5) { g.globalAlpha = a * ez(sb(m.kk, .5, 1)); d.chip(x + rw - 62 * s, gy + 6, m.badge, true, 8.5 * s); g.globalAlpha = a; }
-    const slotStep = Math.max(9, gh * .6 / 4), slotTop = gy + gh * .34, slotH = Math.max(4, slotStep - 7);
-    for (let u = 0; u < 4; u++) {
-      g.strokeStyle = 'rgba(242,239,232,.1)'; g.lineWidth = 1;
-      g.beginPath(); g.moveTo(x + 8, slotTop + (u + 1) * slotStep - 4); g.lineTo(x + rw - 8, slotTop + (u + 1) * slotStep - 4); g.stroke();
-    }
-    if (m.kk <= 0.02 && !mobile) d.label('EMPTY', x + rw - 44 * s, gy + 14 * s, 8 * s, 'rgba(242,239,232,.35)', 1.4);
-    let row0 = 0;
-    if (m.base) {
-      const kb = ez(clamp(m.kk * 3, 0, 1));
-      if (kb > 0) {
-        g.globalAlpha = a * kb * .85;
-        d.rr(x + 8, slotTop, rw - 16, slotH, 3);
-        g.setLineDash([3, 4]); g.strokeStyle = 'rgba(242,239,232,.32)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
-        if (!mobile) d.han(m.base, x + 14, slotTop + slotH / 2 + fBase * .36, fBase, 'rgba(242,239,232,.6)', 600);
+  if (mobile) {   // 手機維持原欄式(手機路徑本來就不畫文字,只畫卡框與晶片)
+    meta.forEach((m, i) => {
+      const a = ez(clamp(kR * 3 - i * .45, 0, 1)) * fadeO;
+      if (a <= 0.12) return; // 終幕淡出末端 gh/slotH 會變負(IndexSizeError → canvas 全滅),提早跳出
+      const x = rx(i), hot = ez(m.kk);
+      g.save(); g.globalAlpha = a;
+      const gh = rh * (0.3 + 0.7 * a);
+      const gy = ry + rh - gh;
+      d.rr(x, gy, rw, gh, 6);
+      g.fillStyle = 'rgba(20,23,28,' + (0.42 + 0.35 * Math.max(hot, kO * .8)).toFixed(2) + ')'; g.fill();
+      g.strokeStyle = hot > .08 ? m.c : 'rgba(242,239,232,.24)'; g.lineWidth = 1 + hot * .8; g.stroke();
+      d.label(m.en, x + 9, gy + Math.max(13, 14 * s), fEn, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
+      d.han(m.zh, x + 9, gy + Math.max(32, 29 * s) + 2, fZh, C.ivory, 800);
+      if (m.badge && hot > .5) { g.globalAlpha = a * ez(sb(m.kk, .5, 1)); d.chip(x + rw - 62 * s, gy + 6, m.badge, true, 8.5 * s); g.globalAlpha = a; }
+      const slotStep = Math.max(9, gh * .6 / 4), slotTop = gy + gh * .34, slotH = Math.max(4, slotStep - 7);
+      for (let u = 0; u < 4; u++) {
+        g.strokeStyle = 'rgba(242,239,232,.1)'; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(x + 8, slotTop + (u + 1) * slotStep - 4); g.lineTo(x + rw - 8, slotTop + (u + 1) * slotStep - 4); g.stroke();
+      }
+      if (m.kk <= 0.02 && !mobile) d.label('EMPTY', x + rw - 44 * s, gy + 14 * s, 8 * s, 'rgba(242,239,232,.35)', 1.4);
+      let row0 = 0;
+      if (m.base) {
+        const kb = ez(clamp(m.kk * 3, 0, 1));
+        if (kb > 0) {
+          g.globalAlpha = a * kb * .85;
+          d.rr(x + 8, slotTop, rw - 16, slotH, 3);
+          g.setLineDash([3, 4]); g.strokeStyle = 'rgba(242,239,232,.32)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
+          if (!mobile) d.han(m.base, x + 14, slotTop + slotH / 2 + fBase * .36, fBase, 'rgba(242,239,232,.6)', 600);
+          g.globalAlpha = a;
+        }
+        row0 = 1;
+      }
+      m.mods.forEach((mod, j) => {
+        const rowIdx = row0 + j;
+        if (rowIdx > 3) return;
+        const km = ez(clamp(m.kk * 4 - rowIdx * .5, 0, 1));
+        if (km <= 0) return;
+        const sy = slotTop + rowIdx * slotStep;
+        const sxOff = Math.min((1 - km) * 24, 8); // 滑入位移夾限,晶片不出卡框
+        g.globalAlpha = a * km;
+        d.rr(x + 8 + sxOff, sy, rw - 16, slotH, 3);
+        g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.12)' : 'rgba(255,107,44,.12)'; g.fill();
+        g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.55)' : 'rgba(255,107,44,.55)'; g.lineWidth = 1; g.stroke();
+        if (!mobile) d.han(mod, x + 14 + sxOff, sy + slotH / 2 + fMod * .36, fMod, 'rgba(242,239,232,.92)', 700);
+        d.node(x + rw - 14, sy + slotH / 2, 2, C.green, a * km);
+        g.globalAlpha = a;
+      });
+      const kp = Math.max(ez(sb(m.kk, .55, 1)), ez(kC));
+      if (kp > 0 && !mobile) { // 手機:牌高塞不下兩行必疊印,CTA 下方 DOM 晶片已有同資訊
+        const py = ry + rh + 10;
+        const boxH = fPrice + fMo + 22;      // 兩行文字 + 上下內距;不再用 38*s(字放大後會掉出框)
+        g.globalAlpha = a * kp;
+        d.rr(x + 2, py, rw - 4, boxH, 4);
+        g.fillStyle = 'rgba(9,11,14,.88)'; g.fill();
+        g.strokeStyle = kC > 0 ? m.c : 'rgba(242,239,232,.25)'; g.lineWidth = 1.2; g.stroke();
+        g.font = '700 ' + fPrice + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory;
+        g.fillText(m.price, x + 11, py + fPrice + 6);
+        d.label(m.mo, x + 11, py + fPrice + fMo + 13, fMo, m.c === C.blue ? C.blue : C.orange, .3);
         g.globalAlpha = a;
       }
-      row0 = 1;
-    }
-    m.mods.forEach((mod, j) => {
-      const rowIdx = row0 + j;
-      if (rowIdx > 3) return;
-      const km = ez(clamp(m.kk * 4 - rowIdx * .5, 0, 1));
-      if (km <= 0) return;
-      const sy = slotTop + rowIdx * slotStep;
-      const sxOff = Math.min((1 - km) * 24, 8); // 滑入位移夾限,晶片不出卡框
-      g.globalAlpha = a * km;
-      d.rr(x + 8 + sxOff, sy, rw - 16, slotH, 3);
-      g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.12)' : 'rgba(255,107,44,.12)'; g.fill();
-      g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.55)' : 'rgba(255,107,44,.55)'; g.lineWidth = 1; g.stroke();
-      if (!mobile) d.han(mod, x + 14 + sxOff, sy + slotH / 2 + fMod * .36, fMod, 'rgba(242,239,232,.92)', 700);
-      d.node(x + rw - 14, sy + slotH / 2, 2, C.green, a * km);
-      g.globalAlpha = a;
+      if (kC > 0 && fadeO > 0.05 && !mobile) {
+        g.globalAlpha = ez(kC) * fadeO;
+        const cy3 = ry + rh + 10 + (fPrice + fMo + 22) + 15;   // 接在價格框下方,不再用固定倍率
+        d.tick(x + 9, cy3, Math.max(6, 6.5 * s), C.green, 1);
+        d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 21, cy3 + 4, Math.max(11, 9 * s), 'rgba(242,239,232,.75)', .6);
+        g.globalAlpha = 1;
+      }
+      g.restore();
     });
-    const kp = Math.max(ez(sb(m.kk, .55, 1)), ez(kC));
-    if (kp > 0 && !mobile) { // 手機:牌高塞不下兩行必疊印,CTA 下方 DOM 晶片已有同資訊
-      const py = ry + rh + 10;
-      const boxH = fPrice + fMo + 22;      // 兩行文字 + 上下內距;不再用 38*s(字放大後會掉出框)
-      g.globalAlpha = a * kp;
-      d.rr(x + 2, py, rw - 4, boxH, 4);
-      g.fillStyle = 'rgba(9,11,14,.88)'; g.fill();
-      g.strokeStyle = kC > 0 ? m.c : 'rgba(242,239,232,.25)'; g.lineWidth = 1.2; g.stroke();
-      g.font = '700 ' + fPrice + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory;
-      g.fillText(m.price, x + 11, py + fPrice + 6);
-      d.label(m.mo, x + 11, py + fPrice + fMo + 13, fMo, m.c === C.blue ? C.blue : C.orange, .3);
-      g.globalAlpha = a;
+    if (kC > 0 && fadeO > 0.05) d.line(z.x, ry + rh + 66 * s, z.x + z.w, ry + rh + 66 * s, ez(kC) * fadeO, 'rgba(242,239,232,.16)', 1);
+    if (kU > 0 && fadeO > 0.05) {
+      const a = ez(kU) * fadeO, ly1 = z.y + z.h * (mobile ? .84 : .82), ly2 = ly1 + z.h * .08;
+      const lx0 = z.x + 4, lx1 = z.x + z.w - 4;
+      g.save(); g.globalAlpha = a;
+      d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
+      if (e.tier === 'full' && kU >= .98) {
+        g.setLineDash([6, 10]); g.lineDashOffset = -t * 30;
+        g.strokeStyle = 'rgba(101,224,188,.9)'; g.lineWidth = 2;
+        g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
+        g.setLineDash([]); g.lineDashOffset = 0;
+      }
+      d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
+      const k2u = ez(sb(kU, .15, 1));
+      d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
+      for (let m2 = 1; m2 <= 8; m2++) {
+        const fx2 = m2 / 9;
+        if (fx2 > k2u) break;
+        const mx = lx0 + (lx1 - lx0) * fx2;
+        g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
+      }
+      d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + Math.max(16, 15 * s), 8.5 * s, C.blue, 1.2);
+      meta.forEach((m, i) => {
+        const ax = rx(i) + rw / 2;
+        d.line(ax, ry + rh + 70 * s, ax, ly1 - 5, ez(sb(kU, i * .15, .6 + i * .15)), 'rgba(242,239,232,.25)', 1);
+      });
+      g.restore();
     }
-    if (kC > 0 && fadeO > 0.05 && !mobile) {
-      g.globalAlpha = ez(kC) * fadeO;
-      const cy3 = ry + rh + 10 + (fPrice + fMo + 22) + 15;   // 接在價格框下方,不再用固定倍率
-      d.tick(x + 9, cy3, Math.max(6, 6.5 * s), C.green, 1);
-      d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 21, cy3 + 4, Math.max(11, 9 * s), 'rgba(242,239,232,.75)', .6);
-      g.globalAlpha = 1;
-    }
-    g.restore();
-  });
-  if (kC > 0 && fadeO > 0.05) d.line(z.x, ry + rh + 66 * s, z.x + z.w, ry + rh + 66 * s, ez(kC) * fadeO, 'rgba(242,239,232,.16)', 1);
-  if (kU > 0 && fadeO > 0.05) {
-    const a = ez(kU) * fadeO, ly1 = z.y + z.h * (mobile ? .84 : .82), ly2 = ly1 + z.h * .08;
-    const lx0 = z.x + 4, lx1 = z.x + z.w - 4;
-    g.save(); g.globalAlpha = a;
-    d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
-    if (e.tier === 'full' && kU >= .98) {
-      g.setLineDash([6, 10]); g.lineDashOffset = -t * 30;
-      g.strokeStyle = 'rgba(101,224,188,.9)'; g.lineWidth = 2;
-      g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
-      g.setLineDash([]); g.lineDashOffset = 0;
-    }
-    d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
-    const k2u = ez(sb(kU, .15, 1));
-    d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
-    for (let m2 = 1; m2 <= 8; m2++) {
-      const fx2 = m2 / 9;
-      if (fx2 > k2u) break;
-      const mx = lx0 + (lx1 - lx0) * fx2;
-      g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
-      g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
-    }
-    d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + Math.max(16, 15 * s), 8.5 * s, C.blue, 1.2);
-    meta.forEach((m, i) => {
-      const ax = rx(i) + rw / 2;
-      d.line(ax, ry + rh + 70 * s, ax, ly1 - 5, ez(sb(kU, i * .15, .6 + i * .15)), 'rgba(242,239,232,.25)', 1);
-    });
-    g.restore();
+  } else {
+    pricingRowsDesktop(g, e, { sb: sb, meta: meta, kR: kR, kC: kC, kU: kU, fadeO: fadeO });
   }
   if (kO > 0) {
     // 終幕重設計:大字、大藥丸、心跳線(原三櫃小字全部讓位,不再擁擠)
