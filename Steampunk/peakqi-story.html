@@ -61,10 +61,16 @@
   #hero .scrollhint { margin-top: 46px; font-size: 11.5px; letter-spacing: .28em; color: rgba(255,255,255,.45); }
   #hero .scrollhint::after { content: '↓'; margin-left: 8px; color: #fe6a2d; }
 
-  #secHead { position: fixed; left: max(12vw, 178px); top: 13vh; z-index: 6; pointer-events: none; max-width: 360px;background:linear-gradient(180deg,rgba(10,12,16,.78) 0%,rgba(10,12,16,.55) 62%,rgba(10,12,16,0) 100%);padding-bottom:26px;text-shadow:0 1px 8px rgba(0,0,0,.65);}
-  #secHead .no { font-size: 11.5px; font-weight: 700; letter-spacing: .34em; color: #fe6a2d; }
-  #secHead h2 { margin: 10px 0 6px; font-size: clamp(24px, 3vw, 36px); font-weight: 900; letter-spacing: .05em; }
-  #secHead .sub { font-size: 13px; color: rgba(255,255,255,.82); line-height: 1.8; }
+  /* 章節說明卡:原本是一塊由深到透明的漸層、文字又貼在邊角(x/y 內距 0),
+     沒有卡片感也讀不安穩。改成與右側 .card 同一套設計語言:
+     實心底 + 橘色左軌 + 圓角 + 真正的內距 + 柔和陰影。 */
+  #secHead { position: fixed; left: max(12vw, 178px); top: 13vh; z-index: 6; pointer-events: none; max-width: 380px;
+    background: rgba(22, 19, 17, .84); border: 1px solid rgba(255,255,255,.1); border-left: 3px solid #fe6a2d;
+    border-radius: 12px; padding: 18px 24px 20px; backdrop-filter: blur(6px);
+    box-shadow: 0 18px 44px rgba(0,0,0,.42); }
+  #secHead .no { font-size: 11px; font-weight: 700; letter-spacing: .24em; color: #fe6a2d; }
+  #secHead h2 { margin: 8px 0 8px; font-size: clamp(21px, 2.6vw, 30px); font-weight: 900; letter-spacing: .04em; }
+  #secHead .sub { font-size: 13.5px; color: rgba(255,255,255,.72); line-height: 1.85; }
 
   #cards { position: fixed; right: 5vw; top: 0; bottom: 0; z-index: 6; width: min(400px, 40vw); pointer-events: none; }
   .card {
@@ -99,7 +105,9 @@
 
   @media (max-width: 860px) {
     #rail { display: none; }
-    #secHead { top: 9vh; left: 6vw; max-width: 70vw; }
+    #secHead { top: 9vh; left: 5vw; right: 5vw; max-width: none; padding: 14px 17px 16px; border-radius: 10px; }
+    #secHead h2 { font-size: clamp(19px, 5.4vw, 24px); margin: 7px 0 6px; }
+    #secHead .sub { font-size: 12.5px; line-height: 1.75; }
     #cards { right: 4vw; left: 4vw; width: auto; }
     /* bottom 抬到 12vh:嵌在案例頁時,父頁底部有浮動「看 Demo」列,5vh 會被蓋住 */
     .card { top: auto; bottom: 12vh; transform: none; padding: 15px 17px; }
