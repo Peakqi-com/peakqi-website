@@ -132,9 +132,15 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
     try {
       if (opt.mobile) computeZone(); // 收合過渡中文案底部持續上移:zone 每繪一幀跟一次,畫面滑上去而非 480ms 後瞬跳
       g.clearRect(0, 0, W, H);
+      const ai = model.activeIdx(p);
+      try { window.__pqCur = ai; } catch (e2) {}   // 驗收用:比對文案層與畫布層的場景索引
       paint(g, {
         w: W, h: H, t: now / 1000, p, zone,
         mobile: !!opt.mobile, tier: opt.tier,
+        // ai/aid = 與 DOM 文案層完全相同的「目前第幾景」。
+        // 畫布若自行用 k>0.02 推算會慢一步(k 走平滑曲線,要到區間 8% 才過門檻),
+        // 於是出現文案寫「階段 03 / 07」、進度軌卻顯示「02 / 07」。
+        ai, aid: (model.included[ai] || {}).id,
         k: (id) => ks[id] ?? 0, gp: p, C, d
       });
       if (opt.flags.grain && opt.tier === 'full') d.grain(W, H, HERO_SHARED.material.grainAlpha);

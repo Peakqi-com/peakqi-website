@@ -184,9 +184,10 @@ function paintSolutions(g, e) {
   const IDS = ['sig', 'layers', 'cap', 'fol', 'nur', 'align', 'console'];
   const NAMES = ['詢問進來', '辨識需求', '回應與建檔', '安排下一步', '延續脈絡', '流程接通', '營運視圖'];
   const ks = IDS.map(id => k(id));
-  // 當前站 = 最後一個 k>0.02 的站;其 k 即展開進度
-  let cur = 0;
-  ks.forEach((v, i) => { if (v > 0.02) cur = i; });
+  // 當前站一律採用 hero-kit 傳來的 ai/aid(與 DOM 文案層同一個判定),
+  // 自行用 k>0.02 推算會慢文案一步 → 出現「文案 03 / 軌道 02」。
+  let cur = IDS.indexOf(e.aid);
+  if (cur < 0) { cur = 0; ks.forEach((v, i) => { if (v > 0.02) cur = i; }); }
 
   // ── 手機:單景舞台(吸睛版)——進度軌 + 一次一個大場景物件
   //    母動畫:物件隨捲動 進場(上移+旋轉+淡入)/退場(上飄+反旋+淡出)
@@ -1428,7 +1429,9 @@ function paintMethod(g, e) {
 // ---------- Method 手機:單景大舞台(母動畫=整組物件隨捲動移動/旋轉/淡入出;子動畫=物件自身持續動作) ----------
 function paintMethodMobile(g, e, sb, ks) {
   const { zone: z, C, d, t } = e;
-  let cur = 0; ks.forEach((v, i) => { if (v > 0.02) cur = i; });
+  // 與 DOM 文案層同一個判定(見 hero-kit 的 ai/aid),不自行用 k>0.02 推算
+  let cur = ['map', 'goal', 'pilot', 'live'].indexOf(e.aid);
+  if (cur < 0) { cur = 0; ks.forEach((v, i) => { if (v > 0.02) cur = i; }); }
   const kv = ks[cur], nk = cur < 3 ? ks[cur + 1] : 0;
   const fsT = 19.5, fsM = 16.5, fsN = 13;     // 手機大字方針:標題/內容/註記
   const AK = [C.orange, C.orange, C.blue, C.green];
