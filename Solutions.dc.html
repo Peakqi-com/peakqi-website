@@ -526,8 +526,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             </div>
             <sc-for list="{{ mods }}" as="m" hint-placeholder-count="6">
               <div data-smod tabindex="0" style="border:1px solid rgba(9,11,14,.16);border-radius:6px;background:#F2EFE8;padding:13px 16px;display:flex;align-items:baseline;gap:12px;cursor:pointer;outline-offset:2px">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C">{{ m.n }}</span>
-                <span style="font:800 15.5px 'Noto Sans TC',sans-serif">{{ m.name }}</span>
+                <span style="font:700 11px 'Space Grotesk',sans-serif;color:#FF6B2C;flex-shrink:0">{{ m.n }}</span>
+                <span style="font:800 15.5px 'Noto Sans TC',sans-serif;white-space:nowrap;flex-shrink:0">{{ m.name }}</span>
                 <span style="margin-left:auto;font:400 12px 'Noto Sans TC',sans-serif;opacity:.6">{{ m.tag }}</span>
               </div>
             </sc-for>
