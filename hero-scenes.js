@@ -402,9 +402,11 @@ function paintSolutions(g, e) {
     } else if (i === 3) { // 安排下一步:token 巡遊四站(子:沿線滑行)
       const m0 = x + 14, m1 = x + w - 14, ty2 = y + h * .34;
       const steps = ['補齊需求', '提供案例', '確認反應', '決定下一步'];
+      // 進度正規化:本景 82% 前一定抵達最後一站(舊式 kv*3.2-.3 對末站需要 kv>1.03,永遠到不了)
+      const conn = ez(sb(kv, .06, .82)) * (steps.length - 1);
       steps.forEach((tx2, j2) => {
         const nx = m0 + (m1 - m0) * j2 / 3;
-        const on = kv * 3.2 - .3 > j2;
+        const on = conn >= j2 - .02;
         d.node(nx, ty2, on ? 3.6 : 2.4, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
         g.globalAlpha = a;
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
@@ -414,10 +416,10 @@ function paintSolutions(g, e) {
         g.fillText(tx2, j2 === 0 ? nx - 4 : (j2 === 3 ? nx + 4 : nx),
           ty2 + (j2 % 2 ? Math.max(38, 40 * S) : Math.max(19, 21 * S)));
         g.textAlign = 'left';
-        if (j2 < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (j2 + 1) / 3 - 6, ty2, clamp(kv * 3.2 - .45 - j2, 0, 1), 'rgba(62,155,255,.5)', 1.4);
+        if (j2 < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (j2 + 1) / 3 - 6, ty2, clamp(conn - j2, 0, 1), 'rgba(62,155,255,.5)', 1.4);
       });
-      const tokP = (Math.sin(t * .9) * .5 + .5) * ez(sb(kv, .4, .8)); // token 巡遊(子)
-      const tokX = m0 + (m1 - m0) * Math.min(tokP, clamp((kv * 3.2 - .3) / 3, 0, 1));
+      // token 巡遊(子動畫):持續往前跑,但不超過已接通的範圍;接通完成後可跑到最後一站
+      const tokX = m0 + (m1 - m0) * Math.min((t * .32) % 1, conn / 3);
       g.globalAlpha = a * ez(sb(kv, .3, .6));
       g.beginPath(); g.arc(tokX, ty2, 6, 0, TAU);
       g.fillStyle = 'rgba(62,155,255,.25)'; g.fill();
@@ -462,10 +464,10 @@ function paintSolutions(g, e) {
     } else if (i === 5) { // 流程接通:模組逐一接通 + 火花(子) + 流動虛線(子)
       const mods = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
       const m0 = x + 16, m1 = x + w - 16, my = y + h * .42;
-      const conn = kv * 5.4 - .3;
+      const conn = ez(sb(kv, .06, .8)) * (mods.length - 1); // 正規化:本景 80% 前接通到最後一個模組
       mods.forEach((tx2, j2) => {
         const nx = m0 + (m1 - m0) * j2 / 5;
-        const on = conn > j2;
+        const on = conn >= j2 - .02;
         if (j2 < 5 && on) { // 流動虛線(子)
           g.save(); g.strokeStyle = 'rgba(101,224,188,.55)'; g.lineWidth = 1.4;
           g.setLineDash([5, 7]); g.lineDashOffset = -t * 26;
@@ -490,14 +492,15 @@ function paintSolutions(g, e) {
       const st = [['12', '今日新客', C.ivory], ['28s', '平均回覆', C.blue], ['18%', '本週轉換', C.green]];
       const gw2 = (w - 20) / 3;
       st.forEach((r2, j2) => {
-        const kc = ez(sb(kv, .1 + j2 * .14, .35 + j2 * .14));
+        // 收在本景 52% 前跑完:尾景 CTA 回來時,步驟已經演完(順序是先動畫、後按鈕)
+        const kc = ez(sb(kv, .06 + j2 * .1, .28 + j2 * .1));
         if (kc <= .02) return;
         const bx = x + j2 * (gw2 + 10);
         g.globalAlpha = a * kc;
         d.rr(bx, y + 6, gw2, h * .52, 8);
         g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
         g.strokeStyle = 'rgba(242,239,232,.18)'; g.stroke();
-        const blink = j2 === 0 ? (Math.sin(t * 3.4) > .92 ? .4 : 1) : 1; // 數字閃爍(子)
+        const blink = j2 === 0 ? (Math.sin(t * 3.4) > .92 ? .72 : 1) : 1; // 數字更新閃動(子,不做到像沒亮)
         g.globalAlpha = a * kc * blink;
         g.font = '700 ' + Math.max(17, 19 * S) + 'px "Space Grotesk",sans-serif';
         g.fillStyle = r2[2]; g.textAlign = 'center';
@@ -508,7 +511,7 @@ function paintSolutions(g, e) {
         g.fillText(r2[1], bx + gw2 / 2, y + 6 + h * .28 + Math.max(16, 18 * S));
         g.textAlign = 'left';
       });
-      const lk = ez(sb(kv, .5, .8)); // 火花線循環(子)
+      const lk = ez(sb(kv, .34, .6)); // 火花線循環(子);同樣提前跑完
       if (lk > .02) {
         const ly2 = y + h * .78;
         g.globalAlpha = a * lk;
@@ -1342,9 +1345,10 @@ function paintMethod(g, e) {
       const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
       const ty2 = py0 + 26 + rh * 1.15;
       const m0 = px0 + Math.max(26, pw * .08), m1 = px0 + pw - Math.max(26, pw * .08);
+      const conn = ez(sb(kP, .06, .78)) * (steps.length - 1); // 正規化:末站也會接到(舊式需 kP>0.98)
       steps.forEach((tx, i) => {
         const nx = m0 + (m1 - m0) * i / 3;
-        const on = kP * 3.4 - .35 > i;
+        const on = conn >= i - .02;
         d.node(nx, ty2, on ? 3.4 : 2.4, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
         g.globalAlpha = a;
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
@@ -1352,7 +1356,7 @@ function paintMethod(g, e) {
         g.textAlign = i === 0 ? 'left' : (i === steps.length - 1 ? 'right' : 'center');
         g.fillText(tx, i === 0 ? nx - 4 : (i === steps.length - 1 ? nx + 6 : nx), ty2 + rh * .62);
         g.textAlign = 'left';
-        if (i < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (i + 1) / 3 - 6, ty2, clamp(kP * 3.4 - .5 - i, 0, 1), 'rgba(62,155,255,.5)', 1.2);
+        if (i < 3) d.line(nx + 6, ty2, m0 + (m1 - m0) * (i + 1) / 3 - 6, ty2, clamp(conn - i, 0, 1), 'rgba(62,155,255,.5)', 1.4);
       });
       const kg2 = ez(sb(kP, .45, .7));
       if (kg2 > 0.02) {
@@ -1536,9 +1540,9 @@ function paintMethodMobile(g, e, sb, ks) {
     const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
     const py = Math.max(by + 58, by + bh * .46);   // 閘門畫在節點上方 50px,不可低於面板上緣
     const m0 = bx + 20, m1 = bx + bw - 20;
-    const conn = kv * 3.6 - .35;
+    const conn = ez(sb(kv, .06, .78)) * (steps.length - 1); // 正規化:本景 78% 前一定接到最後一站
     steps.forEach((tx, i) => {
-      const nx = m0 + (m1 - m0) * i / 3, on = conn > i;
+      const nx = m0 + (m1 - m0) * i / 3, on = conn >= i - .02;
       if (i < 3) {
         const nx2 = m0 + (m1 - m0) * (i + 1) / 3;
         if (on) {
@@ -1547,7 +1551,7 @@ function paintMethodMobile(g, e, sb, ks) {
           g.setLineDash([5, 7]); g.lineDashOffset = -t * 24;
           g.beginPath(); g.moveTo(nx + 9, py); g.lineTo(nx2 - 9, py); g.stroke();
           g.restore();
-        } else d.line(nx + 9, py, nx2 - 9, py, clamp(conn - i, 0, 1), 'rgba(62,155,255,.4)', 1.5);
+        } else d.line(nx + 9, py, nx2 - 9, py, clamp(conn - i, 0, 1), 'rgba(62,155,255,.45)', 1.5);
       }
       d.node(nx, py, on ? 5 : 3.4, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
       g.globalAlpha = a * (on ? 1 : .5);
@@ -1595,7 +1599,8 @@ function paintMethodMobile(g, e, sb, ks) {
     [['tick', '第一階段上線', '標準模組最快 10 個工作天'],
      ['pulse', '觀察實際使用與例外', '例外自動記錄'],
      ['cycle', '每週小幅調整', '依使用數據持續改善']].forEach((r, i) => {
-      const kr = ez(sb(kv, .1 + i * .14, .4 + i * .14));
+      // 收在本景 52% 前跑完:尾景 CTA 回來時步驟已演完(先動畫、後按鈕)
+      const kr = ez(sb(kv, .06 + i * .1, .3 + i * .1));
       if (kr <= .01) return;
       const ry = by + i * rh, icx = bx + 12, rise = (1 - kr) * 16, icy = ry + rh * .36 + rise;
       if (r[0] === 'tick') d.tick(icx, icy, 9, C.green, a * kr);
@@ -1618,7 +1623,7 @@ function paintMethodMobile(g, e, sb, ks) {
       g.font = '500 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
       g.fillText(r[2], bx + 34, icy + fsN + 15);
     });
-    const lk = ez(sb(kv, .5, .85));
+    const lk = ez(sb(kv, .34, .6));
     if (lk > .02) {
       const ly = by + bh - 16;
       g.save(); g.globalAlpha = a * lk;
