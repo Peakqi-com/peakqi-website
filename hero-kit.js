@@ -143,7 +143,8 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
   resize();
   const bound = MotionBoundary(ctx, stage);
   const idle = opt.flags.idle && opt.tier === 'full';
-  ctx.onFrame((now) => { if (!bound.inView) return; if (idle || dirty) draw(now); });
+  let _fl = 0; // 手機(lite 級)子動畫需要時間驅動:視口內以半幀率(~30fps)持續重繪,兼顧電量
+  ctx.onFrame((now) => { if (!bound.inView) return; if (idle || dirty || (opt.mobile && (_fl = 1 - _fl))) draw(now); });
   let tmr = 0;
   const onRz = () => { clearTimeout(tmr); tmr = setTimeout(resize, 120); };
   window.addEventListener('resize', onRz);

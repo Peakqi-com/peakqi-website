@@ -145,9 +145,9 @@ function paintSolutions(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .6, 1.25);
-  const fs = Math.max(12, 12.5 * S);      // 站名
-  const fsS = Math.max(9.5, 10 * S);      // 輔助/編號
-  const fsB = Math.max(11, 11.5 * S);     // 站內內容
+  const fs = Math.max(13.5, 12.5 * S);    // 站名
+  const fsS = Math.max(11, 10 * S);       // 輔助/編號
+  const fsB = Math.max(12.5, 11.5 * S);   // 站內內容(手機可讀鐵律:再拉高)
 
   const IDS = ['sig', 'layers', 'cap', 'fol', 'nur', 'align', 'console'];
   const NAMES = ['詢問進來', '辨識需求', '回應與建檔', '安排下一步', '延續脈絡', '流程接通', '營運視圖'];
@@ -173,9 +173,9 @@ function paintSolutions(g, e) {
       d.node(dx, ry, curD ? 4.4 : 2.6, curD ? C.orange : (on ? C.green : 'rgba(242,239,232,.3)'), curD ? (.7 + .3 * Math.sin(t * 3)) : (on ? .9 : .45), !on && !curD);
       if (i < IDS.length - 1) d.line(dx + 6, ry, px0 + 10 + (pw - 86) * (i + 1) / (IDS.length - 1) - 6, ry, i < cur ? 1 : 0, 'rgba(101,224,188,.4)', 1);
     }
-    g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+    g.font = '700 ' + Math.max(12.5, fsS) + 'px "Space Grotesk",monospace';
     g.fillStyle = C.orange; g.textAlign = 'right';
-    g.fillText('0' + (cur + 1) + ' / 07', px0 + pw, ry + fsS * .36);
+    g.fillText('0' + (cur + 1) + ' / 07', px0 + pw, ry + fsS * .4);
     g.textAlign = 'left';
 
     const vy = ry + 18;
@@ -407,7 +407,7 @@ function paintSolutions(g, e) {
       const oy = y + h * .46, orad = Math.min(w * .3, h * .34);
       const ck = ez(sb(kv, .12, .4));
       g.globalAlpha = a * ck;
-      g.beginPath(); g.arc(cx2, oy, Math.max(16, 18 * S), 0, TAU);
+      g.beginPath(); g.arc(cx2, oy, Math.max(22, 24 * S), 0, TAU);
       g.fillStyle = 'rgba(255,107,44,.14)'; g.fill();
       g.strokeStyle = C.orange; g.lineWidth = 1.6; g.stroke();
       g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
@@ -422,7 +422,7 @@ function paintSolutions(g, e) {
         const ang = t * .7 + j2 * Math.PI * 2 / 3; // 公轉(子)
         const bx = cx2 + Math.cos(ang) * orad, by = oy + Math.sin(ang) * orad * .74;
         g.globalAlpha = a * kc;
-        g.beginPath(); g.arc(bx, by, Math.max(13, 14 * S), 0, TAU);
+        g.beginPath(); g.arc(bx, by, Math.max(18, 19 * S), 0, TAU);
         g.fillStyle = 'rgba(9,11,14,.92)'; g.fill();
         g.strokeStyle = [C.orange, C.blue, C.green][j2]; g.lineWidth = 1.4; g.stroke();
         g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.9)';
