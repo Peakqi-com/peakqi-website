@@ -650,12 +650,18 @@ function paintCases(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .62, 1.25);
-  const fs = Math.max(12, 12.5 * S), fsS = Math.max(9.5, 10 * S), fsB = Math.max(11, 11.5 * S);
+  // 手機字級拉到與其他 hero 一致(原本 12/11/9.5 太小);版面改用「理想高度」佈局,
+  // 矮視窗(iPhone mini 開著工具列只剩 267px)再整組等比縮小 —— 縮的是整體,不會壓到互相重疊。
+  const fs = mobile ? 16 : Math.max(12, 12.5 * S);
+  const fsS = mobile ? 13 : Math.max(9.5, 10 * S);
+  const fsB = mobile ? 15 : Math.max(11, 11.5 * S);
   const ks = { wed: k('wed'), int: k('int'), rea: k('rea'), bea: k('bea'), sum: k('sum') };
   const pw = Math.min(z.w * .94, 430);
   const px0 = z.x + (z.w - pw) / 2;
-  const py0 = z.y + Math.max(8, z.h * .02);
-  const ph = Math.min(z.h - (py0 - z.y) - Math.max(8, z.h * .02), Math.max(300, z.h * .9));
+  const availH = z.h - Math.max(8, z.h * .02) * 2;
+  const ph = mobile ? 372 : Math.min(availH, Math.max(300, z.h * .9));
+  const sc = mobile ? Math.min(1, availH / ph) : 1;
+  const py0 = z.y + Math.max(8, z.h * .02) + Math.max(0, (availH - ph * sc) / 2);
 
   const order = ['wed', 'int', 'rea', 'bea', 'sum'];
   const NAME = { wed: '婚禮婚慶', int: '室內設計', rea: '房仲不動產', bea: '美業預約', sum: 'YOUR TURN' };
@@ -669,6 +675,8 @@ function paintCases(g, e) {
     const a = ez(sb(kv, .02, .3)) * fd;
     if (a <= 0.02) return;
     g.save();
+    // 空間不足時整組等比縮小(以面板上緣中點為錨),版面座標維持在理想尺寸
+    if (sc < 1) { g.translate(px0 + pw / 2, py0); g.scale(sc, sc); g.translate(-(px0 + pw / 2), -py0); }
     // 外框面板
     d.rr(px0, py0, pw, ph, 10);
     g.globalAlpha = a * .96;
