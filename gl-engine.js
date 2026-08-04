@@ -124,6 +124,10 @@ gl_FragColor=vec4(col,(ring*flow*.55+core*.3)*uA);}`;
   }
   let flowWrap = null, flowDeck = null;
   function fxFlow(t) {
+    // 流程段的 WebGL veil(含色差)退役:它會在整個牌組上蓋一層糊掉的濾鏡,
+    // 桌機捲到該段時整段看起來像壓了一張模糊影片,內容反而看不清楚。
+    return;
+    /* eslint-disable no-unreachable */
     if (!flowWrap || !flowDeck) return;
     const wr = flowWrap.getBoundingClientRect();
     const vh = H / DPR;
