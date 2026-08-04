@@ -176,10 +176,23 @@ export function createInteractions({ refs }) {
     const p = clamp((vh - r.top) / (vh + r.height), 0, 1);
     const k = ez(sub(p, 0.22, 0.62));
     const vertical = getComputedStyle(tl.cont).flexDirection === 'column';
+    // ── 先讀後寫 ──
+    // 節點亮不亮,直接拿「線目前在螢幕上實際畫到哪裡」跟「這顆點在螢幕上的位置」比,
+    // 不再另外算一份 i/(n-1) 的進度。兩套判定只要有一邊被別的因素影響
+    // (排版轉直式、步驟數變動、容器可橫捲),點就會跑到線前面 ——
+    // 實測 PeakOps 桌機線畫到 875/1344 時第 5 顆點已經亮了(距線頭 205px),
+    // 手機直式時也有兩顆亮在線外。用螢幕座標比就沒有任何記帳誤差。
+    // 讀取全部在寫入 transform 之前,所以不會每幀強制回流(代價是 1 幀延遲,看不出來)。
+    const lr = tl.line.getBoundingClientRect(), cr = tl.cont.getBoundingClientRect();
+    const reach = vertical ? (lr.bottom - cr.top) : (lr.right - cr.left);
+    const pos = tl.dots.map((d) => {
+      const dr = d.getBoundingClientRect();
+      return vertical ? (dr.top + dr.height / 2 - cr.top) : (dr.left + dr.width / 2 - cr.left);
+    });
     tl.line.style.transformOrigin = vertical ? 'top center' : 'left center';
     tl.line.style.transform = vertical ? 'scaleY(' + k.toFixed(3) + ')' : 'scaleX(' + k.toFixed(3) + ')';
     tl.dots.forEach((d, i) => {
-      const on = k >= (i / Math.max(1, tl.n - 1)) - 0.02;
+      const on = k >= 0.999 ? true : pos[i] <= reach + 4;
       const want = on ? (i === tl.n - 1 ? GREEN : ORANGE) : 'rgba(242,239,232,.25)';
       if (d.style.background !== want) d.style.background = want;
     });
@@ -237,7 +250,7 @@ export function createInteractions({ refs }) {
       if (!reduced) raf = requestAnimationFrame(loop);
       window.__pqInteractions = {
         galNav,
-        state: () => ({ reduced, mobile, gal: gal ? { simple: gal.simple, extra: gal.extra, loaded: gal.loaded } : null, tl: !!tl, caseN: caseFx ? caseFx.items.length : 0, err: lastErr })
+        state: () => ({ reduced, mobile, vis: { ...vis }, gal: gal ? { simple: gal.simple, extra: gal.extra, loaded: gal.loaded } : null, tl: !!tl, caseN: caseFx ? caseFx.items.length : 0, err: lastErr })
       };
     };
     boot();

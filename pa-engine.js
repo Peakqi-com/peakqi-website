@@ -156,13 +156,21 @@ export function createPricingFX() {
     const wrap = pin('p-timeline', 170);
     line.style.transform = 'scaleX(0)';
     dots.forEach(d => { d.style.background = 'rgba(9,11,14,.25)'; });
+    // 先讀後寫:節點亮不亮,直接拿「線目前實際畫到哪裡」跟「這顆點的位置」比(螢幕座標),
+    // 不另外算一份 i/(n-1) 的進度 —— 兩套判定只要有一邊被排版變動影響,點就會跑到線前面。
     ScrollChapter(ctx, wrap || sec, (p) => {
       const k = ez(sub(p, wrap ? 0.06 : 0.22, wrap ? 0.8 : 0.62));
       const vertical = getComputedStyle(cont).flexDirection === 'column';
+      const lr = line.getBoundingClientRect(), cr = cont.getBoundingClientRect();
+      const reach = vertical ? (lr.bottom - cr.top) : (lr.right - cr.left);
+      const pos = dots.map((d) => {
+        const dr = d.getBoundingClientRect();
+        return vertical ? (dr.top + dr.height / 2 - cr.top) : (dr.left + dr.width / 2 - cr.left);
+      });
       line.style.transformOrigin = vertical ? 'top center' : 'left center';
       line.style.transform = vertical ? 'scaleY(' + k.toFixed(3) + ')' : 'scaleX(' + k.toFixed(3) + ')';
       dots.forEach((d, i) => {
-        const on = k >= i / Math.max(1, dots.length - 1) - 0.02;
+        const on = k >= 0.999 ? true : pos[i] <= reach + 4;
         d.style.background = on ? (i === dots.length - 1 ? '#65E0BC' : '#FF6B2C') : 'rgba(9,11,14,.25)';
       });
     }, { pinned: !!wrap });
