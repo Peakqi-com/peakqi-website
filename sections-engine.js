@@ -273,10 +273,18 @@ export function createSectionsEngine({ refs }) {
   function setupMobileParallax() {
     if (reduced || !mobile) return;
     const els = [];
-    document.querySelectorAll('#pq-orbitrow [data-orbcard], #flow [data-layer]').forEach((el, i) => {
+    // 功能總覽卡是「橫向並排」,彼此用不同係數做分層很安全;
+    // 但 #flow 三張是「直向堆疊」——相鄰卡係數不同 = 走的距離不同 = 間距被吃掉,
+    // 實測會疊 14px(晶片壓到下一張的標題)。直向堆疊一律用同一個係數,一起動。
+    document.querySelectorAll('#pq-orbitrow [data-orbcard]').forEach((el, i) => {
       el.style.willChange = 'transform';
       el.style.transition = 'transform .12s linear';
       els.push({ el, f: 0.05 + (i % 3) * 0.035 });
+    });
+    document.querySelectorAll('#flow [data-layer]').forEach((el) => {
+      el.style.willChange = 'transform';
+      el.style.transition = 'transform .12s linear';
+      els.push({ el, f: 0.045 });
     });
     if (els.length) mpar = { els };
   }
@@ -286,7 +294,9 @@ export function createSectionsEngine({ refs }) {
       const it = mpar.els[i], r = it.el.getBoundingClientRect();
       if (r.bottom < -60 || r.top > vh + 60) continue;
       const off = (r.top + r.height / 2) - vc;
-      it.el.style.transform = 'translateY(' + (-off * it.f).toFixed(1) + 'px)';
+      // 位移封頂 ±14px:任何情況下相鄰元素的相對位移都遠小於卡距,不可能再疊到
+      const dy = Math.max(-14, Math.min(14, -off * it.f));
+      it.el.style.transform = 'translateY(' + dy.toFixed(1) + 'px)';
     }
   }
   let lastTick = 0;

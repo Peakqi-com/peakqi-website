@@ -119,10 +119,11 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-win]:nth-of-type(4){right:4%!important;top:66%!important;transform:rotate(1.5deg)!important}
 [data-win]:nth-of-type(5){left:8%!important;top:76%!important;transform:rotate(-2deg)!important}
 }
-/* 追客/養客卡距 v2:完全分離 */
-@media (max-width:899px){#flow [data-deck]{gap:44px!important}#flow [data-layer]{padding-bottom:26px!important}}
-/* 手機三層流程卡:加大卡距,不要黏成一疊 */
-@media (max-width:899px){#flow [data-deck]{gap:36px!important}#flow [data-layer]{box-shadow:0 12px 30px rgba(9,11,14,.16)!important;padding-bottom:20px!important}}
+/* 手機三層流程卡:卡距一條規則講完(先前兩條互相覆蓋,44 被 36 蓋掉) */
+@media (max-width:899px){
+#flow [data-deck]{gap:40px!important}
+#flow [data-layer]{padding-bottom:24px!important;box-shadow:0 12px 30px rgba(9,11,14,.16)!important}
+}
 /* 流程 X 光(手機):亂源五張卡原本直排 ~500px,加上診斷盤 ~400px = 永遠不可能同屏,
    於是「一邊亂、一邊被接手」這個因果看不到。壓成緊湊兩欄的便利貼牆(~190px),
    讓亂源與診斷盤一起進到同一個畫面裡。 */
