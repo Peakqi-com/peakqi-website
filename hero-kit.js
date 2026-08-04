@@ -262,11 +262,48 @@ export function HeroDataLine(ctx, root, model) {
     nodes.push({ el: keep(el), id });
     el.style.transition = 'opacity 300ms cubic-bezier(0.16,1,0.3,1)';
   });
+  // 中途站:data-hero-stop="0.25" = 線頭走到整段進度 0.25 時亮起。
+  // 用進度而不是場景 id,是因為一條線可能橫跨多景。
+  const stops = [];
+  root.querySelectorAll('[data-hero-stop]').forEach((el) => {
+    const at = parseFloat(el.getAttribute('data-hero-stop'));
+    if (!isFinite(at)) return;
+    stops.push({ el: keep(el), at });
+    el.style.transition = 'opacity 260ms cubic-bezier(0.16,1,0.3,1), fill 260ms linear';
+  });
+  // 線頭圓點:位置由「線的實際長度」推算,不是寫死的座標。
+  // 站上先前的毛病就是點與線分家(圓點釘在固定 cx,線卻另外畫),這裡用
+  // getPointAtLength 直接取線的端點,任何路徑形狀都會貼合。
+  const dots = [];
+  root.querySelectorAll('[data-hero-dot]').forEach((el) => {
+    const id = (el.getAttribute('data-hero-dot') || '').trim();
+    const line = lines.filter((l) => l.id === id)[0] || lines[0];
+    if (!line) return;
+    let base = null;
+    try { base = line.el.getPointAtLength(0); } catch (e) { return; }
+    if (!base) return;
+    dots.push({ el: keep(el), line, base });
+  });
+  const kOfLine = (l, ks, p) => clamp(l.id === '*' ? p : (ks[l.id] ?? 1), 0, 1);
   return {
     update(p) {
       const ks = model.kOf(p);
-      lines.forEach((l) => { l.el.style.strokeDashoffset = String(l.L * (1 - (ks[l.id] ?? 1))); });
+      // id 寫 "*" = 吃整段 hero 進度(捲到最後一景時線才走完),
+      // 不是綁單一場景 —— 綁錯場景 id 時 ks[id] 會是 undefined,
+      // ?? 1 讓它一進站就是「已完成」,看起來就像整條線凍住不動。
+      lines.forEach((l) => { l.el.style.strokeDashoffset = String(l.L * (1 - kOfLine(l, ks, p))); });
       nodes.forEach((n) => { n.el.style.opacity = (ks[n.id] ?? 1) > 0.55 ? '1' : '0'; });
+      stops.forEach((s2) => {
+        const on = p >= s2.at - 0.004;
+        s2.el.style.opacity = on ? '1' : '.34';
+        s2.el.style.fill = on ? '#FF6B2C' : 'transparent';
+      });
+      dots.forEach((dt) => {
+        try {
+          const pt = dt.line.el.getPointAtLength(dt.line.L * kOfLine(dt.line, ks, p));
+          dt.el.setAttribute('transform', 'translate(' + (pt.x - dt.base.x).toFixed(2) + ',' + (pt.y - dt.base.y).toFixed(2) + ')');
+        } catch (e) {}
+      });
     }
   };
 }

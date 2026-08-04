@@ -105,10 +105,19 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             </div>
             <svg viewBox="0 0 1200 24" fill="none" preserveAspectRatio="none" style="width:100%;height:14px;display:block">
               <path data-flowline d="M6 12 L1194 12" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" vector-effect="non-scaling-stroke" style="animation:pqDash 2.6s linear infinite"></path>
-              <path data-hero-line="wait" d="M6 12 L440 12" stroke="#FF6B2C" stroke-width="2.4" vector-effect="non-scaling-stroke"></path>
+              <!-- 進度線吃整段 hero 進度("*"):任務 4/4 捲完才走到底。
+                   舊版寫 data-hero-line="wait",但本頁四景的 id 是 ind/flow/build/go,
+                   查不到就 ?? 1 當成已完成 —— 加上路徑本身只畫到 L440(1194 的 36.8%),
+                   結果整條線從進站第一秒就凍在 1/3,捲動完全不影響它。 -->
+              <path data-hero-line="*" d="M6 12 L1194 12" stroke="#FF6B2C" stroke-width="2.4" vector-effect="non-scaling-stroke"></path>
               <circle cx="6" cy="12" r="4" fill="#FF6B2C"></circle>
-              <circle data-hero-node="build" cx="440" cy="12" r="5" fill="#FF6B2C"></circle>
+              <!-- 四個任務的中途站,線頭走到就亮(位置 = 各景的結束進度) -->
+              <circle data-hero-stop="0.25" cx="303" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
+              <circle data-hero-stop="0.5" cx="600" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
+              <circle data-hero-stop="0.78" cx="933" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
               <circle cx="1194" cy="12" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
+              <!-- 線頭圓點:座標由線的實際長度推算,永遠貼在線頭,不會與線分家 -->
+              <circle data-hero-dot="*" cx="6" cy="12" r="5.5" fill="#FF6B2C"></circle>
             </svg>
             <span style="font:600 clamp(9.5px,2.5vw,10.5px) 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.45);text-align:right">等你選擇流程與產業,補完這條線 ↓</span>
           </div>
