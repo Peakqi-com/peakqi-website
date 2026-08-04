@@ -94,20 +94,31 @@ export function createHome2() {
     };
     if (ctx.reduced) return; // 模板預設=接管後狀態+結語
     if (ctx.mobile) {
-      // 手機未釘住,捲動驅動一入眼就是終態 → 改為入視口播一次 3.4s 時間軸(問題升高→AI 接管轉綠)
-      let played = false;
-      const watchEl = (meters[0] && meters[0].parentElement) || q('#diagnostic'); // 觀察面板本體,不是整個長 section(否則面板進眼前動畫已播完)
-      ctx.io(watchEl, es => {
-        if (played || !(es[0] && es[0].isIntersecting)) return;
-        played = true;
-        const t0 = performance.now();
-        const stepFn = (now) => {
-          const p2 = Math.min(1, (now - t0) / 3400);
-          applyDiag(p2);
-          if (p2 < 1) requestAnimationFrame(stepFn);
-        };
-        requestAnimationFrame(stepFn);
-      }, { threshold: 0.4 });
+      // 手機:原本是「入視口播一次 3.4s」,使用者還在捲的時候就播完了,看到的永遠是全綠終態。
+      // 改為由「這一組(亂源+診斷盤)在視口裡的行程」驅動 —— 捲多少走多少,
+      // 兩半又被 CSS 壓進同一屏,所以升高與接管都看得到、也控制得住。
+      const group = q('#diagnostic [data-dgrid]') || (meters[0] && meters[0].parentElement);
+      if (!group) return;
+      let inView = false;
+      ctx.io(group, es => { inView = !!(es[0] && es[0].isIntersecting); }, { threshold: 0 });
+      const jitter = qa('#diagnostic [data-dtool]');
+      ctx.onFrame((now) => {
+        if (!inView) return;
+        const r = group.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        // 整組頂端剛進視口底 → 0;整組底端離開視口頂 → 1(完整行程,才不會沒進畫面就跑完)
+        const raw = (vh - r.top) / Math.max(1, r.height + vh);
+        const p2 = sub(raw, 0.12, 0.88);
+        applyDiag(p2);
+        // 混亂期的卡片微抖(子動畫),接管後停下來
+        const chaos = ez(sub(p2, .05, .5)) * (1 - ez(sub(p2, .58, .74)));
+        jitter.forEach((el, i) => {
+          const rot = parseFloat(el.getAttribute('data-rot') || '0');
+          const sh = chaos * (1.6 + i * .35);
+          el.style.transform = 'rotate(' + (rot + Math.sin(now / 240 + i * 1.7) * sh * .5).toFixed(2) + 'deg)'
+            + ' translate(' + (Math.sin(now / 190 + i) * sh).toFixed(2) + 'px,' + (Math.cos(now / 260 + i * 2) * sh * .7).toFixed(2) + 'px)';
+        });
+      });
       return;
     }
     pin(wrap, stage, 100);

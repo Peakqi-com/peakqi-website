@@ -123,6 +123,20 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @media (max-width:899px){#flow [data-deck]{gap:44px!important}#flow [data-layer]{padding-bottom:26px!important}}
 /* 手機三層流程卡:加大卡距,不要黏成一疊 */
 @media (max-width:899px){#flow [data-deck]{gap:36px!important}#flow [data-layer]{box-shadow:0 12px 30px rgba(9,11,14,.16)!important;padding-bottom:20px!important}}
+/* 流程 X 光(手機):亂源五張卡原本直排 ~500px,加上診斷盤 ~400px = 永遠不可能同屏,
+   於是「一邊亂、一邊被接手」這個因果看不到。壓成緊湊兩欄的便利貼牆(~190px),
+   讓亂源與診斷盤一起進到同一個畫面裡。 */
+@media (max-width:899px){
+#diagnostic [data-dgrid]{gap:14px!important}
+#diagnostic [data-dgrid]>div:first-child{min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+#diagnostic [data-dtool]{max-width:none!important;align-self:auto!important;padding:9px 10px!important;border-radius:5px!important;will-change:transform}
+#diagnostic [data-dtool] span{font-size:10.5px!important;letter-spacing:.08em!important}
+#diagnostic [data-dtool] p{margin-top:4px!important;font-size:12px!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#diagnostic [data-dtool]:nth-child(6){grid-column:1 / -1}
+#diagnostic [data-dgrid]>div:last-child{padding:14px!important;gap:10px!important}
+#diagnostic [data-dgrid]>div:last-child span[style*="font:600 15px"]{font-size:13.5px!important}
+#diagnostic [data-dmeter]{height:7px!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -304,7 +318,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
           <span data-dtake style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(101,224,188,.5);color:#65E0BC;font:700 14px 'Noto Sans TC',sans-serif;letter-spacing:.1em;padding:8px 16px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC"></span>PEAKQI 開始接管</span>
         </div>
-        <div style="margin-top:clamp(24px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,40px);align-items:stretch">
+        <div data-dgrid style="margin-top:clamp(24px,3.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,40px);align-items:stretch">
           <div style="position:relative;display:flex;flex-direction:column;gap:12px;min-height:300px">
             <span data-dscan style="position:absolute;left:-6px;right:-6px;top:0;height:44px;background:linear-gradient(rgba(255,107,44,.09),transparent);opacity:0;pointer-events:none"></span>
             <div data-dtool data-rot="-2" style="background:#14171C;border:1px solid rgba(242,239,232,.16);border-radius:6px;padding:13px 15px;transform:rotate(-2deg);max-width:320px">
