@@ -85,19 +85,23 @@ export function createSolutions() {
     ScrollChapter(ctx, wrap, (p) => {
       const k = ez(sub(p, 0.08, 0.85));
       const idx = clamp(Math.floor(k * cols.length), 0, cols.length - 1);
-      // 手機是直式時間軸 → 卡片由上往下走過四張;桌機橫排 → 左右走。
-      // 行程用卡片實際寬度計算(不是欄寬平均),末段才不會多推出去。
+      // 卡片一次「滑到定點」,不隨捲動連續位移 —— 連續位移會有卡在兩張中間、把兩邊都擋住的時刻。
+      // 手機是直式時間軸:停哪一張改由「目前在視窗中的那張」決定,所以整段捲動王小姐都在畫面上。
       const vertical = cols.length > 1 && cols[1].offsetTop > cols[0].offsetTop + 4;
+      if (!card.style.transition) card.style.transition = 'transform .42s cubic-bezier(.16,1,.3,1)';
+      let snap = idx;
       if (vertical) {
-        const f = k * (cols.length - 1);
-        const i0 = clamp(Math.floor(f), 0, cols.length - 1);
-        const i1 = Math.min(i0 + 1, cols.length - 1);
-        const y = cols[i0].offsetTop + (cols[i1].offsetTop - cols[i0].offsetTop) * (f - i0);
-        card.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
+        const mid = (window.innerHeight || 800) * 0.42;
+        let bd = Infinity;
+        cols.forEach((c, i) => {
+          const d = Math.abs(c.getBoundingClientRect().top + 40 - mid);
+          if (d < bd) { bd = d; snap = i; }
+        });
+        card.style.transform = 'translateY(' + cols[snap].offsetTop + 'px)';
       } else {
-        const tw = track ? track.clientWidth : 1;
-        card.style.transform = 'translateX(' + (k * Math.max(0, tw - card.offsetWidth)).toFixed(1) + 'px)';
+        card.style.transform = 'translateX(' + cols[snap].offsetLeft + 'px)';
       }
+      idx = snap;
       cols.forEach((c, i) => {
         const on = i === idx;
         c.style.borderColor = on ? '#FF6B2C' : 'rgba(9,11,14,.14)';
