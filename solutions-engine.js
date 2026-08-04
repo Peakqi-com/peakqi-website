@@ -85,9 +85,19 @@ export function createSolutions() {
     ScrollChapter(ctx, wrap, (p) => {
       const k = ez(sub(p, 0.08, 0.85));
       const idx = clamp(Math.floor(k * cols.length), 0, cols.length - 1);
-      const tw = track ? track.clientWidth : 1;
-      const colW = tw / cols.length;
-      card.style.transform = 'translateX(' + (k * (tw - colW) ).toFixed(1) + 'px)';
+      // 手機是直式時間軸 → 卡片由上往下走過四張;桌機橫排 → 左右走。
+      // 行程用卡片實際寬度計算(不是欄寬平均),末段才不會多推出去。
+      const vertical = cols.length > 1 && cols[1].offsetTop > cols[0].offsetTop + 4;
+      if (vertical) {
+        const f = k * (cols.length - 1);
+        const i0 = clamp(Math.floor(f), 0, cols.length - 1);
+        const i1 = Math.min(i0 + 1, cols.length - 1);
+        const y = cols[i0].offsetTop + (cols[i1].offsetTop - cols[i0].offsetTop) * (f - i0);
+        card.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
+      } else {
+        const tw = track ? track.clientWidth : 1;
+        card.style.transform = 'translateX(' + (k * Math.max(0, tw - card.offsetWidth)).toFixed(1) + 'px)';
+      }
       cols.forEach((c, i) => {
         const on = i === idx;
         c.style.borderColor = on ? '#FF6B2C' : 'rgba(9,11,14,.14)';
