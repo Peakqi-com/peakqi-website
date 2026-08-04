@@ -254,8 +254,22 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-slogan-ghost:hover{border-color:#FF6B2C;color:#FF6B2C;background:rgba(255,107,44,.07)}
 /* E 一直拍照的相機:連拍節奏的快門閃光 + 取景框角標 + 拍攝參數列 */
 .pq-slogan-flash{position:absolute;inset:0;z-index:23;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:pqBurst 4.4s ease-out infinite}
-/* 亮度乘上 --k(引擎每幀給的結尾進度)→ 只有結尾會閃,且整張畫面一起閃 */
-@keyframes pqBurst{0%{opacity:0}2%{opacity:calc(.20*var(--k,0))}5%{opacity:0}8%{opacity:calc(.14*var(--k,0))}11%{opacity:0}52%{opacity:0}54%{opacity:calc(.18*var(--k,0))}57%{opacity:0}100%{opacity:0}}
+/* 亮度乘上 --k(引擎每幀給的結尾進度)→ 只有結尾會閃,且整張畫面一起閃。
+   原本峰值 .20(實測 opacity 0.198),一閃 130ms 又是 screen 混色,等於看不到 ——
+   改成真正的相機閃燈:瞬間過曝、極快衰減,並補上連拍的第二、三下。 */
+@keyframes pqBurst{
+  0%{opacity:0}
+  1.5%{opacity:calc(.62*var(--k,0))}
+  3%{opacity:calc(.22*var(--k,0))}
+  6%{opacity:0}
+  9%{opacity:calc(.40*var(--k,0))}
+  12%{opacity:0}
+  50%{opacity:0}
+  52%{opacity:calc(.55*var(--k,0))}
+  55%{opacity:calc(.18*var(--k,0))}
+  59%{opacity:0}
+  100%{opacity:0}
+}
 .pq-slogan-marks{position:absolute;inset:clamp(18px,4vw,56px);pointer-events:none;opacity:calc(var(--k,0)*.85)}
 .pq-slogan-marks i{position:absolute;width:clamp(18px,2.2vw,34px);height:clamp(18px,2.2vw,34px);border:2px solid rgba(255,107,44,.75);animation:pqMark 4.4s ease-out infinite}
 .pq-slogan-marks i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
