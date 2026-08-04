@@ -76,6 +76,12 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-cta] a{padding:12px 18px!important;font-size:13.5px!important}
 [data-hero-media]{min-height:25svh!important}
 }
+/* 大螢幕 hero:1360px 容器在 1900px 上兩欄各只剩 648px —— 標題被迫斷三行、動畫框也偏小。
+   ≥1100px 放寬容器並讓文案欄多一點,標題回到兩行,右側視覺框同步放大(手機完全不受影響)。 */
+@media (min-width:1100px){
+#m-hero [data-hero-grid]{max-width:1560px!important;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)!important}
+#m-hero [data-hero-media]{min-height:clamp(380px,60vh,600px)!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -90,7 +96,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div data-hero-wrap style="position:relative">
     <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
-      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+      <div data-hero-grid style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
         <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
           <nav aria-label="breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 14px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
@@ -98,7 +104,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">導入方法</span>
           </nav>
           <span style="font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">HOW WE DELIVER</span>
-          <h1 style="margin:0;font:900 clamp(2.2rem,3.8vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">不是先買工具,<br>而是先把<span style="color:#FF6B2C">第一階段</span>做出來。</h1>
+          <h1 style="margin:0;font:900 clamp(2.2rem,3.5vw,3.7rem)/1.18 'Noto Sans TC',sans-serif">不是先買工具,<br>而是先把<span style="color:#FF6B2C">第一階段</span>做出來。</h1>
           <p style="margin:0;max-width:620px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">導入拆成清楚的階段:先盤點流程與資料、定義要改善的成果,再建立可驗證的第一版流程,完成上線交接與持續改善——由同一個團隊負責到底。</p>
           <div data-hero-scenestage style="position:relative;min-height:96px">
             <div data-hero-scene="map" style="position:relative;display:flex;flex-direction:column;gap:6px">

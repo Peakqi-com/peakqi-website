@@ -93,8 +93,8 @@
 </sc-if>
 <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;right:18px;left:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center;justify-content:flex-end;pointer-events:none">
-    <a href="{{ ctaHref }}" onClick="{{ ctaClick }}" data-cta aria-label="{{ ctaLabel }}" style="pointer-events:auto;display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;max-width:100%;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#FF6B2C;color:#090B0E">
-      <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+    <a href="{{ ctaHref }}" target="_blank" rel="noopener" onClick="{{ ctaClick }}" data-cta aria-label="加入 PeakQi LINE 官方帳號好友(另開視窗)" style="pointer-events:auto;display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;max-width:100%;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 15px 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#06C755;color:#FFFFFF;border-color:#06C755">
+      <span style="width:8px;height:8px;border-radius:50%;background:#06C755;animation:pqPulse 1.8s ease-in-out infinite"></span>
       {{ ctaLabel }}
       <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;background:rgba(242,239,232,.16);border-radius:999px;padding:3px 9px;font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
     </a>
@@ -230,18 +230,14 @@ class Component extends DCLogic {
       toggle: () => { this.state.open ? closeMenu() : openMenu(); },
       close: closeMenu,
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
-      // 母品牌首頁不以 Demo 為唯一出口 → pill 改為「探索旗下產品」;其他頁維持產品導向的 Demo 入口
-      // 母品牌首頁主要下一步 = 預約 AI 導入評估;其他頁維持產品導向的 Demo 入口
-      ctaHref: active === 'home' ? '/demo' : '/demo',
-      // 產品頁(PeakOps)的浮動 CTA 與該頁全部主 CTA 統一為「用我的流程跑一次」;
-      // 首頁維持「預約 AI 導入評估」,其餘頁面維持原文案,避免單頁需求外溢到全站
-      ctaLabel: active === 'home' || active === 'about' ? '預約 AI 導入評估'
-        : active === 'product' || active === 'solutions' ? '用我的流程跑一次'
-        : '用我的場景看 Demo',
-      ctaBadge: active !== 'home',
-      ctaBadgeText: '15 MIN',
+      // 浮動 pill 統一導向 LINE 官方帳號加好友(全站同一個出口,最低門檻的聯絡方式);
+      // 各頁 hero 與段落內的主 CTA 維持原本的表單/Demo 動線,不受影響。
+      ctaHref: 'https://lin.ee/saa67pr',
+      ctaLabel: '加 LINE 好友',
+      ctaBadge: true,
+      ctaBadgeText: '官方帳號',
       navDemoClick: () => this._evt('nav_demo_click'),
-      ctaClick: () => this._evt('sticky_demo_click'),
+      ctaClick: () => this._evt('sticky_line_click'),
       ctaDismiss: () => {
         try { sessionStorage.setItem('pqCtaDismissed', '1'); } catch (e) {}
         this._evt('cta_dismiss');

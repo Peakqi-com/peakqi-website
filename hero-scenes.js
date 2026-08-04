@@ -1233,16 +1233,17 @@ function paintMethod(g, e) {
   // 且每次畫文字前都要重設 g.globalAlpha。
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
-  const s = clamp(Math.min(z.w / 520, z.h / 420), .55, 1.15);
   const kM = k('map'), kG = k('goal'), kP = k('pilot'), kL = k('live');
   if (mobile) { paintMethodMobile(g, e, sb, [kM, kG, kP, kL]); return; }
+  // 桌機:大螢幕要撐得起來(舊上限 470px/1.15 讓 1900px 螢幕上的面板顯得很小)
+  const s = clamp(Math.min(z.w / 520, z.h / 420), .55, 1.5);
   const cx = z.x + z.w * .5;
-  const pw = Math.min(z.w * .94, 470);
+  const pw = Math.min(z.w * .96, 660);
   const px0 = cx - pw / 2;
-  const py0 = z.y + Math.min(18, z.h * .04);
-  const rh = Math.max(30, Math.min(40, z.h * .085));
-  const fs = Math.max(11.5, 12.5 * s);
-  const fsS = Math.max(9.5, 10 * s);
+  const rh = Math.max(30, Math.min(54, z.h * .095));
+  const pyOf = (ph) => z.y + Math.max(12, (z.h - ph) / 2);   // 面板在繪圖區內垂直置中
+  const fs = Math.max(11.5, 13 * s);
+  const fsS = Math.max(9.5, 10.5 * s);
 
   // S1 現況盤點:單一面板,四條來源列逐一掃描點亮,問題晶片在列後浮現
   if (kM > 0) {
@@ -1253,6 +1254,7 @@ function paintMethod(g, e) {
       const rows = [['LINE 對話', '詢問 ×12'], ['網站表單', '需求 ×5'], ['試算表', '名單 ×3'], ['CRM', '案件 ×8']];
       const chips = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1'];
       const ph = 26 + rows.length * rh + rh * 1.05;
+      const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, false);
       d.head(px0, py0, pw, mobile ? '現況盤點' : 'INTAKE — 現況盤點', a, C.orange);
       rows.forEach((r, i) => {
@@ -1294,6 +1296,7 @@ function paintMethod(g, e) {
       g.save();
       const defs = [['目標', '回覆不漏接'], ['範圍', 'LINE 客服・一段流程'], ['人工確認', '報價與例外由人把關']];
       const ph = 26 + defs.length * rh + rh * .5;
+      const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, true);
       d.head(px0, py0, pw, mobile ? '第一階段' : 'PHASE 1 — 定義第一階段', a, C.orange);
       defs.forEach((r, i) => {
@@ -1329,6 +1332,7 @@ function paintMethod(g, e) {
     if (a > 0.02) {
       g.save();
       const ph = 26 + rh * 2.4 + rh * .9;
+      const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, false);
       d.head(px0, py0, pw, mobile ? '建立驗證' : 'PILOT — 建立驗證', a, C.blue);
       const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
@@ -1382,6 +1386,7 @@ function paintMethod(g, e) {
         ['cycle', '每週小幅調整', '依使用數據持續改善']
       ];
       const ph = 26 + rows.length * rh + rh * .35;
+      const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, true);
       d.head(px0, py0, pw, mobile ? '上線運作' : 'LIVE — 上線與改善', a, C.green);
       rows.forEach((r, i) => {
