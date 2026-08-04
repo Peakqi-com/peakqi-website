@@ -882,6 +882,14 @@ function paintPricing(g, e) {
   const { zone: z, k, C, d, mobile, t } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const s = clamp(Math.min(z.w / 720, z.h / 520), .5, 1.15);
+  // 這個區塊「寬但矮」,縮放被高度那一項壓住(桌機實測 s≈0.63 → 模組字只剩 6px,等於看不到)。
+  // 字級一律另給絕對下限,不跟著 s 一起被壓扁。
+  const fEn = Math.max(9.5, 8.5 * s);      // CAPTURE / ASSISTANT
+  const fZh = Math.max(15, 11.5 * s);      // 接客 / 業務助理
+  const fMod = Math.max(12, 9.5 * s);      // 模組列
+  const fBase = Math.max(11.5, 9 * s);     // 含 A 全部
+  const fPrice = Math.max(13.5, 12.5 * s);
+  const fMo = Math.max(10, 8.5 * s);
   const kR = k('racks'), k1 = k('cap'), k2 = k('assist'), k3 = k('plat'), kC = k('cmp'), kU = k('use'), kO = k('run');
   const fadeO = 1 - ez(sb(kO, 0, .45)) * .98; // 終幕:kO 到 0.45 前舊圖層就要全退,不拖尾
   const gap = z.w * .05, rw = (z.w - gap * 2) / 3;
@@ -902,8 +910,8 @@ function paintPricing(g, e) {
     d.rr(x, gy, rw, gh, 6);
     g.fillStyle = 'rgba(20,23,28,' + (0.42 + 0.35 * Math.max(hot, kO * .8)).toFixed(2) + ')'; g.fill();
     g.strokeStyle = hot > .08 ? m.c : 'rgba(242,239,232,.24)'; g.lineWidth = 1 + hot * .8; g.stroke();
-    d.label(m.en, x + 9, gy + Math.max(12, 14 * s), 8.5 * s, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
-    d.han(m.zh, x + 9, gy + Math.max(29, 29 * s) + 2, 11.5 * s, C.ivory, 800);
+    d.label(m.en, x + 9, gy + Math.max(13, 14 * s), fEn, hot > .08 ? m.c : 'rgba(242,239,232,.5)', 1.4);
+    d.han(m.zh, x + 9, gy + Math.max(32, 29 * s) + 2, fZh, C.ivory, 800);
     if (m.badge && hot > .5) { g.globalAlpha = a * ez(sb(m.kk, .5, 1)); d.chip(x + rw - 62 * s, gy + 6, m.badge, true, 8.5 * s); g.globalAlpha = a; }
     const slotStep = Math.max(9, gh * .6 / 4), slotTop = gy + gh * .34, slotH = Math.max(4, slotStep - 7);
     for (let u = 0; u < 4; u++) {
@@ -918,7 +926,7 @@ function paintPricing(g, e) {
         g.globalAlpha = a * kb * .85;
         d.rr(x + 8, slotTop, rw - 16, slotH, 3);
         g.setLineDash([3, 4]); g.strokeStyle = 'rgba(242,239,232,.32)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
-        if (!mobile) d.han(m.base, x + 14, slotTop + slotH / 2 + 4 * s, 9 * s, 'rgba(242,239,232,.55)', 600);
+        if (!mobile) d.han(m.base, x + 14, slotTop + slotH / 2 + fBase * .36, fBase, 'rgba(242,239,232,.6)', 600);
         g.globalAlpha = a;
       }
       row0 = 1;
@@ -934,7 +942,7 @@ function paintPricing(g, e) {
       d.rr(x + 8 + sxOff, sy, rw - 16, slotH, 3);
       g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.12)' : 'rgba(255,107,44,.12)'; g.fill();
       g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.55)' : 'rgba(255,107,44,.55)'; g.lineWidth = 1; g.stroke();
-      if (!mobile) d.han(mod, x + 14 + sxOff, sy + slotH / 2 + 4 * s, 9.5 * s, 'rgba(242,239,232,.88)', 700);
+      if (!mobile) d.han(mod, x + 14 + sxOff, sy + slotH / 2 + fMod * .36, fMod, 'rgba(242,239,232,.92)', 700);
       d.node(x + rw - 14, sy + slotH / 2, 2, C.green, a * km);
       g.globalAlpha = a;
     });
@@ -945,15 +953,15 @@ function paintPricing(g, e) {
       d.rr(x + 2, py, rw - 4, 38 * s, 4);
       g.fillStyle = 'rgba(9,11,14,.88)'; g.fill();
       g.strokeStyle = kC > 0 ? m.c : 'rgba(242,239,232,.25)'; g.lineWidth = 1.2; g.stroke();
-      g.font = '700 ' + Math.max(10, 12.5 * s) + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory;
-      g.fillText(m.price, x + 10, py + 16 * s);
-      d.label(m.mo, x + 10, py + 30 * s, 8.5 * s, m.c === C.blue ? C.blue : C.orange, .3);
+      g.font = '700 ' + fPrice + 'px "Space Grotesk",sans-serif'; g.fillStyle = C.ivory;
+      g.fillText(m.price, x + 10, py + fPrice + 3);
+      d.label(m.mo, x + 10, py + fPrice + fMo + 9, fMo, m.c === C.blue ? C.blue : C.orange, .3);
       g.globalAlpha = a;
     }
     if (kC > 0 && fadeO > 0.05 && !mobile) {
       g.globalAlpha = ez(kC) * fadeO;
       d.tick(x + 8, ry + rh + 56 * s, 5.5 * s, C.green, 1);
-      d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 18, ry + rh + 59 * s, 8.5 * s, 'rgba(242,239,232,.65)', .6);
+      d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 18, ry + rh + 59 * s, Math.max(10.5, 8.5 * s), 'rgba(242,239,232,.72)', .6);
       g.globalAlpha = 1;
     }
     g.restore();
@@ -995,7 +1003,7 @@ function paintPricing(g, e) {
     d.rr(z.x + 1, z.y + 1, z.w - 2, z.h - 2, 12);
     g.strokeStyle = 'rgba(255,107,44,' + (0.35 + 0.2 * Math.sin(t * 1.6)).toFixed(2) + ')'; g.lineWidth = 1.6; g.stroke();
     // 狀態列:呼吸綠點 + 大標
-    const inK = ez(sb(kO, .35, .75));
+    const inK = ez(sb(kO, .5, .82));   // 卡片在 kO≈0.46 才退乾淨,終幕晚一步進場才不會疊印
     g.globalAlpha = a * inK;
     const hy = z.y + z.h * (mobile ? .2 : .24);
     const pulse = .55 + .45 * Math.sin(t * 2.4);
@@ -1008,7 +1016,7 @@ function paintPricing(g, e) {
     const pw = Math.min(rw, 190 * s), ph = Math.max(34, 42 * s);
     const py = z.y + z.h * (mobile ? .38 : .42);
     meta.forEach((m, i) => {
-      const ka = ez(sb(kO, .42 + i * .12, .68 + i * .12));
+      const ka = ez(sb(kO, .54 + i * .1, .78 + i * .1));
       if (ka <= 0.01) return;
       const px2 = z.x + i * (rw + gap) + (rw - pw) / 2;
       g.globalAlpha = a * inK * ka;
