@@ -16,6 +16,11 @@
    不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
 h1,h2{text-wrap:balance}
 
+/* 錨點跳轉的落點:NAV 是 position:fixed、68px 高,沒有 scroll-padding 的話
+   每一個 href="#..." 跳過去都會把該段的標題塞到 NAV 底下(全站十幾個錨點都中)。
+   放在捲動容器 html 上,連 scrollIntoView 一起受惠;68 + 16 的呼吸空間。 */
+html{scroll-padding-top:84px}
+
 #pq-burger{display:none}
 @media (max-width:959px){#pq-links{display:none!important}#pq-burger{display:flex!important}}
 
@@ -91,6 +96,40 @@ h1,h2{text-wrap:balance}
 @media (min-width:960px){.pqm-seam{display:none}}
 @media (max-height:559px){.pqm-seam{display:none}}
 @media (prefers-reduced-motion:reduce){.pqm-seam{display:none}}
+
+/* ══ 演員層 + 逐字互動基礎 ══════════════════════════════════════════════════
+   .pqm-word / .pqm-ch:選單文字被拆成一個字一個 span,小怪獸才能對「單一個字」
+   做事(偷走、踩扁、染色)。inline-block 是 transform 生效的必要條件;
+   transform 與 color 都不觸發 reflow,所以再怎麼玩都不會把版面推歪。
+   ★ 失效方向:沒有任何 act 命中時,.pqm-ch 就是一個普通的字,完全正常。 */
+.pqm-word{display:inline-block}
+.pqm-ch{display:inline-block;transform-origin:50% 100%}
+
+/* 演員預設全部不上場;由 .pqm-vN 那一齣點名。 */
+.pqm-fore{position:fixed;inset:0;z-index:4;overflow:hidden;pointer-events:none;contain:layout paint}
+.pqm-fore *{pointer-events:none}
+@media (min-width:960px){.pqm-fore{display:none}}
+@media (max-height:559px){.pqm-fore{display:none}}
+@media (prefers-reduced-motion:reduce){.pqm-fore{display:none}}
+.pqm-ak{position:absolute;display:none}
+.pqm-ak>svg{display:block;width:100%;height:100%}
+.pqm-ak .pqm-eye,.pqm-ak .pqm-bd,.pqm-ak .pqm-arm,.pqm-ak .pqm-iris,
+.pqm-ak .pqm-drip,.pqm-ak .pqm-legL,.pqm-ak .pqm-legR,
+.pqm-ak .pqm-t1,.pqm-ak .pqm-t2,.pqm-ak .pqm-t3{transform-box:fill-box}
+.pqm-ak .pqm-eye,.pqm-ak .pqm-iris{transform-origin:50% 50%}
+.pqm-ak .pqm-bd,.pqm-ak .pqm-legL,.pqm-ak .pqm-legR{transform-origin:50% 100%}
+.pqm-ak .pqm-arm{transform-origin:100% 50%}
+.pqm-ak .pqm-drip{transform-origin:50% 0}
+.pqm-ak .pqm-t1,.pqm-ak .pqm-t2,.pqm-ak .pqm-t3{transform-origin:50% 100%}
+.pqm-ak .pqm-eye{animation:pqmSeamBlink 3.9s ease-in-out infinite}
+
+/* 演員預設尺寸(act 可覆寫) */
+.pqm-a1{width:34px;height:36px}
+.pqm-a2{width:60px;height:34px}
+.pqm-a3{width:32px;height:32px}
+.pqm-a4{width:58px;height:44px}
+.pqm-a5{width:78px;height:26px}
+.pqm-a6{width:34px;height:44px}
 
 .pqm-nk{position:absolute;display:block}
 .pqm-nk>svg{display:block;width:100%;height:100%}
@@ -282,7 +321,7 @@ h1,h2{text-wrap:balance}
 </header>
 <div aria-hidden="true" style="height:68px"></div>
 <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
-  <div role="dialog" aria-modal="true" aria-label="網站選單" onKeyDown="{{ menuKeys }}" style="position:fixed;inset:0;z-index:300;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;padding:16px clamp(20px,6vw,48px) 40px;overflow:auto">
+  <div role="dialog" aria-modal="true" aria-label="網站選單" class="{{ dlgCls }}" onKeyDown="{{ menuKeys }}" style="position:fixed;inset:0;z-index:300;background:#090B0E;color:#F2EFE8;display:flex;flex-direction:column;padding:16px clamp(20px,6vw,48px) 40px;overflow:auto">
     <!-- ═══ 縫縫獸 SEAMLINGS:手機選單彩蛋 ═══════════════════════════════════════
          插入位置:Nav.dc.html 第 74 行 <div role="dialog" aria-modal="true" ...> 的
          「第一個子元素」,也就是貼在第 75 行
@@ -420,6 +459,139 @@ h1,h2{text-wrap:balance}
       </span>
 
     </div>
+
+    <!-- 前景舞台:z-index 高於文字。演員需要「壓在字上面」才做得出
+         吃字/踩字的效果;它一樣是 pointer-events:none + aria-hidden,
+         不吃點擊也不進 a11y tree,只是視覺層級在字之前。 -->
+    <div class="pqm-fore" aria-hidden="true">
+
+      <!-- ══ 演員組 ══════════════════════════════════════════════════════════
+           上面五隻是「環境層」:固定在螢幕四邊、慢週期、只負責讓選單有生氣。
+           下面六隻是「演員層」:預設 display:none,由 .pqm-vN 那一齣決定誰上場、
+           走到哪、對哪一個字做什麼。牠們可以進到選單中間、可以壓在字上面
+           (act 用 z-index 提到文字之上),因為那正是「打破第四面牆」要的效果。
+           全族共用識別:單顆大單眼(米白眼白 + 近黑瞳 + 橘色高光)、
+           8.5% 半透明軟身 + 42% 描邊、橘腮紅、橘色「(」裂縫族徽。 -->
+
+      <!-- A1 踏踏 Tata:兩隻短腿,會走路、會跳、會踩東西 -->
+      <span class="pqm-ak pqm-a1">
+        <svg viewBox="0 0 34 36" aria-hidden="true" focusable="false">
+          <g class="pqm-bd">
+            <path d="M17 3.4C9.6 3.4 4.2 9.6 4.2 17.6c0 7.4 5.4 12.6 12.8 12.6s12.8-5.2 12.8-12.6C29.8 9.6 24.4 3.4 17 3.4Z" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="2.1"/>
+            <path d="M26.4 12.2c-2.2 2.6-2.2 6 0 8.6" stroke="#FF6B2C" stroke-opacity=".85" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="pqm-eye">
+            <ellipse cx="17" cy="16.6" rx="7.4" ry="7.8" fill="#F2EFE8"/>
+            <circle cx="17.7" cy="18.4" r="3.5" fill="#090B0E"/>
+            <circle cx="19.6" cy="15.9" r="1.35" fill="#FF6B2C"/>
+          </g>
+          <path d="M14.6 26.2c1.5 1.8 3.8 1.8 5.2 0" stroke="#F2EFE8" stroke-opacity=".6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <ellipse cx="8.6" cy="23.4" rx="2.4" ry="1.6" fill="#FF6B2C" fill-opacity=".5"/>
+          <ellipse cx="25.4" cy="23.4" rx="2.4" ry="1.6" fill="#FF6B2C" fill-opacity=".5"/>
+          <path class="pqm-legL" d="M12.4 29.4v5" stroke="#F2EFE8" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round"/>
+          <path class="pqm-legR" d="M21.6 29.4v5" stroke="#F2EFE8" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+
+      <!-- A2 拉拉 Lala:一條會伸長的軟手,用來把字「勾走」再放回來。
+           手畫在左側 x2–24,身體在右側 x26–58;.pqm-arm 沿 x 軸縮放就是伸手。 -->
+      <span class="pqm-ak pqm-a2">
+        <svg viewBox="0 0 60 34" aria-hidden="true" focusable="false">
+          <g class="pqm-arm">
+            <path d="M30 19H6" stroke="#F2EFE8" stroke-opacity=".4" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <circle cx="5.4" cy="19" r="3.4" fill="#F2EFE8" fill-opacity=".2" stroke="#F2EFE8" stroke-opacity=".46" stroke-width="1.6"/>
+          </g>
+          <g class="pqm-bd">
+            <path d="M43 3.6c-7.2 0-12.6 6-12.6 13.8 0 7.2 5.4 12.4 12.6 12.4s12.6-5.2 12.6-12.4C55.6 9.6 50.2 3.6 43 3.6Z" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="2.1"/>
+            <path d="M52.4 12.4c-2.2 2.6-2.2 6 0 8.6" stroke="#FF6B2C" stroke-opacity=".85" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="pqm-eye">
+            <ellipse cx="43" cy="16.4" rx="7.2" ry="7.6" fill="#F2EFE8"/>
+            <circle cx="41.6" cy="18.1" r="3.4" fill="#090B0E"/>
+            <circle cx="39.9" cy="15.7" r="1.3" fill="#FF6B2C"/>
+          </g>
+          <path d="M40.6 25.8c1.5 1.8 3.8 1.8 5.2 0" stroke="#F2EFE8" stroke-opacity=".6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <ellipse cx="34.8" cy="23.2" rx="2.3" ry="1.5" fill="#FF6B2C" fill-opacity=".5"/>
+          <ellipse cx="51.2" cy="23.2" rx="2.3" ry="1.5" fill="#FF6B2C" fill-opacity=".5"/>
+        </svg>
+      </span>
+
+      <!-- A3 滾滾 Gungun:正圓,整隻旋轉時族徽會跟著轉,一眼看得出在滾。 -->
+      <span class="pqm-ak pqm-a3">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <circle cx="16" cy="16" r="13.4" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="2.1"/>
+          <path d="M25.6 11.4c-2.2 2.8-2.2 6.4 0 9.2" stroke="#FF6B2C" stroke-opacity=".85" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M6.4 20.6c2.2-2.8 2.2-6.4 0-9.2" stroke="#FF6B2C" stroke-opacity=".35" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <g class="pqm-eye">
+            <ellipse cx="16" cy="15.4" rx="6.8" ry="7.2" fill="#F2EFE8"/>
+            <circle cx="16.6" cy="17" r="3.2" fill="#090B0E"/>
+            <circle cx="18.4" cy="14.7" r="1.25" fill="#FF6B2C"/>
+          </g>
+          <path d="M13.8 24c1.4 1.6 3.4 1.6 4.6 0" stroke="#F2EFE8" stroke-opacity=".55" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </span>
+
+      <!-- A4 窺窺 Kuikui:幾乎整隻都是一顆大眼,貼在螢幕上直直看著你 ——
+           打破第四面牆的主力。瞳孔是獨立的 .pqm-iris,可以左右追視。 -->
+      <span class="pqm-ak pqm-a4">
+        <svg viewBox="0 0 58 44" aria-hidden="true" focusable="false">
+          <path d="M29 4.2c-11.4 0-21 8.4-25.4 15.6-1 1.6-1 3.2 0 4.8C8 31.8 17.6 40.2 29 40.2s21-8.4 25.4-15.6c1-1.6 1-3.2 0-4.8C50 12.6 40.4 4.2 29 4.2Z" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="2.2"/>
+          <g class="pqm-eye">
+            <ellipse cx="29" cy="22.2" rx="13.6" ry="13.8" fill="#F2EFE8"/>
+            <g class="pqm-iris">
+              <circle cx="29" cy="22.2" r="6.6" fill="#090B0E"/>
+              <circle cx="31.8" cy="19.2" r="2.4" fill="#FF6B2C"/>
+            </g>
+          </g>
+          <path d="M46.8 15.2c-2 2.6-2 6 0 8.6" stroke="#FF6B2C" stroke-opacity=".8" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </span>
+
+      <!-- A5 三小隻 Trio:三個獨立 g,可以各自延遲、做成一小群穿梭。 -->
+      <span class="pqm-ak pqm-a5">
+        <svg viewBox="0 0 78 26" aria-hidden="true" focusable="false">
+          <g class="pqm-t1">
+            <circle cx="11" cy="14" r="9.4" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="1.9"/>
+            <ellipse cx="11" cy="13.4" rx="4.8" ry="5" fill="#F2EFE8"/>
+            <circle cx="11.5" cy="14.5" r="2.3" fill="#090B0E"/>
+            <circle cx="12.8" cy="12.8" r=".9" fill="#FF6B2C"/>
+          </g>
+          <g class="pqm-t2">
+            <circle cx="39" cy="14" r="7.6" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="1.8"/>
+            <ellipse cx="39" cy="13.4" rx="3.9" ry="4.1" fill="#F2EFE8"/>
+            <circle cx="38.5" cy="14.4" r="1.9" fill="#090B0E"/>
+            <circle cx="37.4" cy="12.9" r=".8" fill="#FF6B2C"/>
+          </g>
+          <g class="pqm-t3">
+            <circle cx="66" cy="14" r="8.6" fill="#F2EFE8" fill-opacity=".085" stroke="#F2EFE8" stroke-opacity=".42" stroke-width="1.85"/>
+            <ellipse cx="66" cy="13.4" rx="4.4" ry="4.6" fill="#F2EFE8"/>
+            <circle cx="66.6" cy="14.5" r="2.1" fill="#090B0E"/>
+            <circle cx="67.8" cy="12.9" r=".85" fill="#FF6B2C"/>
+          </g>
+        </svg>
+      </span>
+
+      <!-- A6 染染 Ranran:橘色成分最高的一隻,身上掛著一滴會滴下來的橘色顏料
+           (.pqm-drip),用來解釋「為什麼那幾個字忽然變成橘色的」。 -->
+      <span class="pqm-ak pqm-a6">
+        <svg viewBox="0 0 34 44" aria-hidden="true" focusable="false">
+          <g class="pqm-bd">
+            <path d="M17 3.2C9.8 3.2 4.6 9.4 4.6 17.2c0 7.2 5.2 12.4 12.4 12.4s12.4-5.2 12.4-12.4C29.4 9.4 24.2 3.2 17 3.2Z" fill="#FF6B2C" fill-opacity=".14" stroke="#FF6B2C" stroke-opacity=".5" stroke-width="2.1"/>
+            <path d="M26 11.8c-2.2 2.6-2.2 6 0 8.6" stroke="#FF6B2C" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="pqm-eye">
+            <ellipse cx="17" cy="16" rx="7" ry="7.4" fill="#F2EFE8"/>
+            <circle cx="17.6" cy="17.6" r="3.3" fill="#090B0E"/>
+            <circle cx="19.4" cy="15.3" r="1.3" fill="#FF6B2C"/>
+          </g>
+          <path d="M14.8 25.2c1.4 1.7 3.6 1.7 4.8 0" stroke="#F2EFE8" stroke-opacity=".6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <g class="pqm-drip">
+            <path d="M17 29.4c-2.2 3.4-3.4 5.6-3.4 7.4a3.4 3.4 0 0 0 6.8 0c0-1.8-1.2-4-3.4-7.4Z" fill="#FF6B2C" fill-opacity=".85"/>
+          </g>
+        </svg>
+      </span>
+
+    </div>
     <div style="display:flex;align-items:center;justify-content:space-between;height:60px">
       <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.36em;color:#FF6B2C">PEAKQI — MENU</span>
       <button ref="{{ closeRef }}" onClick="{{ close }}" aria-label="關閉選單" style="width:44px;height:44px;background:none;border:1px solid rgba(242,239,232,.3);border-radius:2px;color:#F2EFE8;font-size:18px;cursor:pointer">✕</button>
@@ -427,16 +599,16 @@ h1,h2{text-wrap:balance}
     <nav style="display:flex;flex-direction:column;margin-top:24px">
       <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
         <sc-if value="{{ l.isLink }}" hint-placeholder-val="{{ true }}">
-          <a href="{{ l.href }}" style="{{ l.mobileStyle }}" style-hover="color:#FF6B2C">
-            <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4);width:34px">{{ l.idx }}</span>
-            {{ l.label }}
+          <a href="{{ l.href }}" class="{{ l.rowCls }}" style="{{ l.mobileStyle }}" style-hover="color:#FF6B2C">
+            <span class="pqm-idx" style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4);width:34px">{{ l.idx }}</span>
+            <span class="pqm-word"><sc-for list="{{ l.chars }}" as="ch" hint-placeholder-count="3"><span class="pqm-ch">{{ ch }}</span></sc-for></span>
           </a>
         </sc-if>
         <sc-if value="{{ l.isGroup }}" hint-placeholder-val="{{ false }}">
           <div style="border-bottom:1px solid rgba(242,239,232,.12)">
-            <button type="button" onClick="{{ l.toggleKids }}" aria-expanded="{{ l.kidsExpanded }}" aria-controls="{{ l.kidsId }}" style="{{ l.groupBtnStyle }}">
-              <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4);flex:0 0 34px;text-align:left">{{ l.idx }}</span>
-              <span style="flex:1 1 auto;text-align:left">{{ l.label }}</span>
+            <button type="button" class="{{ l.rowCls }}" onClick="{{ l.toggleKids }}" aria-expanded="{{ l.kidsExpanded }}" aria-controls="{{ l.kidsId }}" style="{{ l.groupBtnStyle }}">
+              <span class="pqm-idx" style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4);flex:0 0 34px;text-align:left">{{ l.idx }}</span>
+              <span class="pqm-word" style="flex:1 1 auto;text-align:left"><sc-for list="{{ l.chars }}" as="ch" hint-placeholder-count="2"><span class="pqm-ch">{{ ch }}</span></sc-for></span>
               <span style="{{ l.kidCountStyle }}">{{ l.kidCount }}</span>
               <span class="pqm-chev" style="display:inline-block;flex:0 0 auto" aria-hidden="true"><span style="{{ l.chevStyle }}">▾</span></span>
             </button>
@@ -472,7 +644,10 @@ h1,h2{text-wrap:balance}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 220}, &quot;active&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;home&quot;, &quot;solutions&quot;, &quot;cases&quot;, &quot;pricing&quot;, &quot;about&quot;, &quot;demo&quot;], &quot;default&quot;: &quot;home&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;導覽&quot;}, &quot;sticky&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;導覽&quot;}, &quot;ctaThreshold&quot;: {&quot;editor&quot;: &quot;float&quot;, &quot;default&quot;: 0, &quot;min&quot;: 0, &quot;max&quot;: 1, &quot;step&quot;: 0.05, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;導覽&quot;}}">
 class Component extends DCLogic {
-  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null };
+  // egg = 這次開選單要演的那一齣(1..15)。純 CSS 沒有亂數,所以在開啟的瞬間擲一次骰,
+  // 把結果變成容器上的 class;動畫本身仍然 100% 由 CSS keyframes 驅動,沒有 rAF、沒有計時器。
+  _acts = 15;   // 共 15 齣;新增齣別時同步改這裡與 CSS 的 .pqm-v1..v15
+  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null, egg: 1 };
   componentDidMount() {
     import('./content.js').then(m => this.setState({ nav: m.navigation }));
     import('./micro-engine.js').then(m => {
@@ -550,6 +725,10 @@ class Component extends DCLogic {
         href: l.href || '#',
         // 手機:子項預設收起。恆常展開時整份選單 1048px,iPhone 12 mini(812)裝不下,
         // 「關於我們」與底部 CTA 會被推到摺線下;收起後一屏看得完,chevron 同時是下拉提示。
+        // 逐字 span:小怪獸要能「吃掉/踩扁/染色」單一個字,就必須讓每個字是獨立元素。
+        // Array.from 而非 split(''),代理對(surrogate pair)才不會被切成兩半。
+        chars: Array.from(String(l.label || '')),
+        rowCls: 'pqm-row pqm-r' + (i + 1),
         showKids: kidsOpen,
         kidsExpanded: kidsOpen ? 'true' : 'false',
         kidsId: 'pq-grp-' + (l.key || i),
@@ -601,7 +780,11 @@ class Component extends DCLogic {
     });
     const openMenu = () => {
       this._lastFocus = document.activeElement;
-      this.setState({ open: true, grp: null });   // 每次打開都回到「一屏看得完」的收合狀態
+      // 每次打開都回到「一屏看得完」的收合狀態;同時抽一齣戲,不要每次都一樣
+      const N = this._acts;
+      const egg = 1 + Math.floor(Math.random() * N);
+      this.setState({ open: true, grp: null, egg: egg === this._lastEgg ? (egg % N) + 1 : egg });
+      this._lastEgg = egg;
       setTimeout(() => { if (this._closeEl) this._closeEl.focus(); }, 60);
     };
     const closeMenu = () => {
@@ -611,6 +794,7 @@ class Component extends DCLogic {
     };
     return {
       links,
+      dlgCls: 'pqm-stage pqm-v' + this.state.egg,
       open: this.state.open,
       menuExpanded: this.state.open ? 'true' : 'false',
       burgerRef: (el) => { this._burgerEl = el; },
