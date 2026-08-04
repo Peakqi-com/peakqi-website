@@ -46,6 +46,10 @@ h1,h2{text-wrap:balance}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#FF6B2C}::selection{background:#FF6B2C;color:#F2EFE8}
+/* box-sizing 一定要寫:.pq-wrap 是 width:100%,.pq-sec 又給了左右內距,
+   在預設的 content-box 下會變成 100% + 20 + 20 —— 實測整頁比視窗寬 40px,
+   右上角的漢堡鈕被切掉一半,而且 320/360/375/390/414/430/768/1280 全中。 */
+.pq-wrap,.pq-sec,.pq-wrap *,.pq-sec *{box-sizing:border-box}
 .pq-wrap{max-width:1280px;margin:0 auto;width:100%}
 .pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
 .pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
