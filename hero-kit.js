@@ -452,7 +452,7 @@ function HeroMobileCollapse(ctx, root, canvasCtl) {
     if (!compact) measure();
     // 一捲即收(死區會讓人感覺「卡在按鈕那裡」);展開只在幾乎回頂,遲滯防止閾值附近反覆開合
     const c = compact ? p > 0.004 : p > 0.012;
-    const k = p >= 0.9;
+    const k = p >= 0.965;   // 最後一景要先跑完才把 CTA 放回來,不與動畫同時出現
     if (c !== compact) { compact = c; copyCol.classList.toggle('pq-hero-compact', c); reflow(); }
     if (cta && k !== keep) { keep = k; cta.classList.toggle('pq-clp-keep', k); reflow(); }
   } };

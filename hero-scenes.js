@@ -58,7 +58,10 @@ export function makeDraw(g) {
   const C = HERO_SHARED.colors;
   const d = {
     rr(x, y, w, h, r) {
-      r = Math.min(r, w / 2, h / 2);
+      // 空間被壓縮時尺寸可能算成負數/NaN,arcTo 會丟 IndexSizeError;
+      // 畫布只要連錯 3 次就會被永久關掉(使用者看到的是「動畫整個消失」),故在此收斂。
+      if (!(w > 0) || !(h > 0)) { g.beginPath(); return; }
+      r = Math.max(0, Math.min(r, w / 2, h / 2));
       g.beginPath();
       g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
       g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
@@ -195,9 +198,10 @@ function paintSolutions(g, e) {
     // 面板依該景實際內容裁高(有多少畫多少),整組再於可用高度內置中,下方不留大片空白
     const railH = fsS + 36;
     const availH = z.h - railH - 6;
-    const vhOf = (i) => Math.min(availH, [176, 258, 258, 196, 258, 196, 248][i]);
-    if (vhOf(cur) < 150) return;   // 靜止空間不足:不硬擠
+    const vhOf = (i) => Math.max(130, Math.min(availH, [176, 258, 258, 196, 258, 196, 248][i]));
+    // 進度軌永遠先畫:尾段 CTA 回歸把空間壓縮時,畫面也不會整塊變空白
     const vy = mRail(g, d, C, t, px0, pw, z.y + 2 + Math.min(56, Math.max(0, (availH - vhOf(cur)) / 2)), IDS.length, cur, fsS);
+    if (availH < 130) return;
 
     // 母動畫:上一景上飄順旋淡出的同時,這一景由下升起逆旋淡入 —— 交叉換場,不會出現空畫面
     // aP = 卡片本體透明度(先實體到位,擋住上一景的殘影);aa = 卡內內容透明度(隨後長出來)
@@ -1431,14 +1435,15 @@ function paintMethodMobile(g, e, sb, ks) {
   // 面板依「該景實際內容」裁高(有多少畫多少,空間不足時各列自動壓縮),整組再於可用高度內置中
   const railH = fsN + 36;
   const avail = z.h - railH - 6;
-  if (avail < 150) return;
   const headH = pad + fsT + fsN + 21 + 16;
   const chipH = fsN * 2.1;
   g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
   const chipRows = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1']
     .reduce((acc, tx) => g.measureText(tx).width + 18 + acc, 16) > w - pad * 2 ? 2 : 1;
-  const hOf = (i) => Math.min(avail, headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad);
+  const hOf = (i) => Math.max(130, Math.min(avail, headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad));
+  // 進度軌永遠先畫:尾段 CTA 回歸把空間壓縮時,畫面也不會整塊變空白
   const cy0 = mRail(g, d, C, t, x, w, z.y + 2 + Math.min(56, Math.max(0, (avail - hOf(cur)) / 2)), 4, cur, fsN);
+  if (avail < 130) return;
 
   // 母動畫:上一景上飄順旋淡出的同時,這一景由下升起逆旋淡入 —— 交叉換場,不會出現空畫面
   // aP = 卡片本體透明度(先實體到位,擋住上一景殘影);a = 卡內內容透明度(隨後長出來)
@@ -1470,8 +1475,9 @@ function paintMethodMobile(g, e, sb, ks) {
 
   if (cur === 0) { // 現況盤點:四來源列 + 掃描光束(子)+ 問題晶片浮動(子)
     const chipTop = by + bh - chipRows * chipH - (chipRows - 1) * 8;
-    const areaH = chipTop - by - 10;
-    const rh = Math.min(54, areaH / 4);
+    const areaH = Math.max(64, chipTop - by - 10);          // 壓縮時仍給四列最低可讀高度
+    const rh = Math.max(16, Math.min(54, areaH / 4));
+    const chipsFit = chipTop > by + rh * 4 - 2;             // 放不下就不畫晶片,不硬擠
     const beam = by + areaH * (.5 + .5 * Math.sin(t * .85));
     [['LINE 對話', '詢問 ×12'], ['網站表單', '需求 ×5'], ['試算表', '名單 ×3'], ['CRM', '案件 ×8']].forEach((r, i) => {
       const kr = ez(sb(kv, .1 + i * .09, .38 + i * .09));
@@ -1492,7 +1498,7 @@ function paintMethodMobile(g, e, sb, ks) {
     let chx = bx, chy = chipTop;
     ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1'].forEach((tx, i) => {
       const kc = ez(sb(kv, .5 + i * .1, .74 + i * .1));
-      if (kc <= .02) return;
+      if (kc <= .02 || !chipsFit) return;
       g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
       const cw = g.measureText(tx).width + 18;
       if (chx + cw > bx + bw) { chx = bx; chy += chipH + 8; }  // 不爆版:自動換行
@@ -1501,7 +1507,7 @@ function paintMethodMobile(g, e, sb, ks) {
       chx += cw + 8;
     });
   } else if (cur === 1) { // 第一階段:三條定義 + 行進虛線範圍框(子)+ 打勾落下(子)
-    const rh = Math.min(58, (bh - 44) / 3);
+    const rh = Math.max(22, Math.min(58, (bh - 44) / 3));
     g.save();
     g.globalAlpha = a * ez(sb(kv, .18, .5)) * .85;
     g.setLineDash([6, 7]); g.lineDashOffset = -t * 18;
@@ -1528,7 +1534,7 @@ function paintMethodMobile(g, e, sb, ks) {
     }
   } else if (cur === 2) { // 建立驗證:管線 + token 巡遊經閘門停頓(子)+ 資料線流動(子)
     const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
-    const py = by + bh * .46;
+    const py = Math.max(by + 58, by + bh * .46);   // 閘門畫在節點上方 50px,不可低於面板上緣
     const m0 = bx + 20, m1 = bx + bw - 20;
     const conn = kv * 3.6 - .35;
     steps.forEach((tx, i) => {
@@ -1585,7 +1591,7 @@ function paintMethodMobile(g, e, sb, ks) {
       g.fillText('實際使用者測試中・回饋直接改流程', bx + 20, yy);
     }
   } else { // 上線與改善:三列狀態(勾/呼吸/循環,皆為子動畫)+ 底部波形流動(子)
-    const rh = Math.min(62, (bh - 34) / 3);
+    const rh = Math.max(24, Math.min(62, (bh - 34) / 3));
     [['tick', '第一階段上線', '標準模組最快 10 個工作天'],
      ['pulse', '觀察實際使用與例外', '例外自動記錄'],
      ['cycle', '每週小幅調整', '依使用數據持續改善']].forEach((r, i) => {
