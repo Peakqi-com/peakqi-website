@@ -108,14 +108,9 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
-/* 手機 hero 上下分區:文字在上、縮圖牆收進下半帶全亮展示(不再墊在文字底下硬壓暗);
-   遮罩只護頂部文字區;標題縮級避免五行 */
+/* 手機 hero(2026-08 重設計):墨枝動畫在上(data-hero-media-top)、文案在下;標題縮級避免五行 */
 @media (max-width:899px){
-[data-ascrim]{background:linear-gradient(180deg,rgba(9,11,14,.78) 0%,rgba(9,11,14,.55) 46%,rgba(9,11,14,.26) 66%,rgba(9,11,14,0) 80%)!important}
 #a-hero [data-hero-cta] a:not([data-hero-primary]){background:#090B0E!important}
-#a-hero [data-ashotwall]{transition:top .45s cubic-bezier(.16,1,.3,1),height .45s cubic-bezier(.16,1,.3,1)} /* 牆帶位置由 about-hero 依文案實際底部動態設定 */
-#a-hero [data-hero-stage]{padding-bottom:150px!important}
-#a-hero [data-aclust]{opacity:0!important}
 #a-hero [data-anote]{display:none!important}
 #a-hero h1{font-size:clamp(1.5rem,6.6vw,1.95rem)!important}
 }
@@ -126,6 +121,116 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
+}
+/* ═══ 產業色卡牆(INDUSTRY MATRIX 2026-08 重設計) ═══════════════════════
+   一產業一張莫蘭迪色卡,卡面 = 墨線小劇場(純 CSS 子動畫,共用 i×3+b×1 骨架,
+   十套 class 各演一齣);桌機橫式膠卷 scroll-snap、手機直式疊放。 */
+#a-ind-strip{margin-top:clamp(22px,3vw,36px);display:grid;grid-auto-flow:column;grid-auto-columns:clamp(212px,16.6vw,252px);gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:6px clamp(20px,5vw,48px) 14px;scroll-padding:0 clamp(20px,5vw,48px);scrollbar-width:thin;scrollbar-color:rgba(242,239,232,.3) transparent}
+.pq-ind{position:relative;display:flex;flex-direction:column;min-height:296px;border-radius:10px;overflow:hidden;text-decoration:none;color:#090B0E;background:var(--mc,#B3A692);scroll-snap-align:start;box-sizing:border-box;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
+.pq-ind:hover,.pq-ind:focus-visible{transform:translateY(-6px);box-shadow:0 18px 44px rgba(0,0,0,.5)}
+.pq-ind[data-nocase="1"]{pointer-events:none}
+.pq-ind-vig{position:relative;flex:1;min-height:150px;display:block}
+.pq-ind-vig i,.pq-ind-vig b{position:absolute;display:block;box-sizing:border-box}
+.pq-ind-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:13px 15px 15px;border-top:1.5px solid rgba(9,11,14,.22)}
+.pq-ind-meta b{font:900 1.0625rem 'Noto Sans TC',sans-serif}
+.pq-ind-meta i{font:600 .625rem 'Space Grotesk',sans-serif;font-style:normal;letter-spacing:.22em;opacity:.55}
+.pq-ind-meta em{margin-left:auto;font:700 .6875rem 'Space Grotesk',sans-serif;font-style:normal;letter-spacing:.08em;border:1.5px solid rgba(9,11,14,.65);border-radius:999px;padding:3px 9px;transition:background .25s,color .25s}
+.pq-ind:hover .pq-ind-meta em{background:#090B0E;color:#F2EFE8}
+/* 十色莫蘭迪 */
+.pq-ind-wedding{--mc:#C7A0A0}.pq-ind-interior{--mc:#B3A692}.pq-ind-estate{--mc:#8B9DAD}
+.pq-ind-groupbuy{--mc:#BE8A6C}.pq-ind-ticket{--mc:#A98BA4}.pq-ind-esg{--mc:#94AC8F}
+.pq-ind-community{--mc:#9A93B0}.pq-ind-edu{--mc:#C2A878}.pq-ind-brand{--mc:#8A8F98}
+.pq-ind-beauty{--mc:#D8B9A8}
+/* ① 婚禮婚慶:雙環靠攏相扣,火花上竄,交點微光 */
+.pq-ind-wedding .pq-ind-vig i:nth-of-type(1),.pq-ind-wedding .pq-ind-vig i:nth-of-type(2){width:54px;height:54px;border:2.5px solid #090B0E;border-radius:50%;left:calc(50% - 58px);top:calc(50% - 27px);animation:pqInW1 3.6s cubic-bezier(.45,0,.4,1) infinite}
+.pq-ind-wedding .pq-ind-vig i:nth-of-type(2){left:calc(50% + 4px);animation-name:pqInW2}
+.pq-ind-wedding .pq-ind-vig i:nth-of-type(3){width:5px;height:5px;border-radius:50%;background:#F2EFE8;left:calc(50% - 3px);top:calc(50% - 40px);animation:pqInW3 3.6s ease-in-out infinite}
+.pq-ind-wedding .pq-ind-vig b{width:7px;height:7px;border-radius:50%;background:#090B0E;left:calc(50% - 4px);top:calc(50% - 4px);animation:pqInWb 3.6s ease-in-out infinite}
+@keyframes pqInW1{0%,15%{transform:translateX(-12px) rotate(-10deg)}55%,70%{transform:translateX(9px) rotate(3deg)}100%{transform:translateX(-12px) rotate(-10deg)}}
+@keyframes pqInW2{0%,15%{transform:translateX(12px) rotate(10deg)}55%,70%{transform:translateX(-9px) rotate(-3deg)}100%{transform:translateX(12px) rotate(10deg)}}
+@keyframes pqInW3{0%,50%{opacity:0;transform:translateY(4px) scale(.5)}62%{opacity:1;transform:translateY(-8px) scale(1)}78%,100%{opacity:0;transform:translateY(-16px) scale(.6)}}
+@keyframes pqInWb{0%,45%{opacity:0;transform:scale(.4)}60%,75%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.4)}}
+/* ② 室內設計:平面圖組裝 —— 沙發滑入、圓桌落位、尺寸線拉開 */
+.pq-ind-interior .pq-ind-vig i:nth-of-type(1){width:86px;height:58px;border:2px solid #090B0E;left:calc(50% - 43px);top:calc(50% - 34px)}
+.pq-ind-interior .pq-ind-vig i:nth-of-type(2){width:28px;height:13px;background:#090B0E;left:calc(50% - 35px);top:calc(50% + 2px);animation:pqInI2 4.2s cubic-bezier(.16,1,.3,1) infinite}
+.pq-ind-interior .pq-ind-vig i:nth-of-type(3){width:16px;height:16px;border:2px solid #090B0E;border-radius:50%;left:calc(50% + 10px);top:calc(50% - 18px);animation:pqInI3 4.2s ease infinite}
+.pq-ind-interior .pq-ind-vig b{height:2px;width:86px;background:rgba(9,11,14,.55);left:calc(50% - 43px);top:calc(50% + 34px);transform-origin:left center;animation:pqInIb 4.2s cubic-bezier(.16,1,.3,1) infinite}
+@keyframes pqInI2{0%,12%{opacity:0;transform:translateX(-18px)}30%,88%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes pqInI3{0%,30%{opacity:0;transform:scale(.4)}46%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes pqInIb{0%,40%{transform:scaleX(0)}64%,88%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+/* ③ 房仲不動產:屋形 + 鑰匙點滑向門口 + 窗燈亮起 */
+.pq-ind-estate .pq-ind-vig i:nth-of-type(1){width:48px;height:36px;border:2px solid #090B0E;left:calc(50% - 24px);top:calc(50% - 8px)}
+.pq-ind-estate .pq-ind-vig i:nth-of-type(2){width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:22px solid #090B0E;left:calc(50% - 28px);top:calc(50% - 30px)}
+.pq-ind-estate .pq-ind-vig i:nth-of-type(3){width:7px;height:7px;border-radius:50%;background:#090B0E;box-shadow:4px 2px 0 -2px #090B0E;left:calc(50% - 58px);top:calc(50% + 18px);animation:pqInE3 3.8s cubic-bezier(.45,0,.35,1) infinite}
+.pq-ind-estate .pq-ind-vig b{width:9px;height:9px;background:#F2EFE8;left:calc(50% - 5px);top:calc(50% + 2px);animation:pqInEb 3.8s steps(1) infinite}
+@keyframes pqInE3{0%,10%{opacity:0;transform:translate(0,6px)}22%{opacity:1;transform:translate(10px,0)}55%{opacity:1;transform:translate(34px,0)}70%,100%{opacity:0;transform:translate(40px,0)}}
+@keyframes pqInEb{0%,60%{opacity:.25}70%,95%{opacity:1}100%{opacity:.25}}
+/* ④ 團購電商:三個包裹接力彈跳過輸送線 */
+.pq-ind-groupbuy .pq-ind-vig i{width:20px;height:20px;border:2px solid #090B0E;background:rgba(242,239,232,.35);top:calc(50% - 4px);animation:pqInG 2.8s cubic-bezier(.45,0,.4,1) infinite}
+.pq-ind-groupbuy .pq-ind-vig i::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:#090B0E;transform:translateX(-50%)}
+.pq-ind-groupbuy .pq-ind-vig i:nth-of-type(1){left:calc(50% - 52px)}
+.pq-ind-groupbuy .pq-ind-vig i:nth-of-type(2){left:calc(50% - 10px);animation-delay:-.35s}
+.pq-ind-groupbuy .pq-ind-vig i:nth-of-type(3){left:calc(50% + 32px);animation-delay:-.7s}
+.pq-ind-groupbuy .pq-ind-vig b{height:2px;width:120px;background:rgba(9,11,14,.5);left:calc(50% - 60px);top:calc(50% + 22px)}
+@keyframes pqInG{0%,36%,100%{transform:translateY(0)}18%{transform:translateY(-14px) rotate(4deg)}}
+/* ⑤ 活動售票:票根撕開、條碼閃爍 */
+.pq-ind-ticket .pq-ind-vig i:nth-of-type(1){width:62px;height:36px;border:2px solid #090B0E;border-radius:4px;left:calc(50% - 52px);top:calc(50% - 18px)}
+.pq-ind-ticket .pq-ind-vig i:nth-of-type(1)::after{content:'';position:absolute;left:8px;top:7px;bottom:7px;width:26px;background:repeating-linear-gradient(90deg,#090B0E 0 2px,transparent 2px 6px);animation:pqInT1 2.4s steps(2) infinite}
+.pq-ind-ticket .pq-ind-vig i:nth-of-type(2){width:26px;height:36px;border:2px dashed #090B0E;border-radius:4px;left:calc(50% + 14px);top:calc(50% - 18px);transform-origin:0 100%;animation:pqInT2 3.4s cubic-bezier(.45,0,.4,1) infinite}
+.pq-ind-ticket .pq-ind-vig i:nth-of-type(3){width:5px;height:5px;border-radius:50%;background:#090B0E;left:calc(50% + 46px);top:calc(50% - 26px);animation:pqInW3 3.4s ease-in-out infinite}
+.pq-ind-ticket .pq-ind-vig b{width:8px;height:8px;border-radius:50%;background:#F2EFE8;left:calc(50% + 2px);top:calc(50% - 4px)}
+@keyframes pqInT1{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+@keyframes pqInT2{0%,25%{transform:rotate(0) translateX(0)}55%,70%{transform:rotate(12deg) translateX(9px)}100%{transform:rotate(0) translateX(0)}}
+/* ⑥ ESG 永續:年輪呼吸外擴,葉子搖擺 */
+.pq-ind-esg .pq-ind-vig i{border:2px solid #090B0E;border-radius:50%;left:50%;top:50%;animation:pqInS 3.4s ease-out infinite}
+.pq-ind-esg .pq-ind-vig i:nth-of-type(1){width:22px;height:22px;margin:-11px 0 0 -11px}
+.pq-ind-esg .pq-ind-vig i:nth-of-type(2){width:44px;height:44px;margin:-22px 0 0 -22px;animation-delay:-1.1s}
+.pq-ind-esg .pq-ind-vig i:nth-of-type(3){width:66px;height:66px;margin:-33px 0 0 -33px;animation-delay:-2.2s}
+.pq-ind-esg .pq-ind-vig b{width:16px;height:16px;background:#090B0E;border-radius:0 70% 0 70%;left:calc(50% - 3px);top:calc(50% - 26px);transform-origin:0 100%;animation:pqInSb 3.4s ease-in-out infinite}
+@keyframes pqInS{0%{transform:scale(.72);opacity:.9}70%{transform:scale(1.12);opacity:.25}100%{transform:scale(1.18);opacity:0}}
+@keyframes pqInSb{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
+/* ⑦ 社區管理:兩棟樓,一盞窗燈跳位次第亮 */
+.pq-ind-community .pq-ind-vig i:nth-of-type(1){width:36px;height:64px;border:2px solid #090B0E;left:calc(50% - 34px);top:calc(50% - 34px)}
+.pq-ind-community .pq-ind-vig i:nth-of-type(2){width:26px;height:44px;border:2px solid #090B0E;left:calc(50% + 10px);top:calc(50% - 14px)}
+.pq-ind-community .pq-ind-vig i:nth-of-type(3){width:12px;height:12px;border:2px solid #090B0E;border-radius:50%;left:calc(50% + 34px);top:calc(50% - 44px)}
+.pq-ind-community .pq-ind-vig b{width:8px;height:8px;background:#F2EFE8;left:calc(50% - 27px);top:calc(50% - 26px);animation:pqInC 3.2s steps(1) infinite}
+@keyframes pqInC{0%{transform:translate(0,0)}25%{transform:translate(13px,14px)}50%{transform:translate(0,28px)}75%{transform:translate(50px,10px)}100%{transform:translate(0,0)}}
+/* ⑧ 教育培訓:攤開的書,一頁翻過去,進度點亮 */
+.pq-ind-edu .pq-ind-vig i:nth-of-type(1),.pq-ind-edu .pq-ind-vig i:nth-of-type(2){width:34px;height:44px;border:2px solid #090B0E;top:calc(50% - 24px)}
+.pq-ind-edu .pq-ind-vig i:nth-of-type(1){left:calc(50% - 36px);transform:skewY(6deg);border-right-width:1px}
+.pq-ind-edu .pq-ind-vig i:nth-of-type(2){left:calc(50% + 2px);transform:skewY(-6deg);border-left-width:1px}
+.pq-ind-edu .pq-ind-vig i:nth-of-type(3){width:30px;height:40px;background:rgba(242,239,232,.7);left:calc(50% + 3px);top:calc(50% - 22px);transform-origin:0 50%;animation:pqInD 2.9s cubic-bezier(.45,0,.35,1) infinite}
+.pq-ind-edu .pq-ind-vig b{width:5px;height:5px;border-radius:50%;background:#090B0E;left:calc(50% - 12px);top:calc(50% + 30px);box-shadow:10px 0 #090B0E,20px 0 rgba(9,11,14,.35);animation:pqInDb 2.9s ease infinite}
+@keyframes pqInD{0%,12%{transform:skewY(-6deg) scaleX(1)}48%{transform:skewY(0) scaleX(.06)}84%,100%{transform:skewY(6deg) scaleX(-1)}}
+@keyframes pqInDb{0%,100%{opacity:.4}50%{opacity:1}}
+/* ⑨ 品牌官網:簽名筆畫逐段寫出,游標眨動,句點落下 */
+.pq-ind-brand .pq-ind-vig i:nth-of-type(1){height:2px;width:92px;background:rgba(9,11,14,.4);left:calc(50% - 46px);top:calc(50% + 16px)}
+.pq-ind-brand .pq-ind-vig i:nth-of-type(2){height:4px;width:78px;background:#090B0E;border-radius:3px;left:calc(50% - 46px);top:calc(50% - 2px);transform-origin:left center;animation:pqInB2 3.6s steps(9,end) infinite}
+.pq-ind-brand .pq-ind-vig i:nth-of-type(3){width:2px;height:18px;background:#090B0E;left:calc(50% + 36px);top:calc(50% - 9px);animation:pqInB3 .9s steps(1) infinite}
+.pq-ind-brand .pq-ind-vig b{width:6px;height:6px;border-radius:50%;background:#090B0E;left:calc(50% + 40px);top:calc(50% + 8px);animation:pqInBb 3.6s ease infinite}
+@keyframes pqInB2{0%,8%{transform:scaleX(0)}75%,100%{transform:scaleX(1)}}
+@keyframes pqInB3{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes pqInBb{0%,70%{opacity:0;transform:scale(.3)}80%,100%{opacity:1;transform:scale(1)}}
+/* ⑩ 美業:口紅膏體光澤掃過,鏡盒,星光眨眼 */
+.pq-ind-beauty .pq-ind-vig i:nth-of-type(1){width:74px;height:26px;background:#090B0E;border-radius:16px 20px 18px 14px;left:calc(50% - 46px);top:calc(50% - 13px);overflow:hidden}
+.pq-ind-beauty .pq-ind-vig i:nth-of-type(1)::after{content:'';position:absolute;top:-6px;bottom:-6px;width:12px;background:rgba(242,239,232,.55);transform:rotate(18deg);animation:pqInY1 2.6s cubic-bezier(.45,0,.4,1) infinite}
+.pq-ind-beauty .pq-ind-vig i:nth-of-type(2){width:22px;height:22px;border:2px solid #090B0E;border-radius:50%;left:calc(50% + 34px);top:calc(50% - 30px)}
+.pq-ind-beauty .pq-ind-vig i:nth-of-type(3){width:10px;height:10px;border-radius:50%;background:rgba(9,11,14,.4);left:calc(50% + 40px);top:calc(50% - 24px)}
+.pq-ind-beauty .pq-ind-vig b{width:14px;height:14px;left:calc(50% + 26px);top:calc(50% + 14px);animation:pqInYb 2.6s ease-in-out infinite}
+.pq-ind-beauty .pq-ind-vig b::before,.pq-ind-beauty .pq-ind-vig b::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:#090B0E;transform:translateX(-50%)}
+.pq-ind-beauty .pq-ind-vig b::after{transform:translateX(-50%) rotate(90deg)}
+@keyframes pqInY1{0%{left:-16px}60%,100%{left:86px}}
+@keyframes pqInYb{0%,100%{transform:rotate(0) scale(.5);opacity:.3}50%{transform:rotate(45deg) scale(1);opacity:1}}
+/* 手機:直式疊放 */
+@media (max-width:899px){
+#a-ind-strip{display:flex;flex-direction:column;gap:12px;overflow:visible;padding:0 20px 4px;scroll-snap-type:none;margin-top:22px}
+.pq-ind{min-height:0}
+.pq-ind-vig{flex:none;height:122px;min-height:0}
+[data-ind-hint]{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+.pq-ind-vig i,.pq-ind-vig b,.pq-ind-vig i::before,.pq-ind-vig i::after,.pq-ind-vig b::before,.pq-ind-vig b::after{animation:none!important}
+.pq-ind{transition:none}
 }
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
@@ -140,19 +245,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section id="a-hero" data-hero="about" data-screen-label="品牌開場 BUILT FROM REAL WORKFLOWS" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
-      <div data-ashotwall aria-label="真實案例節點網路" style="position:absolute;inset:0;z-index:1;overflow:hidden">
-        <svg data-alines aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .5s"></svg>
-        <sc-for list="{{ aboutShots }}" as="s" hint-placeholder-count="8">
-          <a data-shot="{{ s.slug }}" data-clu="{{ s.clu }}" href="{{ s.href }}" aria-label="{{ s.aria }}" style="{{ s.style }}"></a>
-        </sc-for>
-        <span data-aclust style="position:absolute;left:43%;top:2.5%;opacity:0;transition:opacity .5s;font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#FF6B2C">婚慶・活動</span>
-        <span data-aclust style="position:absolute;left:72%;top:2.5%;opacity:0;transition:opacity .5s;font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#3E9BFF">空間・不動產</span>
-        <span data-aclust style="position:absolute;left:43%;top:50%;opacity:0;transition:opacity .5s;font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:#65E0BC">商務・電商</span>
-        <span data-aclust style="position:absolute;left:72%;top:50%;opacity:0;transition:opacity .5s;font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.8)">平台・工具</span>
-        <span data-acore style="position:absolute;left:65%;top:42%;opacity:0;transition:opacity .6s;background:#090B0E;border:1.5px solid #FF6B2C;border-radius:999px;padding:10px 16px;font:800 .8125rem 'Noto Sans TC',sans-serif;display:inline-flex;align-items:center;gap:8px;z-index:5"><span style="width:7px;height:7px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>PEAKQI 營運核心</span>
-      </div>
-      <div data-ascrim aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:radial-gradient(130% 130% at 10% 32%,rgba(9,11,14,.95) 0%,rgba(9,11,14,.78) 32%,rgba(9,11,14,.24) 56%,rgba(9,11,14,0) 74%);pointer-events:none"></div>
+    <div data-hero-stage data-hero-media-top style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
+      <!-- 2026-08 重設計:案例截圖牆退役,視覺交給 about-organic.js 的「生長的墨枝」canvas;
+           手機 data-hero-media-top = 動畫在上、文案在下 -->
+      <div style="position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(242,239,232,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.035) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:3;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div data-hero-copy style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
         <div style="max-width:820px;display:flex;flex-direction:column;gap:14px">
@@ -165,25 +261,30 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <h1 style="margin:0;font:900 clamp(1.7rem,3.6vw,3.9rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em">不先問你要用哪個 AI,<br>先看工作<span style="color:#FF6B2C">卡在哪裡</span>。</h1>
           <p style="margin:0;max-width:640px;font:400 clamp(1.03125rem,1.35vw,1.1875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.78);text-wrap:pretty">企業 AI 導入與系統整合團隊,把 AI 接進真實工作。</p>
           <div data-hero-scenestage style="position:relative;min-height:128px">
-            <div data-hero-scene="frag" style="position:relative;display:flex;flex-direction:column;gap:8px">
-              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span>場景 01 / 04 ・ 看見碎片</span>
-              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">不是缺工具,是資訊散落各處。</p>
-              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">一次詢問,要在聊天、表單與試算表之間搬運。</p>
+            <div data-hero-scene="idea" style="position:relative;display:flex;flex-direction:column;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span>場景 01 / 05 ・ 創意</span>
+              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">不做模板,做沒見過的樣子。</p>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">從品牌到互動,每一次都當作品開一次頭。</p>
             </div>
-            <div data-hero-scene="link" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
-              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span>場景 02 / 04 ・ 找出斷點</span>
-              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">先看流程在哪裡斷掉。</p>
-              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">找出重複輸入、容易漏追與資料斷點。</p>
+            <div data-hero-scene="craft" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:rgba(242,239,232,.85)"><span style="width:8px;height:8px;border-radius:50%;background:#F2EFE8"></span>場景 02 / 05 ・ 細節</span>
+              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">像素與流程,都要過得了手。</p>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">字距、動線、例外訊息,一條一條修過。</p>
             </div>
-            <div data-hero-scene="group" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
-              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF"><span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span>場景 03 / 04 ・ 建立流程</span>
-              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">讓 AI、規則與人各司其職。</p>
-              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">AI 做分類、摘要與草稿;重要判斷由人確認。</p>
+            <div data-hero-scene="content" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF"><span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span>場景 03 / 05 ・ 數位內容</span>
+              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">內容不是產出,是會生長的資產。</p>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">圖、文、影音接上系統,持續長出來、持續可用。</p>
             </div>
-            <div data-hero-scene="net" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
-              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC"><span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>場景 04 / 04 ・ 開始運作</span>
-              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">不是概念畫面,是真的能用的流程。</p>
-              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">完成第一階段驗證後,再依成效逐步擴大。</p>
+            <div data-hero-scene="culture" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC"><span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>場景 04 / 05 ・ 文化轉型</span>
+              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">導入一半是技術,另一半是習慣。</p>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">陪團隊把做事方式換季,而不是丟一套工具就走。</p>
+            </div>
+            <div data-hero-scene="tech" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:9px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span>場景 05 / 05 ・ 技術力</span>
+              <p style="margin:0;font:900 clamp(1.1875rem,1.7vw,1.4375rem)/1.45 'Noto Sans TC',sans-serif;max-width:520px;text-wrap:pretty">從模型到後台,自己接起來。</p>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:540px;text-wrap:pretty">47 個模組的引擎,一行一行寫出來、一段一段接上線。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
@@ -263,30 +364,25 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
-<section id="a-industries" data-screen-label="產業地圖" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
-  <div style="max-width:1360px;margin:0 auto">
+<section id="a-industries" data-screen-label="產業地圖" style="padding:clamp(64px,8vw,104px) 0;background:#090B0E;color:#F2EFE8;overflow:hidden">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px);box-sizing:border-box">
     <span style="font:600 .875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">INDUSTRY MATRIX</span>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
       <h2 style="margin:12px 0 0;font:900 clamp(1.7rem,3.4vw,2.8rem)/1.25 'Noto Sans TC',sans-serif">服務過的產業</h2>
-      <span style="font:400 .90625rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">hover / focus 有案例的節點,直接看該案畫面</span>
+      <span style="font:400 .90625rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">一個產業一種顏色;標了 CASE 的色卡可直接進案例。</span>
     </div>
-    <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,2.6vw,36px);align-items:start" id="a-ind-grid">
-      <div style="display:flex;flex-wrap:wrap;gap:10px">
-        <sc-for list="{{ indNodes }}" as="n" hint-placeholder-count="10">
-          <button onMouseEnter="{{ n.hover }}" onFocus="{{ n.hover }}" onClick="{{ n.go }}" style="{{ n.style }}">{{ n.label }}<sc-if value="{{ n.hasCase }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;font:600 .8125rem 'Space Grotesk',sans-serif;color:#65E0BC">CASE ↗</span></sc-if></button>
-        </sc-for>
-      </div>
-      <div style="position:sticky;top:84px;border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;overflow:hidden;min-height:240px;display:flex;flex-direction:column">
-        <div role="img" aria-label="{{ previewAlt }}" style="{{ previewStyle }}"></div>
-        <div style="padding:14px 16px;display:flex;flex-direction:column;gap:4px">
-          <span style="font:800 1.0625rem 'Noto Sans TC',sans-serif">{{ previewName }}</span>
-          <span style="font:400 .90625rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ previewD }}</span>
-          <sc-if value="{{ previewHasLink }}" hint-placeholder-val="{{ false }}">
-            <a href="{{ previewHref }}" style="margin-top:4px;font:700 .8125rem 'Noto Sans TC',sans-serif;text-decoration:none">看案例 →</a>
-          </sc-if>
-        </div>
-      </div>
-    </div>
+  </div>
+  <!-- 莫蘭迪色卡牆:桌機橫式膠卷(scroll-snap)、手機直式疊放;每卡一齣墨線小劇場(純 CSS) -->
+  <div id="a-ind-strip">
+    <sc-for list="{{ indCards }}" as="n" hint-placeholder-count="10">
+      <a class="{{ n.cls }}" href="{{ n.href }}" aria-label="{{ n.aria }}" data-nocase="{{ n.nocase }}">
+        <span class="pq-ind-vig" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+        <span class="pq-ind-meta"><b>{{ n.label }}</b><i>{{ n.en }}</i><sc-if value="{{ n.hasCase }}" hint-placeholder-val="{{ false }}"><em>CASE ↗</em></sc-if></span>
+      </a>
+    </sc-for>
+  </div>
+  <div style="max-width:1360px;margin:10px auto 0;padding:0 clamp(20px,5vw,48px);box-sizing:border-box">
+    <span data-ind-hint style="font:600 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">DRAG / SCROLL →</span>
   </div>
 </section>
 
@@ -460,8 +556,11 @@ class Component extends DCLogic {
     Promise.all([import('./motion-kit.js'), import('./motion/about.motion.js')])
       .then(([kit, cfg]) => { if (!this._dead && !this._motion) this._motion = kit.initPageMotion(cfg.default); })
       .catch(() => {});
-    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('about'); }).catch(() => {});
-    import('./about-hero.js').then(m => { if (!this._dead && !this._ah) this._ah = m.mountAboutHero(); }).catch(() => {});
+    // 先註冊 aboutOrganic painter,再掛 hero(painter 查表在 HeroCanvas 建立當下)
+    import('./about-organic.js')
+      .then(() => import('./hero-kit.js'))
+      .then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('about'); })
+      .catch(() => {});
     import('./pa-engine.js')
       .then(m => { if (this._dead || this._fx) return; this._fx = m.createAboutFX(); this._fx.start(); })
       .catch(() => {});
@@ -469,7 +568,6 @@ class Component extends DCLogic {
   componentWillUnmount() {
     this._dead = true;
     if (this._hero) this._hero.destroy();
-    if (this._ah) this._ah.destroy();
     if (this._motion) this._motion.destroy();
     if (this._fx) this._fx.destroy();
   }
@@ -519,47 +617,27 @@ class Component extends DCLogic {
       { v: '30+', l: '完成的系統與網站專案', d: '累計交付並實際上線的 AI 系統、客製平台與品牌網站。', slugs: ['wedding', 'expo', 'groupbuy'] },
       { v: '8+', l: '實際接觸的產業情境', d: '真的做過導入的產業與流程情境,不是可服務產業的清單。', slugs: ['interior', 'realestate', 'doiiin'] }
     ].map(n => ({ ...n, thumbs: n.slugs.map(s => thumb(s, 128, 78)).filter(Boolean) }));
-    // 產業地圖:有案例的節點 → 對應媒體
+    // 產業色卡牆(2026-08 重設計):一產業一莫蘭迪色,卡面是墨線小劇場(CSS 子動畫)
     const indMap = [
-      { label: '婚禮婚慶', slug: 'wedding', detail: '/case?slug=wedding' },
-      { label: '室內設計', slug: 'interior', detail: '/case?slug=interior' },
-      { label: '房仲不動產', slug: 'realestate', detail: '/case?slug=realestate' },
-      { label: '團購電商', slug: 'groupbuy', detail: '/cases#index' },
-      { label: '活動售票', slug: 'labubu', detail: '/cases#index' },
-      { label: 'ESG 永續', slug: 'doiiin', detail: '/cases#index' },
-      { label: '社區管理', slug: 'community', detail: '/cases#index' },
-      { label: '教育培訓', slug: 'ouros', detail: '/cases#index' },
-      { label: '品牌官網', slug: 'rouzhi', detail: '/cases#index' },
-      { label: '美業', slug: null, detail: null }
+      { key: 'wedding', label: '婚禮婚慶', en: 'WEDDING', slug: 'wedding', detail: '/case?slug=wedding' },
+      { key: 'interior', label: '室內設計', en: 'INTERIOR', slug: 'interior', detail: '/case?slug=interior' },
+      { key: 'estate', label: '房仲不動產', en: 'REAL ESTATE', slug: 'realestate', detail: '/case?slug=realestate' },
+      { key: 'groupbuy', label: '團購電商', en: 'GROUP BUY', slug: 'groupbuy', detail: '/cases#index' },
+      { key: 'ticket', label: '活動售票', en: 'TICKETING', slug: 'labubu', detail: '/cases#index' },
+      { key: 'esg', label: 'ESG 永續', en: 'ESG', slug: 'doiiin', detail: '/cases#index' },
+      { key: 'community', label: '社區管理', en: 'COMMUNITY', slug: 'community', detail: '/cases#index' },
+      { key: 'edu', label: '教育培訓', en: 'EDUCATION', slug: 'ouros', detail: '/cases#index' },
+      { key: 'brand', label: '品牌官網', en: 'BRAND SITE', slug: 'rouzhi', detail: '/cases#index' },
+      { key: 'beauty', label: '美業', en: 'BEAUTY', slug: null, detail: null }
     ];
-    const sel = this.state.indSel;
-    const indNodes = indMap.map((n, i) => {
-      const on = i === sel;
-      const hasCase = !!(n.slug && bySlug[n.slug]);
-      return {
-        label: n.label,
-        hasCase,
-        hover: () => { if (this.state.indSel !== i) this.setState({ indSel: i }); },
-        go: () => { if (n.detail) window.location.href = n.detail; },
-        style: {
-          cursor: n.detail ? 'pointer' : 'default',
-          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(242,239,232,.28)',
-          background: on ? 'rgba(255,107,44,.1)' : 'transparent',
-          color: '#F2EFE8', borderRadius: '999px', padding: '11px 20px',
-          font: "600 .875rem 'Noto Sans TC',sans-serif",
-          transition: 'all 200ms cubic-bezier(0.16,1,0.3,1)'
-        }
-      };
-    });
-    const selNode = indMap[sel] ?? indMap[0];
-    const selCase = selNode.slug ? bySlug[selNode.slug] : null;
-    const previewStyle = selCase ? {
-      width: '100%', height: '190px',
-      backgroundImage: 'url("' + selCase.cover.src + '")',
-      backgroundSize: 'cover', backgroundPosition: 'top center',
-      borderBottom: '1px solid rgba(242,239,232,.12)', backgroundColor: '#090B0E',
-      transition: 'opacity 240ms'
-    } : { width: '100%', height: '190px', background: 'repeating-linear-gradient(45deg, rgba(242,239,232,.05) 0 10px, transparent 10px 20px)', borderBottom: '1px solid rgba(242,239,232,.12)' };
+    const indCards = indMap.map((n) => ({
+      label: n.label, en: n.en,
+      hasCase: !!(n.slug && bySlug[n.slug]),
+      cls: 'pq-ind pq-ind-' + n.key,
+      href: n.detail || '#a-industries',
+      nocase: n.detail ? '0' : '1',
+      aria: n.detail ? n.label + ':看案例' : n.label + ':服務過的產業'
+    }));
     // 關於頁的六步驟不重述「做什麼」(那是導入方法頁的工作),
     // 改成回答「誰負責、交付什麼、在哪裡確認」。
     const method = [
@@ -572,31 +650,7 @@ class Component extends DCLogic {
     ];
     const FEAT_SLUGS = ['wedding', 'interior', 'realestate'];
     const caseHref = (slug) => FEAT_SLUGS.includes(slug) ? '/case?slug=' + slug : '/cases#index';
-    // Hero 案例節點:12 張真實截圖(featured 4 + 各產業 8),初始=網路環佈局(no-JS/靜態即完成態)
-    const netSlugs = [
-      { slug: 'wedding', clu: 0 }, { slug: 'interior', clu: 1 }, { slug: 'sparkspace', clu: 2 }, { slug: 'realestate', clu: 1 },
-      { slug: 'expo', clu: 0 }, { slug: 'labubu', clu: 0 }, { slug: 'community', clu: 1 }, { slug: 'groupbuy', clu: 2 },
-      { slug: 'rouzhi', clu: 2 }, { slug: 'doiiin', clu: 3 }, { slug: 'ouros', clu: 3 }, { slug: 'xintu', clu: 3 }
-    ];
-    const aboutShots = netSlugs.map((n2, i) => {
-      const c = bySlug[n2.slug];
-      if (!c) return null;
-      const ang = (i / netSlugs.length) * Math.PI * 2 - Math.PI / 2;
-      const x0 = 69 + Math.cos(ang) * 24 - 5, y0 = 46 + Math.sin(ang) * 40 - 4;
-      return {
-        slug: n2.slug, clu: n2.clu, href: caseHref(n2.slug), fb: c.cover.fallback || '',
-        aria: '進入案例:' + c.name,
-        src: c.cover.src, w: c.cover.w, h: c.cover.h,
-        style: {
-          position: 'absolute', left: x0 + '%', top: y0 + '%', width: '10%',
-          aspectRatio: c.cover.w + ' / ' + c.cover.h, display: 'block',
-          backgroundImage: 'url("' + c.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center',
-          border: '1px solid rgba(242,239,232,.2)', borderRadius: '4px', backgroundColor: '#14171C',
-          boxShadow: '0 10px 28px rgba(0,0,0,.4)',
-          transition: 'left .7s cubic-bezier(.16,1,.3,1), top .7s cubic-bezier(.16,1,.3,1), width .7s cubic-bezier(.16,1,.3,1), opacity .55s cubic-bezier(.16,1,.3,1), filter .55s'
-        }
-      };
-    }).filter(Boolean);
+    // (2026-08)hero 案例截圖牆退役 → aboutShots/netSlugs 移除;開場視覺改 about-organic.js
     const specDef = [
       { en: 'VALIDATION', color: '#FF6B2C', type: '流程驗證', slugs: ['xintu'],
         who: '還不確定 AI 是否適用,希望先驗證單一高價值場景。',
@@ -667,13 +721,8 @@ class Component extends DCLogic {
     return {
       whyResults, principles,
       roles, governance,
-      aboutShots, spectrumRows,
-      bigNums, indNodes, method, stripThumbs,
-      previewAlt: selCase ? selCase.cover.alt : '此產業案例素材整理中',
-      previewName: selCase ? selCase.name : selNode.label + '(可開發能力)',
-      previewD: selCase ? (selCase.industry + '・' + selCase.type) : '已可交付,公開截圖整理中。',
-      previewHasLink: !!selNode.detail,
-      previewHref: selNode.detail ?? '#'
+      spectrumRows,
+      bigNums, indCards, method, stripThumbs
     };
   }
 }

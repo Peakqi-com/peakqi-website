@@ -80,20 +80,19 @@ export const heroConfig = {
     flags: {}
   },
   about: {
-    key: 'about', paint: 'about',
-    // 原本 7 幕(frag/link/group/pipe/days/net/core)有兩個問題:幕數過多、且 pipe/days
-    // 與頁面下方的六步驟方法區重複講同一件事。收斂為 4 幕,對應四段敘事:
-    // 看見碎片 → 找出斷點 → 建立流程 → 開始運作。
-    // 沿用 about-hero.js 既有的 L.frag / L.link / L.group / L.net 佈局,引擎不動。
-    story: 'BUILT FROM REAL WORKFLOWS:看見碎片 → 找出斷點 → 建立流程 → 開始運作',
-    totalVh: { desktop: 250, tablet: 205, mobile: 200 },
+    key: 'about', paint: 'aboutOrganic',
+    // 2026-08 重設計:撤掉案例截圖牆,改「生長的墨枝」有機生成視覺(about-organic.js),
+    // 五幕 = PeakQi 五個核心:創意 → 細節 → 數位內容 → 文化轉型 → 技術力。
+    story: 'FIVE CORES, ONE ORGANISM:創意 → 細節 → 數位內容 → 文化轉型 → 技術力',
+    totalVh: { desktop: 300, tablet: 245, mobile: 240 },
     scenes: [
-      { id: 'frag',  label: '看見碎片', kicker: '場景 01 / 04', line: '一次詢問,在聊天、表單與試算表間反覆搬運。', d: [0, .26],   m: [0, .28] },
-      { id: 'link',  label: '找出斷點', kicker: '場景 02 / 04', line: '找出重複輸入、漏追與責任不清的節點。',   d: [.26, .52], m: [.28, .55] },
-      { id: 'group', label: '建立流程', kicker: '場景 03 / 04', line: 'AI 先分類與擬稿,判斷與例外再由人確認。', d: [.52, .78], m: [.55, .8] },
-      { id: 'net',   label: '開始運作', kicker: '場景 04 / 04', line: '完成第一階段驗證後,再依成效逐步擴大。',                     d: [.78, 1],   m: [.8, 1] }
+      { id: 'idea',    label: '創意',     kicker: '場景 01 / 05', line: '從品牌到互動,每一次都當作品開一次頭。', d: [0, .2],   m: [0, .2] },
+      { id: 'craft',   label: '細節',     kicker: '場景 02 / 05', line: '字距、動線、例外訊息,一條一條修過。',   d: [.2, .4],  m: [.2, .4] },
+      { id: 'content', label: '數位內容', kicker: '場景 03 / 05', line: '圖、文、影音接上系統,持續長出來、持續可用。', d: [.4, .6], m: [.4, .6] },
+      { id: 'culture', label: '文化轉型', kicker: '場景 04 / 05', line: '陪團隊把做事方式換季,而不是丟一套工具就走。', d: [.6, .8], m: [.6, .8] },
+      { id: 'tech',    label: '技術力',   kicker: '場景 05 / 05', line: '47 個模組的引擎,一行一行寫出來、一段一段接上線。', d: [.8, 1], m: [.8, 1] }
     ],
-    reduced: ['frag', 'link', 'group', 'net'],
+    reduced: ['idea', 'content', 'tech'],
     ctas: [
       { kind: 'primary', label: '看我們如何合作', href: '#a-method', track: 'about_method_click' },
       { kind: 'ghost', label: '查看實際案例', href: '/cases', track: 'hero_case_click' }

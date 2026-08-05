@@ -102,6 +102,12 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:1rem}
 @media (min-width:960px){.pqm-seam{display:none}}
 @media (max-height:559px){.pqm-seam{display:none}}
 @media (prefers-reduced-motion:reduce){.pqm-seam{display:none}}
+/* 縫縫獸相位變奏(pqm-e1 為原相位):每次開選單隨機一款,
+   走位動畫從不同時間點接播,邊緣小怪獸不再每次同一套出場順序。
+   只 shift 角色「根節點」的巡遊動畫;臉部/手腳子動畫維持原節奏。 */
+.pqm-e2 .pqm-seam>span{animation-delay:-5.3s!important}
+.pqm-e3 .pqm-seam>span{animation-delay:-9.7s!important}
+.pqm-e4 .pqm-seam>span{animation-delay:-14.6s!important}
 
 /* ══ 演員層 + 逐字互動基礎 ══════════════════════════════════════════════════
    .pqm-word / .pqm-ch:選單文字被拆成一個字一個 span,小怪獸才能對「單一個字」
@@ -1253,23 +1259,51 @@ class Component extends DCLogic {
         }
       };
     });
+    // 抽戲 =「洗牌袋」:15 齣全部發完才重洗(權重完全均等),新袋第一齣不接舊袋最後一齣。
+    // 純 Math.random() 是有放回抽樣,三五次內重複機率高,使用者實測「一直類似 pattern」。
+    const drawEgg = () => {
+      const N = this._acts;
+      let bag = [];
+      try { bag = (JSON.parse(sessionStorage.getItem('pqmBag') || '[]') || []).filter((v) => v >= 1 && v <= N); } catch (e) {}
+      const last = parseInt(sessionStorage.getItem('pqmLast') || '0', 10) || 0;
+      if (!bag.length) {
+        bag = Array.from({ length: N }, (_, i) => i + 1);
+        for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = bag[i]; bag[i] = bag[j]; bag[j] = t; }
+        if (bag[N - 1] === last) { const t = bag[N - 1]; bag[N - 1] = bag[0]; bag[0] = t; } // pop 取尾,尾=下一齣
+      }
+      const egg = bag.pop();
+      try {
+        sessionStorage.setItem('pqmBag', JSON.stringify(bag));
+        sessionStorage.setItem('pqmLast', String(egg));
+      } catch (e) {}
+      return egg;
+    };
     const openMenu = () => {
       this._lastFocus = document.activeElement;
-      // 每次打開都回到「一屏看得完」的收合狀態;同時抽一齣戲,不要每次都一樣
-      const N = this._acts;
-      const egg = 1 + Math.floor(Math.random() * N);
-      this.setState({ open: true, grp: null, egg: egg === this._lastEgg ? (egg % N) + 1 : egg });
-      this._lastEgg = egg;
+      // 環境層(縫縫獸走位)抽相位變奏,連續兩次不同款;戲換幕時不重抽,走位不跳格
+      const lastEnv = this._env || 0;
+      let env = 1 + Math.floor(Math.random() * 4);
+      if (env === lastEnv) env = (env % 4) + 1;
+      this._env = env;
+      // 每次打開都回到「一屏看得完」的收合狀態
+      this.setState({ open: true, grp: null, egg: drawEgg() });
+      // 選單開著就換幕:一齣約 20s,播完自動接下一齣 —— 使用者慢慢找,就能把 15 齣看完
+      clearInterval(this._eggTmr);
+      this._eggTmr = setInterval(() => {
+        if (!this.state.open) { clearInterval(this._eggTmr); return; }
+        this.setState({ egg: drawEgg() });
+      }, 21000);
       setTimeout(() => { if (this._closeEl) this._closeEl.focus(); }, 60);
     };
     const closeMenu = () => {
+      clearInterval(this._eggTmr);
       this.setState({ open: false });
       const back = this._lastFocus || this._burgerEl;
       if (back && back.focus) setTimeout(() => back.focus(), 40);
     };
     return {
       links,
-      dlgCls: 'pqm-stage pqm-v' + this.state.egg,
+      dlgCls: 'pqm-stage pqm-v' + this.state.egg + ' pqm-e' + (this._env || 1),
       open: this.state.open,
       menuExpanded: this.state.open ? 'true' : 'false',
       burgerRef: (el) => { this._burgerEl = el; },
