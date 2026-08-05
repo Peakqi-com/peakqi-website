@@ -78,7 +78,7 @@ export const caseStudies = [
   {
     slug: '室內設計 AI 整合平台',
     industry: t('室內設計裝修', 'Interior design'), title: t('室內設計 AI 整合平台', 'Interior Design AI Platform'),
-    img: 'assets/works/work-interior.png',
+    img: '/assets/works/work-interior.png',
     alt: t('室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報', 'Interior Design AI Platform: space renders, style previews and auto proposal decks'),
     stuck: t('客戶改一次風格,就要重畫、重渲染、重做簡報;設計師把時間花在來回修改與整理提案,而不是設計本身。', 'Every style change meant redrawing, re-rendering and rebuilding the deck. Designers spent their time on revisions, not design.'),
     did: t('空間渲染、風格模擬、自動提案簡報,整合進一個平台。', 'Space renders, style previews and auto proposal decks — one platform.'),
@@ -88,7 +88,7 @@ export const caseStudies = [
   {
     slug: '婚禮產業 AI 大禮包',
     industry: t('婚禮婚慶', 'Weddings'), title: t('婚禮產業 AI 大禮包', 'Wedding Industry AI Suite'),
-    img: 'assets/works/work-wedding.png',
+    img: '/assets/works/work-wedding.png',
     alt: t('婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬與 AI 接客', 'Wedding AI Suite: dress try-on previews and AI intake'),
     stuck: t('婚紗款式、檔期、試妝與方案問題集中在 LINE,由客服重複回覆,再人工把資訊整理到不同表單與群組。', 'Dress styles, dates, makeup trials and package questions all piled into LINE. Support answered on repeat, then re-typed everything into forms and group chats.'),
     did: t('婚紗試穿、髮型試妝模擬、場景生成,加上 AI 接客。', 'Dress try-on, hair and makeup previews, scene generation — plus AI intake.'),
@@ -106,7 +106,7 @@ export const caseStudies = [
   {
     slug: '房仲 AI 助手',
     industry: t('房仲不動產', 'Real estate'), title: t('房仲 AI 助手(串 LINE 官方帳號)', 'Real-Estate AI Assistant (LINE OA)'),
-    img: 'assets/works/work-realestate.png',
+    img: '/assets/works/work-realestate.png',
     alt: t('房仲 AI 助手畫面:串接 LINE 官方帳號自動回物件、排預約帶看', 'Real-Estate AI Assistant: LINE OA integration, auto listing replies and viewing bookings'),
     stuck: t('物件、格局、價格與帶看時間的詢問散在 LINE,業務要一則則回,再人工安排帶看,回覆常常隔數小時。', 'Listing, layout, price and viewing questions scattered across LINE. Agents answered one by one and booked viewings by hand — replies often took hours.'),
     did: t('AI 自動回覆物件資訊、排預約帶看,串接 LINE 官方帳號。', 'AI answers listing questions and books viewings, integrated with the LINE official account.'),
@@ -118,40 +118,40 @@ export const caseNote = t('實際成果依企業流程、資料品質與導入�
 export const caseCta = t('討論相似導入情境', 'Discuss a similar rollout');
 
 export const worksFeatured = [
-  { t: t('婚禮產業 AI 大禮包', 'Wedding Industry AI Suite'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-wedding.png', alt: t('婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬、社群影片生成、發文中心與客戶續談 CRM', 'Wedding AI Suite: dress try-on, social video generation, publishing hub and follow-up CRM'), problem: t('新人問不停,試妝試髮只能靠形容。', 'Couples ask nonstop; try-ons lived in words only.'), solution: t('婚紗試穿、試妝模擬、場景生成+AI 接客。', 'Dress try-on, makeup previews, scene generation + AI intake.'), results: [t('客服人力 ↓約 70%', 'Support workload ↓ ~70%'), t('成交率 5 倍', 'Close rate 5×'), t('8+ AI 模組', '8+ AI modules')] },
-  { t: t('室內設計 AI 整合平台', 'Interior Design AI Platform'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-interior.png', alt: t('室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報', 'Interior Design AI Platform: renders, style previews and auto proposal decks'), problem: t('提案、畫圖、渲染、簡報,三天起跳。', 'Proposal, drawings, renders, deck — three days minimum.'), solution: t('渲染、風格模擬、自動提案,一個平台完成。', 'Renders, style previews and auto proposals in one platform.'), results: [t('提案效率 ↑約 90%', 'Proposals ~90% faster'), t('3 天工作 3 小時完成', '3 days of work in 3 hours'), t('10+ 風格一鍵切換', '10+ styles, one click')] },
-  { t: t('房仲 AI 助手', 'Real-Estate AI Assistant'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-realestate.png', alt: t('房仲 AI 助手畫面:串接 LINE 官方帳號,自動回物件、排預約帶看', 'Real-Estate AI Assistant: LINE OA, auto listing replies, viewing bookings'), problem: t('物件詢問回覆要花數小時。', 'Listing replies took hours.'), solution: t('串 LINE 官方帳號,自動回物件、排帶看。', 'LINE OA integration: auto replies and viewing bookings.'), results: [t('回覆縮短至 30 秒內', 'Replies under 30 seconds'), t('每週省約 8 小時排程', '~8 hrs/week of scheduling saved'), t('名單轉化 ↑約 20%', 'Lead conversion ↑ ~20%')] },
-  { t: t('AI LINE 群組自動摘要', 'AI LINE Group Digest'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-linesummary.png', alt: t('AI LINE 群組自動總結摘要工具畫面', 'AI LINE group auto-summary tool'), problem: t('群組訊息太多,重點被洗掉。', 'Too many messages; the point gets buried.'), solution: t('AI 自動總結群組對話重點。', 'AI summarizes group chats automatically.'), results: [], url: 'https://line-requirement-bot.vercel.app/' },
-  { t: t('AI 自動排桌・排房工具', 'AI Table & Room Planner'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-tables.png', alt: t('AI 自動排組桌、排房工具畫面', 'AI table and room auto-assignment tool'), problem: t('排桌、排房靠人腦喬,一改再改。', 'Seating and rooms juggled by hand, changed again and again.'), solution: t('AI 自動排組桌、排房。', 'AI assigns tables and rooms automatically.'), results: [] },
-  { t: t('牽成|任務回報・團隊管理', 'Chian-Sing | Tasks & Teams'), cat: t('客製系統', 'Custom system'), img: 'assets/works/work-tasks.png', alt: t('牽成任務回報與團隊管理系統畫面', 'Chian-Sing task reporting and team management system'), problem: t('任務交辦散在對話裡,回報靠追問。', 'Assignments scattered in chats; updates only when chased.'), solution: t('任務回報與團隊管理收進一套系統。', 'Task reporting and team management in one system.'), results: [] },
-  { t: t('團購通|電商・LINE 串接', 'GroupBuy Go | Commerce × LINE'), cat: t('客製系統', 'Custom system'), img: 'assets/works/work-groupbuy.png', alt: t('團購通電商系統畫面,串接 LINE 官方帳號', 'GroupBuy Go commerce system with LINE OA integration'), problem: t('團購對帳、下單訊息全靠人工整理。', 'Group-buy orders and reconciliations sorted by hand.'), solution: t('電商系統串接 LINE 官方帳號。', 'Commerce system wired into the LINE official account.'), results: [] }
+  { t: t('婚禮產業 AI 大禮包', 'Wedding Industry AI Suite'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-wedding.png', alt: t('婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬、社群影片生成、發文中心與客戶續談 CRM', 'Wedding AI Suite: dress try-on, social video generation, publishing hub and follow-up CRM'), problem: t('新人問不停,試妝試髮只能靠形容。', 'Couples ask nonstop; try-ons lived in words only.'), solution: t('婚紗試穿、試妝模擬、場景生成+AI 接客。', 'Dress try-on, makeup previews, scene generation + AI intake.'), results: [t('客服人力 ↓約 70%', 'Support workload ↓ ~70%'), t('成交率 5 倍', 'Close rate 5×'), t('8+ AI 模組', '8+ AI modules')] },
+  { t: t('室內設計 AI 整合平台', 'Interior Design AI Platform'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-interior.png', alt: t('室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報', 'Interior Design AI Platform: renders, style previews and auto proposal decks'), problem: t('提案、畫圖、渲染、簡報,三天起跳。', 'Proposal, drawings, renders, deck — three days minimum.'), solution: t('渲染、風格模擬、自動提案,一個平台完成。', 'Renders, style previews and auto proposals in one platform.'), results: [t('提案效率 ↑約 90%', 'Proposals ~90% faster'), t('3 天工作 3 小時完成', '3 days of work in 3 hours'), t('10+ 風格一鍵切換', '10+ styles, one click')] },
+  { t: t('房仲 AI 助手', 'Real-Estate AI Assistant'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-realestate.png', alt: t('房仲 AI 助手畫面:串接 LINE 官方帳號,自動回物件、排預約帶看', 'Real-Estate AI Assistant: LINE OA, auto listing replies, viewing bookings'), problem: t('物件詢問回覆要花數小時。', 'Listing replies took hours.'), solution: t('串 LINE 官方帳號,自動回物件、排帶看。', 'LINE OA integration: auto replies and viewing bookings.'), results: [t('回覆縮短至 30 秒內', 'Replies under 30 seconds'), t('每週省約 8 小時排程', '~8 hrs/week of scheduling saved'), t('名單轉化 ↑約 20%', 'Lead conversion ↑ ~20%')] },
+  { t: t('AI LINE 群組自動摘要', 'AI LINE Group Digest'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-linesummary.png', alt: t('AI LINE 群組自動總結摘要工具畫面', 'AI LINE group auto-summary tool'), problem: t('群組訊息太多,重點被洗掉。', 'Too many messages; the point gets buried.'), solution: t('AI 自動總結群組對話重點。', 'AI summarizes group chats automatically.'), results: [], url: 'https://line-requirement-bot.vercel.app/' },
+  { t: t('AI 自動排桌・排房工具', 'AI Table & Room Planner'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-tables.png', alt: t('AI 自動排組桌、排房工具畫面', 'AI table and room auto-assignment tool'), problem: t('排桌、排房靠人腦喬,一改再改。', 'Seating and rooms juggled by hand, changed again and again.'), solution: t('AI 自動排組桌、排房。', 'AI assigns tables and rooms automatically.'), results: [] },
+  { t: t('牽成|任務回報・團隊管理', 'Chian-Sing | Tasks & Teams'), cat: t('客製系統', 'Custom system'), img: '/assets/works/work-tasks.png', alt: t('牽成任務回報與團隊管理系統畫面', 'Chian-Sing task reporting and team management system'), problem: t('任務交辦散在對話裡,回報靠追問。', 'Assignments scattered in chats; updates only when chased.'), solution: t('任務回報與團隊管理收進一套系統。', 'Task reporting and team management in one system.'), results: [] },
+  { t: t('團購通|電商・LINE 串接', 'GroupBuy Go | Commerce × LINE'), cat: t('客製系統', 'Custom system'), img: '/assets/works/work-groupbuy.png', alt: t('團購通電商系統畫面,串接 LINE 官方帳號', 'GroupBuy Go commerce system with LINE OA integration'), problem: t('團購對帳、下單訊息全靠人工整理。', 'Group-buy orders and reconciliations sorted by hand.'), solution: t('電商系統串接 LINE 官方帳號。', 'Commerce system wired into the LINE official account.'), results: [] }
 ];
 
 export const portfolioAI = [
   { t: t('心途', 'Xintu'), d: t('LINE 定課任務管理工具', 'LINE course-task manager'), cat: t('AI 系統', 'AI system') },
-  { t: t('AI 排桌排房', 'AI Table & Room Planner'), d: t('自動排組桌、排房工具', 'Auto table and room assignment'), cat: t('AI 系統', 'AI system'), img: 'assets/works/work-tables.png' },
-  { t: t('牽成', 'Chian-Sing'), d: t('任務回報/團隊管理系統', 'Task reporting & team management'), cat: t('客製系統', 'Custom system'), img: 'assets/works/work-tasks.png' },
-  { t: t('團購通', 'GroupBuy Go'), d: t('電商系統,串接 LINE 官方帳號', 'Commerce with LINE OA integration'), cat: t('客製系統', 'Custom system'), img: 'assets/works/work-groupbuy.png' },
+  { t: t('AI 排桌排房', 'AI Table & Room Planner'), d: t('自動排組桌、排房工具', 'Auto table and room assignment'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-tables.png' },
+  { t: t('牽成', 'Chian-Sing'), d: t('任務回報/團隊管理系統', 'Task reporting & team management'), cat: t('客製系統', 'Custom system'), img: '/assets/works/work-tasks.png' },
+  { t: t('團購通', 'GroupBuy Go'), d: t('電商系統,串接 LINE 官方帳號', 'Commerce with LINE OA integration'), cat: t('客製系統', 'Custom system'), img: '/assets/works/work-groupbuy.png' },
   { t: 'Hungmen Voice', d: t('聲音檢測自我狀態報告', 'Voice-based self-state reports'), cat: t('AI 系統', 'AI system') },
   { t: t('AI 神農氏', 'AI Shennong'), d: t('保健品配方健檢與開發評估', 'Supplement formula checks and R&D review'), cat: t('AI 系統', 'AI system') },
   { t: t('AutoDraft 台灣 AI 補助王', 'AutoDraft Grant Writer'), d: t('補助計畫書 AI 搜尋、分析與撰寫', 'AI search, analysis and drafting for grant proposals'), cat: t('AI 系統', 'AI system'), url: 'https://autodraft-mvp.vercel.app/' },
   { t: 'Pounds Network', d: t('服務業會員忠誠度與獎勵平台', 'Loyalty and rewards platform for services'), cat: t('AI 系統', 'AI system'), url: 'https://www.pounds.network/en' },
-  { t: t('AI LINE 群組摘要', 'AI LINE Group Digest'), d: t('LINE 群組對話自動總結', 'Auto-summary for LINE group chats'), cat: t('AI 系統', 'AI system'), url: 'https://line-requirement-bot.vercel.app/', img: 'assets/works/work-linesummary.png' },
+  { t: t('AI LINE 群組摘要', 'AI LINE Group Digest'), d: t('LINE 群組對話自動總結', 'Auto-summary for LINE group chats'), cat: t('AI 系統', 'AI system'), url: 'https://line-requirement-bot.vercel.app/', img: '/assets/works/work-linesummary.png' },
   { t: t('AI 呂洞賓', 'AI Lü Dongbin'), d: t('算命/解籤系統', 'Fortune-telling and lot-reading system'), cat: t('AI 系統', 'AI system') },
   { t: 'Nivora AI', d: t('AI Agent 虛擬辦公室', 'AI-agent virtual office'), cat: t('AI 系統', 'AI system') }
 ];
 export const portfolioWeb = [
-  { t: t('嘉義市世博會官網', 'Chiayi Expo Official Site'), d: t('市府級大型活動網站,如期交付上線', 'City-level event site, shipped on schedule'), cat: t('品牌網站', 'Brand site'), img: 'assets/works/work-expo.png' },
+  { t: t('嘉義市世博會官網', 'Chiayi Expo Official Site'), d: t('市府級大型活動網站,如期交付上線', 'City-level event site, shipped on schedule'), cat: t('品牌網站', 'Brand site'), img: '/assets/works/work-expo.png' },
   { t: t('ROUZHI 顏植髮泥', 'ROUZHI'), d: t('品牌官網', 'Brand site'), cat: t('品牌網站', 'Brand site'), url: 'https://rouzhi.tw/' },
   { t: 'OUROS', d: t('AI 課程網頁設計', 'AI course site design'), cat: t('品牌網站', 'Brand site'), url: 'https://www.ouros.tw/' },
   { t: t('DOIIIN ESG 平台', 'DOIIIN ESG Platform'), d: t('網頁設計顧問暨製作', 'Web design consulting and build'), cat: t('品牌網站', 'Brand site'), url: 'https://v0-esg-media-platform.vercel.app/' },
-  { t: t('SparkSpace 倉儲監控', 'SparkSpace Warehouse Monitor'), d: t('倉儲監控系統', 'Warehouse monitoring system'), cat: t('客製系統', 'Custom system'), url: 'https://www.sparkspace.com.tw/', img: 'assets/works/work-warehouse.png' },
+  { t: t('SparkSpace 倉儲監控', 'SparkSpace Warehouse Monitor'), d: t('倉儲監控系統', 'Warehouse monitoring system'), cat: t('客製系統', 'Custom system'), url: 'https://www.sparkspace.com.tw/', img: '/assets/works/work-warehouse.png' },
   { t: t('宮廷命理研究院', 'Palace Numerology Institute'), d: t('算名系統與課程', 'Name-reading system and courses'), cat: t('客製系統', 'Custom system'), url: 'https://palace-virid-nine.vercel.app/' },
   { t: 'Inner Weather', d: t('VJ 用視覺軟體', 'Visual software for VJs'), cat: t('客製系統', 'Custom system'), url: 'https://love-hazel-two.vercel.app/' },
   { t: 'ASML', d: t('品牌官網', 'Brand site'), cat: t('品牌網站', 'Brand site') },
   { t: t('拉步步', 'Labubu'), d: t('活動售票系統', 'Event ticketing system'), cat: t('客製系統', 'Custom system') },
   { t: t('台中綠園', 'Taichung Green Garden'), d: t('圖庫房系統', 'Image library system'), cat: t('客製系統', 'Custom system') },
-  { t: t('社區管理 APP', 'Community Management App'), d: t('社區管理 APP 與後台', 'Community app with back office'), cat: t('客製系統', 'Custom system'), img: 'assets/works/work-community.png' },
+  { t: t('社區管理 APP', 'Community Management App'), d: t('社區管理 APP 與後台', 'Community app with back office'), cat: t('客製系統', 'Custom system'), img: '/assets/works/work-community.png' },
   { t: t('租屋管理平台', 'Rental Management Platform'), d: t('租屋與物件管理', 'Rentals and listings management'), cat: t('客製系統', 'Custom system') },
   { t: t('顏博士論壇', 'Dr. Yan Forum'), d: t('論壇網站', 'Forum site'), cat: t('品牌網站', 'Brand site') }
 ];
