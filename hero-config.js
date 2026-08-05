@@ -131,8 +131,8 @@ export const heroConfig = {
       { kind: 'primary', label: '開始填寫需求', href: '#pq-demo-grid', track: 'hero_demo_click' },
       { kind: 'ghost', label: '先查看相似案例', href: '/cases', track: 'hero_case_click' }
     ],
-    // 本頁右欄是「真的可以操作的草稿面板」,滿版 canvas 會被它整片蓋住 —— 畫了也看不到,
-    // 視差因此毫無意義。關掉畫布層,主視覺交給面板本身與左欄的流程線。
-    flags: { canvas: false }
+    // (2026-08)草稿面板已移出 hero 成獨立 #draft section,右欄改 data-hero-canvaszone
+    // 畫布舞台 —— canvas 重新開啟,四任務主題動畫由 paintDemo 繪製。
+    flags: {}
   }
 };

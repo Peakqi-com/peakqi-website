@@ -511,12 +511,8 @@ class Component extends DCLogic {
     });
     import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});
     import('./analytics.js').then(m => { this._track = m.track; }).catch(() => {});
-    // 頁面級覆寫:草稿面板已移出 hero(見 #draft section),右欄改為 canvas 舞台,
-    // 恢復畫布層讓四個任務的主題動畫可見 —— 只在執行期覆寫,不動 hero-config.js 檔案。
-    Promise.all([import('./hero-config.js'), import('./hero-kit.js')]).then(([hc, m]) => {
-      try { if (hc.heroConfig.demo && hc.heroConfig.demo.flags) delete hc.heroConfig.demo.flags.canvas; } catch (e) {}
-      if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo');
-    }).catch(() => {});
+    // canvas 已在 hero-config.js 正式開啟(flags:{}),直接掛 hero
+    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo'); }).catch(() => {});
   }
   componentWillUnmount() {
     this._dead = true;
