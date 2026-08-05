@@ -37,7 +37,7 @@
    不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
 h1,h2{text-wrap:balance}
 
-#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
@@ -77,7 +77,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
 [data-hero-copy]>div{gap:9px!important}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
-[data-hero-cta] a{padding:12px 18px!important;font-size:13.5px!important}
+[data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
 }
 </style>
@@ -103,16 +103,16 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         </sc-for>
         <sc-for list="{{ featMeta }}" as="f" hint-placeholder-count="4">
           <div data-featchip="{{ f.slug }}" style="{{ f.chipStyle }}">
-            <span style="border:1px solid rgba(242,239,232,.4);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.8)">BEFORE</span>
-            <span style="border:1px solid #FF6B2C;background:rgba(9,11,14,.85);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#FF6B2C">SYSTEM</span>
-            <span style="border:1px solid rgba(101,224,188,.6);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#65E0BC">RESULT</span>
+            <span style="border:1px solid rgba(242,239,232,.4);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 .59375rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.8)">BEFORE</span>
+            <span style="border:1px solid #FF6B2C;background:rgba(9,11,14,.85);border-radius:2px;padding:3px 8px;font:700 .59375rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#FF6B2C">SYSTEM</span>
+            <span style="border:1px solid rgba(101,224,188,.6);background:rgba(9,11,14,.8);border-radius:2px;padding:3px 8px;font:700 .59375rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#65E0BC">RESULT</span>
           </div>
         </sc-for>
         <sc-for list="{{ featMeta }}" as="f2" hint-placeholder-count="4">
           <div data-statcard="{{ f2.slug }}" style="{{ f2.statStyle }}">
-            <span style="font:700 21px 'Space Grotesk',sans-serif;color:#FF6B2C;font-variant-numeric:tabular-nums">{{ f2.v }}</span>
-            <span style="font:400 11.5px/1.5 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8);max-width:180px">{{ f2.l }}</span>
-            <span style="font:600 9px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(242,239,232,.45)">該案例成果・{{ f2.page }}</span>
+            <span style="font:700 1.3125rem 'Space Grotesk',sans-serif;color:#FF6B2C;font-variant-numeric:tabular-nums">{{ f2.v }}</span>
+            <span style="font:400 .71875rem/1.5 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8);max-width:180px">{{ f2.l }}</span>
+            <span style="font:600 .5625rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(242,239,232,.45)">該案例成果・{{ f2.page }}</span>
           </div>
         </sc-for>
       </div>
@@ -120,21 +120,21 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:3;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div data-hero-copy data-whead style="position:relative;z-index:4;max-width:1360px;margin:0 auto;width:100%">
         <div style="max-width:560px;display:flex;flex-direction:column;gap:15px">
-          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">案例與作品</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PROOF IN MOTION</span>
+          <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">PROOF IN MOTION</span>
           <h1 data-chero-h1 style="margin:0;font:900 clamp(1.6rem,4.2vw,3.6rem)/1.25 'Noto Sans TC',sans-serif">不是概念圖,<br>是<span style="color:#FF6B2C">已經運作過</span>的系統。</h1>
           <div style="display:flex;gap:clamp(32px,5vw,56px)">
             <div style="display:flex;flex-direction:column;gap:7px">
               <span style="font:700 clamp(1.9rem,3.1vw,2.7rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">30+</span>
-              <span style="font:600 15px/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">完成專案與系統實作</span>
+              <span style="font:600 .9375rem/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">完成專案與系統實作</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:7px">
               <span style="font:700 clamp(1.9rem,3.1vw,2.7rem)/1 'Space Grotesk',sans-serif;color:#FF6B2C">8+</span>
-              <span style="font:600 15px/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">產業與營運應用情境</span>
+              <span style="font:600 .9375rem/1.4 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)">產業與營運應用情境</span>
             </div>
           </div>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
@@ -144,38 +144,38 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </svg>
           <div data-hero-scenestage style="position:relative;min-height:122px">
             <div data-hero-scene="wed" style="position:relative;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 01 / 05 ・ 婚禮婚慶</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">接住每一筆檔期詢問</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">半夜的「還有檔期嗎?」也有回應——AI 保留檔期,專人確認細節。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 01 / 05 ・ 婚禮婚慶</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">接住每一筆檔期詢問</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">半夜的詢問也有回應——AI 保留檔期,專人確認。</p>
             </div>
             <div data-hero-scene="int" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 02 / 05 ・ 室內設計</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">需求先變成案件卡</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">風格、坪數與預算整理好,設計師接手時脈絡完整。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#FF6B2C">場域 02 / 05 ・ 室內設計</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">需求先變成案件卡</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">風格、坪數與預算整理好,設計師接手時脈絡完整。</p>
             </div>
             <div data-hero-scene="rea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">場域 03 / 05 ・ 房仲不動產</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">物件與帶看自動對上</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">「這間還在嗎?」對上物件、排進帶看時段,不再漏接。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">場域 03 / 05 ・ 房仲不動產</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">物件與帶看自動對上</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">「這間還在嗎?」對上物件、排進帶看,不再漏接。</p>
             </div>
             <div data-hero-scene="bea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 04 / 05 ・ 美業預約</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">預約與提醒自動完成</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">預約、改期、前一日提醒——位子不再空轉。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 04 / 05 ・ 美業預約</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">預約與提醒自動完成</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">預約、改期、前一日提醒——位子不再空轉。</p>
             </div>
             <div data-hero-scene="sum" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 05 / 05 ・ 換你的流程</span>
-              <p style="margin:0;font:800 18px 'Noto Sans TC',sans-serif">同一套系統,不同場域</p>
-              <p style="margin:0;font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">把這個流程換成你的產業,跑一次看看。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">場域 05 / 05 ・ 換你的流程</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">同一套系統,不同場域</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">把這個流程換成你的產業,跑一次看看。</p>
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_case_click" href="#stories" aria-label="查看精選案例" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看精選案例</a>
-            <a data-track="hero_demo_click" href="/demo?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" aria-label="討論我的營運流程" style-hover="border-color:#FF6B2C;color:#FF6B2C">討論我的營運流程</a>
+            <a data-hero-primary data-track="hero_case_click" href="#stories" aria-label="查看精選案例" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 .90625rem 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">查看精選案例</a>
+            <a data-track="hero_demo_click" href="/demo?case=接客追客養客整合流程" style="color:#F2EFE8;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" aria-label="討論我的營運流程" style-hover="border-color:#FF6B2C;color:#FF6B2C">討論我的營運流程</a>
           
-            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,看實際導入案例</span></div>
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 .84375rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 .9375rem 'Space Grotesk',sans-serif">↓</span>往下捲動,看實際導入案例</span></div>
           </div>
-          <p style="margin:0;font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上為場域流程示意動畫;完整案例與實際畫面請見下方案例列表。</p>
+          <p style="margin:0;font:400 .71875rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">以上為流程示意;完整案例請見下方列表。</p>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:5;display:none;flex-wrap:wrap"></div>
@@ -204,12 +204,12 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="stories" data-screen-label="Featured Stories" style="padding:clamp(64px,8vw,104px) 0 0">
   <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,5vw,48px)">
     <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
     </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,<br>三種把 AI 接進流程的方法</h2>
-    <p style="margin:14px 0 0;font:400 clamp(16px,1.3vw,18px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">每個案例都從原本的工作方式開始,說明導入了哪些系統、AI 與人如何分工,以及最後改善了什麼。</p>
+    <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">三個產業,三種 AI 接法</h2>
+    <p style="margin:14px 0 0;font:400 clamp(1rem,1.3vw,1.125rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">原本卡在哪、導入了什麼、AI 與人怎麼分工。</p>
   </div>
   <sc-for list="{{ stories }}" as="st" hint-placeholder-count="4">
     <div data-story style="border-top:1px solid rgba(9,11,14,.12);margin-top:clamp(28px,4vw,44px)">
@@ -221,7 +221,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
                 <sc-for list="{{ st.shots }}" as="sh" hint-placeholder-count="3">
                   <span data-shot role="img" aria-label="{{ sh.alt }}" style="{{ sh.style }}"></span>
                 </sc-for>
-                <span style="position:absolute;left:12px;bottom:10px;background:rgba(9,11,14,.75);border:1px solid rgba(242,239,232,.25);color:rgba(242,239,232,.85);font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;padding:4px 10px;border-radius:2px">REAL SCREENSHOT・{{ st.sourcePage }}</span>
+                <span style="position:absolute;left:12px;bottom:10px;background:rgba(9,11,14,.75);border:1px solid rgba(242,239,232,.25);color:rgba(242,239,232,.85);font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;padding:4px 10px;border-radius:2px">REAL SCREENSHOT・{{ st.sourcePage }}</span>
               </div>
               <div style="display:flex;gap:8px" aria-hidden="true">
                 <span data-pdot style="width:22px;height:6px;border-radius:999px;background:#FF6B2C;transition:all .24s cubic-bezier(.16,1,.3,1)"></span>
@@ -231,38 +231,38 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             </div>
             <div style="display:flex;flex-direction:column;gap:14px">
               <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-                <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.4)">{{ st.no }}</span>
-                <span style="border:1px solid rgba(9,11,14,.25);border-radius:999px;padding:5px 13px;font:500 12px 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(9,11,14,.65)">{{ st.industry }}</span>
-                <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ st.type }}</span>
+                <span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.4)">{{ st.no }}</span>
+                <span style="border:1px solid rgba(9,11,14,.25);border-radius:999px;padding:5px 13px;font:500 .75rem 'Noto Sans TC',sans-serif;letter-spacing:.08em;color:rgba(9,11,14,.65)">{{ st.industry }}</span>
+                <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ st.type }}</span>
               </div>
               <h3 style="margin:0;font:800 clamp(1.65rem,2.9vw,2.35rem)/1.25 'Noto Sans TC',sans-serif">{{ st.title }}</h3>
               <div style="position:relative;min-height:190px">
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本問題</span>
-                  <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.78)">{{ st.stuck }}</p>
+                  <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">BEFORE —— 原本問題</span>
+                  <p style="margin:0;font:500 1rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.78)">{{ st.stuck }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 導入內容</span>
-                  <p style="margin:0;font:500 16px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ st.did }}</p>
+                  <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">SYSTEM —— 導入內容</span>
+                  <p style="margin:0;font:500 1rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.85)">{{ st.did }}</p>
                 </div>
                 <div data-phase style="position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;opacity:0">
-                  <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 實際結果</span>
+                  <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.45)">RESULT —— 實際結果</span>
                   <sc-for list="{{ st.metrics }}" as="m" hint-placeholder-count="3">
                     <div style="display:flex;align-items:baseline;gap:12px;border-bottom:1px dashed rgba(9,11,14,.18);padding-bottom:7px">
-                      <span data-count style="font:700 20px 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:100px;font-variant-numeric:tabular-nums">{{ m.v }}</span>
-                      <span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ m.l }}</span>
+                      <span data-count style="font:700 1.25rem 'Space Grotesk',sans-serif;color:#FF6B2C;min-width:100px;font-variant-numeric:tabular-nums">{{ m.v }}</span>
+                      <span style="font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ m.l }}</span>
                     </div>
                   </sc-for>
-                  <span style="font:400 11.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">※ 該案例成果,依導入範圍而異。</span>
+                  <span style="font:400 .71875rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">※ 該案例成果,依導入範圍而異。</span>
                 </div>
               </div>
               <div style="margin:2px 0 2px;padding:12px 14px;border-left:2px solid #FF6B2C;background:rgba(255,107,44,.05);display:flex;flex-direction:column;gap:5px">
-                <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">HUMAN —— AI 與人分工</span>
-                <p style="margin:0;font:500 15px/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ st.human }}</p>
+                <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:#FF6B2C">HUMAN —— AI 與人分工</span>
+                <p style="margin:0;font:500 .9375rem/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.8)">{{ st.human }}</p>
               </div>
               <div style="display:flex;gap:14px;flex-wrap:wrap">
-                <a href="{{ st.detailHref }}" aria-label="查看完整案例" style="font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none">查看完整案例 →</a>
-                <a href="{{ st.demoHref }}" style="font:500 14px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" aria-label="討論相似導入情境" style-hover="color:#FF6B2C">討論相似導入情境</a>
+                <a href="{{ st.detailHref }}" aria-label="查看完整案例" style="font:700 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none">查看完整案例 →</a>
+                <a href="{{ st.demoHref }}" style="font:500 .875rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6);text-decoration:none" aria-label="討論相似導入情境" style-hover="color:#FF6B2C">討論相似導入情境</a>
               </div>
             </div>
           </div>
@@ -275,13 +275,13 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="index" data-screen-label="Work Index" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">WORK INDEX — 全部實績</span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.5)">WORK INDEX — 全部實績</span>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">不只看成品,也看系統怎麼運作</h2>
-      <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">點卡片放大截圖;點背景或關閉鈕關閉,左右可切換</span>
+      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">不只看成品,也看運作</h2>
+      <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">點卡片放大截圖,左右可切換</span>
     </div>
     <div role="group" aria-label="類別篩選" style="margin-top:clamp(22px,3vw,32px);display:flex;flex-wrap:wrap;gap:10px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
@@ -297,15 +297,15 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <div style="display:flex;flex-direction:column;gap:7px;padding:15px 16px;flex:1">
             <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
               <span style="{{ w.catStyle }}">{{ w.type }}</span>
-              <span style="font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.35)">{{ w.sourcePage }}</span>
+              <span style="font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.35)">{{ w.sourcePage }}</span>
             </div>
-            <span style="font:800 16.5px/1.4 'Noto Sans TC',sans-serif">{{ w.name }}</span>
-            <span style="font:400 13.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">{{ w.d }}</span>
-            <span style="align-self:flex-start;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.55);border:1px solid rgba(242,239,232,.2);border-radius:999px;padding:2px 9px">{{ w.status }}</span>
+            <span style="font:800 1.03125rem/1.4 'Noto Sans TC',sans-serif">{{ w.name }}</span>
+            <span style="font:400 .84375rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">{{ w.d }}</span>
+            <span style="align-self:flex-start;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.55);border:1px solid rgba(242,239,232,.2);border-radius:999px;padding:2px 9px">{{ w.status }}</span>
             <div style="margin-top:auto;display:flex;gap:12px;padding-top:6px">
-              <button onClick="{{ w.zoom }}" style="background:none;border:none;padding:0;cursor:pointer;font:700 12.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">放大截圖</button>
+              <button onClick="{{ w.zoom }}" style="background:none;border:none;padding:0;cursor:pointer;font:700 .78125rem 'Noto Sans TC',sans-serif;color:#FF6B2C">放大截圖</button>
               <sc-if value="{{ w.hasUrl }}" hint-placeholder-val="{{ false }}">
-                <a href="{{ w.url }}" target="_blank" rel="noopener" style="font:700 12.5px 'Space Grotesk',sans-serif;color:rgba(242,239,232,.6);text-decoration:none" style-hover="color:#FF6B2C">造訪 ↗</a>
+                <a href="{{ w.url }}" target="_blank" rel="noopener" style="font:700 .78125rem 'Space Grotesk',sans-serif;color:rgba(242,239,232,.6);text-decoration:none" style-hover="color:#FF6B2C">造訪 ↗</a>
               </sc-if>
             </div>
           </div>
@@ -317,10 +317,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section id="capability" data-screen-label="可開發能力" style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,48px);background:#090B0E;color:#F2EFE8;border-top:1px solid rgba(242,239,232,.1)">
   <div style="max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
-    <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">CAPABILITIES — 已可交付、截圖整理中</span>
+    <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">CAPABILITIES — 已可交付、截圖整理中</span>
     <div style="display:flex;flex-wrap:wrap;gap:10px">
       <sc-for list="{{ caps }}" as="c" hint-placeholder-count="1">
-        <span style="border:1px dashed rgba(242,239,232,.3);border-radius:999px;padding:9px 18px;font:500 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">{{ c.name }}<span style="color:rgba(242,239,232,.4)">・{{ c.d }}</span></span>
+        <span style="border:1px dashed rgba(242,239,232,.3);border-radius:999px;padding:9px 18px;font:500 .84375rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75)">{{ c.name }}<span style="color:rgba(242,239,232,.4)">・{{ c.d }}</span></span>
       </sc-for>
     </div>
   </div>
@@ -329,19 +329,19 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="custom" data-screen-label="客製系統" style="padding:clamp(64px,8vw,104px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CUSTOM BUILD</span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CUSTOM BUILD</span>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between">
-      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">從單一流程,<br>到整套企業系統</h2>
-      <p style="margin:0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);max-width:340px">{{ customNote }}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(20px,2.5vw,36px);align-items:end;justify-content:space-between">
+      <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,3.8vw,3.2rem)/1.22 'Noto Sans TC',sans-serif">從單一流程,到整套系統</h2>
+      <p style="margin:0;font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);max-width:340px">{{ customNote }}</p>
     </div>
-    <p style="margin:20px 0 0;font:400 15.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:640px">{{ customCred }}</p>
-    <div style="margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px">
+    <p style="margin:20px 0 0;font:400 .96875rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68);max-width:640px">{{ customCred }}</p>
+    <div style="margin-top:clamp(24px,2.5vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px">
       <sc-for list="{{ customs }}" as="c" hint-placeholder-count="4">
         <div style="border:1px dashed rgba(9,11,14,.28);border-radius:4px;padding:20px;display:flex;flex-direction:column;gap:6px">
-          <span style="font:500 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">{{ c.s }}</span>
+          <span style="font:500 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">{{ c.s }}</span>
           <span style="font:700 clamp(1.3rem,2vw,1.6rem) 'Space Grotesk',sans-serif">{{ c.r }}</span>
         </div>
       </sc-for>
@@ -350,10 +350,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 </section>
 
 <section data-screen-label="CTA" style="background:#090B0E;color:#F2EFE8;padding:clamp(72px,9vw,110px) clamp(20px,5vw,48px)">
-  <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
-    <h2 style="margin:0;font:900 clamp(1.5rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 如何接進你的流程?</h2>
-    <a href="/demo" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
-    <a href="#stories" aria-label="查看相近產業案例" style="display:inline-flex;align-items:center;gap:8px;margin-left:14px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看相近產業案例</a>
+  <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(24px,2.5vw,40px);align-items:center;justify-content:space-between">
+    <h2 style="margin:0;font:900 clamp(1.5rem,3.6vw,3rem)/1.3 'Noto Sans TC',sans-serif">想看 AI 接進你的流程?</h2>
+    <a href="/demo" data-cta aria-label="預約 15 分鐘流程評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 .96875rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 15 分鐘流程評估 <span data-arrow>→</span></a>
+    <a href="#stories" aria-label="查看相近產業案例" style="display:inline-flex;align-items:center;gap:8px;margin-left:14px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 .9375rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看相近產業案例</a>
   </div>
 </section>
 
@@ -451,7 +451,7 @@ class Component extends DCLogic {
       key: label, label,
       style: {
         position: 'absolute', left: (42 + ci * 14.6) + '%', top: '2%', opacity: 0,
-        font: "700 11px 'Noto Sans TC',sans-serif", letterSpacing: '.18em',
+        font: "700 .6875rem 'Noto Sans TC',sans-serif", letterSpacing: '.18em',
         color: ['#FF6B2C', '#3E9BFF', '#65E0BC', 'rgba(242,239,232,.8)'][ci], transition: 'opacity .5s'
       }
     }));
@@ -503,7 +503,7 @@ class Component extends DCLogic {
       hasUrl: !!w.url,
       zoomLabel: '放大檢視「' + w.name + '」截圖',
       onErr: err(w.cover.fallback),
-      catStyle: { font: "600 10.5px 'Noto Sans TC',sans-serif", letterSpacing: '.14em', color: catColors[w.type] ?? '#FF6B2C' },
+      catStyle: { font: "600 .65625rem 'Noto Sans TC',sans-serif", letterSpacing: '.14em', color: catColors[w.type] ?? '#FF6B2C' },
       zoom: (e) => {
         const fx = this._fx || window.__pqCases;
         if (fx && fx.lightbox) fx.lightbox(lbItems, i, e.currentTarget);
@@ -523,7 +523,7 @@ class Component extends DCLogic {
         },
         style: {
           cursor: 'pointer', borderRadius: '999px', padding: '9px 20px',
-          font: "600 13.5px 'Noto Sans TC',sans-serif",
+          font: "600 .84375rem 'Noto Sans TC',sans-serif",
           background: on ? '#FF6B2C' : 'transparent',
           color: on ? '#090B0E' : 'rgba(242,239,232,.75)',
           border: on ? '1px solid #FF6B2C' : '1px solid rgba(242,239,232,.3)',

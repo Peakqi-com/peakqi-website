@@ -50,11 +50,11 @@
 <style>
 /* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
    不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
-h1,h2{text-wrap:balance}
+h1,h2,h3{text-wrap:balance}
 /* 這兩處標題本來就把每一句包成 span,但 span 是行內元素會連在一起斷 → 各自成行 */
 .pq-cine-studytitle h2 span,#dt-title span{display:block}
 
-#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
@@ -62,7 +62,7 @@ a{color:#FF6B2C}a:hover{color:#D14E12}
 ::selection{background:#FF6B2C;color:#F2EFE8}
 .pq-wrap{max-width:1280px;margin:0 auto;width:100%}
 .pq-sec{padding:clamp(64px,9vw,120px) clamp(20px,5vw,48px)}
-.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
+.pq-eyebrow{font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
 /* 母動畫:區塊進場(捲動觸發) */
 [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
 /* 子動畫(獨立循環) */
@@ -86,17 +86,17 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-paper{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;background:#F2EFE8;background-image:linear-gradient(rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.05) 1px,transparent 1px),linear-gradient(rgba(9,11,14,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(9,11,14,.11) 1px,transparent 1px);background-size:26px 26px,26px 26px,130px 130px,130px 130px}
 .pq-cine-paper::after{content:"";position:absolute;inset:clamp(16px,3.2vw,46px);border:1.5px solid rgba(9,11,14,.5)}
 .pq-cine-paper::before{content:"";position:absolute;inset:clamp(24px,4.2vw,60px);border:1px solid rgba(9,11,14,.18)}
-.pq-cine-titleblock{position:absolute;z-index:5;right:clamp(20px,3.4vw,50px);bottom:clamp(20px,3.4vw,50px);display:none;flex-direction:column;gap:2px;padding:10px 14px;border:1.5px solid rgba(9,11,14,.5);background:rgba(242,239,232,.7);color:rgba(9,11,14,.7);font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.12em;text-align:right}
-.pq-cine-titleblock b{color:#090B0E;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.06em}
+.pq-cine-titleblock{position:absolute;z-index:5;right:clamp(20px,3.4vw,50px);bottom:clamp(20px,3.4vw,50px);display:none;flex-direction:column;gap:2px;padding:10px 14px;border:1.5px solid rgba(9,11,14,.5);background:rgba(242,239,232,.7);color:rgba(9,11,14,.7);font:700 .5rem 'Space Grotesk',sans-serif;letter-spacing:.12em;text-align:right}
+.pq-cine-titleblock b{color:#090B0E;font:800 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.06em}
 .pq-cine-titleblock span{color:#FF6B2C}
 #hero.pq-cine-paper-on .pq-cine-titleblock{display:flex}
 /* U3s 白藍圖零件展示章節標題:工程圖語言(深墨線 + 少量橘 + 大量留白) */
 /* 文字層一律高於影片(z=5)與 debug(z=8):字卡永遠不被蓋住 */
 .pq-cine-studytitle{z-index:20;position:absolute;z-index:5;left:clamp(28px,7vw,120px);top:38%;max-width:min(560px,52vw);pointer-events:none;opacity:var(--k,0);transform:translateY(calc((1 - var(--k,0))*14px));transition:none}
-.pq-cine-studytitle .eyebrow{display:block;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C;margin-bottom:18px;padding-left:2px;border-left:0}
+.pq-cine-studytitle .eyebrow{display:block;font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.28em;color:#FF6B2C;margin-bottom:18px;padding-left:2px;border-left:0}
 .pq-cine-studytitle h2{margin:0 0 16px;font:900 clamp(1.7rem,3.6vw,3rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
-.pq-cine-studytitle p{margin:0;font:400 15px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:26em}
-@media (max-width:820px){.pq-cine-studytitle{left:20px;right:20px;top:26%;max-width:none}.pq-cine-studytitle h2{font-size:1.5rem}}
+.pq-cine-studytitle p{margin:0;font:400 .9375rem/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);max-width:26em}
+@media (max-width:820px){.pq-cine-studytitle{left:20px;right:20px;top:26%;max-width:none}.pq-cine-studytitle h2{font-size:clamp(1.2rem,6.2vw,1.5rem)}}
 /* U3s 零件展示文字卡:工程圖語言(深墨字 + 橘色編號 + 細引線 + 留白) */
 .pq-study{position:absolute;inset:0;z-index:20;pointer-events:none}
 /* B 字卡手繪線稿感:像工程師直接在藍圖上手寫的註記 —— 歪斜手繪外框 + 重描第二筆 + 指向零件的引線 */
@@ -119,15 +119,15 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   background:radial-gradient(circle 3px at left center,rgba(9,11,14,.55) 98%,transparent 100%),
              linear-gradient(rgba(9,11,14,.4),rgba(9,11,14,.4)) right center/100% 1.4px no-repeat}
 /* 索引列:分隔線改成鉛筆虛線手感 */
-.pq-study-idx{display:flex;gap:11px;align-items:baseline;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.45);margin-bottom:16px;padding-bottom:12px;position:relative;border-bottom:0}
+.pq-study-idx{display:flex;gap:11px;align-items:baseline;font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(9,11,14,.45);margin-bottom:16px;padding-bottom:12px;position:relative;border-bottom:0}
 .pq-study-idx::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
   background:repeating-linear-gradient(90deg,rgba(9,11,14,.42) 0 7px,transparent 7px 11px)}
 .pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row-reverse}
-.pq-study-idx b{color:#FF6B2C;font:800 24px 'Space Grotesk',sans-serif;letter-spacing:0}
+.pq-study-idx b{color:#FF6B2C;font:800 1.5rem 'Space Grotesk',sans-serif;letter-spacing:0}
 .pq-study-card h3{margin:0 0 12px;font:900 clamp(1.5rem,2.9vw,2.5rem)/1.16 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#0b0d10}
-.pq-study-card p{margin:0;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)}
+.pq-study-card p{margin:0;font:400 .9375rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)}
 @media (max-width:820px){.pq-study-card,.pq-study-card[data-side="left"],.pq-study-card[data-side="right"]{left:6vw;right:6vw;width:auto;top:auto;bottom:calc(4svh + env(safe-area-inset-bottom, 0px));max-height:36svh;overflow:hidden;padding:clamp(12px,1.9svh,20px) 20px;transform:rotate(-.3deg);text-align:left}.pq-study-card[data-side="right"] .pq-study-idx{flex-direction:row}.pq-study-card h3{font-size:clamp(1rem, min(5vw, 2.5svh), 1.4rem);margin-bottom:clamp(5px,0.8svh,8px)}
-  .pq-study-card p{font-size:clamp(11px, min(3.5vw, 1.85svh), 14px);line-height:1.7}
+  .pq-study-card p{font-size:clamp(.6875rem, min(3.5vw, 1.85svh), .875rem);line-height:1.7}
   .pq-study-idx{margin-bottom:10px;padding-bottom:8px}
   /* 手機模型在上、字卡在下 → 指向側邊的引線沒有意義,收掉 */
   .pq-study-card::after{display:none}}
@@ -167,18 +167,18 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* Debug 對位線:紅=影片裁切多邊形,藍=螢幕外框矩形;reviewEl 加 .debug class 顯示 */
 .pq-cine-dbg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;opacity:0;z-index:8}
 .pq-cine-review.debug .pq-cine-dbg{opacity:1}
-.pq-cine-rec{position:absolute;left:14px;top:12px;z-index:2;display:flex;align-items:center;gap:7px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.9);text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.pq-cine-rec{position:absolute;left:14px;top:12px;z-index:2;display:flex;align-items:center;gap:7px;font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.9);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .pq-cine-rec i{width:9px;height:9px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 10px #ff3b3b;animation:pqPulse 1.4s ease-in-out infinite}
 .pq-cine-vcard{z-index:20;position:absolute;left:clamp(20px,6vw,72px);top:50%;transform:translateY(calc(-50% + 24px));width:min(400px,38vw);border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.66);backdrop-filter:blur(14px);padding:26px 26px 28px;opacity:0;transition:opacity .5s cubic-bezier(0.16,1,0.3,1),transform .5s cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-vcard.is-on{opacity:1;transform:translateY(-50%)}
-.pq-cine-vcard .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
-.pq-cine-vcard .top b{color:#FF6B2C;font:700 15px 'Space Grotesk',sans-serif}
+.pq-cine-vcard .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 .625rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
+.pq-cine-vcard .top b{color:#FF6B2C;font:700 .9375rem 'Space Grotesk',sans-serif}
 .pq-cine-vcard h2{margin:22px 0 16px;font:900 clamp(1.6rem,2.6vw,2.5rem)/1.1 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
 .pq-cine-vcard h2 span{display:block}
 .pq-cine-vcard h2 em{font-style:normal;color:#FF6B2C}
-.pq-cine-vcard>p{margin:0;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pq-cine-vcard>p{margin:0;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
 .pq-cine-vcard ul{margin:20px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:7px}
-.pq-cine-vcard li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 11px 'Noto Sans TC',sans-serif;letter-spacing:.03em}
+.pq-cine-vcard li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 .6875rem 'Noto Sans TC',sans-serif;letter-spacing:.03em}
 /* ── 影片字卡的科技感:四角取景框 + 進場掃描線 + 模組編號讀值 + 內容逐段浮現 ──
    全部走 CSS transition/animation,不新增 rAF(引擎只有一個全域 frame loop)。 */
 .pq-cine-vcard{--ac:62,155,255;overflow:hidden}
@@ -202,7 +202,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqVScan{0%{opacity:0;top:0}9%{opacity:1}100%{opacity:0;top:100%}}
 /* 模組編號讀值:呼吸的狀態點 + 等寬編號 */
 .pq-cine-vcard .sig{display:flex;align-items:center;gap:8px;margin-top:10px;
-  font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(var(--ac),.85)}
+  font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(var(--ac),.85)}
 .pq-cine-vcard .sig u{width:5px;height:5px;border-radius:50%;background:rgb(var(--ac));text-decoration:none;
   box-shadow:0 0 8px rgba(var(--ac),.9);animation:pqSigPulse 2.1s ease-in-out infinite}
 @keyframes pqSigPulse{0%,100%{opacity:.35}50%{opacity:1}}
@@ -223,10 +223,10 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* U3c 組裝完成鏡頭正面章節總結標題(暗場置中,鏡頭中心對齊;非品牌 Slogan) */
 .pq-cine-lenstitle{position:absolute;inset:0;z-index:21;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:clamp(10px,1.6vw,20px);padding:0 8vw;pointer-events:none;opacity:var(--k,0)}
 .pq-cine-lenstitle::before{content:"";position:absolute;left:50%;top:50%;width:min(760px,86vw);height:min(520px,60vh);transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(9,11,14,.62) 0%,rgba(9,11,14,0) 70%);z-index:-1}
-.pq-cine-lenstitle .eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C;transform:translateY(calc((1 - var(--k,0))*10px))}
+.pq-cine-lenstitle .eyebrow{font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C;transform:translateY(calc((1 - var(--k,0))*10px))}
 .pq-cine-lenstitle h2{margin:0;font:900 clamp(1.8rem,5vw,4rem)/1.16 'Noto Sans TC',sans-serif;color:#F2EFE8;letter-spacing:-.01em;text-shadow:0 2px 30px rgba(0,0,0,.6);transform:translateY(calc((1 - var(--k,0))*14px))}
-.pq-cine-lenstitle p{margin:0;font:400 15px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:30em}
-@media (max-width:820px){.pq-cine-lenstitle h2{font-size:1.7rem}
+.pq-cine-lenstitle p{margin:0;font:400 .9375rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);max-width:30em}
+@media (max-width:820px){.pq-cine-lenstitle h2{font-size:clamp(1.35rem,7vw,1.7rem)}
   /* 手機:文字塊改成靠下,和下移後的相機一起把畫面重量帶到中下段 */
   .pq-cine-lenstitle{justify-content:flex-end;padding-bottom:15svh}}
 /* U5 Slogan:外框字掃描填實 + 逐段浮現(--k 由捲動驅動;子=持續微光掃描) */
@@ -235,22 +235,22 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @media (min-width:821px){.pq-slogan{align-items:flex-start;text-align:left;padding:0 0 0 clamp(28px,6vw,96px);width:56%}
   .pq-slogan-title{font-size:clamp(2rem,4.6vw,4rem)}
   .pq-slogan-cta{justify-content:flex-start}}
-.pq-slogan-eyebrow{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;opacity:clamp(0,calc((var(--k,0) - .04)*6),1);transform:translateY(calc((1 - var(--k,0))*10px))}
+.pq-slogan-eyebrow{font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;opacity:clamp(0,calc((var(--k,0) - .04)*6),1);transform:translateY(calc((1 - var(--k,0))*10px))}
 .pq-slogan-title{position:relative;margin:0;font:900 clamp(2rem,6.4vw,5.4rem)/1.12 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8;--step:.04;--dur:.24}
 /* 逐字「開機/解碼」浮現:每字由暗、模糊、下移的殘影 → 實體字,通電時橘光一波掃過(--k 由捲動驅動,--i 每字索引) */
 .pq-slogan-title .ch{display:inline-block;white-space:pre;--p:clamp(0,calc((var(--k,0) - var(--i,0)*var(--step)) / var(--dur)),1);color:#F2EFE8;opacity:calc(.05 + .95*var(--p));transform:translateY(calc((1 - var(--p))*.42em)) scale(calc(.9 + .1*var(--p)));filter:blur(calc((1 - var(--p))*7px));text-shadow:0 0 calc(var(--p)*(1 - var(--p))*52px) rgba(255,107,44,.95),0 0 calc(var(--p)*(1 - var(--p))*20px) #FF6B2C;will-change:opacity,transform,filter}
 .pq-slogan-title .ch.accent{color:#FF6B2C}
-.pq-slogan-lock{font:700 clamp(11px,1.3vw,15px) 'Space Grotesk',sans-serif;letter-spacing:calc(.12em + var(--k,0)*.34em);color:rgba(242,239,232,.72);opacity:clamp(0,calc((var(--k,0) - .3)*4.5),1)}
-.pq-slogan-sub{margin:0;font:600 13px 'Noto Sans TC',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.5);opacity:clamp(0,calc((var(--k,0) - .45)*5),1)}
+.pq-slogan-lock{font:700 clamp(.6875rem,1.3vw,.9375rem) 'Space Grotesk',sans-serif;letter-spacing:calc(.12em + var(--k,0)*.34em);color:rgba(242,239,232,.72);opacity:clamp(0,calc((var(--k,0) - .3)*4.5),1)}
+.pq-slogan-sub{margin:0;font:600 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.1em;color:rgba(242,239,232,.5);opacity:clamp(0,calc((var(--k,0) - .45)*5),1)}
 .pq-slogan-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px;pointer-events:auto;opacity:clamp(0,calc((var(--k,0) - .6)*5),1)}
 /* E 廣告式按鈕:更大的量體、字距,加上掃過的高光 */
-.pq-slogan-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:11px;background:#FF6B2C;color:#090B0E;padding:18px 34px;border-radius:2px;font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:0 14px 40px rgba(255,107,44,.32);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s}
+.pq-slogan-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:11px;background:#FF6B2C;color:#090B0E;padding:18px 34px;border-radius:2px;font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:0 14px 40px rgba(255,107,44,.32);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s}
 .pq-slogan-btn span{font-family:'Space Grotesk',sans-serif;transition:transform .3s cubic-bezier(.16,1,.3,1)}
 .pq-slogan-btn:hover{transform:translateY(-2px);box-shadow:0 20px 52px rgba(255,107,44,.46)}
 .pq-slogan-btn:hover span{transform:translateX(5px)}
 .pq-slogan-btn::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:pqShine 4.4s ease-in-out infinite}
 @keyframes pqShine{0%,72%{left:-60%}86%,100%{left:130%}}
-.pq-slogan-ghost{display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.34);color:#F2EFE8;padding:17px 30px;border-radius:2px;font:600 16px 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;transition:border-color .3s,color .3s,background .3s}
+.pq-slogan-ghost{display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.34);color:#F2EFE8;padding:17px 30px;border-radius:2px;font:600 1rem 'Noto Sans TC',sans-serif;letter-spacing:.03em;text-decoration:none;transition:border-color .3s,color .3s,background .3s}
 .pq-slogan-ghost:hover{border-color:#FF6B2C;color:#FF6B2C;background:rgba(255,107,44,.07)}
 /* E 一直拍照的相機:連拍節奏的快門閃光 + 取景框角標 + 拍攝參數列 */
 .pq-slogan-flash{position:absolute;inset:0;z-index:23;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:pqBurst 4.4s ease-out infinite}
@@ -277,7 +277,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-slogan-marks i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
 .pq-slogan-marks i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
 @keyframes pqMark{0%,50%{transform:scale(1);opacity:.55}2%,54%{transform:scale(.9);opacity:1}12%,64%{transform:scale(1);opacity:.55}}
-.pq-slogan-meta{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px);font:700 clamp(9.5px,1vw,11.5px) 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.42);opacity:clamp(0,calc((var(--k,0) - .5)*5),1)}
+.pq-slogan-meta{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px);font:700 clamp(.59375rem,1vw,.71875rem) 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.42);opacity:clamp(0,calc((var(--k,0) - .5)*5),1)}
 .pq-slogan-meta b{display:flex;align-items:center;gap:6px;color:rgba(242,239,232,.6);font-weight:700}
 .pq-slogan-meta b::before{content:'';width:7px;height:7px;border-radius:50%;background:#ff3b30;box-shadow:0 0 9px #ff3b30;animation:pqRecBlink 1.35s steps(1,end) infinite}
 @media (prefers-reduced-motion:reduce){.pq-slogan-flash,.pq-slogan-marks i,.pq-slogan-btn::after{animation:none!important}.pq-slogan-flash{opacity:0!important}}
@@ -295,32 +295,32 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   /* 4) 結尾 Slogan 在手機往下移一點,不要頂著相機 */
   .pq-slogan{justify-content:flex-end;padding-bottom:14svh}
   .pq-cine-studytitle h2{font-size:clamp(1.2rem,5.4vw,1.55rem);line-height:1.35}
-  .pq-cine-studytitle p{font-size:13px;line-height:1.7}
+  .pq-cine-studytitle p{font-size:.8125rem;line-height:1.7}
 
   /* 5) 深色段節拍字卡:手機上原本佔到半個螢幕還壓住相機 → 整體縮小、限高 */
   .pq-cine-card{left:5vw!important;right:5vw!important;
     bottom:calc(5svh + env(safe-area-inset-bottom, 0px));
     max-height:44svh;overflow:hidden;padding:clamp(10px, 1.6svh, 16px) 16px}
-  .pq-cine-card .top{font-size:clamp(8px, 1.15svh, 10px);padding-bottom:clamp(6px,0.9svh,10px)}
-  .pq-cine-card .top b{font-size:19px}
+  .pq-cine-card .top{font-size:clamp(.5rem, 1.15svh, .625rem);padding-bottom:clamp(6px,0.9svh,10px)}
+  .pq-cine-card .top b{font-size:1.1875rem}
   .pq-cine-card h2{font-size:clamp(0.95rem, min(4.6vw, 2.55svh), 1.38rem);line-height:1.26;margin:clamp(6px,1.1svh,12px) 0 clamp(5px,0.8svh,8px)}
-  .pq-cine-card>p{font-size:clamp(10.5px, min(3.3vw, 1.75svh), 13px);line-height:1.6}
+  .pq-cine-card>p{font-size:clamp(.65625rem, min(3.3vw, 1.75svh), .8125rem);line-height:1.6}
   .pq-cine-callout{padding:clamp(5px,0.9svh,9px) 10px;margin:clamp(5px,0.9svh,9px) 0}
-  .pq-cine-callout span{font-size:9px}
-  .pq-cine-callout b{font-size:12px}
+  .pq-cine-callout span{font-size:.5625rem}
+  .pq-cine-callout b{font-size:.75rem}
   /* 標籤列不換行,避免把卡片撐高 */
   .pq-cine-card ul{margin-top:clamp(6px,1svh,10px);flex-wrap:nowrap;overflow:hidden;gap:6px}
-  .pq-cine-card ul li{white-space:nowrap;font-size:clamp(9.5px,1.35svh,11.5px);padding:clamp(4px,0.7svh,7px) 9px}
+  .pq-cine-card ul li{white-space:nowrap;font-size:clamp(.59375rem,1.35svh,.71875rem);padding:clamp(4px,0.7svh,7px) 9px}
   /* 3) 深色段字卡:限高、收斂內容,不再吃掉大半個螢幕把相機蓋住 */
   .pq-cine-vcard{left:5vw;right:5vw;width:auto;top:auto;
     bottom:calc(9svh + env(safe-area-inset-bottom, 0px));
     max-height:44svh;overflow:hidden;padding:clamp(10px,1.6svh,16px) 16px}
   .pq-cine-vcard h2{font-size:clamp(0.95rem, min(4.8vw, 2.55svh), 1.45rem);margin:clamp(6px,1.1svh,12px) 0 clamp(5px,0.8svh,8px)}
-  .pq-cine-vcard>p{font-size:clamp(10.5px, min(3.3vw, 1.75svh), 13px);line-height:1.6}
-  .pq-cine-vcard .top{padding-bottom:clamp(6px,0.9svh,10px);font-size:clamp(8px,1.15svh,10px)}
+  .pq-cine-vcard>p{font-size:clamp(.65625rem, min(3.3vw, 1.75svh), .8125rem);line-height:1.6}
+  .pq-cine-vcard .top{padding-bottom:clamp(6px,0.9svh,10px);font-size:clamp(.5rem,1.15svh,.625rem)}
   /* 標籤列在小螢幕換行會把卡片撐高 → 只留一行、超出隱藏 */
   .pq-cine-vcard ul{margin-top:12px;flex-wrap:nowrap;overflow:hidden;gap:6px}
-  .pq-cine-vcard ul li{white-space:nowrap;font-size:clamp(9.5px,1.35svh,11.5px)}
+  .pq-cine-vcard ul li{white-space:nowrap;font-size:clamp(.59375rem,1.35svh,.71875rem)}
 }
 
 /* ── Phase 5 字卡進退場:opacity 0→1、translateY 18px→0、blur 5px→0 ──
@@ -339,13 +339,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   #hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card,
   .pq-cine-vcard,.pq-study-card{filter:none!important;transform:none!important}
 }
-@media (max-width:820px){.pq-slogan{gap:14px}.pq-slogan-title{font-size:2rem}.pq-slogan-cta{flex-direction:column;width:100%;max-width:320px}.pq-slogan-btn,.pq-slogan-ghost{justify-content:center}}
+@media (max-width:820px){.pq-slogan{gap:14px}.pq-slogan-title{font-size:clamp(1.6rem,8.2vw,2rem)}.pq-slogan-cta{flex-direction:column;width:100%;max-width:320px}.pq-slogan-btn,.pq-slogan-ghost{justify-content:center}}
 @media (max-width:820px){
   .pq-cine-vstage{left:12px;right:12px;width:auto;top:11%;transform:none}
   /* 這條在後面覆蓋前面的 bottom:9svh,影片字卡要往上一點要改這裡 */
   .pq-cine-vcard{left:12px;right:12px;width:auto;top:auto;bottom:calc(9svh + env(safe-area-inset-bottom, 0px));transform:translateY(20px)}
   .pq-cine-vcard.is-on{transform:none}
-  .pq-cine-vcard h2{font-size:1.45rem}
+  .pq-cine-vcard h2{font-size:clamp(1.15rem,6vw,1.45rem)}
 }
 /* 結尾彩色墨流背景:z-index 0 → 在 3D canvas(z1)底下;canvas 是 alpha:true 所以會透出來。
    高彩度色團 + 緩慢漂移 + blur,疊出流體/大理石紋的感覺;純 CSS,不進每幀迴圈也不吃 WebGL。 */
@@ -367,29 +367,29 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-cine-annot .card{fill:rgba(255,255,255,.92);stroke:rgba(9,11,14,.6);stroke-width:1;filter:drop-shadow(0 6px 16px rgba(9,11,14,.1))}
 .pq-cine-annot .lead{stroke:rgba(9,11,14,.72);stroke-width:1;fill:none}
 .pq-cine-annot .dot{fill:#FF6B2C;stroke:#fff;stroke-width:1.2}
-.pq-cine-annot .idx{fill:#FF6B2C;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.05em}
-.pq-cine-annot .coord{fill:rgba(9,11,14,.5);font:600 9px 'Space Grotesk',sans-serif;letter-spacing:.02em}
-.pq-cine-annot .biz{fill:#090B0E;font:800 14.5px 'Noto Sans TC',sans-serif}
-.pq-cine-annot .note{fill:rgba(9,11,14,.66);font:400 11.5px 'Noto Sans TC',sans-serif}
+.pq-cine-annot .idx{fill:#FF6B2C;font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.05em}
+.pq-cine-annot .coord{fill:rgba(9,11,14,.5);font:600 .5625rem 'Space Grotesk',sans-serif;letter-spacing:.02em}
+.pq-cine-annot .biz{fill:#090B0E;font:800 .90625rem 'Noto Sans TC',sans-serif}
+.pq-cine-annot .note{fill:rgba(9,11,14,.66);font:400 .71875rem 'Noto Sans TC',sans-serif}
 /* 基礎狀態(降級/引擎未接管):可讀的堆疊版 */
 .pq-cine-intro,.pq-cine-card{position:relative;z-index:3;max-width:640px;margin:0 auto 30px}
 .pq-cine-intro{display:flex;flex-direction:column;gap:20px}
-.pq-cine-scrollcue{display:inline-flex;align-items:center;gap:14px;font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.88);text-decoration:none;width:fit-content}
+.pq-cine-scrollcue{display:inline-flex;align-items:center;gap:14px;font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.88);text-decoration:none;width:fit-content}
 .pq-cine-scrollcue i{width:40px;height:40px;border:1px solid rgba(242,239,232,.28);display:grid;place-items:center;color:#FF6B2C;font-style:normal;animation:pqDrop 2s ease-in-out infinite}
 @supports (animation-timeline: scroll()){@media (prefers-reduced-motion: no-preference){.pq-cine-scrollcue{animation:pqCueFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}}
 @keyframes pqCueFade{to{opacity:0;visibility:hidden}}
 .pq-cine-card{border:1px solid rgba(242,239,232,.15);background:rgba(9,11,14,.62);backdrop-filter:blur(14px);padding:26px 26px 28px}
-.pq-cine-card .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
-.pq-cine-card .top b{color:#FF6B2C;font:700 15px 'Space Grotesk',sans-serif}
+.pq-cine-card .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(242,239,232,.12);font:700 .625rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.55)}
+.pq-cine-card .top b{color:#FF6B2C;font:700 .9375rem 'Space Grotesk',sans-serif}
 .pq-cine-card h2{margin:22px 0 16px;font:900 clamp(1.7rem,2.8vw,2.7rem)/1.08 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
 .pq-cine-card h2 span{display:block}
 .pq-cine-card h2 em{font-style:normal;color:#FF6B2C}
-.pq-cine-card>p{margin:0;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pq-cine-card>p{margin:0;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
 .pq-cine-card ul{margin:22px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:7px}
-.pq-cine-card li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 11px 'Noto Sans TC',sans-serif;letter-spacing:.03em}
+.pq-cine-card li{border:1px solid rgba(62,155,255,.32);color:#9fd2ff;background:rgba(62,155,255,.05);padding:6px 10px;font:600 .6875rem 'Noto Sans TC',sans-serif;letter-spacing:.03em}
 .pq-cine-callout{display:flex;flex-direction:column;gap:5px;margin-top:16px;padding-left:12px;border-left:1px solid #3E9BFF}
-.pq-cine-callout span{color:rgba(242,239,232,.5);font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.16em}
-.pq-cine-callout b{color:#8fc9ff;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.05em}
+.pq-cine-callout span{color:rgba(242,239,232,.5);font:700 .5rem 'Space Grotesk',sans-serif;letter-spacing:.16em}
+.pq-cine-callout b{color:#8fc9ff;font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.05em}
 .pq-cine-rail,.pq-cine-label,.pq-cine-phase,.pq-cine-loader{display:none}
 #pq-hero-svg{position:relative;z-index:3;max-width:520px;margin:8px auto 0}
 /* 進階狀態:引擎接管後 pin+分鏡 */
@@ -402,18 +402,18 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #hero.pq-cine-on .is-active{opacity:1;transform:translateY(-50%);pointer-events:auto}
 #hero.pq-cine-on #pq-hero-svg{display:none}
 #hero.pq-cine-on .pq-cine-rail{display:flex;position:absolute;right:clamp(12px,2.2vw,26px);top:50%;transform:translateY(-50%);z-index:5;flex-direction:column;gap:13px}
-#hero.pq-cine-on .pq-cine-rail button{background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:flex-end;gap:9px;color:rgba(242,239,232,.42);font:700 9px 'Space Grotesk',sans-serif;letter-spacing:.1em;transition:color .3s}
+#hero.pq-cine-on .pq-cine-rail button{background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:flex-end;gap:9px;color:rgba(242,239,232,.42);font:700 .5625rem 'Space Grotesk',sans-serif;letter-spacing:.1em;transition:color .3s}
 #hero.pq-cine-on .pq-cine-rail button::after{content:"";width:12px;height:1px;background:currentColor;transition:width .3s,box-shadow .3s}
 #hero.pq-cine-on .pq-cine-rail button.active{color:#FF6B2C}
 #hero.pq-cine-on .pq-cine-rail button.active::after{width:34px;box-shadow:0 0 8px #FF6B2C}
-#hero.pq-cine-on .pq-cine-label{display:flex;position:absolute;left:clamp(16px,3vw,40px);bottom:26px;z-index:5;flex-direction:column;gap:5px;color:rgba(242,239,232,.42);font:700 9px 'Space Grotesk',sans-serif;letter-spacing:.16em;pointer-events:none}
+#hero.pq-cine-on .pq-cine-label{display:flex;position:absolute;left:clamp(16px,3vw,40px);bottom:26px;z-index:5;flex-direction:column;gap:5px;color:rgba(242,239,232,.42);font:700 .5625rem 'Space Grotesk',sans-serif;letter-spacing:.16em;pointer-events:none}
 #hero.pq-cine-on .pq-cine-label b{color:rgba(242,239,232,.72);font-weight:700}
-#hero.pq-cine-on .pq-cine-phase{display:flex;position:absolute;left:clamp(16px,3vw,40px);top:84px;z-index:5;gap:16px;color:rgba(242,239,232,.3);font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.13em;pointer-events:none}
+#hero.pq-cine-on .pq-cine-phase{display:flex;position:absolute;left:clamp(16px,3vw,40px);top:84px;z-index:5;gap:16px;color:rgba(242,239,232,.3);font:700 .5rem 'Space Grotesk',sans-serif;letter-spacing:.13em;pointer-events:none}
 #hero.pq-cine-on .pq-cine-phase span{position:relative;padding-top:9px;transition:color .35s}
 #hero.pq-cine-on .pq-cine-phase span::before{content:"";position:absolute;left:0;top:0;width:16px;height:1px;background:currentColor;transition:width .35s,box-shadow .35s}
 #hero.pq-cine-on .pq-cine-phase span.active{color:#FF6B2C}
 #hero.pq-cine-on .pq-cine-phase span.active::before{width:100%;box-shadow:0 0 8px #FF6B2C}
-#hero.pq-cine-on .pq-cine-loader{display:block;position:absolute;right:clamp(16px,3vw,40px);top:84px;z-index:5;color:#FF6B2C;font:700 8px 'Space Grotesk',sans-serif;letter-spacing:.16em;transition:opacity .8s ease;pointer-events:none}
+#hero.pq-cine-on .pq-cine-loader{display:block;position:absolute;right:clamp(16px,3vw,40px);top:84px;z-index:5;color:#FF6B2C;font:700 .5rem 'Space Grotesk',sans-serif;letter-spacing:.16em;transition:opacity .8s ease;pointer-events:none}
 #hero.pq-cine-on .pq-cine-loader.ready{opacity:0}
 #hero.pq-cine-on .pq-cine-loader.error{color:#ff5b5b}
 /* 攤開白宣紙藍圖模式:隱藏暗卡、標籤/導覽轉深色 */
@@ -434,15 +434,15 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   #hero.pq-cine-on .pq-cine-intro{top:auto;bottom:34px;transform:none}
   #hero.pq-cine-on .pq-cine-card{top:auto;bottom:34px;transform:translateY(24px)}
   #hero.pq-cine-on .is-active{transform:none}
-  #hero.pq-cine-on .pq-cine-card h2{font-size:1.6rem}
+  #hero.pq-cine-on .pq-cine-card h2{font-size:clamp(1.25rem,6.6vw,1.6rem)}
   #hero.pq-cine-on .pq-cine-phase{top:70px;gap:0}
   #hero.pq-cine-on .pq-cine-phase span{display:none}
   #hero.pq-cine-on .pq-cine-phase span.active{display:block}
   #hero.pq-cine-on .pq-cine-loader{top:70px}
-  .pq-cine-annot .biz{font-size:11px}
+  .pq-cine-annot .biz{font-size:.6875rem}
   .pq-cine-annot .note{display:none}
   .pq-cine-annot .coord{display:none}
-  .pq-cine-annot .idx{font-size:9px}
+  .pq-cine-annot .idx{font-size:.5625rem}
   /* 手機:隱藏浮動 Demo 鈕(避免遮擋內容) */
   :has(> a[data-cta]){display:none!important}
   .pq-echo{display:none}
@@ -477,7 +477,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-mod:hover{transform:none;box-shadow:none;background:rgba(9,11,14,.028)}
 /* 巨大實心編號:編輯設計的主角,靠左齊版心 */
 .pq-mod .num{position:static;width:auto;height:auto;border:0;border-radius:0;align-self:flex-start;
-  margin-bottom:2px;font:800 clamp(56px,5.6vw,86px)/.86 'Space Grotesk',sans-serif;
+  margin-bottom:2px;font:800 clamp(3.5rem,5.6vw,5.375rem)/.86 'Space Grotesk',sans-serif;
   letter-spacing:-.04em;color:#11161B;transition:color .4s ease}
 .pq-mod:hover .num{color:var(--ac,#FF6B2C)}
 /* 怪獸圖版:縮到右上角 */
@@ -487,15 +487,15 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-mod .ico svg{display:block;width:100%;height:100%}
 /* 極小規格眉標:大寫加寬字距,和巨大編號形成張力 */
 .pq-mod .eye{display:flex;align-items:center;gap:7px;margin-top:0;
-  font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:var(--ac,#FF6B2C)}
+  font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:var(--ac,#FF6B2C)}
 .pq-mod .eye u{width:5px;height:5px;border-radius:50%;background:currentColor;text-decoration:none;flex:none}
-.pq-mod h3{margin:0;font:900 clamp(20px,1.65vw,24px)/1.2 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#11161B}
-.pq-mod p{margin:0;max-width:30ch;font:400 clamp(13.5px,1.05vw,14.8px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)}
+.pq-mod h3{margin:0;font:900 clamp(1.25rem,1.65vw,1.5rem)/1.2 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#11161B}
+.pq-mod p{margin:0;max-width:30ch;font:400 clamp(.84375rem,1.05vw,.925rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)}
 /* 底部規格列:hairline + 極小等寬讀值 */
 .pq-mod .spec{margin-top:auto;padding-top:14px;border-top:1px solid rgba(9,11,14,.16);
   display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-  font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.42)}
-.pq-mod .spec b{font:700 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--ac,#FF6B2C)}
+  font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.42)}
+.pq-mod .spec b{font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--ac,#FF6B2C)}
 @media (max-width:980px){
   .pq-mod:not(:nth-child(3n+1)){border-left:0}
   .pq-mod:not(:nth-child(2n+1)){border-left:1px solid rgba(9,11,14,.16)}
@@ -839,14 +839,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-bg .orb.a{width:46vw;height:46vw;max-width:620px;max-height:620px;left:-10%;top:2%;background:#4A9EFF;opacity:.19}
 .pq-dt-bg .orb.b{width:42vw;height:42vw;max-width:560px;max-height:560px;right:-8%;top:9%;background:#FF652F;opacity:.15}
 .pq-dt-bg .orb.c{width:52vw;height:52vw;max-width:700px;max-height:700px;left:22%;bottom:-18%;background:#62D5B0;opacity:.12}
-.pq-dt-bg .ghost{position:absolute;font:900 clamp(70px,12.5vw,186px)/1 'Space Grotesk',sans-serif;
+.pq-dt-bg .ghost{position:absolute;font:900 clamp(4.375rem,12.5vw,11.625rem)/1 'Space Grotesk',sans-serif;
   letter-spacing:-.035em;color:#fff;opacity:.03;white-space:nowrap;user-select:none}
 .pq-dt-bg .ghost.g1{left:-2%;top:23%}
 .pq-dt-bg .ghost.g2{right:-3%;top:50%}
-.pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(44px,7.5vw,116px)}
+.pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(2.75rem,7.5vw,7.25rem)}
 .pq-dt-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:start}
 .pq-dt-eyebrow{display:flex;align-items:center;gap:12px;
-  font:700 12.5px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.66);
+  font:700 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.66);
   opacity:0;transform:translateX(-14px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-eyebrow{opacity:1;transform:none}
 .pq-dt-eyebrow i{width:36px;height:1.5px;background:#FF652F;flex:none;transform-origin:left;
@@ -860,13 +860,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in h2 span:nth-child(2){opacity:1;transform:none;transition-delay:.20s}
 .pq-dt h2 em{font-style:normal;color:rgba(244,241,235,.30);transition:color .9s cubic-bezier(.16,1,.3,1) .5s}
 .pq-dt.is-in h2 em{color:#FF652F}
-.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(15.5px,1.2vw,17.5px)/1.95 'Noto Sans TC',sans-serif;
+.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(.96875rem,1.2vw,1.09375rem)/1.95 'Noto Sans TC',sans-serif;
   color:#A6ACB3;opacity:0;transform:translateY(16px);
   transition:opacity .8s cubic-bezier(.16,1,.3,1) .34s,transform .8s cubic-bezier(.16,1,.3,1) .34s}
 .pq-dt.is-in .pq-dt-sub{opacity:1;transform:none}
 .pq-dt-kpi{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:176px}
 .pq-dt-kpi li{display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid var(--bd);border-radius:10px;
-  background:rgba(255,255,255,.026);font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+  background:rgba(255,255,255,.026);font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;
   color:rgba(244,241,235,.8);opacity:0;transform:translateY(12px);
   transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-kpi li{opacity:1;transform:none}
@@ -898,22 +898,22 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.26);
   box-shadow:0 22px 48px -26px rgba(0,0,0,.9)}
 .pq-dt-tag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;
-  border:1px solid currentColor;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
+  border:1px solid currentColor;font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
 .pq-dt-tag u{width:5px;height:5px;border-radius:50%;background:currentColor;text-decoration:none}
 .pq-dt-card h3{margin:0;font:800 clamp(1.25rem,1.8vw,1.6rem) 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
-.pq-dt-card>p{margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-card>p{margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-nodes{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .pq-dt-nodes li{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid rgba(255,255,255,.09);
-  border-radius:12px;background:rgba(255,255,255,.022);font:600 14.5px 'Noto Sans TC',sans-serif;
+  border-radius:12px;background:rgba(255,255,255,.022);font:600 .90625rem 'Noto Sans TC',sans-serif;
   color:rgba(244,241,235,.9);transition:transform .25s ease,border-color .25s ease,background .25s ease}
 .pq-dt-nodes li:hover{transform:scale(1.03);border-color:var(--ac);background:rgba(255,255,255,.05)}
 .pq-dt-nodes li svg{width:19px;height:19px;flex:none;color:var(--ac);transition:transform .25s ease}
 .pq-dt-nodes li:hover svg{transform:rotate(3deg) translateX(2px)}
-.pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 10px 'Space Grotesk',sans-serif;
-  letter-spacing:.14em;color:rgba(244,241,235,.42);font-size:11px}
+.pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 .625rem 'Space Grotesk',sans-serif;
+  letter-spacing:.14em;color:rgba(244,241,235,.42);font-size:.6875rem}
 .pq-dt-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:7px}
 .pq-dt-chips li{padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.028);font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;
+  background:rgba(255,255,255,.028);font:600 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.1em;
   color:rgba(244,241,235,.68)}
 .pq-dt-plat{grid-column:1/-1;position:relative;z-index:2;justify-self:center;width:min(720px,100%);
   margin-top:clamp(74px,8vw,116px);border:1px solid rgba(98,213,176,.34);border-radius:24px;
@@ -932,17 +932,17 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
    會在卡片外面畫出一個歪掉的圓角矩形輪廓。 */
 @property --pqAng{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes pqDtRing{to{--pqAng:360deg}}
-.pq-dt-plat>p{margin:0;max-width:44em;font:400 clamp(15px,1.15vw,16.5px)/1.95 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-plat>p{margin:0;max-width:44em;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.95 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-plat h3{margin:0;font:800 clamp(1.45rem,2.2vw,2rem) 'Noto Sans TC',sans-serif;letter-spacing:-.015em}
 .pq-dt-shared{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;
   border:1px solid rgba(98,213,176,.4);background:rgba(98,213,176,.07);
-  font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
+  font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
 .pq-dt.is-in .pq-dt-shared{animation:pqDtPing 2.4s ease-out 1.5s 2}
 @keyframes pqDtPing{0%,100%{background:rgba(98,213,176,.07)}30%{background:rgba(98,213,176,.2)}}
 .pq-dt-pnodes{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%}
 .pq-dt-pnodes li{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 8px;
   border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.022);
-  font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.72);
+  font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.72);
   opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1),
     border-color .25s ease,background .25s ease}
 .pq-dt.is-in .pq-dt-pnodes li{opacity:1;transform:none}
@@ -955,13 +955,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-pnodes li:hover svg{transform:rotate(3deg) translateY(-2px)}
 .pq-dt-float{position:absolute;z-index:1;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;
   border:1px solid rgba(255,255,255,.13);background:rgba(13,17,21,.82);backdrop-filter:blur(6px);
-  font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(244,241,235,.56);
+  font:700 .59375rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(244,241,235,.56);
   opacity:0;transition:opacity .7s ease}
 .pq-dt.is-in .pq-dt-float{opacity:1}
 .pq-dt-float u{width:5px;height:5px;border-radius:50%;background:var(--ac,#62D5B0);text-decoration:none}
 .pq-dt-fly{margin-top:clamp(64px,7.5vw,108px);position:relative;z-index:2}
 .pq-dt-fly h3{margin:0;font:800 clamp(1.3rem,1.95vw,1.72rem) 'Space Grotesk',sans-serif;letter-spacing:.06em}
-.pq-dt-fly>p{margin:12px 0 0;max-width:660px;font:400 clamp(14.5px,1.1vw,16px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-fly>p{margin:12px 0 0;max-width:660px;font:400 clamp(.90625rem,1.1vw,1rem)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-ring{list-style:none;margin:clamp(28px,3.4vw,44px) 0 0;padding:0;
   display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative}
 .pq-dt-ring::before{content:'';position:absolute;left:6%;right:6%;top:30px;height:1.5px;
@@ -983,9 +983,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   transition:transform .25s ease,border-color .25s ease}
 .pq-dt-ring li:hover i{transform:scale(1.05) rotate(3deg);border-color:rgba(98,213,176,.5)}
 .pq-dt-ring li i svg{width:24px;height:24px}
-.pq-dt-ring li span{font:600 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.82);letter-spacing:.02em}
+.pq-dt-ring li span{font:600 .8125rem/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.82);letter-spacing:.02em}
 .pq-dt-ring li:last-child i{border-color:rgba(98,213,176,.42)}
-.pq-dt-loop{margin:18px 0 0;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+.pq-dt-loop{margin:18px 0 0;font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;
   color:rgba(98,213,176,.72);opacity:0;transition:opacity .7s ease 1.5s}
 .pq-dt.is-in .pq-dt-loop{opacity:1}
 @supports (animation-timeline:view()){
@@ -1020,7 +1020,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-dt-ring::before{display:none}
 }
 @media (max-width:760px){
-  .pq-dt{padding:64px 0 68px}
+  .pq-dt{padding:clamp(48px,9vw,64px) 0 clamp(48px,9.5vw,68px)}
   .pq-dt-wrap{padding:0 20px}
   .pq-dt h2{font-size:clamp(2rem,9vw,2.6rem);max-width:none}
   .pq-dt-flow{grid-template-columns:1fr;gap:44px}
@@ -1032,7 +1032,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-dt-plat{margin-top:0;width:100%;padding:24px}
   .pq-dt-pnodes{grid-template-columns:repeat(2,1fr)}
   .pq-dt-float{display:none}
-  .pq-dt-bg .ghost{font-size:clamp(46px,17vw,80px)}
+  .pq-dt-bg .ghost{font-size:clamp(2.875rem,17vw,5rem)}
   .pq-dt-ring{grid-template-columns:1fr;gap:14px}
   .pq-dt-ring li{flex-direction:row;text-align:left;gap:14px}
   .pq-dt-ring li i{width:42px;height:42px;border-radius:13px;flex:none}
@@ -1131,19 +1131,19 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* 一屏內要塞得下 → 整體收緊 */
 .pq-dt-stage .pq-dt-flow{gap:clamp(12px,1.4vw,20px) clamp(60px,7vw,110px)}
 .pq-dt-stage .pq-dt-card{padding:clamp(16px,1.5vw,22px);gap:10px;border-radius:18px}
-.pq-dt-stage .pq-dt-card>p{font-size:clamp(13.5px,.95vw,14.8px);line-height:1.8}
+.pq-dt-stage .pq-dt-card>p{font-size:clamp(.84375rem,.95vw,.925rem);line-height:1.8}
 .pq-dt-stage .pq-dt-nodes{gap:6px}
-.pq-dt-stage .pq-dt-nodes li{padding:7px 11px;font-size:13px;border-radius:10px}
-.pq-dt-stage .pq-dt-chips li{padding:4px 9px;font-size:10.5px}
+.pq-dt-stage .pq-dt-nodes li{padding:7px 11px;font-size:.8125rem;border-radius:10px}
+.pq-dt-stage .pq-dt-chips li{padding:4px 9px;font-size:.65625rem}
 .pq-dt-stage .pq-dt-card h3{font-size:clamp(1.1rem,1.5vw,1.35rem)}
 .pq-dt-stage .pq-dt-plat{margin-top:clamp(24px,3.4vh,48px);padding:clamp(16px,1.7vw,24px);gap:10px;border-radius:20px}
 .pq-dt-stage .pq-dt-plat h3{font-size:clamp(1.2rem,1.7vw,1.6rem)}
-.pq-dt-stage .pq-dt-plat>p{font-size:clamp(13.5px,.95vw,14.8px);line-height:1.85;max-width:40em}
+.pq-dt-stage .pq-dt-plat>p{font-size:clamp(.84375rem,.95vw,.925rem);line-height:1.85;max-width:40em}
 .pq-dt-stage .pq-dt-pnodes{gap:7px}
-.pq-dt-stage .pq-dt-pnodes li{padding:9px 6px;font-size:10.5px;gap:5px;border-radius:11px}
+.pq-dt-stage .pq-dt-pnodes li{padding:9px 6px;font-size:.65625rem;gap:5px;border-radius:11px}
 .pq-dt-stage .pq-dt-pnodes li svg{width:18px;height:18px}
 .pq-dt-stage h2{font-size:clamp(1.9rem,3.4vw,3.4rem);max-width:none}
-.pq-dt-stage .pq-dt-sub{font-size:clamp(14px,1vw,15.5px);line-height:1.85;max-width:none}
+.pq-dt-stage .pq-dt-sub{font-size:clamp(.875rem,1vw,.96875rem);line-height:1.85;max-width:none}
 /* 沒有捲動時間軸的瀏覽器:退化成靜態一屏,不做視差,版面仍然正確 */
 @supports not (animation-timeline:view()){
   .pq-dt-cover{height:auto}
@@ -1220,16 +1220,16 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes mFlip{0%,100%{transform:scaleX(1)}50%{transform:scaleX(-1) rotate(180deg)}}
 /* 中央標語 */
 .pq-mos-say{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  gap:16px;text-align:center;padding:0 24px;pointer-events:none;
+  gap:16px;text-align:center;padding:0 clamp(24px,5vw,48px);pointer-events:none;
   background:radial-gradient(ellipse 60% 72% at 50% 50%,rgba(7,9,11,.94) 0%,rgba(7,9,11,.74) 44%,rgba(7,9,11,0) 78%)}
-.pq-mos-say span{font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;
+.pq-mos-say span{font:700 .75rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;
   opacity:0;transform:translateY(12px);transition:opacity .8s cubic-bezier(.16,1,.3,1) .5s,transform .8s cubic-bezier(.16,1,.3,1) .5s}
 .pq-mos-say h2{margin:0;max-width:15em;
   font:800 clamp(1.75rem,4.2vw,3.5rem)/1.22 'Noto Sans TC',sans-serif;letter-spacing:-.03em;color:#F4F1EB;
   text-shadow:0 4px 30px rgba(7,9,11,.9);
   opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .62s,transform .9s cubic-bezier(.16,1,.3,1) .62s}
 .pq-mos-say h2 em{font-style:normal;color:#FF6B2C}
-.pq-mos-say p{margin:0;max-width:32em;font:400 clamp(14.5px,1.1vw,16.5px)/1.9 'Noto Sans TC',sans-serif;
+.pq-mos-say p{margin:0;max-width:32em;font:400 clamp(.90625rem,1.1vw,1.03125rem)/1.9 'Noto Sans TC',sans-serif;
   color:rgba(244,241,235,.8);text-shadow:0 2px 18px rgba(7,9,11,.9);
   opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .76s,transform .9s cubic-bezier(.16,1,.3,1) .76s}
 .pq-mos.is-in .pq-mos-say span,.pq-mos.is-in .pq-mos-say h2,.pq-mos.is-in .pq-mos-say p{opacity:1;transform:none}
@@ -1268,14 +1268,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-bg .orb.a{width:46vw;height:46vw;max-width:620px;max-height:620px;left:-10%;top:2%;background:#4A9EFF;opacity:.19}
 .pq-dt-bg .orb.b{width:42vw;height:42vw;max-width:560px;max-height:560px;right:-8%;top:9%;background:#FF652F;opacity:.15}
 .pq-dt-bg .orb.c{width:52vw;height:52vw;max-width:700px;max-height:700px;left:22%;bottom:-18%;background:#62D5B0;opacity:.12}
-.pq-dt-bg .ghost{position:absolute;font:900 clamp(70px,12.5vw,186px)/1 'Space Grotesk',sans-serif;
+.pq-dt-bg .ghost{position:absolute;font:900 clamp(4.375rem,12.5vw,11.625rem)/1 'Space Grotesk',sans-serif;
   letter-spacing:-.035em;color:#fff;opacity:.03;white-space:nowrap;user-select:none}
 .pq-dt-bg .ghost.g1{left:-2%;top:23%}
 .pq-dt-bg .ghost.g2{right:-3%;top:50%}
-.pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(44px,7.5vw,116px)}
+.pq-dt-bg .ghost.g3{left:6%;bottom:1%;font-size:clamp(2.75rem,7.5vw,7.25rem)}
 .pq-dt-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:start}
 .pq-dt-eyebrow{display:flex;align-items:center;gap:12px;
-  font:700 12.5px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.66);
+  font:700 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(244,241,235,.66);
   opacity:0;transform:translateX(-14px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-eyebrow{opacity:1;transform:none}
 .pq-dt-eyebrow i{width:36px;height:1.5px;background:#FF652F;flex:none;transform-origin:left;
@@ -1289,13 +1289,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt.is-in h2 span:nth-child(2){opacity:1;transform:none;transition-delay:.20s}
 .pq-dt h2 em{font-style:normal;color:rgba(244,241,235,.30);transition:color .9s cubic-bezier(.16,1,.3,1) .5s}
 .pq-dt.is-in h2 em{color:#FF652F}
-.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(15.5px,1.2vw,17.5px)/1.95 'Noto Sans TC',sans-serif;
+.pq-dt-sub{margin:22px 0 0;max-width:720px;font:400 clamp(.96875rem,1.2vw,1.09375rem)/1.95 'Noto Sans TC',sans-serif;
   color:#A6ACB3;opacity:0;transform:translateY(16px);
   transition:opacity .8s cubic-bezier(.16,1,.3,1) .34s,transform .8s cubic-bezier(.16,1,.3,1) .34s}
 .pq-dt.is-in .pq-dt-sub{opacity:1;transform:none}
 .pq-dt-kpi{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:176px}
 .pq-dt-kpi li{display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid var(--bd);border-radius:10px;
-  background:rgba(255,255,255,.026);font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+  background:rgba(255,255,255,.026);font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;
   color:rgba(244,241,235,.8);opacity:0;transform:translateY(12px);
   transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .pq-dt.is-in .pq-dt-kpi li{opacity:1;transform:none}
@@ -1327,22 +1327,22 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.26);
   box-shadow:0 22px 48px -26px rgba(0,0,0,.9)}
 .pq-dt-tag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;
-  border:1px solid currentColor;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
+  border:1px solid currentColor;font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:var(--ac)}
 .pq-dt-tag u{width:5px;height:5px;border-radius:50%;background:currentColor;text-decoration:none}
 .pq-dt-card h3{margin:0;font:800 clamp(1.25rem,1.8vw,1.6rem) 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
-.pq-dt-card>p{margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-card>p{margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-nodes{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .pq-dt-nodes li{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid rgba(255,255,255,.09);
-  border-radius:12px;background:rgba(255,255,255,.022);font:600 14.5px 'Noto Sans TC',sans-serif;
+  border-radius:12px;background:rgba(255,255,255,.022);font:600 .90625rem 'Noto Sans TC',sans-serif;
   color:rgba(244,241,235,.9);transition:transform .25s ease,border-color .25s ease,background .25s ease}
 .pq-dt-nodes li:hover{transform:scale(1.03);border-color:var(--ac);background:rgba(255,255,255,.05)}
 .pq-dt-nodes li svg{width:19px;height:19px;flex:none;color:var(--ac);transition:transform .25s ease}
 .pq-dt-nodes li:hover svg{transform:rotate(3deg) translateX(2px)}
-.pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 10px 'Space Grotesk',sans-serif;
-  letter-spacing:.14em;color:rgba(244,241,235,.42);font-size:11px}
+.pq-dt-nodes li em{margin-left:auto;font-style:normal;font:600 .625rem 'Space Grotesk',sans-serif;
+  letter-spacing:.14em;color:rgba(244,241,235,.42);font-size:.6875rem}
 .pq-dt-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:7px}
 .pq-dt-chips li{padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.028);font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.1em;
+  background:rgba(255,255,255,.028);font:600 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.1em;
   color:rgba(244,241,235,.68)}
 .pq-dt-plat{grid-column:1/-1;position:relative;z-index:2;justify-self:center;width:min(720px,100%);
   margin-top:clamp(74px,8vw,116px);border:1px solid rgba(98,213,176,.34);border-radius:24px;
@@ -1361,17 +1361,17 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
    會在卡片外面畫出一個歪掉的圓角矩形輪廓。 */
 @property --pqAng{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes pqDtRing{to{--pqAng:360deg}}
-.pq-dt-plat>p{margin:0;max-width:44em;font:400 clamp(15px,1.15vw,16.5px)/1.95 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-plat>p{margin:0;max-width:44em;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.95 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-plat h3{margin:0;font:800 clamp(1.45rem,2.2vw,2rem) 'Noto Sans TC',sans-serif;letter-spacing:-.015em}
 .pq-dt-shared{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;
   border:1px solid rgba(98,213,176,.4);background:rgba(98,213,176,.07);
-  font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
+  font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#62D5B0}
 .pq-dt.is-in .pq-dt-shared{animation:pqDtPing 2.4s ease-out 1.5s 2}
 @keyframes pqDtPing{0%,100%{background:rgba(98,213,176,.07)}30%{background:rgba(98,213,176,.2)}}
 .pq-dt-pnodes{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;width:100%}
 .pq-dt-pnodes li{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 8px;
   border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.022);
-  font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.72);
+  font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.09em;color:rgba(244,241,235,.72);
   opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1),
     border-color .25s ease,background .25s ease}
 .pq-dt.is-in .pq-dt-pnodes li{opacity:1;transform:none}
@@ -1384,13 +1384,13 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-dt-pnodes li:hover svg{transform:rotate(3deg) translateY(-2px)}
 .pq-dt-float{position:absolute;z-index:1;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;
   border:1px solid rgba(255,255,255,.13);background:rgba(13,17,21,.82);backdrop-filter:blur(6px);
-  font:700 9.5px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(244,241,235,.56);
+  font:700 .59375rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:rgba(244,241,235,.56);
   opacity:0;transition:opacity .7s ease}
 .pq-dt.is-in .pq-dt-float{opacity:1}
 .pq-dt-float u{width:5px;height:5px;border-radius:50%;background:var(--ac,#62D5B0);text-decoration:none}
 .pq-dt-fly{margin-top:clamp(64px,7.5vw,108px);position:relative;z-index:2}
 .pq-dt-fly h3{margin:0;font:800 clamp(1.3rem,1.95vw,1.72rem) 'Space Grotesk',sans-serif;letter-spacing:.06em}
-.pq-dt-fly>p{margin:12px 0 0;max-width:660px;font:400 clamp(14.5px,1.1vw,16px)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
+.pq-dt-fly>p{margin:12px 0 0;max-width:660px;font:400 clamp(.90625rem,1.1vw,1rem)/1.9 'Noto Sans TC',sans-serif;color:#A6ACB3}
 .pq-dt-ring{list-style:none;margin:clamp(28px,3.4vw,44px) 0 0;padding:0;
   display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative}
 .pq-dt-ring::before{content:'';position:absolute;left:6%;right:6%;top:30px;height:1.5px;
@@ -1412,9 +1412,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   transition:transform .25s ease,border-color .25s ease}
 .pq-dt-ring li:hover i{transform:scale(1.05) rotate(3deg);border-color:rgba(98,213,176,.5)}
 .pq-dt-ring li i svg{width:24px;height:24px}
-.pq-dt-ring li span{font:600 13px/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.82);letter-spacing:.02em}
+.pq-dt-ring li span{font:600 .8125rem/1.6 'Noto Sans TC',sans-serif;color:rgba(244,241,235,.82);letter-spacing:.02em}
 .pq-dt-ring li:last-child i{border-color:rgba(98,213,176,.42)}
-.pq-dt-loop{margin:18px 0 0;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;
+.pq-dt-loop{margin:18px 0 0;font:700 .71875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;
   color:rgba(98,213,176,.72);opacity:0;transition:opacity .7s ease 1.5s}
 .pq-dt.is-in .pq-dt-loop{opacity:1}
 @supports (animation-timeline:view()){
@@ -1449,7 +1449,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-dt-ring::before{display:none}
 }
 @media (max-width:760px){
-  .pq-dt{padding:64px 0 68px}
+  .pq-dt{padding:clamp(48px,9vw,64px) 0 clamp(48px,9.5vw,68px)}
   .pq-dt-wrap{padding:0 20px}
   .pq-dt h2{font-size:clamp(2rem,9vw,2.6rem);max-width:none}
   .pq-dt-flow{grid-template-columns:1fr;gap:44px}
@@ -1461,7 +1461,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-dt-plat{margin-top:0;width:100%;padding:24px}
   .pq-dt-pnodes{grid-template-columns:repeat(2,1fr)}
   .pq-dt-float{display:none}
-  .pq-dt-bg .ghost{font-size:clamp(46px,17vw,80px)}
+  .pq-dt-bg .ghost{font-size:clamp(2.875rem,17vw,5rem)}
   .pq-dt-ring{grid-template-columns:1fr;gap:14px}
   .pq-dt-ring li{flex-direction:row;text-align:left;gap:14px}
   .pq-dt-ring li i{width:42px;height:42px;border-radius:13px;flex:none}
@@ -1567,15 +1567,15 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqMosSpin{to{transform:rotate(360deg)}}
 /* 中央標語:壓在拼貼上,底下墊一層暗罩保證對比 */
 .pq-mos-say{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  gap:14px;text-align:center;padding:0 24px;pointer-events:none;
+  gap:14px;text-align:center;padding:0 clamp(24px,5vw,48px);pointer-events:none;
   background:radial-gradient(ellipse 62% 74% at 50% 50%,rgba(7,9,11,.9) 0%,rgba(7,9,11,.66) 46%,rgba(7,9,11,0) 78%)}
-.pq-mos-say span{font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;
+.pq-mos-say span{font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C;
   opacity:0;transform:translateY(12px);transition:opacity .8s cubic-bezier(.16,1,.3,1) .5s,transform .8s cubic-bezier(.16,1,.3,1) .5s}
 .pq-mos-say h2{margin:0;max-width:16em;
   font:800 clamp(1.55rem,3.6vw,3.1rem)/1.24 'Noto Sans TC',sans-serif;letter-spacing:-.03em;color:#F4F1EB;
   opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .62s,transform .9s cubic-bezier(.16,1,.3,1) .62s}
 .pq-mos-say h2 em{font-style:normal;color:#FF6B2C}
-.pq-mos-say p{margin:0;max-width:34em;font:400 clamp(14px,1.05vw,15.5px)/1.9 'Noto Sans TC',sans-serif;
+.pq-mos-say p{margin:0;max-width:34em;font:400 clamp(.875rem,1.05vw,.96875rem)/1.9 'Noto Sans TC',sans-serif;
   color:rgba(244,241,235,.72);
   opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.16,1,.3,1) .76s,transform .9s cubic-bezier(.16,1,.3,1) .76s}
 .pq-mos.is-in .pq-mos-say span,.pq-mos.is-in .pq-mos-say h2,.pq-mos.is-in .pq-mos-say p{opacity:1;transform:none}
@@ -1881,9 +1881,9 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* 矮視窗(MacBook Air 類):開場字卡置中後會頂到 top:84px 的階段標籤列 → 往下讓開 */
 @media (max-height:940px){#hero.pq-cine-on .pq-cine-intro{margin-top:72px}}
 /* 回頂部:電影卷軸很長,深捲後給一條快速回頭路(左下,避開右下浮動 CTA) */
-#pq-backtop{position:fixed;left:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:140;display:none;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(9,11,14,.82);color:#F2EFE8;border:1px solid rgba(242,239,232,.3);font:700 18px 'Space Grotesk',sans-serif;text-decoration:none;backdrop-filter:blur(6px)}
+#pq-backtop{position:fixed;left:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:140;display:none;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(9,11,14,.82);color:#F2EFE8;border:1px solid rgba(242,239,232,.3);font:700 1.125rem 'Space Grotesk',sans-serif;text-decoration:none;backdrop-filter:blur(6px)}
 #pq-backtop:hover{border-color:#FF6B2C;color:#FF6B2C}
-@media (max-width:899px){#pq-backtop{left:auto;right:5px;bottom:calc(92px + env(safe-area-inset-bottom,0px));width:38px;height:38px;font-size:14px}}
+@media (max-width:899px){#pq-backtop{left:auto;right:5px;bottom:calc(92px + env(safe-area-inset-bottom,0px));width:38px;height:38px;font-size:.875rem}}
 /* [2] 360 窄幅:相機模型的 4K 貼字與 H1 行尾黏連,鏡頭右移讓開 */
 @media (max-width:374px){#pq-hero-gl{transform:translateX(12px)}}
 body[data-pq-top="1"] #pq-backtop{display:flex}
@@ -1905,13 +1905,13 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div class="pq-cine-studytitle" data-cine-studytitle aria-hidden="true">
       <span class="eyebrow">INSIDE PEAKQI / COMPONENT STUDY</span>
       <h2>拆開來看，複雜都留在裡面。</h2>
-      <p>你看到的應該是清楚。該怎麼接、怎麼跑、怎麼記，我們在後面整理好。</p>
+      <p>怎麼接、怎麼跑、怎麼記，都在後面整理好。</p>
     </div>
     <!-- U3s 零件展示文字卡(繁中,存在 DOM;由引擎依當前零件顯示。奇數零件文字在左、偶數在右) -->
     <div class="pq-study" data-cine-study aria-hidden="true">
       <article class="pq-study-card" data-study-card="0" data-side="left">
         <div class="pq-study-idx"><b>01</b><span>接住需求</span></div>
-        <h3>先對準，真正需要被解決的事</h3><p>來自不同入口的詢問，先被接住、理解，再交到對的位置。</p>
+        <h3>先對準，真正該解決的事</h3><p>詢問先被接住、理解，再交到對的位置。</p>
       </article>
       <article class="pq-study-card" data-study-card="1" data-side="right">
         <div class="pq-study-idx"><b>02</b><span>抓住時機</span></div>
@@ -1919,15 +1919,15 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       </article>
       <article class="pq-study-card" data-study-card="2" data-side="left">
         <div class="pq-study-idx"><b>03</b><span>維持標準</span></div>
-        <h3>把每一次輸出，調成你的樣子</h3><p>內容、圖像與話術，不只產得快，也維持同一個品牌標準。</p>
+        <h3>每次輸出，都是你的樣子</h3><p>內容、圖像與話術，都維持同一個品牌標準。</p>
       </article>
       <article class="pq-study-card" data-study-card="3" data-side="right">
         <div class="pq-study-idx"><b>04</b><span>看見結果</span></div>
-        <h3>把每一次完成，留成下一次的判斷</h3><p>不是多一張報表。是看見什麼有效、哪裡卡住，下一步應該往哪走。</p>
+        <h3>每一次完成，都留成判斷</h3><p>看見什麼有效、哪裡卡住，下一步往哪走。</p>
       </article>
       <article class="pq-study-card" data-study-card="4" data-side="left">
         <div class="pq-study-idx"><b>05</b><span>記住脈絡</span></div>
-        <h3>下一次開口，不必再從頭問起</h3><p>客戶說過什麼、走到哪一步，都留在同一條脈絡裡。</p>
+        <h3>下次開口，不必從頭問起</h3><p>說過什麼、走到哪一步，都在同一條脈絡裡。</p>
       </article>
     </div>
     <canvas id="pq-hero-gl" aria-hidden="true"></canvas>
@@ -1939,17 +1939,12 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div class="pq-cine-intro" data-cine-card="0" data-eyebrow="ENGINE · ONLINE">
       <span class="pq-eyebrow">AI 導入 × 系統整合 × 企業流程</span>
       <h1 style="margin:0;font:900 clamp(1.65rem,4.6vw,3.9rem)/1.24 'Noto Sans TC',sans-serif">把 AI 接進你的<br><span style="color:#FF6B2C">真實營運流程</span></h1>
-      <p style="margin:0;max-width:520px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">從客服、CRM、報價、行銷到專案管理,我們先盤點企業目前的工作方式,再用可驗證的導入方案,串接你正在使用的工具、資料與人員流程。<b style="color:#F2EFE8;font-weight:700">把你現在最卡的流程,先交給我們跑一次。</b></p>
+      <p style="margin:0;max-width:520px;font:400 1rem/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">先盤點現在的做法,<b style="display:inline-block;color:#F2EFE8;font-weight:700">再把最卡的流程交給我們跑一次。</b></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px">
-        <a href="/demo" aria-label="預約 AI 導入評估,先用 15 分鐘確認問題與適用場景" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 AI 導入評估 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
-        <a href="/cases" aria-label="查看實際導入案例" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
+        <a href="/demo" aria-label="預約 AI 導入評估,先用 15 分鐘確認問題與適用場景" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 .96875rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">預約 AI 導入評估 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+        <a href="/cases" aria-label="查看實際導入案例" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 .9375rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看實際導入案例</a>
       </div>
-      <p style="margin:2px 0 0;max-width:520px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">先用 15 分鐘確認問題與適用場景,不會直接推銷整套系統。</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:8px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">
-        <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:5px;height:5px;border-radius:50%;background:#FF6B2C"></i>從單一高價值流程開始</span>
-        <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:5px;height:5px;border-radius:50%;background:#3E9BFF"></i>可串接既有工具與系統</span>
-        <span style="display:inline-flex;align-items:center;gap:7px"><i style="width:5px;height:5px;border-radius:50%;background:#65E0BC"></i>保留權限、審核與人工接手</span>
-      </div>
+      <p style="margin:2px 0 0;max-width:520px;font:400 .8125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">先用 15 分鐘確認問題與場景,不推銷整套系統。</p>
       <a class="pq-cine-scrollcue" href="#brands"><span>向下捲動 · 拆解引擎</span><i>↓</i></a>
     </div>
 
@@ -1971,7 +1966,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <article class="pq-cine-card" data-cine-card="3" data-align="left" data-eyebrow="CREATIVE" data-focus="sensor" data-part="IMAGE SENSOR · 感光元件">
       <div class="top"><b>03</b><span>03 / 留下脈絡</span></div>
       <div class="pq-cine-callout"><span>零件 · SENSOR</span><b>感光元件 → 留下脈絡</b></div>
-      <h2><span>把看見的,</span><span>變成下一次<em>用得上的資訊</em></span></h2>
+      <h2><span>把看見的,</span><span>留成<em>用得上的資訊</em></span></h2>
       <p>對話與現場內容,整理成可以延續的紀錄。</p>
     </article>
     <!-- Beat 4:報價/數據 = 抽出控制與螢幕 -->
@@ -2028,35 +2023,35 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <div class="top"><b>01</b><span>接上現有的做法</span></div>
         <i class="brk" aria-hidden="true"></i><i class="scanline" aria-hidden="true"></i><div class="sig"><u></u><span>MODULE 07 / 47</span></div>
         <h2><span>不用打掉重練，</span><span>接上<em>你現在的做法</em></span></h2>
-        <p>LINE、表單、Excel、既有的客戶名單，都能接進來。導入是把你現在的流程接起來，不是要你先把公司重來一次。</p>
+        <p>LINE、表單、Excel、既有名單都能接進來，不必先把公司重來一次。</p>
         <ul><li>既有工具照用</li></ul>
       </article>
       <article class="pq-cine-vcard" data-shot="1">
         <div class="top"><b>02</b><span>資料留在你這邊</span></div>
         <i class="brk" aria-hidden="true"></i><i class="scanline" aria-hidden="true"></i><div class="sig"><u></u><span>MODULE 14 / 47</span></div>
         <h2><span>客戶與對話，</span><span>始終是<em>你自己的資產</em></span></h2>
-        <p>每一次詢問、報價與紀錄都留在你自己的後台，可以匯出、可以帶走。不會因為換了平台或斷了合作，關係就跟著歸零。</p>
+        <p>詢問、報價與紀錄都留在你的後台，可以匯出、可以帶走。</p>
         <ul><li>資料可帶走</li></ul>
       </article>
       <article class="pq-cine-vcard" data-shot="2">
         <div class="top"><b>03</b><span>從一個場景開始</span></div>
         <i class="brk" aria-hidden="true"></i><i class="scanline" aria-hidden="true"></i><div class="sig"><u></u><span>MODULE 23 / 47</span></div>
         <h2><span>不必一次上完，</span><span>先解<em>最卡的那一個</em></span></h2>
-        <p>47 個模組不是一次全開。從最卡的那個環節做起，跑順了再往外長。每一步都看得到效果，才有下一步。</p>
+        <p>47 個模組不必一次全開，從最卡的環節做起，跑順了再往外長。</p>
         <ul><li>逐步擴張</li></ul>
       </article>
       <article class="pq-cine-vcard" data-shot="3">
         <div class="top"><b>04</b><span>會愈用愈懂你</span></div>
         <i class="brk" aria-hidden="true"></i><i class="scanline" aria-hidden="true"></i><div class="sig"><u></u><span>MODULE 35 / 47</span></div>
         <h2><span>裝完不是結束，</span><span>而是<em>開始被調校</em></span></h2>
-        <p>每個月回看真實數據：哪些詢問成交、哪些環節卡住、哪些內容有人看。系統跟著你的做法調整，而不是裝完就停在原地。</p>
+        <p>每個月回看真實數據，系統跟著你的做法持續調整。</p>
         <ul><li>AI 月報</li></ul>
       </article>
       <article class="pq-cine-vcard" data-shot="4">
         <div class="top"><b>05</b><span>背後有人</span></div>
         <i class="brk" aria-hidden="true"></i><i class="scanline" aria-hidden="true"></i><div class="sig"><u></u><span>MODULE 47 / 47</span></div>
         <h2><span>不是丟一套軟體，</span><span>就<em>讓你自己摸索</em></span></h2>
-        <p>從導入、調校、教學到每月檢視，都有人陪著跑。我們把複雜留在系統裡，把清楚留給你。</p>
+        <p>從導入、調校、教學到每月檢視，都有人陪著跑。</p>
         <ul><li>全程陪跑</li></ul>
       </article>
     </div>
@@ -2069,7 +2064,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <!-- U3c 組裝完成鏡頭正面「章節總結標題」(--k 由捲動驅動;翻面前淡出。這不是品牌 Hero Slogan) -->
     <div class="pq-cine-lenstitle" data-cine-lenstitle aria-hidden="true">
       <span class="eyebrow">ONE SYSTEM / EVERYDAY OPERATIONS</span>
-      <h2>組起來，讓日常不再各自為政</h2>
+      <h2>組起來，日常不再各自為政</h2>
       <p>接客、跟進、內容、專案與數據，回到同一套系統。</p>
     </div>
     <!-- U5 回機身 + Slogan(外框字掃描填實 + 逐段浮現;--k 由捲動驅動) -->
@@ -2077,9 +2072,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <!-- E 一直拍照的相機:取景框角標(快門閃光已移到舞台層,才能整張一起閃) -->
       <div class="pq-slogan-marks"><i></i><i></i><i></i><i></i></div>
       <span class="pq-slogan-eyebrow">OUR MISSION · PEAKQI 2026</span>
-      <h2 class="pq-slogan-title" data-accent="6">別讓瑣碎,耽誤真正重要的事</h2>
+      <h2 class="pq-slogan-title" data-accent="4">別讓瑣碎，耽誤重要的事</h2>
       <div class="pq-slogan-lock">MADE FOR WHAT MATTERS.</div>
-      <p class="pq-slogan-sub">我們把複雜留在裡面，把清楚和時間，還給每一個認真做事的人。</p>
+      <p class="pq-slogan-sub">把複雜留在裡面，把清楚和時間，還給認真做事的人。</p>
       <div class="pq-slogan-meta"><b>REC</b><span>F2.8</span><span>1/250</span><span>ISO 400</span><span>4K · 24P</span></div>
       <div class="pq-slogan-cta">
         <a class="pq-slogan-btn" href="Products.dc.html">探索旗下產品 <span>→</span></a>
@@ -2120,24 +2115,24 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <circle r="30" fill="none" stroke="#FF6B2C" stroke-width="1.5" opacity=".5" style="transform-box:fill-box;transform-origin:center;animation:pqRing 2.6s ease-out infinite"></circle>
           <circle r="30" fill="none" stroke="#FF6B2C" stroke-width="1.5" opacity=".5" style="transform-box:fill-box;transform-origin:center;animation:pqRing 2.6s ease-out infinite 1.3s"></circle>
           <circle r="30" fill="#0F1319" stroke="rgba(255,107,44,.7)" stroke-width="1.5" style="transform-box:fill-box;transform-origin:center;animation:pqBreathe 3s ease-in-out infinite"></circle>
-          <text y="-2" text-anchor="middle" fill="#F2EFE8" style="font:800 13px 'Space Grotesk',sans-serif">47</text>
-          <text y="13" text-anchor="middle" fill="rgba(242,239,232,.6)" style="font:600 8px 'Noto Sans TC',sans-serif;letter-spacing:.1em">模組引擎</text>
+          <text y="-2" text-anchor="middle" fill="#F2EFE8" style="font:800 .8125rem 'Space Grotesk',sans-serif">47</text>
+          <text y="13" text-anchor="middle" fill="rgba(242,239,232,.6)" style="font:600 .5rem 'Noto Sans TC',sans-serif;letter-spacing:.1em">模組引擎</text>
         </g>
         <!-- 四個品牌節點(子動畫:呼吸浮動) -->
         <g style="animation:pqFloatY 5s ease-in-out infinite">
-          <g transform="translate(372 92)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(255,107,44,.55)"></rect><circle cx="16" cy="0" r="4" fill="#FF6B2C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">Peak Ops</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">通用 AI 業務工具</text></g>
+          <g transform="translate(372 92)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(255,107,44,.55)"></rect><circle cx="16" cy="0" r="4" fill="#FF6B2C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 .75rem 'Noto Sans TC',sans-serif">Peak Ops</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 .5625rem 'Noto Sans TC',sans-serif">通用 AI 業務工具</text></g>
         </g>
         <g style="animation:pqFloatY 5.6s ease-in-out infinite .4s">
-          <g transform="translate(392 172)"><rect x="0" y="-22" width="120" height="44" rx="8" fill="#14171C" stroke="rgba(62,155,255,.55)"></rect><circle cx="16" cy="0" r="4" fill="#3E9BFF"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">冒泡</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">房仲 AI</text></g>
+          <g transform="translate(392 172)"><rect x="0" y="-22" width="120" height="44" rx="8" fill="#14171C" stroke="rgba(62,155,255,.55)"></rect><circle cx="16" cy="0" r="4" fill="#3E9BFF"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 .75rem 'Noto Sans TC',sans-serif">冒泡</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 .5625rem 'Noto Sans TC',sans-serif">房仲 AI</text></g>
         </g>
         <g style="animation:pqFloatY 5.6s ease-in-out infinite .8s">
-          <g transform="translate(392 272)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(224,107,156,.55)"></rect><circle cx="16" cy="0" r="4" fill="#E06B9C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">AI Wedding Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">婚禮 AI</text></g>
+          <g transform="translate(392 272)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(224,107,156,.55)"></rect><circle cx="16" cy="0" r="4" fill="#E06B9C"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 .75rem 'Noto Sans TC',sans-serif">AI Wedding Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 .5625rem 'Noto Sans TC',sans-serif">婚禮 AI</text></g>
         </g>
         <g style="animation:pqFloatY 5s ease-in-out infinite 1.2s">
-          <g transform="translate(372 352)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(101,224,188,.55)"></rect><circle cx="16" cy="0" r="4" fill="#65E0BC"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 12px 'Noto Sans TC',sans-serif">AI Interior Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 9px 'Noto Sans TC',sans-serif">室內設計 AI</text></g>
+          <g transform="translate(372 352)"><rect x="0" y="-22" width="132" height="44" rx="8" fill="#14171C" stroke="rgba(101,224,188,.55)"></rect><circle cx="16" cy="0" r="4" fill="#65E0BC"></circle><text x="30" y="-3" fill="#F2EFE8" style="font:700 .75rem 'Noto Sans TC',sans-serif">AI Interior Pro</text><text x="30" y="12" fill="rgba(242,239,232,.55)" style="font:400 .5625rem 'Noto Sans TC',sans-serif">室內設計 AI</text></g>
         </g>
       </svg>
-      <span style="position:absolute;left:2px;bottom:-6px;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.35)">ONE ENGINE — MANY BRANDS</span>
+      <span style="position:absolute;left:2px;bottom:-6px;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.35)">ONE ENGINE — MANY BRANDS</span>
     </div>
   </div>
 </section>
@@ -2146,8 +2141,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="modules" class="pq-sec" style="background:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">SIX MODULES · 六大核心能力模組</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">六個能力模組,<br>對應企業每天在做的<span style="color:#FF6B2C">六件事</span></h2>
-    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">這些是可以組合的核心能力,不是綁在一起的整套系統。導入時通常先選一個高價值場景驗證,再逐步串起其他模組——想從哪一塊開始都可以。</p>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">六個模組,對應日常<span style="color:#FF6B2C">六件事</span></h2>
+    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 .9375rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">可自由組合的核心能力,先選一個場景驗證,再逐步串起其他模組。</p>
     <div class="pq-modgrid" style="margin-top:clamp(28px,4vw,48px);display:grid;gap:16px">
       <div data-reveal class="pq-mod pqbrk1" style="--ac:#FF6B2C"><span class="num">01</span><span class="ico" aria-hidden="true"><svg class="pqmB1" viewBox="0 0 120 160">
 <rect x="12" y="49" width="96" height="10" fill="#F2EFE8"/>
@@ -2182,7 +2177,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle cx="108" cy="54" r="5" fill="#FF6B2C" stroke="#11161B" stroke-width="2"/>
 <g class="leg legA"><path d="M52 54V72" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/><g class="foot footA"><path d="M52 72h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/></g></g>
 <g class="leg legB"><path d="M70 54V70" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/><g class="foot footB"><path d="M70 70h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/></g></g>
-</svg></span><span class="eye"><u></u>AI 客服 · LENS</span><h3>先處理重複問題,把複雜情況交回給人</h3><p>整合網站、LINE 或其他詢問來源,讓 AI 根據核准過的企業資料回覆常見問題、辨識需求並建立紀錄。遇到例外、敏感或高價值案件時,可轉交人工處理。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
+</svg></span><span class="eye"><u></u>AI 客服 · LENS</span><h3>重複問題先答,複雜交回給人</h3><p>整合網站與 LINE 的詢問,AI 依核准資料回覆並留下紀錄;例外與高價值案件轉回人工。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk2" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pqmB2" viewBox="0 0 110 150">
 <rect x="20" y="41" width="70" height="8" fill="#F2EFE8"/>
 <path class="bar" d="M20 45 Q55 55 90 45" fill="none" stroke="rgba(17,22,27,.9)" stroke-width="1.6" stroke-linecap="round"/>
@@ -2205,7 +2200,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="tuckA"><g class="dangA"><path d="M48 92V107" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftA"><path d="M48 107h-8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></g>
 <g class="tuckB"><g class="dangB"><path d="M62 92V105" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftB"><path d="M62 105h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g></g>
 </g></g>
-</svg></span><span class="eye"><u></u>CRM 追蹤 · MAINBOARD</span><h3>讓每一筆詢問都有下一步</h3><p>自動建立客戶資料、整理互動紀錄並提醒負責人追蹤,降低訊息分散、忘記回覆與案件無人負責的情況。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
+</svg></span><span class="eye"><u></u>CRM 追蹤 · MAINBOARD</span><h3>讓每一筆詢問都有下一步</h3><p>自動建立客戶資料、整理紀錄並提醒追蹤,案件不再無人負責。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk3" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pqmB3" viewBox="0 0 130 150">
 <rect x="22" y="53" width="92" height="8" fill="#F2EFE8"/>
 <path class="sag3" d="M22 57 Q68 66 112 57" fill="none" stroke="rgba(17,22,27,.9)" stroke-width="1.6" stroke-linecap="round"/>
@@ -2230,7 +2225,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="armN"><path d="M57 69q2 7 1 13" stroke="#11161B" stroke-width="4" stroke-linecap="round" fill="none"/>
 <circle cx="57.6" cy="84" r="4.4" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
 </g>
-</svg></span><span class="eye"><u></u>行銷自動化 · SENSOR</span><h3>根據客戶狀態,執行適合的溝通</h3><p>依照來源、需求、標籤與互動階段,自動安排後續訊息與內容,不再對所有客戶發送相同資訊。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
+</svg></span><span class="eye"><u></u>行銷自動化 · SENSOR</span><h3>依客戶狀態,送出適合的溝通</h3><p>依來源、標籤與互動階段,自動安排後續訊息,不再人人同一套。</p><div class="spec"><span>MODULE 03 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk4" style="--ac:#FF6B2C"><span class="num">04</span><span class="ico" aria-hidden="true"><svg class="pqmB4" viewBox="0 0 120 160">
 <rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
 <path class="sag4" d="M12 54 Q64 62 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
@@ -2263,7 +2258,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="legD4"><path d="M58 106V123" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/><g class="ftD4"><path d="M58 123h8" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g></g>
 </g>
 </g>
-</svg></span><span class="eye"><u></u>報價文件 · SHUTTER</span><h3>減少重複整理,加快報價與文件產出</h3><p>將常用方案、價格、條款與客戶需求整理成結構化資料,協助產生初步報價、提案或內部文件,再由負責人確認送出。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
+</svg></span><span class="eye"><u></u>報價文件 · SHUTTER</span><h3>減少重複整理,加快報價產出</h3><p>方案、價格與需求整理成結構化資料,先產出初步報價與文件,再由負責人確認送出。</p><div class="spec"><span>MODULE 04 / 47</span><b>方案 C 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk5" style="--ac:#3E9BFF"><span class="num">05</span><span class="ico" aria-hidden="true"><svg class="pqmB5" viewBox="0 0 120 150">
 <rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
 <path class="sag5" d="M12 54 Q58 60 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
@@ -2287,7 +2282,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="legF5"><path d="M66 48L76 44" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/>
 <path d="M76 44l6 1.5" stroke="#11161B" stroke-width="4.4" stroke-linecap="round"/></g>
 </g></g>
-</svg></span><span class="eye"><u></u>專案管理 · CHASSIS</span><h3>從成交到交付,不再靠人工轉貼資訊</h3><p>將客戶需求、報價內容、任務、時程與交付紀錄連接起來,降低跨部門交接時遺漏資訊的風險。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
+</svg></span><span class="eye"><u></u>專案管理 · CHASSIS</span><h3>從成交到交付,不靠人工轉貼</h3><p>需求、報價、任務與時程連成一條線,交接不再遺漏資訊。</p><div class="spec"><span>MODULE 05 / 47</span><b>方案 C 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk6" style="--ac:#3FA98C"><span class="num">06</span><span class="ico" aria-hidden="true"><svg class="pqmB6" viewBox="0 0 120 150">
 <rect x="12" y="50" width="96" height="8" fill="#F2EFE8"/>
 <path class="sag6" d="M12 54 Q62 61 108 54" fill="none" stroke="rgba(17,22,27,.32)" stroke-width="1.1" stroke-linecap="round"/>
@@ -2311,9 +2306,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle cx="85.4" cy="103" r="4.2" fill="#3FA98C" stroke="#11161B" stroke-width="2"/></g>
 <g class="ant6"><path d="M62 95v9" stroke="#11161B" stroke-width="2.2" stroke-linecap="round"/><circle cx="62" cy="106" r="2.6" fill="#11161B"/></g>
 </g></g>
-</svg></span><span class="eye"><u></u>數據整合 · DISPLAY</span><h3>看見流程卡在哪裡,而不只看到結果</h3><p>整合詢問、回覆、成交、專案與營運數據,協助企業判斷哪些流程值得優化,以及 AI 導入後是否真的產生改善。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
+</svg></span><span class="eye"><u></u>數據整合 · DISPLAY</span><h3>看見卡在哪裡,不只看到結果</h3><p>整合詢問、成交與營運數據,看見哪裡值得優化、改善是否真的發生。</p><div class="spec"><span>MODULE 06 / 47</span><b>方案 C 起</b></div></div>
     </div>
-    <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
+    <p data-reveal style="margin:20px 0 0;font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">方案由小到大:A 先把接客做好,B 加上追客與 CRM,C 才是完整營運平台。</p>
   </div>
 </section>
 
@@ -2383,8 +2378,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
   <div class="pq-mos-say">
     <span>ONE ENGINE / MANY SHAPES</span>
-    <h2 id="mos-title">同一套零件,<em>拼得出每一種生意</em></h2>
-    <p>每個產業的形狀都不一樣。我們不做一套通用範本硬套在你身上,而是用同一顆引擎,拼出你這一行真正需要的樣子。</p>
+    <h2 id="mos-title">同一套零件,<em>拼出每種生意</em></h2>
+    <p>不拿通用範本硬套,用同一顆引擎,拼出你這一行需要的樣子。</p>
   </div>
 </section>
 
@@ -2401,8 +2396,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <header class="pq-dt-head">
       <div>
         <div class="pq-dt-eyebrow"><i></i>DUAL-TRACK VALIDATION</div>
-        <h2 id="dt-title"><span>奇鋒是平台公司,</span><span><em>不是接案公司</em></span></h2>
-        <p class="pq-dt-sub">同一顆引擎,兩條軌道一起驗證:一邊做自家垂直品牌累積 know-how,一邊把通用工具賣給市場。一套引擎、多個品牌、雙軌驗證。</p>
+        <h2 id="dt-title"><span>奇鋒是平台,</span><span><em>不是接案公司</em></span></h2>
+        <p class="pq-dt-sub">同一顆引擎,兩條軌道驗證:自家品牌累積 know-how,通用工具賣向市場。</p>
       </div>
       <ul class="pq-dt-kpi">
         <li><b></b>ONE ENGINE</li>
@@ -2426,7 +2421,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <article class="pq-dt-card tA" style="--ac:#4A9EFF">
         <span class="pq-dt-tag"><u></u>TRACK A</span>
         <h3>自家垂直品牌</h3>
-        <p>冒泡、AI Wedding Pro、AI Interior Pro 深入產業、累積真實 know-how,與資料飛輪一起用越強。</p>
+        <p>深入產業、累積真實 know-how,與資料飛輪越用越強。</p>
         <ul class="pq-dt-nodes">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5"/><circle cx="16.5" cy="15.5" r="3.5"/></svg>冒泡<em>SOCIAL</em></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-9.5A3.5 3.5 0 0 1 12 8a3.5 3.5 0 0 1 7 2.5C19 15.5 12 20 12 20z"/></svg>AI Wedding Pro<em>WEDDING</em></li>
@@ -2438,7 +2433,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <article class="pq-dt-card tB" style="--ac:#FF652F">
         <span class="pq-dt-tag"><u></u>TRACK B</span>
         <h3>Peak Ops 外部客戶</h3>
-        <p>通用型 AI 業務工具,對外賣給還沒有專門工具的產業,一年訂閱制,推動 SaaS ARR 成長。</p>
+        <p>通用型 AI 業務工具,賣給還沒有專門工具的產業;一年訂閱制,推動 SaaS ARR 成長。</p>
         <ul class="pq-dt-nodes">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19"/><circle cx="10" cy="8" r="3.5"/><path d="M17 11.5 19 13.5 22.5 10"/></svg>Sales Teams<em>B2B</em></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-7l8-6 8 6v7"/><path d="M9.5 20v-5h5v5"/></svg>Service Industry<em>SERVICE</em></li>
@@ -2451,7 +2446,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <i class="ring" aria-hidden="true"></i>
         <span class="pq-dt-shared">ONE SHARED ENGINE</span>
         <h3>AI 營運平台</h3>
-        <p>兩條軌道都餵養同一顆引擎與同一份資料飛輪;品牌結構下,每個垂直品牌都能獨立分析或出售。</p>
+        <p>兩條軌道餵養同一顆引擎與資料飛輪;每個垂直品牌都能獨立分析或出售。</p>
         <ul class="pq-dt-pnodes">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8v-11"/><path d="M5 12c0 1.55 3.13 2.8 7 2.8s7-1.25 7-2.8"/></svg>Shared Data</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M10 7h5.5a2 2 0 0 1 2 2v5"/></svg>AI Workflow</li>
@@ -2472,7 +2467,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
     <div class="pq-dt-fly">
       <h3>ONE ENGINE, COMPOUNDING DATA</h3>
-      <p>每一次品牌營運與客戶導入,都會轉化為可重複使用的資料、流程與產品能力。</p>
+      <p>每一次營運與導入,都轉化為可重複使用的資料、流程與產品能力。</p>
       <ul class="pq-dt-ring">
         <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8 20 20"/></svg></i><span>Industry Insight</span></li>
         <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg></i><span>Structured Data</span></li>
@@ -2490,36 +2485,36 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="onboard" class="pq-sec" style="background:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">ONBOARDING · AI 導入方法</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 導入,<span style="color:#FF6B2C">不必一次換掉所有系統</span></h2>
-    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">我們先從影響明確、資料可取得、風險可控制的場景開始,驗證有效後,再逐步連接更多流程。第一個場景最快約 10 個工作天就能上線。</p>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 導入,<span style="color:#FF6B2C">不必換掉所有系統</span></h2>
+    <p data-reveal style="margin:16px 0 0;max-width:560px;font:400 .9375rem/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">先從風險可控的場景開始,驗證後再逐步擴大;第一個場景最快 10 個工作天上線。</p>
     <div style="margin-top:clamp(28px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px">
       <div data-reveal class="pq-onb" style="--c:#FF6B2C;border-top:2px solid #FF6B2C"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><rect class="st dim" x="12" y="10" width="40" height="44" rx="5"/>
 <path class="st dim" d="M20 20h18M20 27h24"/>
 <path class="st sig" d="M20 42c4-8 6 6 9-1s5 5 8 0 4 3 7-2"/>
 <g class="pen"><path class="st" d="M40 36l7-7 4 4-7 7-5 1z"/><path class="fl" d="M35 41l5-1 1 4z" opacity=".85"/></g>
-<g class="stamp"><circle class="st" cx="44" cy="20" r="9" stroke-width="2.6"/><path class="st" d="M39.5 20.5l3.2 3.2 6-6.6"/></g></svg><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C">STEP 01</span><b style="font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">流程盤點</b><span style="font:400 clamp(14px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">了解目前工作方式、使用工具、資料來源與真正卡住的位置。</span></div>
+<g class="stamp"><circle class="st" cx="44" cy="20" r="9" stroke-width="2.6"/><path class="st" d="M39.5 20.5l3.2 3.2 6-6.6"/></g></svg><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C">STEP 01</span><b style="font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif">流程盤點</b><span style="font:400 clamp(.875rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">了解目前工作方式、使用工具、資料來源與真正卡住的位置。</span></div>
       <div data-reveal class="pq-onb" style="--c:#3E9BFF;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M10 54h44"/>
 <rect class="fl blk b1" x="14" y="42" width="16" height="11" rx="2.5"/>
 <rect class="fl blk b2" x="33" y="42" width="17" height="11" rx="2.5" opacity=".72"/>
 <rect class="fl blk b3" x="21" y="29" width="22" height="11" rx="2.5" opacity=".55"/>
-<rect class="st blk b3" x="26" y="16" width="12" height="11" rx="2.5"/></svg><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 02</span><b style="font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">場景排序與驗證</b><span style="font:400 clamp(14px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">評估價值、資料條件與風險選出第一個場景,先建可操作的 Demo 或 PoC,確認 AI 是否適合處理。</span></div>
+<rect class="st blk b3" x="26" y="16" width="12" height="11" rx="2.5"/></svg><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 02</span><b style="font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif">場景排序與驗證</b><span style="font:400 clamp(.875rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">評估價值與風險選出第一個場景,先建 Demo 或 PoC 驗證。</span></div>
       <div data-reveal class="pq-onb" style="--c:#3FA98C;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><rect class="st dim" x="11" y="10" width="42" height="44" rx="5"/>
 <path class="st dim" d="M31 21h14M31 32h14M31 43h14"/>
 <path class="st tick t1" d="M17 21l3 3 5.5-6"/><path class="st tick t2" d="M17 32l3 3 5.5-6"/>
 <path class="st tick t3" d="M17 43l3 3 5.5-6"/>
-<g class="glass"><circle class="st" cx="47" cy="16" r="7"/><path class="st" d="M52 21l5 5"/></g></svg><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 03</span><b style="font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">系統串接</b><span style="font:400 clamp(14px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">連接既有網站、LINE、CRM、表單、資料庫或內部工具,讓資料真正串起來。</span></div>
+<g class="glass"><circle class="st" cx="47" cy="16" r="7"/><path class="st" d="M52 21l5 5"/></g></svg><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 03</span><b style="font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif">系統串接</b><span style="font:400 clamp(.875rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">連接既有網站、LINE、CRM、表單、資料庫或內部工具,讓資料真正串起來。</span></div>
       <div data-reveal class="pq-onb" style="--c:#FF6B2C;border-top:2px solid rgba(9,11,14,.2)"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M12 44a20 20 0 0 1 40 0"/>
 <path class="st dim" d="M16 33l3 2M32 24v3M48 33l-3 2"/>
 <g class="ndl"><path class="st" d="M32 44V26"/></g><circle class="fl" cx="32" cy="44" r="3.6"/>
-<path class="st dim" d="M14 54h36"/><g class="knob"><rect class="fl" x="28" y="50" width="9" height="8" rx="2.5"/></g></svg><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 04</span><b style="font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">測試與上線</b><span style="font:400 clamp(14px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">設定權限、審核、人工接手與例外處理,讓實際使用者參與測試後正式上線。</span></div>
+<path class="st dim" d="M14 54h36"/><g class="knob"><rect class="fl" x="28" y="50" width="9" height="8" rx="2.5"/></g></svg><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:rgba(9,11,14,.55)">STEP 04</span><b style="font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif">測試與上線</b><span style="font:400 clamp(.875rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">設定權限、審核、人工接手與例外處理,讓實際使用者參與測試後正式上線。</span></div>
       <div data-reveal class="pq-onb" style="--c:#1e9a72;border-top:2px solid #65E0BC"><svg class="ic" aria-hidden="true" viewBox="0 0 64 64"><path class="st dim" d="M14 56h36"/>
 <g class="rkt"><path class="st" d="M32 8c6 6 9 13 9 21v9H23v-9c0-8 3-15 9-21z"/>
 <circle class="fl" cx="32" cy="24" r="4"/>
 <path class="fl" d="M23 30l-6 8h6zM41 30l6 8h-6z" opacity=".75"/>
 <g class="fire"><path class="fl" d="M27 39h10l-5 11z" opacity=".9"/></g></g>
-<circle class="fl spark" cx="22" cy="46" r="2"/><circle class="fl spark" cx="42" cy="48" r="1.6" opacity=".7"/></svg><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#1e9a72">STEP 05</span><b style="font:800 clamp(18px,1.5vw,21px) 'Noto Sans TC',sans-serif">衡量與優化</b><span style="font:400 clamp(14px,1.1vw,15.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">追蹤回覆時間、工時、漏單率、使用率等實際指標,持續調整流程。</span></div>
+<circle class="fl spark" cx="22" cy="46" r="2"/><circle class="fl spark" cx="42" cy="48" r="1.6" opacity=".7"/></svg><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#1e9a72">STEP 05</span><b style="font:800 clamp(1.125rem,1.5vw,1.3125rem) 'Noto Sans TC',sans-serif">衡量與優化</b><span style="font:400 clamp(.875rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">追蹤回覆時間、工時、漏單率、使用率等實際指標,持續調整流程。</span></div>
     </div>
-    <p data-reveal style="margin:20px 0 0;font:400 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">完整垂直平台或大型客製系統,參考時程約六週。</p>
+    <p data-reveal style="margin:20px 0 0;font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)">完整垂直平台或大型客製系統,參考時程約六週。</p>
   </div>
 </section>
 
@@ -2527,17 +2522,17 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="governance" data-screen-label="AI 治理" class="pq-sec" style="background:#0D1115;color:#F2EFE8">
   <div class="pq-wrap">
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(242,239,232,.5)">TRUST &amp; CONTROL · AI 治理</span></div>
-    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 可以自動處理,<br>但企業仍保有<span style="color:#FF6B2C">控制權</span></h2>
-    <p data-reveal style="margin:16px 0 0;max-width:600px;font:400 15px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">自動化不代表放手。權限、審核與例外處理都留在你這邊——AI 只在設定好的範圍內運作,重要的事仍由人決定。</p>
+    <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">AI 自動處理,<span style="color:#FF6B2C">控制權</span>在你</h2>
+    <p data-reveal style="margin:16px 0 0;max-width:600px;font:400 .9375rem/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">權限、審核與例外處理都留在你這邊,重要的事仍由人決定。</p>
     <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4l10 4v6c0 6-4 10-10 12C10 24 6 20 6 14V8z" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 15l3 3 5-6" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">權限分級</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">依角色與需求設定資料權限,不同人只看到需要的資訊。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="16" cy="11" r="4.5" fill="none" stroke="#3E9BFF" stroke-width="2.2"/><path d="M7 26c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#3E9BFF" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">人工確認</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">重要輸出可保留人工確認後再送出,不讓 AI 自行決定。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M6 16h9l3-5 4 10 3-5h1" fill="none" stroke="#3FA98C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">例外轉真人</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">敏感、低信心或高價值案件,系統交由真人處理,不猜測。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="7" y="14" width="18" height="12" rx="2.5" fill="none" stroke="#FF6B2C" stroke-width="2.2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3" fill="none" stroke="#FF6B2C" stroke-width="2.2"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">資料範圍可限</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">AI 使用的資料範圍可以被限制,禁止回答的內容可設定。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M9 5h11l4 4v18H9z" fill="none" stroke="#3E9BFF" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 14h8M13 19h8" stroke="#3E9BFF" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">操作留痕</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">保留必要的操作與處理紀錄,事後可追溯每一步。</p></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="14" cy="14" r="7" fill="none" stroke="#3FA98C" stroke-width="2.2"/><path d="M19 19l6 6" stroke="#3FA98C" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(17px,1.4vw,19px) 'Noto Sans TC',sans-serif;color:#F2EFE8">來源可查</h3><p style="margin:0;font:400 14px/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">導入前確認資料來源與保存方式,不使用來路不明的資料。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4l10 4v6c0 6-4 10-10 12C10 24 6 20 6 14V8z" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 15l3 3 5-6" fill="none" stroke="#FF6B2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">權限分級</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">依角色與需求設定資料權限,不同人只看到需要的資訊。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="16" cy="11" r="4.5" fill="none" stroke="#3E9BFF" stroke-width="2.2"/><path d="M7 26c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#3E9BFF" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">人工確認</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">重要輸出可保留人工確認後再送出,不讓 AI 自行決定。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M6 16h9l3-5 4 10 3-5h1" fill="none" stroke="#3FA98C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">例外轉真人</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">敏感、低信心或高價值案件,系統交由真人處理,不猜測。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="7" y="14" width="18" height="12" rx="2.5" fill="none" stroke="#FF6B2C" stroke-width="2.2"/><path d="M11 14v-3a5 5 0 0 1 10 0v3" fill="none" stroke="#FF6B2C" stroke-width="2.2"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">資料範圍可限</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">AI 使用的資料範圍可以被限制,禁止回答的內容可設定。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M9 5h11l4 4v18H9z" fill="none" stroke="#3E9BFF" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 14h8M13 19h8" stroke="#3E9BFF" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">操作留痕</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">保留必要的操作與處理紀錄,事後可追溯每一步。</p></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:14px;background:rgba(242,239,232,.03);padding:24px 22px;display:flex;flex-direction:column;gap:11px"><span aria-hidden="true" style="width:44px;height:44px;border-radius:11px;background:rgba(242,239,232,.05);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="14" cy="14" r="7" fill="none" stroke="#3FA98C" stroke-width="2.2"/><path d="M19 19l6 6" stroke="#3FA98C" stroke-width="2.2" stroke-linecap="round"/></svg></span><h3 style="margin:2px 0 0;font:800 clamp(1.0625rem,1.4vw,1.1875rem) 'Noto Sans TC',sans-serif;color:#F2EFE8">來源可查</h3><p style="margin:0;font:400 .875rem/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.6)">導入前確認資料來源與保存方式,不使用來路不明的資料。</p></div>
     </div>
-    <p data-reveal style="margin:20px 0 0;font:400 13px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.42)">更完整的資料保存位置、模型供應商與加密方式,會在導入前依你的實際環境逐項確認並書面說明。</p>
+    <p data-reveal style="margin:20px 0 0;font:400 .8125rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.42)">資料保存位置、模型供應商與加密方式,導入前依你的環境逐項確認並書面說明。</p>
   </div>
 </section>
 
@@ -2546,14 +2541,14 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div class="pq-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center">
     <div data-reveal>
       <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">ABOUT · 公司介紹</span></div>
-      <h2 style="margin:14px 0 0;font:900 clamp(1.55rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">從企業每天卡住的<br>流程開始</h2>
-      <p style="margin:20px 0 0;max-width:460px;font:400 15.5px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">奇鋒國際 PeakQi 不是從 AI 名詞開始,而是從行銷、客服、提案、報價這些每天卡住的流程開始,把它們整合進一套營運系統。連市府級大型活動官網(嘉義市世博會)都如期交付上線。</p>
+      <h2 style="margin:14px 0 0;font:900 clamp(1.55rem,3.6vw,3rem)/1.22 'Noto Sans TC',sans-serif">從每天卡住的流程開始</h2>
+      <p style="margin:20px 0 0;max-width:460px;font:400 .96875rem/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">不從 AI 名詞開始,從行銷、客服、報價這些卡住的流程開始,整合成一套營運系統。</p>
     </div>
     <div data-reveal style="display:flex;flex-direction:column;gap:0">
-      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">2024</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">自研 47 模組 AI 業務引擎,累積型技術資產成形。</span></div>
-      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">垂直</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">孵化冒泡、AI Wedding Pro、AI Interior Pro,深入 8+ 產業。</span></div>
-      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">通用</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">Peak Ops 對外提供通用型 AI 業務工具,30+ 系統上線。</span></div>
-      <div style="display:flex;gap:16px;padding:16px 0"><span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">下一步</span><span style="font:500 15px/1.6 'Noto Sans TC',sans-serif">品牌屋結構——每個垂直品牌可獨立分拆或出售。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">2024</span><span style="font:500 .9375rem/1.6 'Noto Sans TC',sans-serif">自研 47 模組 AI 業務引擎,累積型技術資產成形。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">垂直</span><span style="font:500 .9375rem/1.6 'Noto Sans TC',sans-serif">孵化冒泡、AI Wedding Pro、AI Interior Pro,深入 8+ 產業。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(242,239,232,.12)"><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">通用</span><span style="font:500 .9375rem/1.6 'Noto Sans TC',sans-serif">Peak Ops 對外提供通用型 AI 業務工具,30+ 系統上線。</span></div>
+      <div style="display:flex;gap:16px;padding:16px 0"><span style="font:700 .9375rem 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#FF6B2C;min-width:56px">下一步</span><span style="font:500 .9375rem/1.6 'Noto Sans TC',sans-serif">品牌屋結構——每個垂直品牌可獨立分拆或出售。</span></div>
     </div>
   </div>
 </section>
@@ -2566,7 +2561,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <div style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow" style="color:rgba(9,11,14,.5)">BRAND HOUSE</span></div>
         <h2 style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">旗下品牌</h2>
       </div>
-      <p style="margin:0;max-width:360px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套底層引擎,換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
+      <p style="margin:0;max-width:360px;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">同一套引擎,換的是知識庫、定位與視覺;各品牌獨立官網、獨立定價。</p>
     </div>
     <div style="margin-top:clamp(24px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px" id="pq-brand-grid">
       <a data-reveal data-brand href="/peakops" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf1" aria-hidden="true"><svg viewBox="0 0 200 200">
@@ -2627,10 +2622,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
 </svg></span>
         <span aria-hidden="true" style="position:absolute;left:0;top:0;width:38%;height:3px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqSweep 3s linear infinite"></span>
-        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">GENERAL SaaS</span></div>
-        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">Peak Ops</h3>
-        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">通用型 AI 業務工具,給還沒有專門工具的產業:接客、追客、養客、報價、數據一套整合。</p>
-        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">了解更多 →</span>
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">GENERAL SaaS</span></div>
+        <h3 style="margin:0;font:900 1.375rem 'Noto Sans TC',sans-serif">Peak Ops</h3>
+        <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">通用型 AI 業務工具,給還沒有專門工具的產業:接客、追客、養客、報價、數據一套整合。</p>
+        <span style="margin-top:auto;font:700 .84375rem 'Noto Sans TC',sans-serif;color:#FF6B2C">了解更多 →</span>
       </a>
       <a data-reveal data-brand href="https://bubble.tw" target="_blank" rel="noopener" style="--a:#3E9BFF;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf2" aria-hidden="true"><svg viewBox="0 0 200 200">
 <rect class="bg" width="200" height="200"/>
@@ -2703,10 +2698,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
 <circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
 </svg></span>
-        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#3E9BFF"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">REAL ESTATE</span></div>
-        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">冒泡</h3>
-        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
-        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#3E9BFF">了解更多 →</span>
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#3E9BFF"></span><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">REAL ESTATE</span></div>
+        <h3 style="margin:0;font:900 1.375rem 'Noto Sans TC',sans-serif">冒泡</h3>
+        <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
+        <span style="margin-top:auto;font:700 .84375rem 'Noto Sans TC',sans-serif;color:#3E9BFF">了解更多 →</span>
       </a>
       <a data-reveal data-brand href="https://www.aiweddingpro360.com/" target="_blank" rel="noopener" style="--a:#E06B9C;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf3" aria-hidden="true"><svg viewBox="0 0 200 200">
 <rect class="bg" width="200" height="200"/>
@@ -2772,10 +2767,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
 <circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
 </svg></span>
-        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#E06B9C"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">WEDDING</span></div>
-        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Wedding Pro</h3>
-        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
-        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#E06B9C">了解更多 →</span>
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#E06B9C"></span><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">WEDDING</span></div>
+        <h3 style="margin:0;font:900 1.375rem 'Noto Sans TC',sans-serif">AI Wedding Pro</h3>
+        <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
+        <span style="margin-top:auto;font:700 .84375rem 'Noto Sans TC',sans-serif;color:#E06B9C">了解更多 →</span>
       </a>
       <a data-reveal data-brand href="https://www.aiinteriorpro360.com/" target="_blank" rel="noopener" style="--a:#65E0BC;position:relative;overflow:hidden;text-decoration:none;color:#090B0E;border:1px solid rgba(9,11,14,.14);border-radius:10px;background:#fff;padding:24px;display:flex;flex-direction:column;gap:10px;min-height:210px;transition:transform .25s cubic-bezier(0.16,1,0.3,1),box-shadow .25s,border-color .25s"><span class="pq-brandfilm pf4" aria-hidden="true"><svg viewBox="0 0 200 200">
 <rect class="bg" width="200" height="200"/>
@@ -2840,13 +2835,13 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <circle class="cue c1" cx="82" cy="180" r="3"/><circle class="cue c2" cx="94" cy="180" r="3"/>
 <circle class="cue c3" cx="106" cy="180" r="3"/><circle class="cue c4" cx="118" cy="180" r="3"/>
 </svg></span>
-        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#1e9a72"></span><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#1e9a72">INTERIOR</span></div>
-        <h3 style="margin:0;font:900 22px 'Noto Sans TC',sans-serif">AI Interior Pro</h3>
-        <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
-        <span style="margin-top:auto;font:700 13.5px 'Noto Sans TC',sans-serif;color:#1e9a72">了解更多 →</span>
+        <div style="display:flex;align-items:center;gap:9px"><span style="width:9px;height:9px;border-radius:50%;background:#1e9a72"></span><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#1e9a72">INTERIOR</span></div>
+        <h3 style="margin:0;font:900 1.375rem 'Noto Sans TC',sans-serif">AI Interior Pro</h3>
+        <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
+        <span style="margin-top:auto;font:700 .84375rem 'Noto Sans TC',sans-serif;color:#1e9a72">了解更多 →</span>
       </a>
     </div>
-    <p data-reveal style="margin:20px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品。</p>
+    <p data-reveal style="margin:20px 0 0;font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品。</p>
   </div>
 </section>
 
@@ -2857,18 +2852,18 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div data-reveal style="display:flex;align-items:center;gap:14px"><span style="width:36px;height:1px;background:#FF6B2C"></span><span class="pq-eyebrow">CASE STUDIES</span></div>
     <h2 data-reveal style="margin:14px 0 0;font:900 clamp(1.5rem,3.6vw,3rem)/1.25 'Noto Sans TC',sans-serif">跨產業實戰成效</h2>
     <div style="margin-top:clamp(26px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border-top:1px solid rgba(242,239,232,.14)">
-      <div data-reveal style="padding:24px 24px 26px 0"><div class="pq-num" data-to="30" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif">30+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">已上線系統與網站</span></div>
-      <div data-reveal style="padding:24px"><div class="pq-num" data-to="8" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#3E9BFF">8+</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">產業別實戰經驗</span></div>
-      <div data-reveal style="padding:24px"><div class="pq-num" data-to="10" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#65E0BC">10 天</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">最快上線(工作天)</span></div>
-      <div data-reveal style="padding:24px"><div style="font:700 clamp(1.4rem,2.4vw,2rem) 'Noto Sans TC',sans-serif;color:#FF6B2C">市府級</div><span style="font:400 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">大型活動官網執行</span></div>
+      <div data-reveal style="padding:24px 24px 26px 0"><div class="pq-num" data-to="30" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif">30+</div><span style="font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">已上線系統與網站</span></div>
+      <div data-reveal style="padding:24px"><div class="pq-num" data-to="8" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#3E9BFF">8+</div><span style="font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">產業別實戰經驗</span></div>
+      <div data-reveal style="padding:24px"><div class="pq-num" data-to="10" style="font:700 clamp(2rem,3.4vw,2.8rem) 'Space Grotesk',sans-serif;color:#65E0BC">10 天</div><span style="font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">最快上線(工作天)</span></div>
+      <div data-reveal style="padding:24px"><div style="font:700 clamp(1.4rem,2.4vw,2rem) 'Noto Sans TC',sans-serif;color:#FF6B2C">市府級</div><span style="font:400 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">大型活動官網執行</span></div>
     </div>
     <div style="margin-top:clamp(22px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px">
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC">室內設計</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">提案效率 ↑ 90%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">三天工作 3 小時完成、10+ 風格一鍵切換</span></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">婚禮婚慶</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">客服 ↓ 70%・成交 5X</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">婚紗試穿、髮妝模擬、8+ AI 功能模組</span></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">房仲不動產</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">回覆 → 30 秒・名單 ↑ 20%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">串 LINE 自動回物件、每週省 8 小時排程</span></div>
-      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">美業</span><p style="margin:0;font:700 15px/1.6 'Noto Sans TC',sans-serif">報價 ↑ 3X・決策 ↓ 60%</p><span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">髮色試換、妝容模擬,消費前先看成果</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#65E0BC">室內設計</span><p style="margin:0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif">提案效率 ↑ 90%</p><span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">三天工作 3 小時完成、10+ 風格一鍵切換</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#E06B9C">婚禮婚慶</span><p style="margin:0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif">客服 ↓ 70%・成交 5X</p><span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">婚紗試穿、髮妝模擬、8+ AI 功能模組</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#3E9BFF">房仲不動產</span><p style="margin:0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif">回覆 → 30 秒・名單 ↑ 20%</p><span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">串 LINE 自動回物件、每週省 8 小時排程</span></div>
+      <div data-reveal style="border:1px solid rgba(242,239,232,.14);border-radius:8px;background:#14171C;padding:20px;display:flex;flex-direction:column;gap:8px"><span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#FF6B2C">美業</span><p style="margin:0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif">報價 ↑ 3X・決策 ↓ 60%</p><span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">髮色試換、妝容模擬,消費前先看成果</span></div>
     </div>
-    <a data-reveal href="/cases" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:700 15px 'Noto Sans TC',sans-serif" style-hover="color:#FF6B2C">看更多實績與作品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
+    <a data-reveal href="/cases" style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:700 .9375rem 'Noto Sans TC',sans-serif" style-hover="color:#FF6B2C">看更多實績與作品 <span style="font-family:'Space Grotesk',sans-serif">→</span></a>
   </div>
 </section>
 
@@ -2880,16 +2875,16 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <div data-reveal style="display:flex;flex-direction:column;gap:20px">
       <span class="pq-eyebrow">LET'S TALK</span>
       <h2 style="margin:0;font:900 clamp(1.6rem,4.2vw,3.6rem)/1.3 'Noto Sans TC',sans-serif">有一個流程<br>想用 AI 改善?</h2>
-      <p style="margin:0;max-width:480px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不需要先準備完整規格。只要告訴我們目前的工作方式與卡住的位置,我們會協助判斷 AI 是否適合,以及第一階段可以從哪裡開始。<br><span style="color:rgba(242,239,232,.5);font-size:14px">商業合作、媒體與投資、加入團隊,歡迎來信 jacky@peakqi.com。</span></p>
+      <p style="margin:0;max-width:480px;font:400 1rem/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">不必先準備規格。說說你卡住的位置,我們協助判斷 AI 適不適合、從哪裡開始。<br><span style="color:rgba(242,239,232,.5);font-size:.875rem">商業合作、媒體與投資、加入團隊,歡迎來信 jacky@peakqi.com。</span></p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-        <a href="/demo" aria-label="預約 AI 導入評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 15.5px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 AI 導入評估</a>
-        <a href="Products.dc.html" aria-label="查看產品 Demo" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 15px 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看產品 Demo</a>
+        <a href="/demo" aria-label="預約 AI 導入評估" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:16px 28px;border-radius:2px;font:700 .96875rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8">預約 AI 導入評估</a>
+        <a href="Products.dc.html" aria-label="查看產品 Demo" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:500 .9375rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">查看產品 Demo</a>
       </div>
     </div>
     <div data-reveal style="display:flex;flex-direction:column;gap:14px">
-      <a href="mailto:jacky@peakqi.com" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">EMAIL</span><span style="font:700 17px 'Space Grotesk',sans-serif">jacky@peakqi.com</span></a>
-      <a href="tel:0266093699" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">PHONE</span><span style="font:700 17px 'Space Grotesk',sans-serif">(02) 6609-3699</span></a>
-      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">WEB</span><span style="font:700 17px 'Space Grotesk',sans-serif">peakqi.com</span></div>
+      <a href="mailto:jacky@peakqi.com" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">EMAIL</span><span style="font:700 1.0625rem 'Space Grotesk',sans-serif">jacky@peakqi.com</span></a>
+      <a href="tel:0266093699" style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;text-decoration:none;color:#F2EFE8;display:flex;flex-direction:column;gap:4px" style-hover="border-color:#FF6B2C"><span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">PHONE</span><span style="font:700 1.0625rem 'Space Grotesk',sans-serif">(02) 6609-3699</span></a>
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:4px"><span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)">WEB</span><span style="font:700 1.0625rem 'Space Grotesk',sans-serif">peakqi.com</span></div>
     </div>
   </div>
 </section>

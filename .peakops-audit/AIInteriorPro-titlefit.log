@@ -1,0 +1,165 @@
+== AIInteriorPro W=320 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=320 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.4,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=320 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.8,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=375 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=375 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.4,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=375 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.8,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=390 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=390 sp=0.4 ==
+      0 [main] sh 991 dofork: child -1 - forked process 48052 died unexpectedly, retry 0, exit code 0xC0000142, errno 11
+sh: fork: retry: Resource temporarily unavailable
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.4,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=390 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.8,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=1440 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=1440 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.4,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIInteriorPro W=1440 sp=0.8 ==
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/favicon.svg>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/content.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/micro-engine.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/analytics.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/favicon-32.png>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/AIInteriorPro.dc.html",
+ "sp": 0.8,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}

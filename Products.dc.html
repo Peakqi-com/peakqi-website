@@ -41,7 +41,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
    不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
 h1,h2{text-wrap:balance}
 
-#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
@@ -52,12 +52,15 @@ a{color:#FF6B2C}::selection{background:#FF6B2C;color:#F2EFE8}
 .pq-wrap,.pq-sec,.pq-wrap *,.pq-sec *{box-sizing:border-box}
 .pq-wrap{max-width:1280px;margin:0 auto;width:100%}
 .pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
-.pq-eyebrow{font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
+.pq-eyebrow{font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
 [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1)}
 @keyframes pqSweep{0%{transform:translateX(-120%)}100%{transform:translateX(240%)}}
 @keyframes pqPageIn{from{opacity:0}to{opacity:1}}
 body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body,[data-reveal]{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}}
+/* ≤374px:品牌卡的「了解更多」移到文字下方 —— 英文品牌名(AI Interior Pro)才放得進一行,
+   不會把 Pro 擠成孤字行;375 起維持左右兩欄不變 */
+@media (max-width:374px){[data-brand]{grid-template-columns:minmax(0,1fr)!important}[data-brand]>span:last-child{justify-self:start!important}}
 </style>
 </helmet>
 <a id="pq-skip" href="#brandlist">跳到主要內容</a>
@@ -66,8 +69,8 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 <section style="background:#090B0E;color:#F2EFE8">
   <div class="pq-wrap pq-sec" style="padding-bottom:clamp(36px,5vw,64px)">
     <span data-reveal class="pq-eyebrow">PRODUCTS · BRAND HOUSE</span>
-    <h1 data-reveal style="margin:16px 0 0;font:900 clamp(1.6rem,4.4vw,3.6rem)/1.28 'Noto Sans TC',sans-serif">一套引擎,<span style="color:#FF6B2C">多張產業的臉</span></h1>
-    <p data-reveal style="margin:18px 0 0;max-width:560px;font:400 16px/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">底層共用 47 模組 AI 業務引擎;每個品牌換的是知識庫、工具組合、一句話定位與官網視覺。各品牌獨立官網、獨立定價。</p>
+    <h1 data-reveal style="margin:16px 0 0;font:900 clamp(1.6rem,4.4vw,3.6rem)/1.28 'Noto Sans TC',sans-serif">一套引擎,<br><span style="color:#FF6B2C">多張產業的臉</span></h1>
+    <p data-reveal style="margin:18px 0 0;max-width:560px;font:400 1rem/1.9 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66);text-wrap:balance">共用 47 模組引擎,各品牌獨立官網與定價。</p>
   </div>
 </section>
 
@@ -76,37 +79,37 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
     <a data-reveal data-brand href="/peakops" style="--a:#FF6B2C;position:relative;overflow:hidden;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
       <span aria-hidden="true" style="position:absolute;left:0;top:0;width:32%;height:3px;background:linear-gradient(90deg,transparent,#FF6B2C,transparent);animation:pqSweep 3s linear infinite"></span>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#FF6B2C">GENERAL SaaS · 通用型</span>
+        <span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#FF6B2C">GENERAL SaaS · 通用型</span>
         <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">Peak Ops</h2>
-        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">通用型 AI 業務工具,給還沒有專門工具的產業:接客、追客、養客、報價、數據一套整合。三方案、年訂閱制。</p>
+        <p style="margin:0;max-width:560px;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">接客、追客、養客、報價、數據,一套整合。三方案、年訂閱制。</p>
       </div>
-      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#FF6B2C;white-space:nowrap">了解更多 →</span>
+      <span style="justify-self:end;font:700 .9375rem 'Noto Sans TC',sans-serif;color:#FF6B2C;white-space:nowrap">了解更多 →</span>
     </a>
     <a data-reveal data-brand href="Bubble.dc.html" style="--a:#3E9BFF;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:8px">
-        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#3E9BFF">REAL ESTATE · 房仲</span>
+        <span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#3E9BFF">REAL ESTATE · 房仲</span>
         <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">冒泡</h2>
-        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">房仲 AI 助手,串 LINE 官方帳號:客戶在 LINE 自己約看房,你專心成交就好。</p>
+        <p style="margin:0;max-width:560px;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">AI 助手串 LINE 官方帳號:客戶自己約看房,你專心成交。</p>
       </div>
-      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#3E9BFF;white-space:nowrap">了解更多 →</span>
+      <span style="justify-self:end;font:700 .9375rem 'Noto Sans TC',sans-serif;color:#3E9BFF;white-space:nowrap">了解更多 →</span>
     </a>
     <a data-reveal data-brand href="AIWeddingPro.dc.html" style="--a:#E06B9C;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:8px">
-        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#E06B9C">WEDDING · 婚禮</span>
+        <span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#E06B9C">WEDDING · 婚禮</span>
         <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">AI Wedding Pro</h2>
-        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">婚禮 AI 大禮包:婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
+        <p style="margin:0;max-width:560px;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">婚紗試穿、髮妝模擬、場景生成加 AI 接客,消費前先看效果。</p>
       </div>
-      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#E06B9C;white-space:nowrap">了解更多 →</span>
+      <span style="justify-self:end;font:700 .9375rem 'Noto Sans TC',sans-serif;color:#E06B9C;white-space:nowrap">了解更多 →</span>
     </a>
     <a data-reveal data-brand href="AIInteriorPro.dc.html" style="--a:#65E0BC;text-decoration:none;color:#F2EFE8;border:1px solid rgba(242,239,232,.16);border-radius:12px;background:#14171C;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:8px">
-        <span style="font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#65E0BC">INTERIOR · 室內設計</span>
+        <span style="font:700 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.16em;color:#65E0BC">INTERIOR · 室內設計</span>
         <h2 style="margin:0;font:900 clamp(1.5rem,2.6vw,2.1rem) 'Noto Sans TC',sans-serif">AI Interior Pro</h2>
-        <p style="margin:0;max-width:560px;font:400 14.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">室內設計 AI 整合平台:空間渲染、風格模擬、自動提案簡報,一個平台整合設計流程。</p>
+        <p style="margin:0;max-width:560px;font:400 .90625rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.66)">AI 整合平台:空間渲染、風格模擬、自動提案簡報。</p>
       </div>
-      <span style="justify-self:end;font:700 15px 'Noto Sans TC',sans-serif;color:#65E0BC;white-space:nowrap">了解更多 →</span>
+      <span style="justify-self:end;font:700 .9375rem 'Noto Sans TC',sans-serif;color:#65E0BC;white-space:nowrap">了解更多 →</span>
     </a>
-    <p data-reveal style="margin:8px 0 0;font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品,了解更多請至 peakqi.com。</p>
+    <p data-reveal style="margin:8px 0 0;font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">垂直品牌陸續獨立官網上線中。各品牌為奇鋒國際的產品,了解更多請至 peakqi.com。</p>
   </div>
 </section>
 

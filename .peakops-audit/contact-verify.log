@@ -1,0 +1,161 @@
+== Contact w=320 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=320 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.4,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=320 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.8,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=375 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=375 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.4,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=375 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.8,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=390 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=390 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.4,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=390 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.8,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=1440 sp=0 ==
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Nav.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Nav\" threw: ./Nav.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    at mf (",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Footer.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Footer\" threw: ./Footer.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    a"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=1440 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.4,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== Contact w=1440 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Contact.dc.html",
+ "sp": 0.8,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}

@@ -1,0 +1,153 @@
+== AIWeddingPro W=320 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=320 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.4,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=320 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.8,
+ "vw": 320,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=375 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=375 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.4,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=375 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.8,
+ "vw": 375,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=390 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=390 sp=0.4 ==
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/micro-engine.js>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.4,
+ "vw": 390,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=390 sp=0.8 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+== AIWeddingPro W=1440 sp=0 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=1440 sp=0.4 ==
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.4,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
+== AIWeddingPro W=1440 sp=0.8 ==
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/logo.png>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/analytics.js>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/AIWeddingPro.dc.html",
+ "sp": 0.8,
+ "vw": 1440,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}

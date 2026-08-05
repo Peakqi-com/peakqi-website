@@ -37,7 +37,7 @@
    不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
 h1,h2{text-wrap:balance}
 
-#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
 #pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
@@ -65,12 +65,12 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
 [data-hero-copy]>div{gap:9px!important}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
-[data-hero-cta] a{padding:12px 18px!important;font-size:13.5px!important}
+[data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
 [data-hero-progress]{display:none!important}
 }
 @media (max-width:659px){#pq-ind-grid2{grid-template-columns:1fr!important}}
-@media (max-width:399px){[role="status"]{font-size:9px!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
+@media (max-width:399px){[role="status"]{font-size:.5625rem!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
 @media (max-width:899px){[data-hero-media] div[style*="overflow-y:auto"],[data-hero-media] div[style*="overflow-y: auto"]{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent)}}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
@@ -88,18 +88,18 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
         <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
-          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
             <a href="/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">首頁</a>
             <span>/</span>
             <span style="color:#F2EFE8;font-weight:700">導入草稿</span>
           </nav>
-          <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
-          <h1 style="margin:0;font:900 clamp(1.62rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">選出現在最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段導入草稿</span>。</h1>
-          <p style="margin:0;max-width:600px;font:400 clamp(16px,1.3vw,17.5px)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">先選產業、工作流程與現有工具,我們會整理建議能力、人工確認邊界,以及正式評估前仍需釐清的條件。</p>
+          <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
+          <h1 style="margin:0;font:900 clamp(1.62rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">選出最卡的流程,<br>組出<span style="color:#FF6B2C">第一階段草稿</span>。</h1>
+          <p style="margin:0;max-width:600px;font:400 clamp(1rem,1.3vw,1.09375rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">先選產業與流程,再定人工確認邊界。</p>
           <!-- 流程線:標籤改為正常流排版(原本三個 absolute 標籤在窄機會互相重疊),
                字級用 clamp+vw,iPhone mini(375)也不爆版 -->
           <div style="margin-top:2px;display:flex;flex-direction:column;gap:5px" aria-hidden="true">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 clamp(9.5px,2.5vw,10.5px) 'Space Grotesk',sans-serif;letter-spacing:.18em">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 clamp(.59375rem,2.5vw,.65625rem) 'Space Grotesk',sans-serif;letter-spacing:.18em">
               <span style="color:rgba(242,239,232,.55);white-space:nowrap">你的客人</span>
               <span style="color:#FF6B2C;white-space:nowrap;text-align:right">{{ flowLabel }}</span>
             </div>
@@ -119,49 +119,48 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <!-- 線頭圓點:座標由線的實際長度推算,永遠貼在線頭,不會與線分家 -->
               <circle data-hero-dot="*" cx="6" cy="12" r="5.5" fill="#FF6B2C"></circle>
             </svg>
-            <span style="font:600 clamp(9.5px,2.5vw,10.5px) 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.45);text-align:right">等你選擇流程與產業,補完這條線 ↓</span>
+            <span style="font:600 clamp(.59375rem,2.5vw,.65625rem) 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.45);text-align:right">等你選擇流程與產業,補完這條線 ↓</span>
           </div>
           <div data-hero-scenestage style="position:relative;min-height:96px">
             <div data-hero-scene="ind" style="position:relative;display:flex;flex-direction:column;gap:6px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 1 / 4 ・ 選擇情境</span>
-              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">選產業或使用情境——案例、用語與流程示意會跟著更新。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 1 / 4 ・ 選擇情境</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">選產業或情境,案例與流程示意跟著更新。</p>
             </div>
             <div data-hero-scene="flow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF">任務 2 / 4 ・ 找出卡點</span>
-              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">勾選目前最卡的流程,右側草稿即時加入對應節點。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF">任務 2 / 4 ・ 找出卡點</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">勾選最卡的流程,草稿即時加入節點。</p>
             </div>
             <div data-hero-scene="build" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 3 / 4 ・ 組合第一階段</span>
-              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">確認建議能力與人工確認邊界,組成第一版導入草稿。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">任務 3 / 4 ・ 組合第一階段</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">確認能力與人工邊界,組成第一版草稿。</p>
             </div>
             <div data-hero-scene="go" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
-              <span style="font:700 13px 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC">任務 4 / 4 ・ 確認並送出</span>
-              <p style="margin:0;font:400 clamp(15px,1.15vw,16.5px)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">草稿自動帶入表單,補上聯絡方式就能送出討論。</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC">任務 4 / 4 ・ 確認並送出</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">草稿自動帶入表單,補上聯絡方式送出。</p>
             </div>
           </div>
-          <p style="margin:0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.52)">你的選擇會被保留,並自動帶入最後的需求摘要。</p>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 14.5px 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始組合導入草稿</a>
-            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 14px 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看相近案例</a>
+            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 .90625rem 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始組合導入草稿</a>
+            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看相近案例</a>
           
-            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 13.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 15px 'Space Grotesk',sans-serif">↓</span>往下捲動,開始組裝你的草稿</span></div>
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 .84375rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 .9375rem 'Space Grotesk',sans-serif">↓</span>往下捲動,開始組裝你的草稿</span></div>
           </div>
         </div>
         <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px);max-height:min(82vh,820px)">
           <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
             <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-            <span style="font:700 12px 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
-            <span role="status" style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
+            <span style="font:700 .75rem 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
+            <span role="status" style="margin-left:auto;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
           <div style="padding:14px 16px 22px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0;overflow-y:auto">
             <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
               <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
-                <span style="font:600 13px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>
-                <span style="font:400 12.5px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">選擇產業與流程後,這裡會即時產生第一版導入情境。</span>
+                <span style="font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>
+                <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">選擇產業與流程後,這裡會即時產生第一版導入情境。</span>
               </div>
             </sc-if>
             <div role="group" aria-label="選你的產業(單選)" style="display:flex;flex-direction:column;gap:8px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 選你的產業</span>
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 選你的產業</span>
               <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <sc-for list="{{ heroIndOpts }}" as="n" hint-placeholder-count="11">
                   <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
@@ -169,7 +168,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               </div>
             </div>
             <div role="group" aria-label="最卡的流程(單選)" style="display:flex;flex-direction:column;gap:8px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">02 最卡的流程</span>
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">02 最卡的流程</span>
               <div style="display:flex;flex-wrap:wrap;gap:6px">
                 <sc-for list="{{ heroFlowOpts }}" as="n" hint-placeholder-count="7">
                   <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
@@ -180,8 +179,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <sc-if value="{{ heroHasCase }}" hint-placeholder-val="{{ false }}">
                 <div role="img" aria-label="{{ heroCaseAlt }}" style="{{ heroCaseImgStyle }}"></div>
                 <div style="padding:10px 13px;display:flex;flex-direction:column;gap:2px">
-                  <span style="font:700 12.5px 'Noto Sans TC',sans-serif">相似場景:{{ heroCaseName }}</span>
-                  <span style="font:400 10.5px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.45)">REAL SCREENSHOT・{{ heroCasePage }}</span>
+                  <span style="font:700 .78125rem 'Noto Sans TC',sans-serif">相似場景:{{ heroCaseName }}</span>
+                  <span style="font:400 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.45)">REAL SCREENSHOT・{{ heroCasePage }}</span>
                 </div>
               </sc-if>
               <sc-if value="{{ heroNoCase }}" hint-placeholder-val="{{ true }}">
@@ -191,25 +190,25 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
                     <span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span><span style="flex:1;height:2px;background:rgba(242,239,232,.2)"></span>
                     <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>
                   </div>
-                  <span style="font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ heroNoCaseNote }}</span>
+                  <span style="font:400 .71875rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ heroNoCaseNote }}</span>
                 </div>
               </sc-if>
             </div>
             <div style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
-              <span style="font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">草稿摘要</span>
-              <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">產業:<b>{{ heroSumInd }}</b>・流程:<b>{{ heroSumFlow }}</b></span>
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">草稿摘要</span>
+              <span style="font:500 .78125rem/1.6 'Noto Sans TC',sans-serif">產業:<b>{{ heroSumInd }}</b>・流程:<b>{{ heroSumFlow }}</b></span>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-                <span style="font:500 12.5px 'Noto Sans TC',sans-serif">可能展示:</span>
+                <span style="font:500 .78125rem 'Noto Sans TC',sans-serif">可能展示:</span>
                 <sc-for list="{{ heroModChips }}" as="m" hint-placeholder-count="2">
-                  <span style="border:1px solid rgba(255,107,44,.5);border-radius:999px;padding:2px 9px;font:600 10.5px 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ m.t }}</span>
+                  <span style="border:1px solid rgba(255,107,44,.5);border-radius:999px;padding:2px 9px;font:600 .65625rem 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ m.t }}</span>
                 </sc-for>
-                <sc-if value="{{ heroNoMods }}" hint-placeholder-val="{{ true }}"><span style="font:400 12px 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">選流程後帶入對應模組</span></sc-if>
+                <sc-if value="{{ heroNoMods }}" hint-placeholder-val="{{ true }}"><span style="font:400 .75rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">選流程後帶入對應模組</span></sc-if>
               </div>
-              <span style="font:500 12.5px/1.6 'Noto Sans TC',sans-serif">希望聯絡時間:<b>{{ heroTime }}</b></span>
-              <span style="font:400 12.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍。</span>
+              <span style="font:500 .78125rem/1.6 'Noto Sans TC',sans-serif">希望聯絡時間:<b>{{ heroTime }}</b></span>
+              <span style="font:400 .78125rem/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍。</span>
             </div>
           </div>
-          <a href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 13.5px 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
+          <a href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 .84375rem 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
         </div>
       </div>
       <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
@@ -220,35 +219,35 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="scene" data-screen-label="場景選擇" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px)">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">最想改善的流程(可複選)</span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">最想改善的流程(可複選)</span>
     </div>
     <div id="pq-scene-grid" style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,2.6vw,36px);align-items:start">
       <div role="group" aria-label="選擇最想改善的流程" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
         <sc-for list="{{ sceneOpts }}" as="s" hint-placeholder-count="7">
           <button onClick="{{ s.pick }}" aria-pressed="{{ s.pressed }}" style="{{ s.style }}">{{ s.label }}</button>
         </sc-for>
-        <p style="margin:6px 0 0;font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);width:100%">右側為介面流程預覽,非成效數字;選好的內容會自動帶進下方表單。</p>
+        <p style="margin:6px 0 0;font:400 .78125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);width:100%">右側為介面流程預覽,非成效數字;選好的內容會自動帶進下方表單。</p>
       </div>
       <div aria-live="polite" style="background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden">
         <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
           <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
-          <span style="font:700 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.12em">你的流程預覽</span>
-          <span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">PREVIEW</span>
+          <span style="font:700 .78125rem 'Noto Sans TC',sans-serif;letter-spacing:.12em">你的流程預覽</span>
+          <span style="margin-left:auto;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">PREVIEW</span>
         </div>
         <div style="padding:18px;display:flex;flex-direction:column;gap:10px;min-height:250px">
           <sc-for list="{{ pipeline }}" as="p" hint-placeholder-count="4">
             <div style="{{ p.rowStyle }}">
               <span style="{{ p.dotStyle }}"></span>
               <div style="display:flex;flex-direction:column;gap:2px">
-                <span style="font:800 14px 'Noto Sans TC',sans-serif">{{ p.t }}</span>
-                <span style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ p.d }}</span>
+                <span style="font:800 .875rem 'Noto Sans TC',sans-serif">{{ p.t }}</span>
+                <span style="font:400 .75rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ p.d }}</span>
               </div>
               <span style="{{ p.stateStyle }}">{{ p.state }}</span>
             </div>
           </sc-for>
-          <p style="margin:auto 0 0;font:400 11.5px/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ pipelineNote }}</p>
+          <p style="margin:auto 0 0;font:400 .71875rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ pipelineNote }}</p>
         </div>
       </div>
     </div>
@@ -256,8 +255,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
   <div style="max-width:1360px;margin:clamp(32px,4vw,48px) auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,36px)">
     <div style="min-width:0">
-      <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">目前哪些工具正在使用?</h3>
-      <p style="margin:8px 0 0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">只用來理解目前資料分布;實際串接方式仍需確認 API、權限與資料結構。</p>
+      <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">目前哪些工具正在使用?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">只用來理解目前資料分布;實際串接方式仍需確認 API、權限與資料結構。</p>
       <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
         <sc-for list="{{ toolOpts }}" as="tp" hint-placeholder-count="9">
           <button onClick="{{ tp.pick }}" aria-pressed="{{ tp.pressed }}" style="{{ tp.style }}">{{ tp.label }}</button>
@@ -265,8 +264,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       </div>
     </div>
     <div style="min-width:0">
-      <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">哪些動作一定要由真人確認?</h3>
-      <p style="margin:8px 0 0;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">AI 可以準備資料與草稿,但企業仍可決定哪些內容不得自動送出。</p>
+      <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">哪些動作要真人確認?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">AI 可以準備資料與草稿,但企業仍可決定哪些內容不得自動送出。</p>
       <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
         <sc-for list="{{ humanOpts }}" as="hp2" hint-placeholder-count="7">
           <button onClick="{{ hp2.pick }}" aria-pressed="{{ hp2.pressed }}" style="{{ hp2.style }}">{{ hp2.label }}</button>
@@ -275,19 +274,19 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     </div>
   </div>
   <div style="max-width:1360px;margin:clamp(28px,3.6vw,44px) auto 0">
-    <h3 style="margin:0;font:900 clamp(19px,1.6vw,22px) 'Noto Sans TC',sans-serif">根據你的選擇,建議先處理這些能力</h3>
-    <p style="margin:8px 0 0;max-width:640px;font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">建議不等於已加入——按「加入草稿」才會列入;第一階段確認有效後,其餘能力可後續擴充。</p>
+    <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">建議先處理的能力</h3>
+    <p style="margin:8px 0 0;max-width:640px;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">按「加入草稿」才會列入;其餘能力可後續擴充。</p>
     <div aria-live="polite" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px">
       <sc-for list="{{ recCards }}" as="rc" hint-placeholder-count="4">
         <div style="{{ rc.cardStyle }}">
-          <span style="font:700 13px 'Space Grotesk',sans-serif;letter-spacing:.18em;color:{{ rc.tagColor }}">{{ rc.tag }}</span>
-          <span style="font:800 clamp(16.5px,1.3vw,18.5px) 'Noto Sans TC',sans-serif">{{ rc.name }}</span>
-          <span style="font:400 clamp(14px,1.05vw,15px)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66);text-wrap:pretty">{{ rc.why }}</span>
+          <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:{{ rc.tagColor }}">{{ rc.tag }}</span>
+          <span style="font:800 clamp(1.03125rem,1.3vw,1.15625rem) 'Noto Sans TC',sans-serif">{{ rc.name }}</span>
+          <span style="font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66);text-wrap:pretty">{{ rc.why }}</span>
           <button onClick="{{ rc.toggle }}" aria-pressed="{{ rc.pressed }}" style="{{ rc.btnStyle }}">{{ rc.btnLabel }}</button>
         </div>
       </sc-for>
       <sc-if value="{{ noRecs }}" hint-placeholder-val="{{ true }}">
-        <span style="font:400 14.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);padding:12px 0">先在上面選流程,建議能力會出現在這裡。</span>
+        <span style="font:400 .90625rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);padding:12px 0">先在上面選流程,建議能力會出現在這裡。</span>
       </sc-if>
     </div>
   </div>
@@ -296,14 +295,14 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <section id="industry" data-screen-label="產業情境" style="padding:0 clamp(20px,5vw,48px) clamp(56px,7vw,88px)">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:14px">
-      <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
-      <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">你的產業</span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">你的產業</span>
     </div>
     <div style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,2.6vw,36px);align-items:start" id="pq-ind-grid2">
       <div role="group" aria-label="選擇你的產業" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
         <sc-for list="{{ indOpts }}" as="i" hint-placeholder-count="11">
-          <button onClick="{{ i.pick }}" aria-pressed="{{ i.pressed }}" style="{{ i.style }}">{{ i.label }}<sc-if value="{{ i.hasCase }}" hint-placeholder-val="{{ false }}"><span style="margin-left:7px;font:600 9.5px 'Space Grotesk',sans-serif;color:#1e9a72">CASE</span></sc-if></button>
+          <button onClick="{{ i.pick }}" aria-pressed="{{ i.pressed }}" style="{{ i.style }}">{{ i.label }}<sc-if value="{{ i.hasCase }}" hint-placeholder-val="{{ false }}"><span style="margin-left:7px;font:600 .59375rem 'Space Grotesk',sans-serif;color:#1e9a72">CASE</span></sc-if></button>
         </sc-for>
       </div>
       <div aria-live="polite" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.1);overflow:hidden">
@@ -322,10 +321,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
         </sc-if>
         <div style="padding:16px 18px;display:flex;flex-direction:column;gap:5px">
-          <span style="font:800 15px 'Noto Sans TC',sans-serif">{{ indPanelName }}</span>
-          <span style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ indPanelD }}</span>
+          <span style="font:800 .9375rem 'Noto Sans TC',sans-serif">{{ indPanelName }}</span>
+          <span style="font:400 .8125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ indPanelD }}</span>
           <sc-if value="{{ indHasLink }}" hint-placeholder-val="{{ false }}">
-            <a href="{{ indHref }}" style="margin-top:4px;font:700 13px 'Noto Sans TC',sans-serif;text-decoration:none">看這個產業的案例 →</a>
+            <a href="{{ indHref }}" style="margin-top:4px;font:700 .8125rem 'Noto Sans TC',sans-serif;text-decoration:none">看這個產業的案例 →</a>
           </sc-if>
         </div>
       </div>
@@ -337,46 +336,46 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   <div id="pq-demo-grid" style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(28px,4vw,56px);align-items:start">
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:center;gap:14px">
-        <span style="font:700 13px 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
+        <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
         <span style="width:36px;height:1px;background:#FF6B2C"></span>
-        <span style="font:600 12px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">留下需求</span>
+        <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">留下需求</span>
       </div>
       <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
         <div style="border:1px solid rgba(9,11,14,.14);border-radius:4px;padding:18px 20px;display:flex;gap:16px;align-items:baseline;background:rgba(9,11,14,.02)">
-          <span style="font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ r.n }}</span>
+          <span style="font:700 .75rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ r.n }}</span>
           <div style="display:flex;flex-direction:column;gap:3px">
-            <span style="font:900 16px 'Noto Sans TC',sans-serif">{{ r.t }}</span>
-            <span style="font:400 13.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ r.d }}</span>
+            <span style="font:900 1rem 'Noto Sans TC',sans-serif">{{ r.t }}</span>
+            <span style="font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ r.d }}</span>
           </div>
         </div>
       </sc-for>
       <div style="background:#090B0E;color:#F2EFE8;border-radius:6px;padding:22px">
-        <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">DIRECT CONTACT</span>
+        <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">DIRECT CONTACT</span>
         <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
-          <a href="mailto:jacky@peakqi.com" style="color:#F2EFE8;text-decoration:none;font:500 15px 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">jacky@peakqi.com</a>
-          <a href="tel:0266093699" style="color:#F2EFE8;text-decoration:none;font:500 15px 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">(02) 6609-3699</a>
-          <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:500 15px 'Noto Sans TC',sans-serif" style-hover="color:#06C755"><span style="width:7px;height:7px;border-radius:50%;background:#06C755"></span>LINE 官方帳號</a>
+          <a href="mailto:jacky@peakqi.com" style="color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">jacky@peakqi.com</a>
+          <a href="tel:0266093699" style="color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">(02) 6609-3699</a>
+          <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Noto Sans TC',sans-serif" style-hover="color:#06C755"><span style="width:7px;height:7px;border-radius:50%;background:#06C755"></span>LINE 官方帳號</a>
         </div>
-        <button onClick="{{ copyEmail }}" style="margin-top:14px;background:none;border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);padding:8px 14px;border-radius:2px;font:500 12.5px 'Noto Sans TC',sans-serif;cursor:pointer">{{ copyLabel }}</button>
+        <button onClick="{{ copyEmail }}" style="margin-top:14px;background:none;border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);padding:8px 14px;border-radius:2px;font:500 .78125rem 'Noto Sans TC',sans-serif;cursor:pointer">{{ copyLabel }}</button>
       </div>
     </div>
     <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
       <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
-        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">選出最想改善的工作</h2>
-      <p style="margin:12px 0 0;max-width:600px;font:400 clamp(15.5px,1.2vw,17px)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">可複選。每選一項,右側流程草稿與建議能力會即時更新。</p>
-        <p style="margin:-6px 0 0;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。上面選好的流程與產業已自動帶入。</p>
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:balance">補上聯絡方式,送出草稿</h2>
+      <p style="margin:12px 0 0;max-width:600px;font:400 clamp(.96875rem,1.2vw,1.0625rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">上面選好的流程與產業已自動帶入。</p>
+        <p style="margin:-6px 0 0;font:400 .8125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">標<span style="color:#D14E12;font-weight:700"> * </span>為必填;聯絡方式(電話/Email/LINE)至少留一種。</p>
         <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
-          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">怎麼稱呼你<span style="color:#D14E12"> *</span>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">怎麼稱呼你<span style="color:#D14E12"> *</span>
             <input id="pq-f-name" value="{{ vName }}" onChange="{{ setName }}" onBlur="{{ blurName }}" aria-invalid="{{ nameInvalid }}" aria-describedby="pq-e-name" placeholder="例:王先生" style="{{ nameStyle }}">
             <span id="pq-e-name" role="alert" style="{{ nameErrStyle }}">{{ nameErr }}</span>
           </label>
-          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">公司/品牌<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">公司/品牌<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
             <input value="{{ vCompany }}" onChange="{{ setCompany }}" placeholder="例:某某室內設計" style="{{ baseInput }}">
           </label>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
-          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">產業<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">產業<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
             <select value="{{ vIndustry }}" onChange="{{ setIndustry }}" style="{{ baseInput }}">
               <option value="">請選擇⋯</option>
               <sc-for list="{{ industryOpts }}" as="o" hint-placeholder-count="11">
@@ -384,7 +383,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               </sc-for>
             </select>
           </label>
-          <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">希望聯絡時間<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">希望聯絡時間<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填)</span>
             <select value="{{ vTime }}" onChange="{{ setTime }}" style="{{ baseInput }}">
               <option value="">請選擇⋯</option>
               <sc-for list="{{ timeOpts }}" as="o" hint-placeholder-count="5">
@@ -394,36 +393,36 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </label>
         </div>
         <fieldset style="border:1px dashed rgba(9,11,14,.25);border-radius:4px;padding:12px 16px 15px;margin:0;display:flex;flex-direction:column;gap:11px">
-          <legend style="font:700 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);padding:0 8px">聯絡方式,至少留一種<span style="color:#D14E12"> *</span></legend>
+          <legend style="font:700 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);padding:0 8px">聯絡方式,至少留一種<span style="color:#D14E12"> *</span></legend>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px">
-            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">聯絡電話
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">聯絡電話
               <input id="pq-f-phone" type="tel" inputMode="tel" value="{{ vPhone }}" onChange="{{ setPhone }}" onBlur="{{ blurContact }}" aria-invalid="{{ phoneInvalid }}" aria-describedby="pq-e-contact" placeholder="09xx-xxx-xxx" style="{{ phoneStyle }}">
             </label>
-            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">Email
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">Email
               <input id="pq-f-email" type="email" inputMode="email" value="{{ vEmail }}" onChange="{{ setEmail }}" onBlur="{{ blurContact }}" aria-invalid="{{ emailInvalid }}" aria-describedby="pq-e-contact" placeholder="you@example.com" style="{{ emailStyle }}">
             </label>
-            <label style="display:flex;flex-direction:column;gap:5px;font:600 12.5px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">LINE ID
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">LINE ID
               <input id="pq-f-line" value="{{ vLine }}" onChange="{{ setLine }}" onBlur="{{ blurContact }}" aria-describedby="pq-e-contact" placeholder="LINE ID" style="{{ baseInput }}">
             </label>
           </div>
           <span id="pq-e-contact" role="alert" style="{{ contactErrStyle }}">{{ contactErr }}</span>
         </fieldset>
-        <label style="display:flex;flex-direction:column;gap:6px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">現在最想改善的流程<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
+        <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">現在最想改善的流程<span style="font-weight:400;color:rgba(9,11,14,.45)">(選填,已由上方帶入)</span>
           <textarea id="pq-f-need" value="{{ vNeed }}" onChange="{{ setNeed }}" rows="4" placeholder="例:半夜的 LINE 詢問常常漏接,名單散在三個地方⋯" style="{{ areaInput }}"></textarea>
         </label>
         <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.03);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
-          <span style="font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.5)">送出前摘要</span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">產業:<b>{{ sumIndustry }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">想改善:<b>{{ sumScenes }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">目前工具:<b>{{ sumTools }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">已加入草稿的能力:<b>{{ sumMods }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">人工確認邊界:<b>{{ sumHuman }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif">聯絡:<b>{{ sumContact }}</b></span>
-          <span style="font:500 14px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">第一階段草稿情境:<b style="color:#090B0E">{{ sumDemo }}</b></span>
-          <span style="font:400 13.5px/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍;現有系統、API、權限、資料與時程仍待評估確認。</span>
+          <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.5)">送出前摘要</span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">產業:<b>{{ sumIndustry }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">想改善:<b>{{ sumScenes }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">目前工具:<b>{{ sumTools }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">已加入草稿的能力:<b>{{ sumMods }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">人工確認邊界:<b>{{ sumHuman }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">聯絡:<b>{{ sumContact }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">第一階段草稿情境:<b style="color:#090B0E">{{ sumDemo }}</b></span>
+          <span style="font:400 .84375rem/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">此內容為初步導入草稿,不代表正式報價或已確認交付範圍;現有系統、API、權限、資料與時程仍待評估確認。</span>
         </div>
         <button onClick="{{ submit }}" disabled="{{ submitting }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
-        <p style="margin:10px 0 0;font:400 12.5px/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">送出即表示你同意我們依<a href="/privacy" target="_blank" style="color:rgba(242,239,232,.7);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">隱私權政策</a>使用你提供的資料進行聯絡與評估。</p>
+        <p style="margin:10px 0 0;font:400 .78125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">送出即表示你同意我們依<a href="/privacy" target="_blank" style="color:rgba(242,239,232,.7);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">隱私權政策</a>使用你提供的資料進行聯絡與評估。</p>
       </sc-if>
       <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
@@ -436,14 +435,14 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <path d="M556 20 L559 23 L565 16" stroke="#65E0BC" stroke-width="2" fill="none"></path>
             </svg>
           </div>
-          <h2 style="margin:0;font:900 clamp(21px,1.8vw,25px)/1.45 'Noto Sans TC',sans-serif">導入草稿已送出</h2>
-          <p style="margin:0;font:400 clamp(15px,1.15vw,16px)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">我們會先閱讀你的草稿內容,再依你偏好的聯絡方式安排討論;正式模組、時程與費用會在評估後確認。</p>
-          <p style="margin:0;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
+          <h2 style="margin:0;font:900 clamp(1.3125rem,1.8vw,1.5625rem)/1.45 'Noto Sans TC',sans-serif">導入草稿已送出</h2>
+          <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">我們會先閱讀你的草稿,再依偏好的方式安排討論;模組、時程與費用於評估後確認。</p>
+          <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
             <button onClick="{{ copyDraft }}" style="{{ copyDraftStyle }}">{{ copyDraftLabel }}</button>
-            <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;padding:13px 20px;border-radius:2px;font:700 14.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#05a648">用 LINE 傳給我們</a>
-            <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 14.5px 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#D14E12">用郵件軟體開啟</a>
-            <a href="tel:0266093699" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 14px 'Space Grotesk',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">(02) 6609-3699</a>
+            <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;padding:13px 20px;border-radius:2px;font:700 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#05a648">用 LINE 傳給我們</a>
+            <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#D14E12">用郵件軟體開啟</a>
+            <a href="tel:0266093699" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 .875rem 'Space Grotesk',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">(02) 6609-3699</a>
           </div>
         </div>
       </sc-if>
@@ -565,10 +564,10 @@ class Component extends DCLogic {
     const showContact = !!(t.contact && (errs.contact || errs.email || errs.phone));
     const base = {
       border: '1px solid rgba(9,11,14,.25)', borderRadius: '2px', background: '#FFFFFF',
-      padding: '12px 14px', font: "400 16px 'Noto Sans TC',sans-serif", color: '#090B0E', width: '100%', boxSizing: 'border-box'
+      padding: '12px 14px', font: "400 1rem 'Noto Sans TC',sans-serif", color: '#090B0E', width: '100%', boxSizing: 'border-box'
     };
     const errB = { ...base, border: '1.5px solid #D14E12' };
-    const errText = (on) => ({ font: "500 12.5px/1.5 'Noto Sans TC',sans-serif", color: '#D14E12', display: on ? 'block' : 'none' });
+    const errText = (on) => ({ font: "500 .78125rem/1.5 'Noto Sans TC',sans-serif", color: '#D14E12', display: on ? 'block' : 'none' });
     const set = (k) => (e) => {
       if (!this._started && this._track) { this._started = true; this._track('demo_form_start'); }
       const patch = { [k]: e.target.value };
@@ -600,7 +599,7 @@ class Component extends DCLogic {
         pick: () => toggleScene(sd.key),
         style: {
           cursor: 'pointer', borderRadius: '8px', padding: '13px 18px', textAlign: 'left',
-          font: "500 15px/1.55 'Noto Sans TC',sans-serif", minHeight: '44px',
+          font: "500 .9375rem/1.55 'Noto Sans TC',sans-serif", minHeight: '44px',
           background: on ? '#090B0E' : '#FFFFFF',
           color: on ? '#F2EFE8' : '#090B0E',
           border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.2)',
@@ -613,7 +612,7 @@ class Component extends DCLogic {
     const TOOL_OPTS = ['LINE', 'Email', '網站表單', 'CRM', '試算表', 'Notion 或知識工具', '內部系統', '尚未確定', '其他'];
     const chip = (on, activeBg) => ({
       cursor: 'pointer', borderRadius: '999px', padding: '12px 20px', minHeight: '44px',
-      font: "600 14.5px 'Noto Sans TC',sans-serif",
+      font: "600 .90625rem 'Noto Sans TC',sans-serif",
       background: on ? (activeBg || '#090B0E') : '#FFFFFF',
       color: on ? '#F2EFE8' : '#090B0E',
       border: on ? '1.5px solid ' + (activeBg || '#090B0E') : '1px solid rgba(9,11,14,.25)',
@@ -657,7 +656,7 @@ class Component extends DCLogic {
         btnLabel: added ? '✓ 已加入草稿(點擊移除)' : '＋ 加入草稿',
         btnStyle: {
           marginTop: 'auto', cursor: 'pointer', borderRadius: '4px', padding: '11px 14px', minHeight: '44px',
-          font: "700 14px 'Noto Sans TC',sans-serif",
+          font: "700 .875rem 'Noto Sans TC',sans-serif",
           background: added ? 'rgba(15,138,106,.1)' : '#090B0E',
           color: added ? '#0F8A6A' : '#F2EFE8',
           border: added ? '1.5px solid #0F8A6A' : 'none',
@@ -687,7 +686,7 @@ class Component extends DCLogic {
         transition: 'all 260ms cubic-bezier(0.16,1,0.3,1)'
       },
       dotStyle: { width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0, background: r.empty ? 'rgba(242,239,232,.3)' : (r.fixed ? '#3E9BFF' : '#FF6B2C') },
-      stateStyle: { marginLeft: 'auto', font: "700 10px 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: r.empty ? 'rgba(242,239,232,.4)' : (r.fixed ? '#3E9BFF' : '#65E0BC'), flexShrink: 0 }
+      stateStyle: { marginLeft: 'auto', font: "700 .625rem 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: r.empty ? 'rgba(242,239,232,.4)' : (r.fixed ? '#3E9BFF' : '#65E0BC'), flexShrink: 0 }
     }));
     // ---- 產業情境 ----
     const indCaseMap = { '婚禮婚慶': 'wedding', '室內設計': 'interior', '房仲不動產': 'realestate', '團購電商': 'groupbuy', '活動售票': 'labubu', 'ESG 永續': 'doiiin', '社區管理': 'community', '教育培訓': 'ouros', '品牌官網': 'rouzhi' };
@@ -709,7 +708,7 @@ class Component extends DCLogic {
         pick: () => pickInd(label),
         style: {
           cursor: 'pointer', borderRadius: '999px', padding: '11px 20px',
-          font: "600 14px 'Noto Sans TC',sans-serif",
+          font: "600 .875rem 'Noto Sans TC',sans-serif",
           background: on ? '#FF6B2C' : 'transparent',
           color: on ? '#090B0E' : '#090B0E',
           border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
@@ -723,7 +722,7 @@ class Component extends DCLogic {
     const heroFlowMap = { 'LINE 客服': 'LINE 客服回覆', '名單追蹤': '名單追蹤', '報價提案': '報價與提案', '行銷內容': '行銷內容', '專案管理': '專案管理', '數據報表': '數據報表', '客製流程': '其他客製流程' };
     const heroModsMap = { 'LINE 客服': ['AI 客服', '知識庫'], '名單追蹤': ['CRM', '跟進序列'], '報價提案': ['報價', '提案'], '行銷內容': ['行銷', '排程'], '專案管理': ['專案'], '數據報表': ['數據', 'AI 月報'], '客製流程': ['客製模組'] };
     const syncURL = (ind, flow) => { try { const u = new URL(window.location.href); if (ind) u.searchParams.set('ind', ind); else u.searchParams.delete('ind'); if (flow) u.searchParams.set('flow', flow); else u.searchParams.delete('flow'); history.replaceState(null, '', u); } catch (e2) {} };
-    const heroChip = (on) => ({ cursor: 'pointer', borderRadius: '999px', padding: '8px 13px', font: "600 12.5px 'Noto Sans TC',sans-serif", background: on ? '#FF6B2C' : 'transparent', color: on ? '#090B0E' : 'rgba(242,239,232,.85)', border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(242,239,232,.3)', transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)' });
+    const heroChip = (on) => ({ cursor: 'pointer', borderRadius: '999px', padding: '8px 13px', font: "600 .78125rem 'Noto Sans TC',sans-serif", background: on ? '#FF6B2C' : 'transparent', color: on ? '#090B0E' : 'rgba(242,239,232,.85)', border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(242,239,232,.3)', transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)' });
     const heroIndOpts = indList.map(label => {
       const on = s.heroInd === label;
       return {
@@ -836,7 +835,7 @@ class Component extends DCLogic {
       copyDraftStyle: {
         cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', minHeight: '44px',
         background: s.draftCopied ? '#0F8A6A' : '#090B0E', color: '#F2EFE8', border: 'none',
-        padding: '13px 20px', borderRadius: '2px', font: "700 14.5px 'Noto Sans TC',sans-serif",
+        padding: '13px 20px', borderRadius: '2px', font: "700 .90625rem 'Noto Sans TC',sans-serif",
         transition: 'background 200ms ease'
       },
       copyDraft: () => {
@@ -856,11 +855,11 @@ class Component extends DCLogic {
       submitLabel: s.submitting ? '送出中⋯' : '送出導入草稿 →',
       submitStyle: {
         background: s.submitting ? 'rgba(9,11,14,.35)' : '#FF6B2C', border: 'none', color: '#090B0E',
-        padding: '15px', borderRadius: '2px', font: "700 16px 'Noto Sans TC',sans-serif", letterSpacing: '.04em',
+        padding: '15px', borderRadius: '2px', font: "700 1rem 'Noto Sans TC',sans-serif", letterSpacing: '.04em',
         cursor: s.submitting ? 'wait' : 'pointer'
       },
       statusMsg: s.failMsg || (s.done ? '我們會先閱讀你的需求,再安排適合的討論方式。' : ''),
-      statusStyle: { font: "500 13.5px/1.7 'Noto Sans TC',sans-serif", color: s.failMsg ? '#D14E12' : '#1e9a72', minHeight: '1px', margin: 0 },
+      statusStyle: { font: "500 .84375rem/1.7 'Noto Sans TC',sans-serif", color: s.failMsg ? '#D14E12' : '#1e9a72', minHeight: '1px', margin: 0 },
       submit: async () => {
         if (s.submitting || s.done) return;
         if (s.hp) { this.setState({ done: true, doneMode: 'demo' }); return; }
