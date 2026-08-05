@@ -120,7 +120,10 @@ html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{text-wrap:balance}
    transform 與 color 都不觸發 reflow,所以再怎麼玩都不會把版面推歪。
    ★ 失效方向:沒有任何 act 命中時,.pqm-ch 就是一個普通的字,完全正常。 */
 .pqm-word{display:inline-block}
-.pqm-ch{display:inline-block;transform-origin:50% 100%}
+/* white-space:pre —— 逐字 span 是彩蛋要吃單字用的;英文標籤的「空格」也是一個 span,
+   預設會被 HTML 空白摺疊吃掉(實測 EN 選單顯示成 Howwedeliver)。pre 保住空格,
+   且斷行機會仍落在 span 之間,不會切在單字中間。 */
+.pqm-ch{display:inline-block;white-space:pre;transform-origin:50% 100%}
 
 /* 演員預設全部不上場;由 .pqm-vN 那一齣點名。 */
 .pqm-fore{position:fixed;inset:0;z-index:4;overflow:hidden;pointer-events:none;contain:layout paint}
@@ -1228,7 +1231,6 @@ class Component extends DCLogic {
         idx: '0' + (i + 1),
         isGroup, isLink: !isGroup,
         href: EP(l.href || '#'),
-        children: isGroup ? l.children.map((c) => ({ ...c, href: c.ext ? c.href : EP(c.href) })) : l.children,
         // 手機:子項預設收起。恆常展開時整份選單 1048px,iPhone 12 mini(812)裝不下,
         // 「關於我們」與底部 CTA 會被推到摺線下;收起後一屏看得完,chevron 同時是下拉提示。
         // 逐字 span:小怪獸要能「吃掉/踩扁/染色」單一個字,就必須讓每個字是獨立元素。
@@ -1260,7 +1262,7 @@ class Component extends DCLogic {
           transition: 'transform .24s cubic-bezier(.16,1,.3,1), color .2s',
           transform: kidsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
         },
-        children: isGroup ? l.children.map(c => ({ ...c, style: childStyle, mStyle: mChildStyle, target: c.ext ? '_blank' : '_self', rel: c.ext ? 'noopener noreferrer' : '' })) : [],
+        children: isGroup ? l.children.map(c => ({ ...c, href: c.ext ? c.href : EP(c.href), style: childStyle, mStyle: mChildStyle, target: c.ext ? '_blank' : '_self', rel: c.ext ? 'noopener noreferrer' : '' })) : [],
         style: {
           ...base,
           color: l.key === active ? '#090B0E' : 'rgba(9,11,14,.6)',
