@@ -55,7 +55,8 @@ export function applySEO(key) {
   if (!document.getElementById('pq-ld-core')) {
     const org = {
       '@context': 'https://schema.org', '@type': 'Organization',
-      name: '奇鋒國際有限公司', alternateName: 'PeakQi', url: SITE,
+      name: LANG === 'en' ? 'PeakQi International Ltd.' : '奇鋒國際有限公司',
+      alternateName: LANG === 'en' ? '奇鋒國際有限公司' : 'PeakQi', url: SITE,
       logo: SITE + '/assets/favicon.png', email: 'jacky@peakqi.com', telephone: '+886-2-6609-3699',
       areaServed: 'TW'
     };
@@ -65,9 +66,12 @@ export function applySEO(key) {
     };
     const service = {
       '@context': 'https://schema.org', '@type': 'Service',
-      name: 'AI 整合營運系統', provider: { '@type': 'Organization', name: '奇鋒國際 PeakQi' },
+      name: LANG === 'en' ? 'AI operations platform' : 'AI 整合營運系統',
+      provider: { '@type': 'Organization', name: LANG === 'en' ? 'PeakQi International' : '奇鋒國際 PeakQi' },
       areaServed: 'TW',
-      description: '為台灣中小企業整合 AI 接客、LINE AI 客服、CRM、行銷內容、報價與專案管理的營運系統,最快 10 個工作天上線。',
+      description: LANG === 'en'
+        ? 'An operations platform for Taiwan SMBs that unifies AI intake, LINE AI support, CRM, marketing content, quotes and project management — live in as fast as 10 working days.'
+        : '為台灣中小企業整合 AI 接客、LINE AI 客服、CRM、行銷內容、報價與專案管理的營運系統,最快 10 個工作天上線。',
       offers: [
         { '@type': 'Offer', name: 'AI 接客方案', priceCurrency: 'TWD', price: '39000' },
         { '@type': 'Offer', name: 'AI 業務助理', priceCurrency: 'TWD', price: '78000' },

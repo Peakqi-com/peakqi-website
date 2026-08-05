@@ -747,7 +747,7 @@ export function createHomeEngine() {
     const connectorLayer = new THREE.Group(); connectorLayer.name = 'CONNECTORS';
     (async function loadModel() {
       try {
-        const gltf = await new GLTFLoader().loadAsync('assets/models/peakqi-camera-web.glb');
+        const gltf = await new GLTFLoader().loadAsync('/assets/models/peakqi-camera-web.glb');   // 絕對路徑:/en/ 頁引用時相對路徑會 404
         if (destroyed) return;
         const asset = gltf.scene;
         const ground = asset.getObjectByName('ground_0'); if (ground && ground.parent) ground.parent.remove(ground);

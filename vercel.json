@@ -50,6 +50,61 @@
       "source": "/Privacy.dc.html",
       "destination": "/privacy",
       "permanent": true
+    },
+    {
+      "source": "/en",
+      "destination": "/en/",
+      "permanent": true
+    },
+    {
+      "source": "/en/Home.dc.html",
+      "destination": "/en/",
+      "permanent": true
+    },
+    {
+      "source": "/en/Solutions.dc.html",
+      "destination": "/en/solutions",
+      "permanent": true
+    },
+    {
+      "source": "/en/Method.dc.html",
+      "destination": "/en/method",
+      "permanent": true
+    },
+    {
+      "source": "/en/Cases.dc.html",
+      "destination": "/en/cases",
+      "permanent": true
+    },
+    {
+      "source": "/en/Case.dc.html",
+      "destination": "/en/case",
+      "permanent": true
+    },
+    {
+      "source": "/en/Pricing.dc.html",
+      "destination": "/en/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/en/About.dc.html",
+      "destination": "/en/about",
+      "permanent": true
+    },
+    {
+      "source": "/en/Demo.dc.html",
+      "destination": "/en/demo",
+      "permanent": true
+    },
+    {
+      "source": "/en/PeakOps.dc.html",
+      "destination": "/en/peakops",
+      "permanent": true
+    },
+    {
+      "source": "/en/Privacy.dc.html",
+      "destination": "/en/privacy",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -96,6 +151,46 @@
     {
       "source": "/favicon.ico",
       "destination": "/favicon-32.png"
+    },
+    {
+      "source": "/en/",
+      "destination": "/en/Home.dc.html"
+    },
+    {
+      "source": "/en/solutions",
+      "destination": "/en/Solutions.dc.html"
+    },
+    {
+      "source": "/en/method",
+      "destination": "/en/Method.dc.html"
+    },
+    {
+      "source": "/en/cases",
+      "destination": "/en/Cases.dc.html"
+    },
+    {
+      "source": "/en/case",
+      "destination": "/en/Case.dc.html"
+    },
+    {
+      "source": "/en/pricing",
+      "destination": "/en/Pricing.dc.html"
+    },
+    {
+      "source": "/en/about",
+      "destination": "/en/About.dc.html"
+    },
+    {
+      "source": "/en/demo",
+      "destination": "/en/Demo.dc.html"
+    },
+    {
+      "source": "/en/peakops",
+      "destination": "/en/PeakOps.dc.html"
+    },
+    {
+      "source": "/en/privacy",
+      "destination": "/en/Privacy.dc.html"
     }
   ]
 }

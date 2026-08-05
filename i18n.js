@@ -9,7 +9,7 @@ export const t = (zh, en) => (LANG === 'en' ? en : zh);
 
 // 已上線英文版的頁面(中文 clean path)。Phase 2 每完成一頁加一筆,
 // 語言切換鈕只在「對應英文版存在」的頁面現身──不會把使用者切去 404。
-export const EN_READY = [];
+export const EN_READY = ['/', '/about', '/solutions', '/method'];
 
 // 路徑正規化:本機 /About.dc.html 與正式 /about 都收斂成 clean path
 const norm = (p) => {
