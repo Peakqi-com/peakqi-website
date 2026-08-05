@@ -1,0 +1,15 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "sp": 0.02,
+ "phase": "01 / 光澤原型",
+ "card": {
+  "y": 426,
+  "b": 861,
+  "h": 435
+ },
+ "vh": 844,
+ "cardClipped": true
+}

@@ -1,0 +1,66 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 430,
+ "vh": 844,
+ "stage": {
+  "x": 0,
+  "y": 68,
+  "w": 430,
+  "h": 776,
+  "b": 844
+ },
+ "media": {
+  "x": 22,
+  "y": 333,
+  "w": 387,
+  "h": 682,
+  "b": 1015
+ },
+ "mediaCS": {
+  "overflow": "hidden",
+  "height": "680.016px",
+  "maxHeight": "692.08px"
+ },
+ "panel": {
+  "x": 23,
+  "y": 376,
+  "w": 385,
+  "h": 594,
+  "b": 970
+ },
+ "panelCS": {
+  "overflowY": "auto",
+  "height": "558.016px",
+  "maxHeight": "none"
+ },
+ "panelScroll": {
+  "scrollH": 594,
+  "clientH": 594,
+  "over": 0
+ },
+ "lastText": {
+  "t": "此內容為初步導入草稿,不代表正式報價",
+  "r": {
+   "x": 39,
+   "y": 927,
+   "w": 353,
+   "h": 21,
+   "b": 948
+  }
+ },
+ "ctaInMedia": {
+  "t": "帶著這份草稿,補上聯絡資料 ↓",
+  "r": {
+   "x": 23,
+   "y": 970,
+   "w": 385,
+   "h": 44,
+   "b": 1014
+  }
+ },
+ "stageBottom": 844,
+ "clipped": true
+}

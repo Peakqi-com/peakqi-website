@@ -1,0 +1,25 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Home.dc.html",
+ "vw": 768,
+ "vh": 1024,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 2,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "看更多實績與作品 →",
+   "h": 21,
+   "w": 143
+  }
+ ]
+}

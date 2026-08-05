@@ -1,0 +1,45 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 390,
+ "out": [
+  {
+   "i": 1,
+   "sagScreen": 84,
+   "target": 84,
+   "off": 0
+  },
+  {
+   "i": 2,
+   "sagScreen": 388,
+   "target": 373,
+   "off": 15
+  },
+  {
+   "i": 3,
+   "sagScreen": null,
+   "target": 653,
+   "off": null
+  },
+  {
+   "i": 4,
+   "sagScreen": null,
+   "target": 932,
+   "off": null
+  },
+  {
+   "i": 5,
+   "sagScreen": null,
+   "target": 1258,
+   "off": null
+  },
+  {
+   "i": 6,
+   "sagScreen": null,
+   "target": 1538,
+   "off": null
+  }
+ ]
+}

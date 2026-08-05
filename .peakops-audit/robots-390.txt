@@ -1,0 +1,148 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 390,
+ "grid": {
+  "x": 20,
+  "y": 84,
+  "w": 350,
+  "h": 1712
+ },
+ "gridCols": 1,
+ "mods": [
+  {
+   "i": 1,
+   "card": {
+    "x": 20,
+    "y": 85,
+    "w": 350,
+    "h": 288
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 258,
+    "y": 37,
+    "w": 104,
+    "h": 139
+   },
+   "icoPos": {
+    "top": "-48px",
+    "right": "8px",
+    "w": "104px"
+   },
+   "gapLineToIco": -48
+  },
+  {
+   "i": 2,
+   "card": {
+    "x": 20,
+    "y": 389,
+    "w": 350,
+    "h": 264
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 264,
+    "y": 349,
+    "w": 96,
+    "h": 131
+   },
+   "icoPos": {
+    "top": "-40px",
+    "right": "10px",
+    "w": "96px"
+   },
+   "gapLineToIco": -40
+  },
+  {
+   "i": 3,
+   "card": {
+    "x": 20,
+    "y": 669,
+    "w": 350,
+    "h": 264
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 250,
+    "y": 619,
+    "w": 112,
+    "h": 129
+   },
+   "icoPos": {
+    "top": "-50px",
+    "right": "8px",
+    "w": "112px"
+   },
+   "gapLineToIco": -50
+  },
+  {
+   "i": 4,
+   "card": {
+    "x": 20,
+    "y": 970,
+    "w": 350,
+    "h": 288
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 258,
+    "y": 922,
+    "w": 104,
+    "h": 139
+   },
+   "icoPos": {
+    "top": "-48px",
+    "right": "8px",
+    "w": "104px"
+   },
+   "gapLineToIco": -48
+  },
+  {
+   "i": 5,
+   "card": {
+    "x": 20,
+    "y": 1274,
+    "w": 350,
+    "h": 264
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 143,
+    "y": 1226,
+    "w": 104,
+    "h": 130
+   },
+   "icoPos": {
+    "top": "-48px",
+    "right": "26px",
+    "w": "104px"
+   },
+   "gapLineToIco": -48
+  },
+  {
+   "i": 6,
+   "card": {
+    "x": 20,
+    "y": 1554,
+    "w": 350,
+    "h": 264
+   },
+   "borderTop": "0px rgb(9, 11, 14)",
+   "ico": {
+    "x": 258,
+    "y": 1506,
+    "w": 104,
+    "h": 130
+   },
+   "icoPos": {
+    "top": "-48px",
+    "right": "8px",
+    "w": "104px"
+   },
+   "gapLineToIco": -48
+  }
+ ]
+}

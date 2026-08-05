@@ -1,0 +1,32 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 480,
+ "secW": 480,
+ "wrap": {
+  "x": 0,
+  "y": 274,
+  "w": 480,
+  "right": 480
+ },
+ "wrapPad": "64px 24px",
+ "wrapBox": "border-box",
+ "wrapMargin": "0px/0px",
+ "para": {
+  "x": 24,
+  "y": 469,
+  "w": 432,
+  "right": 456
+ },
+ "paraCut": false,
+ "card0": {
+  "x": 24,
+  "y": 680,
+  "w": 432,
+  "right": 456
+ },
+ "overflowX": 0,
+ "grid": "432px"
+}

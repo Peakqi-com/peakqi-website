@@ -1,0 +1,15 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "sp": 0.18,
+ "phase": "04 / 黑白藍圖",
+ "card": {
+  "y": 587,
+  "b": 861,
+  "h": 275
+ },
+ "vh": 844,
+ "cardClipped": true
+}
