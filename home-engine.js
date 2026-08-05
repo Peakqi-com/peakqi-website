@@ -1259,7 +1259,7 @@ export function createHomeEngine() {
       const _posTargetY = isMobile
         ? (1.45 * dark * (1 - flipK) - 0.55 * summaryHold                       // 首頁/拆解:降到畫面中間偏上(原 2.35 頂太高,下方一整片黑)
            + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
-           + 0.05 * flipK                                   // 翻面看螢幕:同樣落在中間偏上(原 +0.45 太高)
+           + 1.00 * flipK                                   // 翻面看螢幕:螢幕+字卡整組上移到畫面中間(flipK 已排除 slogan)
            - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
         : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
