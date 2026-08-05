@@ -5,6 +5,8 @@
 //   → 點燈泡俯衝沿裂縫縫合(針腳一段段長出+火花,縫完開心轉圈)
 //   → 全縫完愛心亮起脈動、機器人挺胸大笑、烏雲散開出小太陽 → 6–12 秒後新裂紋再碎。
 
+import { t } from './i18n.js';
+
 const INK = '#090B0E', CREAM = '#F2EFE8', BLUE = '#3E9BFF', ORANGE = '#FF6B2C',
   YELLOW = '#FFD23F', PINK = '#FF3B6B', SHELL = '#1C2430';
 const HEART_D = 'M0 -11C-7 -22 -26 -20 -26 -5C-26 8 -11 17 0 26C11 17 26 8 26 -5C26 -20 7 -22 0 -11Z';
@@ -77,7 +79,7 @@ export function createAct(stage, api) {
     `.a2-bulb{cursor:pointer}`;
 
   const svgHtml =
-    `<svg class="a2-svg" viewBox="0 0 200 200" role="img" aria-label="第二幕:心碎機器人與修補小燈泡" style="display:block;position:absolute;inset:0;width:100%;height:100%">` +
+    `<svg class="a2-svg" viewBox="0 0 200 200" role="img" aria-label="${t('第二幕:心碎機器人與修補小燈泡', 'Act 2: heartbroken robot and the little repair bulbs')}" style="display:block;position:absolute;inset:0;width:100%;height:100%">` +
     `<style>${css}</style>` +
     `<defs>` +
     `<pattern id="a2dots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r=".95" fill="${INK}"/></pattern>` +

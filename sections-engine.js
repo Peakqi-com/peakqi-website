@@ -1,4 +1,6 @@
 // PeakQi 首頁四區塊動畫引擎:痛點/損失/三層敘事/功能軌道(共用 motion tokens、IO 暫停、reduced 降級)
+// i18n:本檔動態寫入的 textContent 皆為數字(badge/損失計數),無中文字串需 t() 化;import 保留供未來使用
+import { t } from './i18n.js'; // eslint-disable-line no-unused-vars
 export function createSectionsEngine({ refs }) {
   const ORANGE = '#FF6B2C', GREEN = '#65E0BC';
   const TOK = { fast: 160, base: 320, slow: 700, out: 'cubic-bezier(0.16,1,0.3,1)', inout: 'cubic-bezier(0.65,0,0.35,1)' };

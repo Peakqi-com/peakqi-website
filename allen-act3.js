@@ -5,6 +5,8 @@
 //   華爾滋(3/4 拍 90bpm oom-pah-pah)→ 舞廳吊燈塵光、自轉圓舞+殘影
 // 鐵則:預設完全無聲,只有使用者手勢(pointerdown/鍵盤 click)才 api.audio.ensure();
 //        全部 oscillator/noise 合成、總音量 master gain 0.13;共享 rAF;destroy 全清。
+import { t } from './i18n.js';
+
 export function createAct(stage, api) {
   const rnd = api.rand;
   const TAU = Math.PI * 2;
@@ -38,7 +40,7 @@ export function createAct(stage, api) {
 .a3-chip:active{transform:scale(.93)}
 .a3-chip.on{background:var(--c);color:#090B0E;transform:translateY(-2px);box-shadow:0 3px 0 rgba(9,11,14,.5)}
 </style>
-<svg viewBox="0 0 200 200" role="img" aria-label="Allen 的音樂機器人:點晶片播不同音樂,機器人跳不同舞">
+<svg viewBox="0 0 200 200" role="img" aria-label="${t('Allen 的音樂機器人:點晶片播不同音樂,機器人跳不同舞', "Allen's music robot: tap a chip for a different song and dance")}">
 <defs>
   <pattern id="a3ht" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.15" fill="#090B0E"/></pattern>
   <pattern id="a3htb" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.3" fill="#3E9BFF"/></pattern>
@@ -157,11 +159,11 @@ export function createAct(stage, api) {
 <g class="a3-notes"></g>
 <g class="a3-burst" style="opacity:0"><path class="a3-bstar" d="${star(12, 25, 16)}" stroke="#090B0E" stroke-width="2"/><text class="a3-btxt" text-anchor="middle" dominant-baseline="middle" font-family="'Space Grotesk','Noto Sans TC',sans-serif" font-weight="900" font-size="10"></text></g>
 </svg>
-<div class="a3-ui" role="group" aria-label="音樂晶片">
-  <button type="button" class="a3-chip" data-song="calm" style="--c:#65E0BC">〜 平靜</button>
+<div class="a3-ui" role="group" aria-label="${t('音樂晶片', 'Music chips')}">
+  <button type="button" class="a3-chip" data-song="calm" style="--c:#65E0BC">〜 ${t('平靜', 'Calm')}</button>
   <button type="button" class="a3-chip" data-song="disco" style="--c:#FF3B6B">✦ DISCO</button>
-  <button type="button" class="a3-chip" data-song="waltz" style="--c:#FFD23F">♪ 華爾滋</button>
-  <button type="button" class="a3-chip" data-song="stop" style="--c:#F2EFE8" aria-label="停止音樂">⏹</button>
+  <button type="button" class="a3-chip" data-song="waltz" style="--c:#FFD23F">♪ ${t('華爾滋', 'Waltz')}</button>
+  <button type="button" class="a3-chip" data-song="stop" style="--c:#F2EFE8" aria-label="${t('停止音樂', 'Stop')}">⏹</button>
 </div>`;
   stage.insertAdjacentElement('afterbegin', root);
 
@@ -478,7 +480,7 @@ export function createAct(stage, api) {
   // 漫畫音效框
   let burstT = -9;
   const BURSTS = {
-    calm: { txt: '呼～', fill: '#65E0BC', tc: '#090B0E', x: 50, y: 40 },
+    calm: { txt: t('呼～', 'Ahh～'), fill: '#65E0BC', tc: '#090B0E', x: 50, y: 40 },
     disco: { txt: 'GROOVE!', fill: '#FF3B6B', tc: '#F2EFE8', x: 50, y: 36 },
     waltz: { txt: '1·2·3♪', fill: '#FFD23F', tc: '#090B0E', x: 52, y: 36 }
   };

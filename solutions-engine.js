@@ -1,6 +1,7 @@
 // /solutions 長篇產品敘事引擎:overview 收攏、capture 對話、follow pipeline、nurture 圖層、modules 聚焦
 import { createMotionContext, ScrollChapter, StickyProductStage } from './motion-kit.js';
 import { ezSmooth } from './motion-config.js';
+import { t } from './i18n.js';
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const sub = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
 const ez = ezSmooth;
@@ -112,7 +113,7 @@ export function createSolutions() {
       });
       const tag = card.querySelector('[data-ftag]');
       if (tag) {
-        const labels = ['DAY 1・提醒已擬', 'DAY 3・補上案例', 'DAY 5・限時優惠', 'DAY 7・最後關心'];
+        const labels = [t('DAY 1・提醒已擬', 'DAY 1 · Reminder ready'), t('DAY 3・補上案例', 'DAY 3 · Case added'), t('DAY 5・限時優惠', 'DAY 5 · Limited offer'), t('DAY 7・最後關心', 'DAY 7 · Final check-in')];
         if (tag.textContent !== labels[idx]) tag.textContent = labels[idx];
       }
     }, { pinned: !!wrap });

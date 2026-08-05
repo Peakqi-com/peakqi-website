@@ -1,6 +1,7 @@
 // /pricing 與 /about 動態引擎:方案機架、模組切換、sticky 比較高亮、雙管線、複雜度圖、時間軸、品牌節點、產業矩陣、方法流、作品帶
 import { createMotionContext, ScrollChapter, StickyProductStage } from './motion-kit.js';
 import { ezSmooth } from './motion-config.js';
+import { t } from './i18n.js';
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const sub = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
 const ez = ezSmooth;
@@ -269,7 +270,7 @@ export function createAboutFX() {
         cur = idx;
         const t2 = steps[idx].querySelector('span:nth-child(2)');
         const d2 = steps[idx].querySelector('span:nth-child(3)');
-        conTx.textContent = 'STEP 0' + (idx + 1) + ' — ' + (t2 ? t2.textContent : '') + ':' + (d2 ? d2.textContent : '');
+        conTx.textContent = 'STEP 0' + (idx + 1) + ' — ' + (t2 ? t2.textContent : '') + t(':', ': ') + (d2 ? d2.textContent : '');
       }
     }, { pinned: !!wrap });
   }

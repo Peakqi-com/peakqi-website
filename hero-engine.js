@@ -1,4 +1,5 @@
 // PeakQi Hero 捲動分鏡引擎:pinned scroll 敘事(程序式 Canvas + 可替換影格序列)
+import { t } from './i18n.js';
 export function createHeroEngine({ refs, manifest }) {
   const IVORY = '#F2EFE8', ORANGE = '#FF6B2C', BLUE = '#3E9BFF', GREEN = '#65E0BC';
   const PANEL = '#14171C', PANEL_B = 'rgba(242,239,232,.16)';
@@ -32,14 +33,25 @@ export function createHeroEngine({ refs, manifest }) {
     return { x: CF.x + CF.pad + c * (SW + CF.gap) + SW / 2, y: CF.y + CF.head + CF.pad + r * (SH + CF.gap) + SH / 2, w: SW, h: SH };
   };
   const wins = [
-    { type: 'line', title: 'LINE・23:41', mt: '客服', tick: '接住詢問', w: 250, h: 180, cx: 610, cy: 200, rot: -6, dep: 1.15, sx: 0, sy: 0 },
-    { type: 'excel', title: '名單_v7.xlsx', mt: 'CRM', tick: '建立紀錄', w: 260, h: 170, cx: 920, cy: 160, rot: 4, dep: 0.85, sx: 70, sy: 40 },
-    { type: 'quote', title: '報價單.pdf', mt: '報價', tick: '產生報價單', w: 220, h: 160, cx: 1080, cy: 330, rot: 7, dep: 1.3, sx: 0, sy: 0 },
-    { type: 'social', title: '社群排程', mt: '行銷', tick: '排入內容', w: 240, h: 170, cx: 640, cy: 470, rot: -3, dep: 1.0, sx: 0, sy: 0 },
-    { type: 'task', title: '任務清單', mt: '專案', tick: '建立任務', w: 250, h: 170, cx: 950, cy: 520, rot: 5, dep: 1.15, sx: 60, sy: 50 },
-    { type: 'data', title: '營運數據', mt: '數據', tick: '更新儀表板', w: 210, h: 160, cx: 780, cy: 320, rot: -2, dep: 0.9, sx: 0, sy: 0 },
-    { type: 'note', title: '備忘錄', mt: '', tick: '', w: 150, h: 120, cx: 520, cy: 590, rot: -8, dep: 1.3, sx: 0, sy: 30 }
+    { type: 'line', title: 'LINE・23:41', mt: t('客服', 'Support'), tick: t('接住詢問', 'Replied'), w: 250, h: 180, cx: 610, cy: 200, rot: -6, dep: 1.15, sx: 0, sy: 0 },
+    { type: 'excel', title: t('名單_v7.xlsx', 'leads_v7.xlsx'), mt: 'CRM', tick: t('建立紀錄', 'Logged'), w: 260, h: 170, cx: 920, cy: 160, rot: 4, dep: 0.85, sx: 70, sy: 40 },
+    { type: 'quote', title: t('報價單.pdf', 'quote.pdf'), mt: t('報價', 'Quotes'), tick: t('產生報價單', 'Quote sent'), w: 220, h: 160, cx: 1080, cy: 330, rot: 7, dep: 1.3, sx: 0, sy: 0 },
+    { type: 'social', title: t('社群排程', 'Social queue'), mt: t('行銷', 'Marketing'), tick: t('排入內容', 'Queued'), w: 240, h: 170, cx: 640, cy: 470, rot: -3, dep: 1.0, sx: 0, sy: 0 },
+    { type: 'task', title: t('任務清單', 'Tasks'), mt: t('專案', 'Projects'), tick: t('建立任務', 'Task added'), w: 250, h: 170, cx: 950, cy: 520, rot: 5, dep: 1.15, sx: 60, sy: 50 },
+    { type: 'data', title: t('營運數據', 'Metrics'), mt: t('數據', 'Data'), tick: t('更新儀表板', 'Updated'), w: 210, h: 160, cx: 780, cy: 320, rot: -2, dep: 0.9, sx: 0, sy: 0 },
+    { type: 'note', title: t('備忘錄', 'Notes'), mt: '', tick: '', w: 150, h: 120, cx: 520, cy: 590, rot: -8, dep: 1.3, sx: 0, sy: 30 }
   ];
+  // i18n 文案抽常數:draw 系列函式的參數 t 是「時間」,會遮蔽 i18n 的 t(),故在此先取值
+  const TXT = {
+    note1: t('回覆王先生!!', 'Reply Mr. Wang!!'),
+    note2: t('(三天前)', '(3 days ago)'),
+    aiDone: t('AI 已回覆・時段已保留', 'AI replied · slot booked'),
+    total: t('總價', 'Total'),
+    kpi: t('回覆 28s・轉換 ', 'Reply 28s · conv '),
+    console: t('PEAKQI 營運控制台', 'PEAKQI OPS CONSOLE'),
+    stats: t('今日新客 12・平均回覆 28s・本週轉換 18%', 'New today 12 · avg reply 28s · conv 18%')
+  };
+  const PEOPLE = [[t('王小姐', 'Ms. Wang'), GREEN, t('DAY1 已排', 'DAY1 set')], [t('洪艾倫', 'Allen Hung'), BLUE, t('跟進中', 'Following')], [t('吳傑奇', 'Jacky Wu'), ORANGE, t('已成交', 'Won')]];
   const X = (x) => OX + x * SC, Y = (y) => OY + y * SC, S = (v) => v * SC;
   const px = (v) => Math.max(10, Math.round(v * SC));
 
@@ -148,9 +160,9 @@ export function createHeroEngine({ refs, manifest }) {
       ctx.fillStyle = '#E6E0D2'; rr(x, y, w, h, S(4)); ctx.fill();
       ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
       ctx.fillStyle = 'rgba(9,11,14,.85)'; ctx.font = F(700, px(12)); ctx.textAlign = 'left';
-      ctx.fillText('回覆王先生!!', x + S(14), y + S(34));
+      ctx.fillText(TXT.note1, x + S(14), y + S(34));
       ctx.fillStyle = 'rgba(9,11,14,.5)'; ctx.font = F(400, px(10.5));
-      ctx.fillText('(三天前)', x + S(14), y + S(56));
+      ctx.fillText(TXT.note2, x + S(14), y + S(56));
       ctx.restore(); return;
     }
     ctx.fillStyle = PANEL; rr(x, y, w, h, S(6)); ctx.fill();
@@ -225,7 +237,7 @@ export function createHeroEngine({ refs, manifest }) {
         rr(x + pad, y + pad + S(52), inW * 0.78, S(18), S(10)); ctx.fill(); // 客戶再回(左)
         ctx.restore();
         ctx.globalAlpha = baseA; ctx.fillStyle = GREEN; ctx.font = F(600, px(10.5));
-        ctx.fillText('AI 已回覆・時段已保留', x + pad, y + h - S(10));
+        ctx.fillText(TXT.aiDone, x + pad, y + h - S(10));
       } else {
         ctx.fillStyle = 'rgba(242,239,232,.14)'; rr(x + pad, y + pad, w * 0.56, S(22), S(8)); ctx.fill();
         ctx.fillStyle = 'rgba(101,224,188,' + (0.25 + dock * 0.5) + ')'; rr(x + w - pad - w * 0.5, y + pad + S(30), w * 0.5, S(22), S(8)); ctx.fill();
@@ -236,7 +248,7 @@ export function createHeroEngine({ refs, manifest }) {
       // CRM:三位客戶(不同顏色)依序排入、掃描高亮
       if (docked) {
         clipRect(x, y, w, h, S(4));
-        const people = [['王小姐', GREEN, 'DAY1 已排'], ['洪艾倫', BLUE, '跟進中'], ['吳傑奇', ORANGE, '已成交']];
+        const people = PEOPLE;
         const rh = S(30), ph2 = frac(t / 5.5), hi = Math.floor(t / 1.1) % 3;
         people.forEach((p2, i2) => {
           const rin = ez(sub(ph2, 0.04 + i2 * 0.12, 0.18 + i2 * 0.12)) * (1 - ez(sub(ph2, 0.9, 0.99)));
@@ -278,7 +290,7 @@ export function createHeroEngine({ refs, manifest }) {
         ctx.beginPath(); ctx.moveTo(x + pad, divY); ctx.lineTo(x + w - pad, divY); ctx.stroke();
         const total = items.reduce((a2, b2) => a2 + b2, 0), ty2 = divY + S(20);
         ctx.globalAlpha = baseA * ez(sub(cyc, 0.42, 0.55));
-        ctx.fillStyle = 'rgba(242,239,232,.5)'; ctx.font = F(500, px(9.5)); ctx.fillText('總價', x + pad, ty2);
+        ctx.fillStyle = 'rgba(242,239,232,.5)'; ctx.font = F(500, px(9.5)); ctx.fillText(TXT.total, x + pad, ty2);
         ctx.fillStyle = ORANGE; ctx.font = F(700, px(15)); ctx.textAlign = 'right';
         ctx.fillText('NT$ ' + fmtNT(total * ez(sub(cyc, 0.45, 0.82))), x + w - pad, ty2 + S(2));
         ctx.textAlign = 'left'; ctx.restore(); ctx.globalAlpha = baseA;
@@ -355,7 +367,7 @@ export function createHeroEngine({ refs, manifest }) {
         clipRect(x, y, w, h, S(4));
         ctx.globalAlpha = baseA; ctx.fillStyle = 'rgba(242,239,232,.7)'; ctx.font = F(600, px(10.5));
         const conv = 15 + Math.round(3 + 3 * Math.sin(t * 0.8));
-        ctx.fillText('回覆 28s・轉換 ' + conv + '%', x + pad, y + pad + S(6));
+        ctx.fillText(TXT.kpi + conv + '%', x + pad, y + pad + S(6));
         const sx0 = x + pad, sw = w - pad * 2, syTop = y + pad + S(14), sh = S(18);
         ctx.strokeStyle = 'rgba(101,224,188,.75)'; ctx.lineWidth = Math.max(1, S(1.4)); ctx.beginPath();
         const N = 12; let last = null;
@@ -474,12 +486,12 @@ export function createHeroEngine({ refs, manifest }) {
     ctx.fillStyle = 'rgba(101,224,188,' + pulse + ')'; ctx.beginPath(); ctx.arc(x + S(18), y + th / 2, S(4), 0, 7); ctx.fill();
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillStyle = IVORY; ctx.font = F(700, px(13));
-    ctx.fillText('PEAKQI 營運控制台', x + S(32), y + th / 2 + 0.5);
+    ctx.fillText(TXT.console, x + S(32), y + th / 2 + 0.5);
     const kA = ez(sub(q, 0.8, 0.87));
     if (kA > 0 && !isMobile) {   // 手機直式太窄,隱藏這條統計避免重疊
       ctx.globalAlpha = a * kA;
       ctx.fillStyle = 'rgba(242,239,232,.6)'; ctx.font = F(500, px(11)); ctx.textAlign = 'right';
-      ctx.fillText('今日新客 12・平均回覆 28s・本週轉換 18%', x + w - S(64), y + th / 2 + 0.5);
+      ctx.fillText(TXT.stats, x + w - S(64), y + th / 2 + 0.5);
       ctx.globalAlpha = a;
     }
     ctx.fillStyle = 'rgba(242,239,232,.45)'; ctx.font = F(600, px(10)); ctx.textAlign = 'right';

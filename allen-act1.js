@@ -4,6 +4,7 @@
 //       頭殼冒火花 + TOK! 普普爆點,機器人越來越煩(壓眉、抿嘴、翻白眼、冒汗、冒蒸氣、怒氣線)。
 //       點鳥 → 受驚「!?」沿弧線飛出畫面(帶速度線),機器人視線全程追蹤;
 //       全趕走 → 鬆口氣(白手套擦汗 + 呼氣雲),隨機 4–10 秒後再度來襲(「又來了」)。
+import { t } from './i18n.js';
 const NS = 'http://www.w3.org/2000/svg';
 
 export function createAct(stage, api) {
@@ -34,7 +35,7 @@ export function createAct(stage, api) {
 #a1-svg [data-bird]{cursor:pointer}
 #a1-svg text{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-weight:900}
 </style>
-<svg id="a1-svg" viewBox="0 0 400 400" role="img" aria-label="第一幕:機器啄木鳥騷擾 Allen 的機器人,點鳥幫他解圍" style="display:block;width:100%;height:100%;position:absolute;inset:0">
+<svg id="a1-svg" viewBox="0 0 400 400" role="img" aria-label="${t('第一幕:機器啄木鳥騷擾 Allen 的機器人,點鳥幫他解圍', "Act 1: robo-woodpeckers pester Allen's robot — click a bird to shoo it away")}" style="display:block;width:100%;height:100%;position:absolute;inset:0">
   <defs>
     <pattern id="a1-dotA" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.6" fill="#FF3B6B"/></pattern>
     <pattern id="a1-dotB" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.2" fill="#3E9BFF"/></pattern>
