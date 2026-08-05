@@ -285,6 +285,14 @@
     {
       "source": "/en/404",
       "destination": "/en/404.dc.html"
+    },
+    {
+      "source": "/tour",
+      "destination": "/Steampunk/peakqi-story.html"
+    },
+    {
+      "source": "/en/tour",
+      "destination": "/Steampunk/peakqi-story-en.html"
     }
   ]
 }
