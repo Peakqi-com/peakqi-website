@@ -471,9 +471,10 @@ export function createHomeEngine() {
     const _inkG = _inkCv.getContext('2d');
     const INK_TEX = new THREE.CanvasTexture(_inkCv);
     INK_TEX.wrapS = INK_TEX.wrapT = THREE.RepeatWrapping;
+    INK_TEX.channel = 1;   // 取樣 uv1(投影頻道),原生 uv 留給原材質的 normal/roughness
     // map + 補投影 UV:matcap 在平板零件(法線同向)會塌成單色,map 才能讓平面也有流動;
     // 無 UV 幾何在 addPartVisuals 以包圍盒最大兩軸做平面投影(見 ensureInkUv)
-    const INK_MAT = new THREE.MeshBasicMaterial({ map: INK_TEX, toneMapped: false, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+    const INK_MAT = new THREE.MeshBasicMaterial({ map: INK_TEX, side: THREE.DoubleSide, toneMapped: false, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });   // DoubleSide:LCD 這類薄板從背面看會整片消失
     const MORANDI = [[199, 160, 160], [148, 172, 143], [139, 157, 173], [194, 168, 120], [169, 139, 164], [216, 185, 168]];
     let _inkN = 0, _inkF = 0;
     function inkPaint(t2) {
@@ -699,10 +700,10 @@ export function createHomeEngine() {
         // 水彩材質需要 UV;這批 GLTF 多數 mesh 沒有 → 用包圍盒最大兩軸平面投影補一份
         // (只在缺 UV 時補,不動有真 UV 的幾何)
         const g0 = obj.geometry;
-        // 這批 GLTF 是無貼圖的平塗低模,原生 UV 是縮在圖集小角落的殘料
-        // (實測紅色診斷:map 取樣恆定、整面單色)→ 一律覆寫成包圍盒投影 UV
-        const needUv = !!g0;
-        if (needUv) {
+        // 水彩投影 UV 一律寫進「第二頻道 uv1」(INK_TEX.channel=1 取樣):
+        // 第一版直接覆寫原生 uv,結果光澤段的 normal/roughness 貼圖跟著取樣壞掉,
+        // 整台相機像碎玻璃(使用者:「相機爛掉了」)。原生 uv 從此一根手指都不碰。
+        if (g0 && !g0.getAttribute('uv1')) {
           try { window.__uvN = (window.__uvN || 0) + 1; } catch (e2) {}
           g0.computeBoundingBox();
           const bb = g0.boundingBox, pos = g0.getAttribute('position');
@@ -714,7 +715,7 @@ export function createHomeEngine() {
             uv[vi * 2] = (pos['get' + dims[0][0]](vi) - dims[0][2]) / dims[0][1];
             uv[vi * 2 + 1] = (pos['get' + dims[1][0]](vi) - dims[1][2]) / dims[1][1];
           }
-          g0.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+          g0.setAttribute('uv1', new THREE.BufferAttribute(uv, 2));
         }
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });
@@ -1502,7 +1503,10 @@ export function createHomeEngine() {
         if (part.matMode !== matMode) {
           if (matMode === 2) _inkN++; else if (part.matMode === 2) _inkN--;
           part.matMode = matMode;
-          try { window.__inkDbg = { n: _inkN, last: part.name, mode: matMode, paperK: +paperK.toFixed(2) }; } catch (e2) {}
+          try {
+            window.__inkDbg = { n: _inkN, last: part.name, mode: matMode, paperK: +paperK.toFixed(2) };
+            window.__inkList = parts.filter((pp) => pp.matMode === 2).map((pp) => pp.name + ':f' + pp.fills.length);
+          } catch (e2) {}
           part.paperOn = wantPaper;
           for (let f = 0; f < part.fills.length; f++) {
             const mh = part.fills[f];
