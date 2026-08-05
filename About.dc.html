@@ -108,8 +108,11 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
 @keyframes pqShFade{to{opacity:0;visibility:hidden}}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
-/* 手機 hero(2026-08 重設計):墨枝動畫在上(data-hero-media-top)、文案在下;標題縮級避免五行 */
+/* 手機 hero(2026-08 重設計):墨枝動畫在上(data-hero-media-top)、文案在下;標題縮級避免五行。
+   文案上方保留 34svh 動畫帶 —— 沒這條,展開時文案頂到 nav,zone 的 150px 下限會把樹畫進字裡 */
 @media (max-width:899px){
+#a-hero [data-hero-copy]{margin-top:min(34svh,300px)!important}
+#a-hero [data-hero-stage].pq-hero-compact{align-items:flex-start!important} /* 動畫帶靠 margin 保留,不再吃收合置中 */
 #a-hero [data-hero-cta] a:not([data-hero-primary]){background:#090B0E!important}
 #a-hero [data-anote]{display:none!important}
 #a-hero h1{font-size:clamp(1.5rem,6.6vw,1.95rem)!important}

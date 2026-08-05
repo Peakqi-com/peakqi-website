@@ -62,6 +62,8 @@ nav[aria-label="breadcrumb"]{align-items:center}
 @media (max-width:899px){[data-scrollhint]{display:none!important}}
 /* 手機 hero 空間預算:舞台內距縮小+場景列緊湊,配合捲動收合讓視覺帶放大 */
 @media (max-width:899px){
+/* 使用者指定:任務步驟文案貼頂、下方留給大正方形動畫區(蓋過 hero-kit 收合置中) */
+section[data-hero="demo"] [data-hero-stage].pq-hero-compact{align-items:flex-start!important}
 [data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
 [data-hero-copy]>div{gap:9px!important}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
@@ -84,7 +86,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section id="d-hero" data-hero="demo" data-screen-label="Demo 開場" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
+    <div data-hero-stage data-hero-zone="square" style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
         <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">

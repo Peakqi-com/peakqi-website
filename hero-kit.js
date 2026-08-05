@@ -125,6 +125,8 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
         const cb = copyEl ? rectIn(copyEl).y + copyEl.offsetHeight + 12 : H * .3;
         const top = Math.max(cb, H * .2);   // 嚴格貼文案底,絕不上頂
         z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, H - 74 - top) };
+        // opt-in(stage 加 data-hero-zone="square"):繪圖區收成貼文案底的大正方形
+        if (stage.getAttribute('data-hero-zone') === 'square') z.h = Math.min(z.h, z.w);
       }
     }
     const pad = 6;
@@ -473,7 +475,7 @@ function ensureMobileCollapseCss() {
     '[data-hero-stage]:has(.pq-hero-compact) [data-shotwall],[data-hero-stage]:has(.pq-hero-compact) [data-ashotwall]{top:40%!important;height:60%!important;transition:top .45s cubic-bezier(.16,1,.3,1),height .45s cubic-bezier(.16,1,.3,1)}' +
     '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +
     '.pq-hero-compact .pq-clp{opacity:0;max-height:0!important;margin:0!important;pointer-events:none}' +
-    '.pq-hero-compact .pq-clp.pq-clp-keep{opacity:1;max-height:300px!important;pointer-events:auto}' +
+    '.pq-hero-compact .pq-clp.pq-clp-keep{opacity:1;max-height:300px!important;margin-top:14px!important;pointer-events:auto}' + // 尾景 CTA 回歸時別貼死上面段落
     '}';
   document.head.appendChild(st);
 }

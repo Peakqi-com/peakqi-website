@@ -47,6 +47,13 @@ function buildTree(mobile) {
   grow(.5, 1.0, -Math.PI / 2 + (r() - .5) * .1, mobile ? .3 : .32, 0, 0);
   segs.sort((a, b) => a.ord - b.ord);
   tips.forEach((tp, i) => { tp.i = i; });
+  // 亂數種子長出的樹冠常偏一邊:量外接框後整株水平置中
+  let mnx = 1, mxx = 0;
+  segs.forEach((s) => { mnx = Math.min(mnx, s.x0, s.x1, s.cx); mxx = Math.max(mxx, s.x0, s.x1, s.cx); });
+  const dx = .5 - (mnx + mxx) / 2;
+  segs.forEach((s) => { s.x0 += dx; s.cx += dx; s.x1 += dx; });
+  tips.forEach((tp) => { tp.x += dx; });
+  joints.forEach((j) => { j.x += dx; });
   return { segs, tips, joints, maxLv };
 }
 let _tree = { m: null, t: null };
@@ -74,7 +81,9 @@ painters.aboutOrganic = function paintAboutOrganic(g, e) {
   // 生長總量:創意長主幹、細節補脈、內容前全株成形
   const G = .42 * kI + .3 * kC + .28 * kN;
   if (G <= 0.001) return;
-  const sway = (lv, ph) => Math.sin(t * .55 + ph) * (lv * lv) * (mobile ? .45 : .6);
+  // 風擺加強版:基礎振幅加倍 + 每 ~16s 一陣風(gust 最高再放大 2.4 倍),樹要看得出在活
+  const gust = 1 + 1.4 * Math.pow(Math.max(0, Math.sin(t * .38)), 3);
+  const sway = (lv, ph) => Math.sin(t * .8 + ph) * (lv * lv) * (mobile ? .8 : 1) * gust;
   const X = (nx) => z.x + nx * z.w;
   const Y = (ny) => z.y + ny * z.h;
   // 換季掃描角(culture):由樹心向外的角度波前
@@ -94,8 +103,9 @@ painters.aboutOrganic = function paintAboutOrganic(g, e) {
     const q = ez(sub(G, s.ord, s.ord + .1));
     // 細節景之前,末梢兩級只到骨架;craft 進場才補滿細脈
     const fine = s.lv >= T.maxLv - 1;
-    const a = (fine ? .18 + .5 * Math.max(kC, kN) : .5 + .34 / (s.lv + 1)) * (1 - kT * .18);
-    const wdt = Math.max(.55, (mobile ? 2.4 : 3) / (s.lv + 1));
+    // 亮度與線寬加粗版:實機回饋「幾乎看不清楚」——主幹要像主幹
+    const a = (fine ? .3 + .55 * Math.max(kC, kN) : .62 + .34 / (s.lv + 1)) * (1 - kT * .12);
+    const wdt = Math.max(.8, (mobile ? 4.4 : 4.8) / (s.lv + 1));
     const sw = sway(s.lv, s.ph), swm = sw * .6;
     const p2 = part(s.x0, s.y0, s.cx, s.cy, s.x1, s.y1, q);
     g.strokeStyle = segCol(s) === C.green
@@ -115,13 +125,13 @@ painters.aboutOrganic = function paintAboutOrganic(g, e) {
   });
 
   // ── S1 創意:飄浮的種子(常駐但創意景最亮) ──
-  const seedA = .12 + .55 * kI * (1 - kN);
+  const seedA = .18 + .6 * kI * (1 - kN);
   if (seedA > .05) {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
       const ph = i * 2.4;
-      const sx = .5 + Math.sin(t * .22 + ph) * (.3 + i * .022);
-      const sy = .34 + Math.cos(t * .17 + ph * 1.7) * .26 - i * .012;
-      d.node(X(sx), Y(sy), i % 3 ? 1.4 : 2.2, i % 4 === 3 ? C.blue : C.orange, seedA * (.4 + .6 * Math.abs(Math.sin(t * .8 + ph))));
+      const sx = .5 + Math.sin(t * .3 + ph) * (.3 + i * .022);
+      const sy = .34 + Math.cos(t * .24 + ph * 1.7) * .26 - i * .012;
+      d.node(X(sx), Y(sy), i % 3 ? 1.7 : 2.6, i % 4 === 3 ? C.blue : C.orange, seedA * (.4 + .6 * Math.abs(Math.sin(t * 1.1 + ph))));
     }
   }
 
@@ -189,14 +199,14 @@ painters.aboutOrganic = function paintAboutOrganic(g, e) {
       }
     });
     // 樹液光點:沿三條中層枝循環流動(內容=會一直長出來)
-    const sapN = mobile ? 4 : 6;
+    const sapN = mobile ? 6 : 9;
     const flow = T.segs.filter((s) => s.lv === 1 || s.lv === 2);
     for (let i = 0; i < sapN && flow.length; i++) {
       const s = flow[(i * 5) % flow.length];
       if (s.ord >= G) continue;
-      const u = (t * (.16 + i * .03) + i * .37) % 1;
+      const u = (t * (.22 + i * .04) + i * .37) % 1;
       const p0 = qAt(s, u);
-      d.node(X(p0.x), Y(p0.y), 1.8, i % 2 ? C.blue : C.orange, (.2 + .6 * kN) * (1 - kT * .4));
+      d.node(X(p0.x), Y(p0.y), 2.2, i % 2 ? C.blue : C.orange, (.25 + .65 * kN) * (1 - kT * .4));
     }
   }
 

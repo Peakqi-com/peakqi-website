@@ -1445,7 +1445,10 @@ function paintDemo(g, e) {
     y0 = vy; availH = z.y + z.h - vy - 4;
   }
   if (availH < 96) return;
-  const s = clamp(Math.min(z.w / 560, availH / 380), mobile ? .7 : .62, 1.25);
+  // 手機是方形舞台(data-hero-zone="square"):以寬為主放大,內容吃滿正方形;各景高度護欄自縮
+  const s = mobile
+    ? clamp(Math.min(z.w / 430, availH / 360), .8, 1.25)
+    : clamp(Math.min(z.w / 560, availH / 380), .62, 1.25);
   let fs = Math.max(12.5, 13 * s), fsS = Math.max(10.5, 10.5 * s);
   if (mobile && !isStatic) { fs = Math.max(15.5, fs); fsS = Math.max(12, fsS); } // 手機可讀鐵律
   const pw = Math.min(z.w - (mobile ? 4 : 12), 640);
