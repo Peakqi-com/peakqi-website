@@ -571,7 +571,7 @@ export function createHomeEngine() {
         return out;
       }
       // 二分搜尋「排得下的最大縮放」→ 排得密、又不溢出
-      let lo = 0.001, hi = 1.4, best = null, bestF = 0;
+      let lo = 0.001, hi = 1.65, best = null, bestF = 0;
       for (let it = 0; it < 30; it++) {
         const mid = (lo + hi) / 2, r = pack(mid);
         if (r) { best = r; bestF = mid; lo = mid; } else hi = mid;
@@ -770,9 +770,13 @@ export function createHomeEngine() {
           });
           // 攤平陳列順序:大件排前面(靠近中央),小件往外圍
           const _sorted = parts.slice().sort((a, b) => b.sizeLocal - a.sizeLocal);
-          _sorted.forEach((pp, r) => { pp.knollIdx = r; });
           knollMaxSize = _sorted[0] ? _sorted[0].sizeLocal : 0.001;
-          knollSizes = _sorted.map(pp => pp.sizeLocal / knollMaxSize);   // 排版用:真實比例(最大=1)
+          // 手機:壓縮尺寸級距(size^0.62)——真實比例下小零件小到看不見、版面填不滿
+          //(使用者:「所有零件都可以大一點,要能塞滿」)。每件的縮放各自用
+          // 自己的格子換算(見 knollFit),所以壓縮級距不會造成重疊。桌機維持真實比例。
+          const KEXP = isMobile ? 0.54 : 1;
+          _sorted.forEach((pp, r) => { pp.knollIdx = r; pp.knollRatio = Math.pow(pp.sizeLocal / knollMaxSize, KEXP); });
+          knollSizes = _sorted.map(pp => pp.knollRatio);
           // D 材質化掃描:依零件在模型上的左右位置給一個 0~1 的順序,轉場時像一道波掃過去
           {
             let xmin = Infinity, xmax = -Infinity;
@@ -1155,7 +1159,7 @@ export function createHomeEngine() {
         // _hx/_hy = 主角在畫面上佔的半寬/半高(viewW/viewH 的比例)。
         // 排版座標 x、y **都以 gridW 為單位**(y 的範圍是 ±Hn/2,Hn = gridH/gridW),
         // 所以 holeRYn 必須除以 gridW;先前除以 gridH → 洞比實際高 1.6 倍,主角上下整片排不進零件。
-        const _hx = isMobile ? 0.42 : 0.32, _hy = isMobile ? 0.34 : 0.42;   // 洞跟著主角放大,等待零件不壓到主角
+        const _hx = isMobile ? 0.38 : 0.32, _hy = isMobile ? 0.29 : 0.42;   // 淨空收窄:零件圍上來,不留空環
         const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridW;
         const holeCXn = sideOff / gridW;   // 洞的中心(正規化)= 主角實際所在的位置
         const aspect = gridW / gridH;
@@ -1318,7 +1322,9 @@ export function createHomeEngine() {
         let knollFit = 1;
         if (sKnollK > 0.001 && _knoll.f > 0) {
           // 全部零件同一個倍率 → 維持真實比例(大的還是大、小的還是小),不個別亂調
-          knollFit = (_knoll.f * _knoll.gridW * (1 - (_knoll.cut || 0))) / Math.max(1e-4, knollMaxSize * _knoll.wS);   // 壓縮後同步縮小,不會互相重疊
+          // 逐件換算:自己的格寬(knollRatio*f)÷ 自己的實際尺寸 → 小零件放大、大零件不變,格內不重疊
+          const _ratio = part.knollRatio ?? (part.sizeLocal / knollMaxSize);
+          knollFit = (_knoll.f * _knoll.gridW * (1 - (_knoll.cut || 0)) * _ratio) / Math.max(1e-4, part.sizeLocal * _knoll.wS);
         }
         const knollBase = 1 + (knollFit - 1) * sKnollK;
         let tScale = knollBase;
@@ -1443,7 +1449,9 @@ export function createHomeEngine() {
         for (let e = 0; e < part.edges.length; e++) {
           const em = part.edges[e];
           em.color.copy(part.baseColor).lerp(BLACK, paperK);
-          if (isFocus) em.color.lerp(PQ_ORANGE, 0.32 * sFocusK);
+          // 藍圖段主角上材質後,深色件(感光玻璃/螢幕)會變一團黑 —— 輪廓線改亮橘,
+          // 黑件也讀得出形;等待中的零件維持黑線稿。
+          if (isShown) em.color.lerp(PQ_ORANGE, (0.32 + 0.55 * paperK) * sFocusK);
           em.blending = paperK > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
           const wireLine = wireP * (hi ? 0.95 : 0.5) * (0.6 + 0.4 * op2) + front * 0.9;   // 波前加亮 = 掃過去的那道光
           // 展示時的線條層次(壓掉雜線):強調零件 1.0 → 同組其餘 0.4 → 被推開的零件最淡;隨 sFocusK 平順過渡
