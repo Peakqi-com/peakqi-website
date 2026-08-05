@@ -1,30 +1,20 @@
 const grid = document.querySelector('.pq-modgrid');
-if (!grid) return 'no grid';
-grid.scrollIntoView({ block: 'center' });
-await new Promise(r => setTimeout(r, 1600));
-const WIRE = ['.sag', '.bar', '.sag3', '.sag4', '.sag5', '.sag6'];
-const out = [];
-document.querySelectorAll('.pq-mod').forEach((card, i) => {
-  const ico = card.querySelector('.ico');
-  const svg = ico && ico.querySelector('svg');
-  const wire = svg && svg.querySelector(WIRE[i]);
-  const cr = card.getBoundingClientRect();
-  // 卡片「上緣那條線」= 上一列的 border-bottom 或 grid 的 border-top,實際就在 card.top
-  const lineY = cr.top;
-  let wireY = null, wireBox = null;
-  if (wire) {
-    const wr = wire.getBoundingClientRect();      // 含所有 transform 的真實位置
-    wireBox = { top: Math.round(wr.top), bottom: Math.round(wr.bottom), h: Math.round(wr.height) };
-    wireY = wr.top + wr.height / 2;
-  }
-  const ir = ico ? ico.getBoundingClientRect() : null;
-  out.push({
-    n: i + 1, cls: (card.className.match(/pqbrk\d/) || [''])[0],
-    lineY: Math.round(lineY),
-    icoTop: ir ? Math.round(ir.top) : null, icoH: ir ? Math.round(ir.height) : null,
-    vb: svg ? svg.getAttribute('viewBox') : null,
-    wireBox,
-    delta: wireY == null ? null : Math.round(wireY - lineY)   // +下沉 / -上浮
-  });
+grid.scrollIntoView();
+await new Promise(r => setTimeout(r, 900));
+for (let i = 0; i < 30; i++) await new Promise(r => requestAnimationFrame(r));
+const mods = Array.from(document.querySelectorAll('.pq-mod'));
+const out = mods.map((m, i) => {
+  const svg = m.querySelector('.ico svg');
+  const vb = svg.viewBox.baseVal;
+  const sag = svg.querySelector('.sag, .bar');
+  const sr = svg.getBoundingClientRect();
+  const scale = sr.height / vb.height;
+  // 弧線起點的 viewBox y(路徑 M x y 的 y)
+  let sagY = null;
+  if (sag) { const d = sag.getAttribute('d'); const m2 = /M\s*[\d.]+\s+([\d.]+)/.exec(d); if (m2) sagY = parseFloat(m2[1]); }
+  const sagScreen = sagY === null ? null : sr.top + sagY * scale;
+  // 目標線:上一張卡的 border-bottom(= 上一卡底),第一張用 grid 頂
+  const target = i === 0 ? grid.getBoundingClientRect().top : mods[i - 1].getBoundingClientRect().bottom;
+  return { i: i + 1, sagScreen: sagScreen === null ? null : Math.round(sagScreen), target: Math.round(target), off: sagScreen === null ? null : Math.round(sagScreen - target) };
 });
-return JSON.stringify({ vw: innerWidth, rows: out }, null, 1);
+return JSON.stringify({ vw: innerWidth, out }, null, 1);

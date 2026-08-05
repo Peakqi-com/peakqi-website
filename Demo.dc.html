@@ -71,7 +71,18 @@ nav[aria-label="breadcrumb"]{align-items:center}
 }
 @media (max-width:659px){#pq-ind-grid2{grid-template-columns:1fr!important}}
 @media (max-width:399px){[role="status"]{font-size:.5625rem!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
-@media (max-width:899px){[data-hero-media] div[style*="overflow-y:auto"],[data-hero-media] div[style*="overflow-y: auto"]{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent)}}
+/* 手機:草稿面板整組(含摘要與 CTA)原本被 82vh 撐到舞台外 —— 實測 390x844 時
+   面板底 1027 > 舞台底 844,末尾的草稿摘要與「帶著這份草稿」CTA 全被裁掉。
+   改為:容器高度鎖在舞台剩餘空間內、容器自身可捲;內層原捲動區改為順流,
+   單一捲動脈絡(巢狀雙捲在觸控上很難用),漸層遮罩移到容器上提示還有內容。 */
+@media (max-width:899px){
+  [data-hero-media]{
+    max-height:calc(100svh - 352px)!important;
+    overflow-y:auto!important;
+    -webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent);
+    mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent)}
+  [data-hero-media] div[style*="overflow-y:auto"],[data-hero-media] div[style*="overflow-y: auto"]{overflow-y:visible!important;flex:none!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}

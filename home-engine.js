@@ -1148,14 +1148,14 @@ export function createHomeEngine() {
         parts[0].node.parent.getWorldScale(_wScale);
         const wS = (_wScale.x + _wScale.y + _wScale.z) / 3;
         _knoll.wS = wS;
-        const gridW = viewW * (isMobile ? 0.90 : 0.99), gridH = viewH * (isMobile ? 0.92 : 1.0);   // 略微超出畫面邊緣,零件可以排大一點(邊緣輕微裁切是自然的)
+        const gridW = viewW * (isMobile ? 1.02 : 0.99), gridH = viewH * (isMobile ? 1.00 : 1.0);   // 手機加大到滿版微溢出:零件要「塞滿畫面」,邊緣輕微裁切是自然的
         // 中央淨空(正規化):半徑要蓋得住放大的主元件
         // 中央淨空必須用「實際網格寬高」正規化。先前手機網格是 viewW*0.90 卻仍除以 1.04,
         // 正規化後的洞比預期小 → 等待中的零件會壓到中央放大的主角。
         // _hx/_hy = 主角在畫面上佔的半寬/半高(viewW/viewH 的比例)。
         // 排版座標 x、y **都以 gridW 為單位**(y 的範圍是 ±Hn/2,Hn = gridH/gridW),
         // 所以 holeRYn 必須除以 gridW;先前除以 gridH → 洞比實際高 1.6 倍,主角上下整片排不進零件。
-        const _hx = isMobile ? 0.36 : 0.32, _hy = isMobile ? 0.28 : 0.42;
+        const _hx = isMobile ? 0.42 : 0.32, _hy = isMobile ? 0.34 : 0.42;   // 洞跟著主角放大,等待零件不壓到主角
         const holeRXn = _hx * viewW / gridW, holeRYn = _hy * viewH / gridW;
         const holeCXn = sideOff / gridW;   // 洞的中心(正規化)= 主角實際所在的位置
         const aspect = gridW / gridH;
@@ -1202,7 +1202,7 @@ export function createHomeEngine() {
             const ph = Math.max(1e-4, mxy - mny), pw = Math.max(1e-4, 2 * exR);
             // 上限放寬:小零件(鏡片環/按鍵)要放大到滿版需要 20~40 倍,卡在 16 倍就會「特寫還是太小」
             // 寬度上限扣掉字卡區(桌機字卡約佔 30% 寬),確保主角與字卡完全不重疊
-            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.62 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? (0.60 + (1 - mCardK) * 0.26) : 1) / ph), 1, 60);
+            sGroupTarget = clamp(Math.min(viewW * (isMobile ? 0.78 : 0.52) / pw, viewH * (_grp ? 0.82 : 0.86) * (isMobile ? (0.68 + (1 - mCardK) * 0.24) : 1) / ph), 1, 60);
           }
         }
       }
@@ -1257,9 +1257,9 @@ export function createHomeEngine() {
       const _sumQ = sceneProgress('summary');
       const summaryHold = ez(sub(_sumQ, 0.05, 0.25)) * (1 - ez(sub(_sumQ, 0.78, 1.00)));
       const _posTargetY = isMobile
-        ? (2.35 * dark * (1 - flipK) - 0.95 * summaryHold                       // 首頁/拆解:相機抬到字卡帶之上(字卡上緣約 50%)
+        ? (1.45 * dark * (1 - flipK) - 0.55 * summaryHold                       // 首頁/拆解:降到畫面中間偏上(原 2.35 頂太高,下方一整片黑)
            + 0.72 * paperK * (1 - flipK) * mCardK          // 白藍圖:只有「有字卡」時才抬起讓位
-           + 0.45 * flipK                                   // 翻面看螢幕
+           + 0.05 * flipK                                   // 翻面看螢幕:同樣落在中間偏上(原 +0.45 太高)
            - 0.62 * introK)                                 // 章節開場:標題在上,模型下移讓開並填滿下半部
         : 0;
       rig.position.y += (_posTargetY - rig.position.y) * (snapping ? 1 : (0.04 + flipK * flipK * 0.3));
@@ -1415,6 +1415,7 @@ export function createHomeEngine() {
         // D 材質化掃描:rp = 這個零件的材質化進度(左邊的零件先變實體)
         const rp = clamp((R - (part.swp || 0) * 0.42) / 0.58, 0, 1);
         part.solidP = 1 - ez(sub(p, 0.14, 0.24)) * (1 - rp);
+        if (isShown) part.solidP = Math.max(part.solidP, sFocusK);   // 展示主角:上材質(實體),其餘維持線稿
         const wireP = 1 - part.solidP;                       // 這個零件當下的線稿強度
         const front = rp > 0 && rp < 1 ? 1 - Math.abs(rp * 2 - 1) : 0;   // 波前:正在材質化的那一刻最亮
         const studyDim = isStudyDim ? (1 - paperK * 0.78) : 1;         // 展示時非聚焦零件降到 ~22%(隨 paperK)
@@ -1428,7 +1429,9 @@ export function createHomeEngine() {
         // 隱線消除:白藍圖完全展開時把材質換成紙色平塗(遮住後方線條),離開時還原。
         // 只在「狀態改變」的那一幀做替換,平常零成本。
         // 遲滯(0.86 / 0.92):否則停在門檻附近時會每幀來回替換材質 → 閃爍
-        const wantPaper = (part.paperOn ? paperK > 0.86 : paperK > 0.92) && intHide > 0.5;
+        // 使用者定案:白藍圖展示「只有重點強調的物件上材質,其他都是線稿」——
+        // 展示中的零件(isShown)不換紙色平塗,走下面的強制實體分支。
+        const wantPaper = (part.paperOn ? paperK > 0.86 : paperK > 0.92) && intHide > 0.5 && !isShown;
         if (part.paperOn !== wantPaper) {
           part.paperOn = wantPaper;
           for (let f = 0; f < part.fills.length; f++) {

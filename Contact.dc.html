@@ -46,6 +46,10 @@ h1,h2{text-wrap:balance}
 html{scroll-behavior:smooth}
 body{margin:0;background:#090B0E;color:#F2EFE8;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#FF6B2C}::selection{background:#FF6B2C;color:#F2EFE8}
+/* box-sizing 必寫:.pq-wrap 是 width:100% 而 .pq-sec 有左右內距,content-box 下
+   實寬 = 100% + 40px —— 實測 390 視窗時每個 section 都寬 40px,右緣被
+   overflow:hidden 靜默吃掉(所以溢出探針量不到),看起來就是「整塊沒置中」。 */
+.pq-wrap,.pq-sec,.pq-wrap *,.pq-sec *{box-sizing:border-box}
 .pq-wrap{max-width:1280px;margin:0 auto;width:100%}
 .pq-sec{padding:clamp(56px,8vw,110px) clamp(20px,5vw,48px)}
 .pq-eyebrow{font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.32em;color:#FF6B2C}
