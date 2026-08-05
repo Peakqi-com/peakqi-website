@@ -140,16 +140,19 @@ nav[aria-label="breadcrumb"]{align-items:center}
 /* ═══ 產業色卡牆(INDUSTRY MATRIX 2026-08 重設計) ═══════════════════════
    一產業一張莫蘭迪色卡,卡面 = 墨線小劇場(純 CSS 子動畫,共用 i×3+b×1 骨架,
    十套 class 各演一齣);桌機橫式膠卷 scroll-snap、手機直式疊放。 */
-#a-ind-strip{margin-top:clamp(22px,3vw,36px);display:grid;grid-auto-flow:column;grid-auto-columns:clamp(212px,16.6vw,252px);gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:6px clamp(20px,5vw,48px) 14px;scroll-padding:0 clamp(20px,5vw,48px);scrollbar-width:thin;scrollbar-color:rgba(242,239,232,.3) transparent}
+#a-ind-strip{margin-top:clamp(22px,3vw,36px);display:grid;grid-auto-flow:column;grid-auto-columns:clamp(212px,16.6vw,252px);gap:14px;overflow-x:auto;overscroll-behavior-x:contain;padding:6px clamp(20px,5vw,48px) 14px;scrollbar-width:none}
+#a-ind-strip::-webkit-scrollbar{display:none}
 .pq-ind{position:relative;display:flex;flex-direction:column;min-height:296px;border-radius:10px;overflow:hidden;text-decoration:none;color:#090B0E;background:var(--mc,#B3A692);scroll-snap-align:start;box-sizing:border-box;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
 .pq-ind:hover,.pq-ind:focus-visible{transform:translateY(-6px);box-shadow:0 18px 44px rgba(0,0,0,.5)}
 .pq-ind[data-nocase="1"]{pointer-events:none}
 .pq-ind-vig{position:relative;flex:1;min-height:150px;display:block}
 .pq-ind-vig i,.pq-ind-vig b{position:absolute;display:block;box-sizing:border-box}
-.pq-ind-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:13px 15px 15px;border-top:1.5px solid rgba(9,11,14,.22)}
+/* 統一兩行置中:上=標題(中文+EN 同行),下=CASE 鈕;中英長度不再影響排版 */
+.pq-ind-meta{display:flex;flex-direction:column;align-items:center;gap:9px;padding:13px 15px 15px;border-top:1.5px solid rgba(9,11,14,.22);text-align:center}
+.pq-ind-meta .tt{display:flex;align-items:baseline;gap:8px;justify-content:center;flex-wrap:wrap}
 .pq-ind-meta b{font:900 1.0625rem 'Noto Sans TC',sans-serif}
 .pq-ind-meta i{font:600 .625rem 'Space Grotesk',sans-serif;font-style:normal;letter-spacing:.22em;opacity:.55}
-.pq-ind-meta em{margin-left:auto;font:700 .6875rem 'Space Grotesk',sans-serif;font-style:normal;letter-spacing:.08em;border:1.5px solid rgba(9,11,14,.65);border-radius:999px;padding:3px 9px;transition:background .25s,color .25s}
+.pq-ind-meta em{font:700 .6875rem 'Space Grotesk',sans-serif;font-style:normal;letter-spacing:.08em;border:1.5px solid rgba(9,11,14,.65);border-radius:999px;padding:3px 9px;transition:background .25s,color .25s}
 .pq-ind:hover .pq-ind-meta em{background:#090B0E;color:#F2EFE8}
 /* 十色莫蘭迪 */
 .pq-ind-wedding{--mc:#C7A0A0}.pq-ind-interior{--mc:#B3A692}.pq-ind-estate{--mc:#8B9DAD}
@@ -392,7 +395,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
     <sc-for list="{{ indCards }}" as="n" hint-placeholder-count="10">
       <a class="{{ n.cls }}" href="{{ n.href }}" aria-label="{{ n.aria }}" data-nocase="{{ n.nocase }}">
         <span class="pq-ind-vig" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-        <span class="pq-ind-meta"><b>{{ n.label }}</b><i>{{ n.en }}</i><sc-if value="{{ n.hasCase }}" hint-placeholder-val="{{ false }}"><em>CASE ↗</em></sc-if></span>
+        <span class="pq-ind-meta"><span class="tt"><b>{{ n.label }}</b><i>{{ n.en }}</i></span><sc-if value="{{ n.hasCase }}" hint-placeholder-val="{{ false }}"><em>CASE ↗</em></sc-if></span>
       </a>
     </sc-for>
   </div>
@@ -588,6 +591,33 @@ class Component extends DCLogic {
       .catch(() => {});
     // Allen 大頭貼互動小劇場(三幕隨機輪演)
     import('./allen-avatar.js').then(m => { if (!this._dead && !this._allen) this._allen = m.mountAllenAvatar(); }).catch(() => {});
+    // 產業色卡牆:桌機卷軸已隱藏,改自動漂移(hover/按下/滾輪即暫停 3s;到頭折返;reduced 不動)
+    this._indT = setTimeout(() => {
+      if (this._dead) return;
+      const strip = document.querySelector('#a-ind-strip');
+      if (!strip || (window.innerWidth || 0) < 900) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      let dir = 1, hold = 1000;
+      const iv = setInterval(() => {
+        if (this._dead) return;
+        if (hold > 0) { hold -= 40; return; }
+        const max = strip.scrollWidth - strip.clientWidth;
+        if (max <= 0) return;
+        strip.scrollLeft += dir * 0.6;
+        if (strip.scrollLeft >= max - 1) { dir = -1; hold = 1400; }
+        else if (strip.scrollLeft <= 1) { dir = 1; hold = 1400; }
+      }, 40);
+      const pause = () => { hold = 3000; };
+      strip.addEventListener('pointerenter', pause);
+      strip.addEventListener('pointerdown', pause);
+      strip.addEventListener('wheel', pause, { passive: true });
+      this._indDrift = () => {
+        clearInterval(iv);
+        strip.removeEventListener('pointerenter', pause);
+        strip.removeEventListener('pointerdown', pause);
+        strip.removeEventListener('wheel', pause);
+      };
+    }, 1200);
     import('./pa-engine.js')
       .then(m => { if (this._dead || this._fx) return; this._fx = m.createAboutFX(); this._fx.start(); })
       .catch(() => {});
@@ -596,6 +626,8 @@ class Component extends DCLogic {
     this._dead = true;
     if (this._hero) this._hero.destroy();
     if (this._allen) this._allen.destroy();
+    clearTimeout(this._indT);
+    if (this._indDrift) this._indDrift();
     if (this._motion) this._motion.destroy();
     if (this._fx) this._fx.destroy();
   }
