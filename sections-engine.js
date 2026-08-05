@@ -49,9 +49,8 @@ export function createSectionsEngine({ refs }) {
     const dir = p - lastPain;
     lastPain = p;
     const small = pain.root.clientWidth < 520;
-    pain.wins.forEach((w, i) => {
-      if (small && i > 2) { w.el.style.display = 'none'; return; }
-      w.el.style.display = '';
+    pain.wins.forEach((w) => {
+      if (small) return; // 手機:五窗全顯示,版位與漂浮由頁面 CSS 全權負責(引擎不寫 transform 才不會蓋掉動畫)
       const ty = (w.dep - 1) * (p - 0.5) * 130;
       w.el.style.transform = 'translateY(' + ty.toFixed(1) + 'px) rotate(' + (w.el.getAttribute('data-rot') || 0) + 'deg)';
     });

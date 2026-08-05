@@ -467,6 +467,8 @@ function ensureMobileCollapseCss() {
   const st = document.createElement('style');
   st.textContent = '@media (max-width:899px){' +
     '[data-hero-stage]{align-items:flex-start!important}' +
+    // 收合後內容變短:整組落到舞台垂直置中,底下不再空一大塊(intro 版式頁維持定案的頂對齊)
+    '[data-hero-stage].pq-hero-compact:not([data-hero-media-top="intro"]){align-items:center!important;align-items:safe center!important}' +
     '[data-hero-progress]{display:none!important}' +
     '[data-hero-stage]:has(.pq-hero-compact) [data-shotwall],[data-hero-stage]:has(.pq-hero-compact) [data-ashotwall]{top:40%!important;height:60%!important;transition:top .45s cubic-bezier(.16,1,.3,1),height .45s cubic-bezier(.16,1,.3,1)}' +
     '[data-hero-copy] .pq-clp{max-height:440px;transition:opacity .3s ease,max-height .45s cubic-bezier(.16,1,.3,1),margin .45s cubic-bezier(.16,1,.3,1);overflow:hidden}' +

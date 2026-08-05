@@ -1005,8 +1005,11 @@ function pricingRowsDesktop(g, e, ctx) {
           g.setLineDash([3, 4]); g.strokeStyle = 'rgba(242,239,232,.4)'; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
           g.fillStyle = 'rgba(242,239,232,.9)';
         } else {
-          g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,.13)' : 'rgba(255,107,44,.13)'; g.fill();
-          g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,.6)' : 'rgba(255,107,44,.6)'; g.lineWidth = 1; g.stroke();
+          // 子動畫:晶片逐顆輪巡微亮(相位吃列序與顆序,三列不同步)
+          const gl = Math.max(0, Math.sin(e.t * 1.8 - (i * 5 + seq) * .9));
+          const ca = (base) => (base + .1 * gl).toFixed(3);
+          g.fillStyle = m.c === C.blue ? 'rgba(62,155,255,' + ca(.13) + ')' : 'rgba(255,107,44,' + ca(.13) + ')'; g.fill();
+          g.strokeStyle = m.c === C.blue ? 'rgba(62,155,255,' + (.6 + .3 * gl).toFixed(3) + ')' : 'rgba(255,107,44,' + (.6 + .3 * gl).toFixed(3) + ')'; g.lineWidth = 1; g.stroke();
           g.fillStyle = 'rgba(242,239,232,.95)';
         }
         g.font = '600 ' + fMod + 'px "Noto Sans TC",sans-serif';
@@ -1062,7 +1065,7 @@ function pricingRowsDesktop(g, e, ctx) {
     g.save(); g.globalAlpha = a;
     d.line(z.x, rowsBottom + 12, z.x + z.w, rowsBottom + 12, 1, 'rgba(242,239,232,.14)', 1);
     d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
-    if (e.tier === 'full' && kU >= .98) {
+    if (kU >= .98) {   // 流動虛線不再鎖 full:手機(lite)已有 30fps 連續重繪,凍住只是浪費
       g.setLineDash([6, 10]); g.lineDashOffset = -e.t * 30;
       g.strokeStyle = 'rgba(101,224,188,.9)'; g.lineWidth = 2;
       g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
@@ -1182,11 +1185,15 @@ function paintPricing(g, e) {
       const lx0 = z.x + 4, lx1 = z.x + z.w - 4;
       g.save(); g.globalAlpha = a;
       d.line(lx0, ly1, lx1, ly1, kU, 'rgba(101,224,188,.6)', 2);
-      if (e.tier === 'full' && kU >= .98) {
+      if (kU >= .98) {   // 手機 30fps 連續重繪已存在,流動虛線不再鎖 full
         g.setLineDash([6, 10]); g.lineDashOffset = -t * 30;
         g.strokeStyle = 'rgba(101,224,188,.9)'; g.lineWidth = 2;
         g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
         g.setLineDash([]); g.lineDashOffset = 0;
+        // 子動畫:兩條計費通道各一顆巡邏光點
+        const fd1 = (t * .14) % 1, fd2 = (t * .11 + .4) % 1;
+        d.node(lx0 + (lx1 - lx0) * fd1, ly1, 2.5, C.green, a);
+        d.node(lx0 + (lx1 - lx0) * fd2, ly2, 2.5, C.blue, a * ez(sb(kU, .15, 1)));
       }
       d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
       const k2u = ez(sb(kU, .15, 1));
@@ -1225,9 +1232,9 @@ function paintPricing(g, e) {
     };
     const inK = ez(sb(kO, .5, .82));   // 卡片在 kO≈0.46 才退乾淨,終幕晚一步進場才不會疊印
     g.globalAlpha = a * inK;
-    const hy = z.y + z.h * (mobile ? .2 : .26);
+    const hy = z.y + z.h * (mobile ? .16 : .26);
     const pulse = .55 + .45 * Math.sin(t * 2.4);
-    const fTitle = mobile ? Math.max(17, 21 * s) : Math.max(23, 25 * s);
+    const fTitle = mobile ? Math.max(19, 21 * s) : Math.max(23, 25 * s);
     const fKick = mobile ? Math.max(10, 11 * s) : Math.max(12, 12.5 * s);
     labelC('PEAKQI OS · RUNNING', cx, hy - fTitle - 14, fKick, C.orange, 2.2);
     g.font = '900 ' + fTitle + 'px "Noto Sans TC",sans-serif';
@@ -1239,7 +1246,7 @@ function paintPricing(g, e) {
     // 三個大藥丸:方案名 + 綠勾(逐一亮起)
     const fPill = mobile ? Math.max(12, 13 * s) : Math.max(15, 15 * s);
     const pw = Math.min(rw, 210 * s), ph = Math.max(38, fPill * 2.9);
-    const py = z.y + z.h * (mobile ? .38 : .42);
+    const py = z.y + z.h * (mobile ? .3 : .42);
     meta.forEach((m, i) => {
       const ka = ez(sb(kO, .54 + i * .1, .78 + i * .1));
       if (ka <= 0.01) return;
@@ -1252,6 +1259,27 @@ function paintPricing(g, e) {
       d.han(m.zh, px2 + 33, py + ph / 2 + fPill * .36, fPill, C.ivory, 800);
       g.globalAlpha = a;
     });
+    if (mobile) {
+      // 手機終幕原本只有標題+藥丸+心跳線,整面偏空:補「A→B→C 串接軌」與模組數,
+      // 軌上一顆巡邏光點常駐流動,畫面才有「運作中」的密度
+      const railK = ez(sb(kO, .62, .9));
+      if (railK > 0.02) {
+        const rely = py + ph + Math.max(14, z.h * .05);
+        const x0 = z.x + rw / 2, x1 = z.x + 2 * (rw + gap) + rw / 2;
+        g.globalAlpha = a * inK * railK;
+        d.line(x0, rely, x1, rely, railK, 'rgba(242,239,232,.25)', 1);
+        meta.forEach((m2, i2) => {
+          d.node(z.x + i2 * (rw + gap) + rw / 2, rely, 2.5, m2.c === C.blue ? C.blue : C.orange, a * inK * railK);
+        });
+        const fd = (t * .16) % 1;
+        d.node(x0 + (x1 - x0) * fd, rely, 3, C.green, a * inK * railK);
+        const fTal = Math.max(10, 10.5 * s);
+        ['4 模組', '8 模組', '12 模組'].forEach((txt, i2) => {
+          labelC(txt, z.x + i2 * (rw + gap) + rw / 2, rely + fTal + 12, fTal, 'rgba(242,239,232,.6)', .5);
+        });
+        g.globalAlpha = a * inK;
+      }
+    }
     // 心跳線:運作中的生命感(整條隨時間流動)
     const wy = z.y + z.h * (mobile ? .66 : .7);
     const seg = 44;
@@ -1260,7 +1288,7 @@ function paintPricing(g, e) {
     for (let i2 = 0; i2 <= seg; i2++) {
       const fx2 = i2 / seg;
       const px3 = z.x + z.w * .06 + z.w * .88 * fx2;
-      const beat = Math.exp(-Math.pow(((fx2 * 3 + (e.tier === 'full' ? t * .5 : 0)) % 1) - .5, 2) * 90);
+      const beat = Math.exp(-Math.pow(((fx2 * 3 + t * .5) % 1) - .5, 2) * 90); // 心跳流速不鎖 full:手機也要活著
       const py3 = wy - beat * z.h * .06 * (1 + .15 * Math.sin(t * 3));
       if (i2 === 0) g.moveTo(px3, py3); else g.lineTo(px3, py3);
     }

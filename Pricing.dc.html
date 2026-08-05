@@ -333,6 +333,9 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
+/* 收合後 canvaszone 別再佔 42vh:手機畫布區是 computeZone 自算(copy 底→視窗底),
+   這個佔位盒縮小純粹讓整組垂直置中的重心下沉,不影響畫布實際繪圖範圍 */
+[data-hero-stage].pq-hero-compact [data-hero-canvaszone]{min-height:30svh!important}
 [data-plannote]{display:none!important}
 [data-hero-copy] h1{font-size:clamp(1.55rem,6.6vw,1.9rem)!important;text-wrap:balance}
 }
@@ -700,7 +703,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
-<section id="p-risk" data-screen-label="低風險" style="padding:0 clamp(20px,5vw,48px) clamp(64px,8vw,104px)">
+<section id="p-risk" data-screen-label="低風險" style="padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px) clamp(64px,8vw,104px)">
   <div style="max-width:1360px;margin:0 auto">
     <div style="display:flex;flex-wrap:wrap;gap:clamp(18px,2.5vw,28px);align-items:end;justify-content:space-between">
       <h2 style="margin:0;font:900 clamp(1.6rem,3vw,2.4rem)/1.25 'Noto Sans TC',sans-serif">先確認有用,再談合作</h2>
