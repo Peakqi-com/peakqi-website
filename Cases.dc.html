@@ -192,7 +192,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
        節奏換算:故事內部 1300vh、每章 170vh、字卡佔章內 62%。
        跑道可捲距離 2100vh → 每章 = 170/1300*2100 ≈ 275vh,4 張卡的章節每張約 43vh、
        5 張卡(含實績卡)的章節每張約 34vh,足夠讀完再換卡,不會一滑就過。 -->
-  <div id="pq-bh-runway" style="height:2200vh;position:relative;margin-top:clamp(24px,4vw,40px)">
+  <!-- margin-top 會從無 padding 的 section 頂「塌陷逃逸」,在兩個深色段之間露出一條米白 body(電腦手機都看得到)——改 padding-top 收在段內 -->
+  <div id="pq-bh-runway" style="height:2200vh;position:relative;padding-top:clamp(24px,4vw,40px);box-sizing:border-box">
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
       <iframe id="pq-bh-frame" src="Steampunk/peakqi-story.html" title="PeakQi 品牌屋 3D 導覽"
         loading="lazy" scrolling="no"

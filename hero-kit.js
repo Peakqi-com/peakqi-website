@@ -113,8 +113,11 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
         // 動畫在上、文案在下(使用者指定的版式,stage 加 data-hero-media-top 啟用):
         // 繪圖區自舞台頂往下吃到「文案實際頂部」之上;文案收合時 zone 跟著長高。
         const ct = copyEl ? rectIn(copyEl).y : H * .62;
-        const top = Math.max(12, H * .02);
-        z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, ct - 14 - top) };
+        // 高度設上限並把繪圖區「貼著文案上緣」——文案收合後(舞台置中)整組
+        // canvas+文案一起落在畫面中間,而不是 canvas 貼頂、下半場空一大片。
+        const zh = Math.max(150, Math.min(ct - 26, H * .52));
+        const top = Math.max(12, ct - 14 - zh);
+        z = { x: 10, y: top, w: Math.max(180, W - 20), h: zh };
       } else {
         // 預設:繪圖區滿版寬,自「文案實際底部」起,往下吃到浮動 CTA pill 之上
         const cb = copyEl ? rectIn(copyEl).y + copyEl.offsetHeight + 12 : H * .3;

@@ -140,13 +140,19 @@ export function createSolutions() {
     const dets = qa('#modules [data-sdet]');
     const core = q('#modules [data-score]');
     if (!rows.length) return;
-    // 手機:桌機的「按鈕 → 右側面板切換」在手機看不到面板,切換無感。
-    // 把每張細節卡搬到自己那一列底下變手風琴;捲動導覽照樣逐列開合。
+    // 手機(使用者定案):不做切換也不做手風琴 —— 捲動開合會一直跳版面很難往下滑。
+    // 直接把六張「會動的細節卡」全部靜態排在清單後面;上面那六列變成純展示、不可互動。
     const mob = ctx.mobile;
-    if (mob) rows.forEach((el, i) => {
-      const d = dets[i];
-      if (d) { el.insertAdjacentElement('afterend', d); d.classList.add('pq-sdet-m'); }
-    });
+    if (mob) {
+      const shell = q('#pq-sol-detshell');
+      const listBox = rows[0].parentElement;
+      if (shell && shell.parentElement) {
+        dets.forEach((d) => { d.classList.add('pq-sdet-m', 'is-open'); shell.parentElement.insertBefore(d, shell); });
+      }
+      if (listBox) listBox.style.pointerEvents = 'none';
+      rows.forEach((el) => el.setAttribute('aria-hidden', 'false'));
+      return;   // 不掛 hover/click/捲動,細節卡的子動畫由 CSS 自己跑
+    }
     const setActive = (idx, anim) => {
       rows.forEach((el, i) => {
         const on = i === idx;
@@ -155,11 +161,10 @@ export function createSolutions() {
         el.style.background = on ? '#090B0E' : '#F2EFE8';
         el.style.color = on ? '#F2EFE8' : '#090B0E';
         el.setAttribute('aria-current', on ? 'true' : 'false');
-        if (mob) el.setAttribute('aria-expanded', on ? 'true' : 'false');
+
       });
       dets.forEach((el, i) => {
         const on = i === idx;
-        if (mob) { el.classList.toggle('is-open', on); return; }   // 手風琴:CSS 控顯示
         if (anim) el.style.transition = 'opacity 240ms cubic-bezier(0.65,0,0.35,1), clip-path 240ms cubic-bezier(0.16,1,0.3,1)';
         el.style.opacity = on ? '1' : '0';
         el.style.clipPath = on ? 'inset(0 0 0 0)' : 'inset(0 0 14% 0)';
@@ -176,12 +181,12 @@ export function createSolutions() {
     });
     let cur = -1;
     setActive(0, false);
-    if (!wrap && !mob) return;   // 桌機沒 pin(reduced)維持靜態第一項
-    ScrollChapter(ctx, wrap || sec, (p) => {
+    if (!wrap) return;   // 桌機沒 pin(reduced)維持靜態第一項
+    ScrollChapter(ctx, wrap, (p) => {
       if (core) core.style.transform = 'translateY(' + ((0.5 - p) * 16).toFixed(1) + 'px)';
       const idx = clamp(Math.floor(sub(p, 0.04, 0.96) * rows.length), 0, rows.length - 1);
       if (idx !== cur) { cur = idx; setActive(idx, true); }
-    }, { pinned: !!wrap });
+    }, { pinned: true });
   }
 
   function integration() { // 結尾系統合併:三層 chips + 六模組收進控制台(pinned 可逆;mobile/reduced 走 IO 一次進場)

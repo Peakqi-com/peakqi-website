@@ -511,8 +511,12 @@ export function createHeroEngine({ refs, manifest }) {
       const k = ez(sub(q, 0.46, 0.72));
       SC = lerp(mScW, mScD, k);
       const fx = lerp(740, CF.x + CF.w / 2, k), fy = lerp(400, CF.y + CF.h / 2, k);
+      // 尾景(t5 置底淡入):主機台微縮並上浮到上半場,「動畫在上、文字在下」。
+      // 縮放必須在 OX/OY 之前套用,兩軸才會用同一個 SC 對位。
+      const kEnd = ez(sub(q, 0.86, 0.96));
+      SC *= 1 - 0.14 * kEnd;
       OX = W / 2 - fx * SC;
-      OY = NAV + mAnimH * lerp(0.6, 0.5, k) - fy * SC;
+      OY = NAV + mAnimH * (lerp(0.6, 0.5, k) - 0.17 * kEnd) - fy * SC;
     }
     watermark(q);
     const cam = 1 + 0.045 * ez(sub(q, 0.42, 0.56)) * (1 - ez(sub(q, 0.76, 0.9)));
@@ -533,9 +537,9 @@ export function createHeroEngine({ refs, manifest }) {
     el.style.visibility = o <= 0.001 ? 'hidden' : 'visible';
     const ty = (1 - sub(q, a, b)) * 20 - sub(q, c, d) * 16;
     if (keepCenter !== false) {
-      // 手機採上下分區:文字靠上錨定(無 -50%);桌機維持垂直置中
+      // 手機:文字定點淡入淡出,不做位移(使用者定案「捲的時候不要移動」);桌機維持置中+位移
       el.style.transform = isMobile
-        ? 'translateY(' + ty.toFixed(1) + 'px)'
+        ? 'none'
         : 'translateY(calc(-50% + ' + ty.toFixed(1) + 'px))';
     }
     return o;
@@ -580,8 +584,10 @@ export function createHeroEngine({ refs, manifest }) {
         if (key !== lastScrimK) {
           lastScrimK = key;
           scrimEl.style.opacity = oMax.toFixed(2);
+          // t5 文字改置底後,遮罩要反轉成「下深上透」:上半留給主機台動畫,
+          // 下半壓暗給文字;t1–t4(文字在上)維持上深下透。
           scrimEl.style.background = o5 > 0.01
-            ? 'linear-gradient(180deg,rgba(9,11,14,.96) 0%,rgba(9,11,14,.92) 40%,rgba(9,11,14,' + (0.5 + 0.47 * o5).toFixed(2) + ') 62%,rgba(9,11,14,' + (0.92 * o5).toFixed(2) + ') 100%)'
+            ? 'linear-gradient(0deg,rgba(9,11,14,' + (0.55 + 0.41 * o5).toFixed(2) + ') 0%,rgba(9,11,14,' + (0.5 + 0.3 * o5).toFixed(2) + ') 46%,rgba(9,11,14,' + (0.24 * o5).toFixed(2) + ') 72%,rgba(9,11,14,0) 100%)'
             : 'linear-gradient(180deg,rgba(9,11,14,.94) 0%,rgba(9,11,14,.86) 30%,rgba(9,11,14,.5) 44%,rgba(9,11,14,0) 60%)';
         }
       }
@@ -624,13 +630,23 @@ export function createHeroEngine({ refs, manifest }) {
       if (!el) return;
       const o = textOrig[i];
       if (isMobile) {
-        el.style.top = (NAV + 10) + 'px';
+        // 各塊各自版位:t2/t3 下移一段(原本頂著 NAV 太高);
+        // t5 尾景改「動畫在上、文字在下」—— 置底,底下不再一片空。
+        const mTops = [NAV + 10, NAV + 64, NAV + 64, NAV + 10, null];
+        if (i === 4) {
+          el.style.top = 'auto';
+          el.style.bottom = 'calc(92px + env(safe-area-inset-bottom, 0px))';
+        } else {
+          el.style.top = mTops[i] + 'px';
+          el.style.bottom = 'auto';
+        }
         el.style.left = '18px';
         el.style.right = '18px';
         el.style.width = 'auto';
         el.style.maxWidth = 'none';
       } else if (o) {
         el.style.top = o.top;
+        el.style.bottom = 'auto';
         el.style.left = o.left;
         el.style.right = o.right;
         el.style.width = o.width;
