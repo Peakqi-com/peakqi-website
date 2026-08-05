@@ -654,7 +654,7 @@ function paintSolutions(g, e) {
 function paintCases(g, e) {
   // 場域情境舞台(2026-08 無圖重設計):五景同構——產業徽章+幾何場域圖+對話帶+狀態晶片。
   // 純 canvas 幾何,不用截圖;桌機/手機同語言;字級帶下限;交叉切換乾淨(前景快退)。
-  const { zone: z, k, C, d, mobile, t } = e;
+  const { zone: z, k, C, d, mobile, t, gp } = e;
   const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
   const S = clamp(Math.min(z.w / 520, z.h / 460), mobile ? .95 : .62, 1.25);
   // 手機字級拉到與其他 hero 一致(原本 12/11/9.5 太小);版面改用「理想高度」佈局,
@@ -674,6 +674,15 @@ function paintCases(g, e) {
   const NAME = { wed: '婚禮婚慶', int: '室內設計', rea: '房仲不動產', bea: '美業預約', sum: 'YOUR TURN' };
   const HUE = { wed: C.orange, int: C.orange, rea: C.blue, bea: C.green, sum: C.green };
 
+  // ── 開場 ident:五場域星陣(2026-08 使用者回饋:靜止首屏的畫面與場域 01 完全重複)
+  // gp<0.06 只畫獨立開場——五個場域色點沿三圈橢圓導軌慢速環繞核心光圈,軌跡拖尾、
+  // 依序點亮+擴散圈,下方 PROOF IN MOTION 動態字距逐字浮現;首載跑一次 boot 序列。
+  // 0.06–0.12 交棒:光圈張開、整陣放大淡出;場景卡以同區間 lead 淡入接手
+  // (既有五場景繪製本體不動,只在總 alpha 乘上交棒係數)。
+  const introA = 1 - ez(sb(gp, .06, .12));
+  const lead = ez(sb(gp, .055, .125));
+  if (introA > 0.02) introIdent(introA);
+
   order.forEach((id, idx) => {
     const kv = ks[id];
     if (kv <= 0.02) return;
@@ -682,7 +691,7 @@ function paintCases(g, e) {
     // (實測舊卡 a=0.59、新卡 a=0.48 同時在畫),兩張卡的編號與產業名直接疊印成亂碼。
     // 改成不重疊的接力:舊卡在下一景 12% 前就退乾淨,新卡 13% 之後才開始進場。
     const fd = nxt ? 1 - ez(sb(ks[nxt], 0, .12)) : 1;
-    const a = ez(sb(kv, .13, .34)) * fd;
+    const a = ez(sb(kv, .13, .34)) * fd * lead; // lead=開場 ident 交棒係數(gp<0.055 場景卡完全讓位)
     if (a <= 0.02) return;
     g.save();
     // 空間不足時整組等比縮小(以面板上緣中點為錨),版面座標維持在理想尺寸
@@ -893,6 +902,132 @@ function paintCases(g, e) {
       g.globalAlpha = a * kc;
       xx += d.chip(xx, yBase - Math.max(18, 20 * S), tx2, j === rows.length - 1, fsS) + 7;
     });
+  }
+
+  // ── 開場 ident 繪製:五場域星陣+光圈(與五場景互斥,不共用任何場景元素)
+  function introIdent(A) {
+    if (paintCases._t0 === undefined) paintCases._t0 = t;      // 首載 boot 序列基準
+    const boot = ez(clamp((t - paintCases._t0) / 1.8, 0, 1));
+    const ex = 1 - A;                                          // 交棒進度(0=靜止,1=已讓位)
+    const cx = z.x + z.w / 2, cyO = z.y + z.h * .40;           // 星陣核心;字區留在下方
+    const SC = clamp(Math.min(z.w / 520, z.h / 420), .7, 1.3);
+    const rx = Math.min(z.w * .44, 340), ry = Math.min(z.h * .30, 210);
+    const rot = gp * 1.8;                                      // 0–0.06 捲動也有微轉回饋
+    g.save();
+    const scl = 1 + ex * .14;                                  // 交棒:整陣以核心為錨放大淡出
+    g.translate(cx, cyO); g.scale(scl, scl); g.translate(-cx, -cyO);
+
+    // 星塵:確定性偽隨機、極低調明滅(氛圍層;非粒子系統)
+    for (let i = 0; i < 18; i++) {
+      const h1 = Math.sin(i * 127.1) * 43758.5453, h2 = Math.sin(i * 311.7) * 12543.85;
+      d.node(cx + (h1 - Math.floor(h1) - .5) * 2.1 * rx, cyO + (h2 - Math.floor(h2) - .5) * 2.1 * ry,
+        i % 4 === 0 ? 1.3 : .9, C.ivory,
+        A * boot * (.04 + .1 * (.5 + .5 * Math.sin(t * (.6 + (i % 5) * .23) + i * 1.7))), false);
+    }
+
+    // 三圈橢圓導軌:boot 期掃線畫入;外圈虛線緩轉+一段橙色掠弧
+    [.58, .79, 1].forEach((fr, ri) => {
+      const sweep = ez(clamp(boot * 1.7 - ri * .22, 0, 1));
+      if (sweep <= 0.01) return;
+      g.globalAlpha = A * (ri === 2 ? .17 : .1);
+      g.strokeStyle = '#F2EFE8'; g.lineWidth = 1;
+      if (ri === 2) { g.setLineDash([3, 8]); g.lineDashOffset = -t * 5; }
+      g.beginPath(); g.ellipse(cx, cyO, rx * fr, ry * fr, 0, -Math.PI / 2, -Math.PI / 2 + TAU * sweep); g.stroke();
+      g.setLineDash([]);
+      if (ri === 2 && sweep > .98) {
+        const a0 = t * .3 + rot;
+        g.globalAlpha = A * .55; g.strokeStyle = C.orange; g.lineWidth = 1.5;
+        g.beginPath(); g.ellipse(cx, cyO, rx, ry, 0, a0, a0 + .9); g.stroke();
+      }
+    });
+
+    // 五場域節點(色點=場域,不用字):各自軌道慢速環繞,拖尾+依序點亮+擴散圈
+    const FR = [.42, .58, .72, .86, 1];
+    const OM = [.3, -.22, .18, -.15, .12];
+    const PH0 = [0, 2.5, 4.4, 1.2, 5.5];
+    const HUEI = [C.orange, C.orange, C.blue, C.green, C.green];
+    const nodeR = Math.max(3.2, 4.2 * SC);
+    const pos = [], bri = [];
+    for (let i = 0; i < 5; i++) {
+      const bIn = ez(clamp(boot * 6 - i * 1.05, 0, 1));      // 首載依序點亮
+      const th = PH0[i] + t * OM[i] + rot;
+      const px = cx + Math.cos(th) * rx * FR[i];
+      const py = cyO + Math.sin(th) * ry * FR[i];
+      const ph = ((t * .85 - i * (TAU / 5)) % TAU + TAU) % TAU;
+      const flash = ph < Math.PI ? Math.pow(Math.sin(ph), 3) : 0;   // 循環輪點(常駐律動)
+      const b = (.4 + .6 * flash) * bIn;
+      pos.push([px, py]); bri.push(b);
+      if (bIn <= 0.02) continue;
+      for (let j = 1; j <= 9; j++) {                         // 軌跡拖尾:漸細漸淡
+        const th2 = th - Math.sign(OM[i]) * j * .06;
+        d.node(cx + Math.cos(th2) * rx * FR[i], cyO + Math.sin(th2) * ry * FR[i],
+          nodeR * (1 - j / 11) * .55, HUEI[i], A * b * (1 - j / 10) * .4, false);
+      }
+      d.node(px, py, nodeR * 2.3, HUEI[i], A * b * .12, false);
+      d.node(px, py, nodeR, HUEI[i], A * (.5 + .5 * b), false);
+      if (flash > 0.01) {                                    // 點亮時往外擴散一圈
+        const pf = ph / Math.PI;
+        d.node(px, py, nodeR + pf * 15, HUEI[i], A * (1 - pf) * .4 * bIn, true);
+      }
+    }
+    // 星陣連線:相鄰節點依亮度浮現
+    g.globalAlpha = A;
+    for (let i = 0; i < 5; i++) {
+      const jn = (i + 1) % 5;
+      d.line(pos[i][0], pos[i][1], pos[jn][0], pos[jn][1], 1,
+        'rgba(242,239,232,' + (.05 + .13 * Math.min(bri[i], bri[jn])).toFixed(3) + ')', 1);
+    }
+
+    // 核心光圈:五葉快門弧(慢轉;交棒時張開+外推)+律動核+內細環
+    const rC = Math.max(15, 19 * SC) + ex * 30;
+    g.lineCap = 'round';
+    for (let i = 0; i < 5; i++) {
+      const a0 = i * (TAU / 5) + t * .35 + rot + ex * 1.3;
+      const span = (TAU / 5) * .62 * boot * (1 - ex * .75);
+      if (span <= 0.01) continue;
+      g.globalAlpha = A * .85; g.strokeStyle = C.orange; g.lineWidth = Math.max(1.6, 2 * SC);
+      g.beginPath(); g.arc(cx, cyO, rC, a0, a0 + span); g.stroke();
+    }
+    g.lineCap = 'butt';
+    d.node(cx, cyO, Math.max(2.6, 3.2 * SC) * (1 + .16 * Math.sin(t * 2.6)), C.orange, A * boot, false);
+    g.globalAlpha = A * .3 * boot; g.strokeStyle = '#F2EFE8'; g.lineWidth = 1;
+    g.beginPath(); g.arc(cx, cyO, rC * .62, 0, TAU); g.stroke();
+
+    // PROOF IN MOTION:動態字距展開+掃描高光;字級由「最大字距」反解,任何時刻不爆版
+    const WM = 'PROOF IN MOTION';
+    const availW = Math.min(z.w * .88, 680);
+    g.font = '700 10px "Space Grotesk",sans-serif';
+    const w10 = g.measureText(WM).width;
+    const TRmax = .42;
+    const fs2 = Math.max(13, Math.min(34, z.h * .17, availW / (w10 / 10 + (WM.length - 1) * TRmax)));
+    const expand = clamp(.34 + .1 * Math.sin(t * .7) + .8 * ez(sb(gp, 0, .07)), 0, 1);
+    const track = fs2 * TRmax * (.32 + .68 * expand) + ex * fs2 * .35; // 交棒時逐字散開(幅度收斂,不掃到左欄)
+    const exFade = clamp(1 - ex * .9, 0, 1);                           // 字比星陣先退,不壓到進場卡的晶片列
+    g.font = '700 ' + fs2 + 'px "Space Grotesk",sans-serif';
+    let tw2 = track * (WM.length - 1);
+    const lets = [];
+    for (const ch of WM) { const wch = g.measureText(ch).width; lets.push([ch, wch]); tw2 += wch; }
+    let lx = cx - tw2 / 2;
+    const ty = z.y + z.h * .8;
+    g.textAlign = 'left';
+    lets.forEach((lt, i) => {
+      const la = ez(clamp(boot * 6.5 - i * .3, 0, 1));        // 首載逐字浮現
+      if (la > 0.02) {
+        const sIdx = (t * 2.2) % (WM.length + 6) - 3;          // 掃描高光循環
+        const glow = Math.max(0, 1 - Math.abs(i - sIdx) / 2.2);
+        g.globalAlpha = A * exFade * la * (.6 + .4 * glow);
+        g.fillStyle = glow > .5 ? C.orange : C.ivory;
+        g.fillText(lt[0], lx, ty + (1 - la) * 8);
+      }
+      lx += lt[1] + track;
+    });
+    g.globalAlpha = A * exFade * clamp(1 - ex * 1.8, 0, 1) * ez(clamp(boot * 2 - .5, 0, 1)) * .85;
+    g.font = '600 ' + Math.max(11, mobile ? 13 : 11.5 * SC) + 'px "Noto Sans TC",sans-serif';
+    g.fillStyle = 'rgba(242,239,232,.62)';
+    g.textAlign = 'center';
+    g.fillText('五個場域・同一套流程', cx, ty + Math.max(17, fs2 * .78));
+    g.textAlign = 'left';
+    g.restore(); g.globalAlpha = 1;
   }
 }
 
