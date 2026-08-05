@@ -601,6 +601,14 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pqbrk2 .ico{position:absolute;top:-46px;right:22px;width:110px;height:150px;z-index:4;transform:none}
 .pqbrk2:hover .ico{transform:none}
 .pqmB2{display:block;width:100%;height:100%;overflow:visible}
+/* 使用者定案(2026-08-05):02 不再舉線 —— 沿著規線左右反覆跳(手腳觸角原有的甩動變成跳躍肢體語言);
+   03 改懸崖邊掙扎:白帶把規線斷開,牠前半身懸空、原有爬行腳變成亂扒 */
+.pqmB2 .heave{animation:none!important}
+.pqmB2{animation:pqb2Hop 3.6s cubic-bezier(.45,0,.4,1) infinite}
+@keyframes pqb2Hop{0%,6%{transform:translateX(-20px)}16%{transform:translate(-10px,-15px)}24%,30%{transform:translateX(0)}40%{transform:translate(10px,-15px)}48%,54%{transform:translateX(20px)}64%{transform:translate(10px,-15px)}72%,76%{transform:translateX(0)}86%{transform:translate(-10px,-15px)}94%,100%{transform:translateX(-20px)}}
+.pqmB3{animation:pqb3Cliff 2.6s ease-in-out infinite;transform-origin:66% 38%}
+@keyframes pqb3Cliff{0%,100%{transform:rotate(2deg)}14%{transform:rotate(8deg) translateY(1.5px)}30%{transform:rotate(3deg)}48%{transform:rotate(10deg) translateY(2.5px)}62%{transform:rotate(2.5deg)}80%{transform:rotate(7deg) translateY(1px)}}
+@media (prefers-reduced-motion:reduce){.pqmB2,.pqmB3{animation:none!important}}
 .pqmB2 *{transform-box:view-box}
 /* 主循環 4.1s:8% 預備下沉 → 30% 拉起 -8px → 40-48% 頂點顫抖 → 60% 落下過衝 → 回穩 */
 .pqmB2 .heave{transform-origin:55px 45px;animation:pqb2Heave 4.1s cubic-bezier(.45,.03,.25,1) infinite}
@@ -2198,8 +2206,6 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <g class="leg legB"><path d="M70 54V70" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/><g class="foot footB"><path d="M70 70h9" stroke="#11161B" stroke-width="4.4" stroke-linecap="round" fill="none"/></g></g>
 </svg></span><span class="eye"><u></u>AI 客服 · LENS</span><h3>重複問題先答,複雜交回給人</h3><p>整合網站與 LINE 的詢問,AI 依核准資料回覆並留下紀錄;例外與高價值案件轉回人工。</p><div class="spec"><span>MODULE 01 / 47</span><b>方案 A 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk2" style="--ac:#3E9BFF"><span class="num">02</span><span class="ico" aria-hidden="true"><svg class="pqmB2" viewBox="0 0 110 150">
-<rect x="20" y="41" width="70" height="8" fill="#F2EFE8"/>
-<path class="bar" d="M20 45 Q55 55 90 45" fill="none" stroke="#090B0E" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
 <path class="tick tickL" d="M26 50l-4 4" stroke="rgba(17,22,27,.5)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
 <path class="tick tickR" d="M84 50l4 4" stroke="rgba(17,22,27,.5)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0"/>
 <g class="slip"><g class="heave">
@@ -2222,7 +2228,6 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 </svg></span><span class="eye"><u></u>CRM 追蹤 · MAINBOARD</span><h3>讓每一筆詢問都有下一步</h3><p>自動建立客戶資料、整理紀錄並提醒追蹤,案件不再無人負責。</p><div class="spec"><span>MODULE 02 / 47</span><b>方案 B 起</b></div></div>
       <div data-reveal class="pq-mod pqbrk3" style="--ac:#3FA98C"><span class="num">03</span><span class="ico" aria-hidden="true"><svg class="pqmB3" viewBox="0 0 130 150">
 <rect x="22" y="53" width="92" height="8" fill="#F2EFE8"/>
-<path class="sag3" d="M22 57 Q68 66 112 57" fill="none" stroke="#090B0E" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
 <g class="lie">
 <rect x="44" y="44" width="52" height="26" rx="11" fill="#3FA98C"/>
 <g stroke="rgba(17,22,27,.28)" stroke-width="1.3"><path d="M61 44v26M78 44v26M44 57h52"/></g>

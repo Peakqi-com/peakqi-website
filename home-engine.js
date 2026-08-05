@@ -464,6 +464,44 @@ export function createHomeEngine() {
     // polygonOffset 讓填色稍微退後,邊線壓在上面才不會 z-fighting。
     // toneMapped:false → 不吃 renderer 的色調映射,填色才會剛好等於紙色背景(否則會偏灰,零件像蒙了一層)
     const PAPER_FILL = new THREE.MeshBasicMaterial({ color: 0xF2EFE8, toneMapped: false, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });   // 白藍圖紙色:零件平塗填色用(遮住後方線條)
+    // 展示主角的「流動莫蘭迪水彩」材質(使用者指定:液體、不規則、水彩,四個主角零件都要):
+    // 離屏 canvas 畫六團莫蘭迪色斑,輪廓用多諧波正弦擾動(不規則)、multiply 疊色(顏料暈染),
+    // 每兩幀重繪一次餵 CanvasTexture;MeshBasicMaterial 不吃光照,水彩讀起來always乾淨。
+    const _inkCv = document.createElement('canvas'); _inkCv.width = 256; _inkCv.height = 256;
+    const _inkG = _inkCv.getContext('2d');
+    const INK_TEX = new THREE.CanvasTexture(_inkCv);
+    INK_TEX.wrapS = INK_TEX.wrapT = THREE.RepeatWrapping;
+    // map + 補投影 UV:matcap 在平板零件(法線同向)會塌成單色,map 才能讓平面也有流動;
+    // 無 UV 幾何在 addPartVisuals 以包圍盒最大兩軸做平面投影(見 ensureInkUv)
+    const INK_MAT = new THREE.MeshBasicMaterial({ map: INK_TEX, toneMapped: false, depthWrite: true, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+    const MORANDI = [[199, 160, 160], [148, 172, 143], [139, 157, 173], [194, 168, 120], [169, 139, 164], [216, 185, 168]];
+    let _inkN = 0, _inkF = 0;
+    function inkPaint(t2) {
+      const g2 = _inkG, S = 256;
+      g2.globalCompositeOperation = 'source-over';
+      g2.fillStyle = '#EFEAE0'; g2.fillRect(0, 0, S, S);
+      g2.globalCompositeOperation = 'multiply';
+      for (let i = 0; i < 6; i++) {
+        const c = MORANDI[i];
+        const x = S * (0.5 + 0.4 * Math.sin(t2 * (0.13 + i * 0.021) + i * 2.1));
+        const y = S * (0.5 + 0.4 * Math.cos(t2 * (0.11 + i * 0.017) + i * 1.3));
+        const r = S * (0.3 + 0.13 * Math.sin(t2 * 0.23 + i));
+        const rad = g2.createRadialGradient(x, y, r * 0.08, x, y, r * 1.15);
+        rad.addColorStop(0, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',.88)');
+        rad.addColorStop(0.72, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',.4)');
+        rad.addColorStop(1, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0)');
+        g2.fillStyle = rad;
+        g2.beginPath();
+        for (let a2 = 0; a2 <= 22; a2++) {
+          const th = a2 / 22 * 6.2832;
+          const rr = r * (1 + 0.3 * Math.sin(th * 3 + t2 * 0.9 + i * 2) + 0.18 * Math.sin(th * 5 - t2 * 0.6 + i));
+          const px2 = x + Math.cos(th) * rr, py2 = y + Math.sin(th) * rr;
+          if (a2) g2.lineTo(px2, py2); else g2.moveTo(px2, py2);
+        }
+        g2.closePath(); g2.fill();
+      }
+      INK_TEX.needsUpdate = true;
+    }
     // U1 鏡頭自轉:光學軸/樞紐(load 時算)+ 暫存四元數
     const lensAxis = new THREE.Vector3(1, 0, 0), lensPivot = new THREE.Vector3(), _spinQ = new THREE.Quaternion();
     // 程式加的內部零件(只在拆解/藍圖需要;組回後隱藏,避免灰塊透出機身)
@@ -658,6 +696,26 @@ export function createHomeEngine() {
       node.traverse(obj => { if (obj instanceof THREE.Mesh) meshes.push(obj); });
       meshes.forEach(obj => {
         obj.frustumCulled = false;
+        // 水彩材質需要 UV;這批 GLTF 多數 mesh 沒有 → 用包圍盒最大兩軸平面投影補一份
+        // (只在缺 UV 時補,不動有真 UV 的幾何)
+        const g0 = obj.geometry;
+        // 這批 GLTF 是無貼圖的平塗低模,原生 UV 是縮在圖集小角落的殘料
+        // (實測紅色診斷:map 取樣恆定、整面單色)→ 一律覆寫成包圍盒投影 UV
+        const needUv = !!g0;
+        if (needUv) {
+          try { window.__uvN = (window.__uvN || 0) + 1; } catch (e2) {}
+          g0.computeBoundingBox();
+          const bb = g0.boundingBox, pos = g0.getAttribute('position');
+          const dims = [['X', bb.max.x - bb.min.x, bb.min.x], ['Y', bb.max.y - bb.min.y, bb.min.y], ['Z', bb.max.z - bb.min.z, bb.min.z]]
+            .map(dd => [dd[0], Math.max(1e-5, dd[1]), dd[2]])
+            .sort((a, b) => b[1] - a[1]);
+          const uv = new Float32Array(pos.count * 2);
+          for (let vi = 0; vi < pos.count; vi++) {
+            uv[vi * 2] = (pos['get' + dims[0][0]](vi) - dims[0][2]) / dims[0][1];
+            uv[vi * 2 + 1] = (pos['get' + dims[1][0]](vi) - dims[1][2]) / dims[1][1];
+          }
+          g0.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        }
         const src = Array.isArray(obj.material) ? obj.material : [obj.material];
         const clones = src.map(m => { const c = m.clone(); c.transparent = true; c.opacity = 0; c.depthWrite = false; materials.push(c); return c; });
         obj.material = Array.isArray(obj.material) ? clones : clones[0];
@@ -1438,11 +1496,17 @@ export function createHomeEngine() {
         // 使用者定案:白藍圖展示「只有重點強調的物件上材質,其他都是線稿」——
         // 展示中的零件(isShown)不換紙色平塗,走下面的強制實體分支。
         const wantPaper = (part.paperOn ? paperK > 0.86 : paperK > 0.92) && intHide > 0.5 && !isShown;
-        if (part.paperOn !== wantPaper) {
+        // 展示主角換「流動莫蘭迪水彩」材質(mode 2);等待零件紙色平塗(1);其餘原材質(0)
+        const wantInk = isShown && paperK > (part.matMode === 2 ? 0.4 : 0.5);
+        const matMode = wantInk ? 2 : wantPaper ? 1 : 0;
+        if (part.matMode !== matMode) {
+          if (matMode === 2) _inkN++; else if (part.matMode === 2) _inkN--;
+          part.matMode = matMode;
+          try { window.__inkDbg = { n: _inkN, last: part.name, mode: matMode, paperK: +paperK.toFixed(2) }; } catch (e2) {}
           part.paperOn = wantPaper;
           for (let f = 0; f < part.fills.length; f++) {
             const mh = part.fills[f];
-            mh.material = wantPaper ? PAPER_FILL : mh.userData.pqMat;
+            mh.material = matMode === 2 ? INK_MAT : matMode === 1 ? PAPER_FILL : mh.userData.pqMat;
           }
         }
         // 邊線(發光彩色線稿 → 黑白藍圖線):展示時聚焦零件線條較深、其餘變淡;聚焦零件帶少量橘
@@ -1468,6 +1532,7 @@ export function createHomeEngine() {
         part.connector.material.color.copy(part.baseColor).lerp(BLACK, paperK);
         part.connector.material.opacity = Math.max(staged * wireK * (hi ? 0.5 : 0.14) * dark, staged * paperK * 0.45) * (1 - sKnollK);   // 攤平陳列時收掉拆解連接線(否則滿畫面放射雜線)
       }
+      if (_inkN > 0 && (_inkF = 1 - _inkF)) inkPaint(t);   // 有主角上水彩時每兩幀重繪,流動感
       // 藍圖卡片標註(逐一浮現,組裝回組時淡出)
       if (annotSvg && paperK > 0.02) {
         const W = stage.clientWidth || 1, H = stage.clientHeight || 1;

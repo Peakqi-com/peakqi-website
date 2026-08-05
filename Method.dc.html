@@ -75,6 +75,8 @@ nav[aria-label="breadcrumb"]{align-items:center}
 /* 手機 hero 空間預算:舞台內距縮小+場景列緊湊,配合捲動收合讓視覺帶放大 */
 @media (max-width:899px){
 [data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
+/* 使用者定案:收合後整塊上移到近螢幕置中(預設收合置中被卡片高度拖低) */
+section[data-hero="method"] [data-hero-stage].pq-hero-compact{align-items:flex-start!important;padding-top:10svh!important}
 [data-hero-copy]>div{gap:9px!important}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
