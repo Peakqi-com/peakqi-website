@@ -16,8 +16,8 @@
   .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: #FF6B2C; }
   .wrap { position: absolute; left: 96px; top: 96px; right: 96px; }
   .logo { display: flex; align-items: center; gap: 20px; }
-  .mark { width: 64px; height: 64px; border-radius: 50%; border: 5px solid #FF6B2C; position: relative; }
-  .mark::after { content: ''; position: absolute; inset: 11px; border-radius: 50%; border: 5px solid #FF6B2C; opacity: .55; }
+  .mark { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+  .mark svg { width: 64px; height: 64px; display: block; }
   .brand { font: 700 44px 'Space Grotesk', sans-serif; letter-spacing: .01em; }
   .brand small { font: 700 22px 'Noto Sans TC', sans-serif; color: rgba(242,239,232,.65); margin-left: 14px; letter-spacing: .3em; }
   .kicker { margin-top: 74px; font: 700 24px 'Space Grotesk', sans-serif; letter-spacing: .34em; color: #FF6B2C; }
@@ -34,7 +34,7 @@
   <div class="bar"></div>
   <div class="wrap">
     <div class="logo">
-      <div class="mark"></div>
+      <div class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><g stroke="#FF6B2C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="48" r="43"/><path d="M20 62 A31 31 0 1 1 80 62"/><path d="M42 28 A16 16 0 1 1 42 60"/><path d="M42 38 A6.5 6.5 0 1 1 42 51"/></g><path d="M42 24 V90" stroke="#FF6B2C" stroke-width="8.4" stroke-linecap="round"/></svg></div>
       <div class="brand">PeakQi<small>奇鋒國際</small></div>
     </div>
     <div class="kicker">AI OPERATING SYSTEM FOR TAIWAN SMEs</div>
