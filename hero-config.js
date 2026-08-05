@@ -1,7 +1,9 @@
 // PeakQi 內頁 Hero 集中設定 — 場景、距離、顏色、camera/material 上限、reduced 資產、feature flags
 // 共用元件在 hero-kit.js;各頁 Canvas 敘事在 hero-scenes.js。改 Hero 行為只改這一檔。
 // i18n(Phase 1):label/kicker/line/cta label 走 t(zh,en);href 內的中文查詢參數是識別鍵,不翻。
-import { t } from './i18n.js';
+import { t, LANG } from './i18n.js';
+// EN 頁 hero CTA 站內連結自動加 /en 前綴(錨點與外部連結不動)
+const ep = (h) => (LANG === 'en' && h.charAt(0) === '/' ? '/en' + h : h);
 export const HERO_SHARED = {
   colors: { ink: '#090B0E', ivory: '#F2EFE8', orange: '#FF6B2C', blue: '#3E9BFF', green: '#65E0BC', panel: '#14171C', line: 'rgba(242,239,232,.16)' },
   dprMax: 1.5,                       // Canvas DPR 上限
@@ -38,8 +40,8 @@ export const heroConfig = {
     ],
     reduced: ['sig', 'layers', 'cap', 'fol', 'console'],
     ctas: [
-      { kind: 'primary', label: t('用我的流程跑一次', 'Run it on my workflow'), href: '/demo?case=接客追客養客整合流程', track: 'hero_demo_click' },
-      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: '/cases', track: 'hero_case_click' }
+      { kind: 'primary', label: t('用我的流程跑一次', 'Run it on my workflow'), href: ep('/demo?case=接客追客養客整合流程'), track: 'hero_demo_click' },
+      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: ep('/cases'), track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -57,7 +59,7 @@ export const heroConfig = {
     reduced: ['wed', 'rea', 'sum'],
     ctas: [
       { kind: 'primary', label: t('查看所有案例', 'Browse all cases'), href: '#index', track: 'hero_case_click' },
-      { kind: 'ghost', label: t('把這個流程套用到我的公司', 'Apply this to my company'), href: '/demo?case=接客追客養客整合流程', track: 'hero_demo_click' }
+      { kind: 'ghost', label: t('把這個流程套用到我的公司', 'Apply this to my company'), href: ep('/demo?case=接客追客養客整合流程'), track: 'hero_demo_click' }
     ],
     flags: {}
   },
@@ -77,7 +79,7 @@ export const heroConfig = {
     reduced: ['racks', 'plat', 'cmp', 'use', 'run'],
     ctas: [
       { kind: 'primary', label: t('用我的需求比較方案', 'Compare plans for my needs'), href: '#p-selector', track: 'hero_case_click' },
-      { kind: 'ghost', label: t('預約 15 分鐘 Demo', 'Book a 15-min demo'), href: '/demo', track: 'hero_demo_click' }
+      { kind: 'ghost', label: t('預約 15 分鐘 Demo', 'Book a 15-min demo'), href: ep('/demo'), track: 'hero_demo_click' }
     ],
     flags: {}
   },
@@ -97,7 +99,7 @@ export const heroConfig = {
     reduced: ['idea', 'content', 'tech'],
     ctas: [
       { kind: 'primary', label: t('看我們如何合作', 'How we work together'), href: '#a-method', track: 'about_method_click' },
-      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: '/cases', track: 'hero_case_click' }
+      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: ep('/cases'), track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -113,8 +115,8 @@ export const heroConfig = {
     ],
     reduced: ['map', 'goal', 'pilot', 'live'],
     ctas: [
-      { kind: 'primary', label: t('預約 AI 導入評估', 'Book an AI assessment'), href: '/demo', track: 'hero_demo_click' },
-      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: '/cases', track: 'hero_case_click' }
+      { kind: 'primary', label: t('預約 AI 導入評估', 'Book an AI assessment'), href: ep('/demo'), track: 'hero_demo_click' },
+      { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: ep('/cases'), track: 'hero_case_click' }
     ],
     flags: {}
   },
@@ -131,7 +133,7 @@ export const heroConfig = {
     reduced: ['ind', 'flow', 'build', 'go'],
     ctas: [
       { kind: 'primary', label: t('開始填寫需求', 'Start the form'), href: '#pq-demo-grid', track: 'hero_demo_click' },
-      { kind: 'ghost', label: t('先查看相似案例', 'See similar cases first'), href: '/cases', track: 'hero_case_click' }
+      { kind: 'ghost', label: t('先查看相似案例', 'See similar cases first'), href: ep('/cases'), track: 'hero_case_click' }
     ],
     // (2026-08)草稿面板已移出 hero 成獨立 #draft section,右欄改 data-hero-canvaszone
     // 畫布舞台 —— canvas 重新開啟,四任務主題動畫由 paintDemo 繪製。
