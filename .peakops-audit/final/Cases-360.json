@@ -1,0 +1,51 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/cases-hero.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Steampunk/tower.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/interior.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/nivora.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "vw": 360,
+ "vh": 640,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 6,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  },
+  {
+   "t": "查看完整案例 →",
+   "h": 21,
+   "w": 105
+  },
+  {
+   "t": "討論相似導入情境",
+   "h": 21,
+   "w": 112
+  },
+  {
+   "t": "放大截圖",
+   "h": 19,
+   "w": 50
+  },
+  {
+   "t": "造訪 ↗",
+   "h": 19,
+   "w": 41
+  }
+ ]
+}

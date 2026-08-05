@@ -1,0 +1,5 @@
+{
+ "consoleErrors": [],
+ "probeError": "TypeError: Cannot read properties of null (reading 'scrollHeight')\n    at <anonymous>:2:52\n    at <anonymous>:55:5"
+}
+{}

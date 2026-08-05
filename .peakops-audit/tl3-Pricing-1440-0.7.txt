@@ -1,0 +1,62 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Pricing.dc.html",
+ "sp": 0.7,
+ "vw": 1440,
+ "count": 1,
+ "tracks": [
+  {
+   "id": "pq-tl2",
+   "vertical": true,
+   "lineW": 0,
+   "lineH": 3,
+   "trackW": 1344,
+   "headX": 48,
+   "headY": 489.1,
+   "dots": 5,
+   "litCount": 1,
+   "litOutsideLine": 0,
+   "lastGap": 0.5,
+   "detail": [
+    {
+     "i": 0,
+     "on": true,
+     "cx": 56.5,
+     "cy": 488.6,
+     "covered": true
+    },
+    {
+     "i": 1,
+     "on": false,
+     "cx": 328.1,
+     "cy": 488.6,
+     "covered": true
+    },
+    {
+     "i": 2,
+     "on": false,
+     "cx": 599.7,
+     "cy": 488.6,
+     "covered": true
+    },
+    {
+     "i": 3,
+     "on": false,
+     "cx": 871.3,
+     "cy": 488.6,
+     "covered": true
+    },
+    {
+     "i": 4,
+     "on": false,
+     "cx": 1142.9,
+     "cy": 488.6,
+     "covered": true
+    }
+   ]
+  }
+ ]
+}

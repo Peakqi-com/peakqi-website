@@ -1,0 +1,27 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/About.dc.html",
+ "navH": 68,
+ "scrollPaddingTop": "84px",
+ "checked": 2,
+ "bad": 0,
+ "out": [
+  {
+   "id": "a-numbers",
+   "targetTop": 926,
+   "headingTop": 926,
+   "headingText": "TRACK RECORD 30+ 完",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "a-method",
+   "targetTop": 414,
+   "headingTop": 546,
+   "headingText": "同一個團隊,從理解問題到上線後調整",
+   "hiddenUnderNav": false
+  }
+ ]
+}

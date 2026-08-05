@@ -1,0 +1,45 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Solutions.dc.html",
+ "vw": 1280,
+ "vh": 800,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 21,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "解決方案",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "導入方法",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "案例",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "產品 ▼",
+   "h": 30,
+   "w": 48
+  }
+ ]
+}

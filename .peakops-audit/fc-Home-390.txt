@@ -1,0 +1,50 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Home.dc.html",
+ "vw": 390,
+ "vh": 844,
+ "overflowX": 0,
+ "overlapCount": 3,
+ "overlaps": [
+  {
+   "a": "PeakQi",
+   "b": "MODULE 02 / 47",
+   "ox": 53,
+   "oy": 13,
+   "y": 16,
+   "step": 4
+  },
+  {
+   "a": "PeakQi",
+   "b": "流程開始",
+   "ox": 53,
+   "oy": 18,
+   "y": 16,
+   "step": 6
+  },
+  {
+   "a": "奇鋒國際",
+   "b": "流程開始",
+   "ox": 45,
+   "oy": 13,
+   "y": 39,
+   "step": 6
+  }
+ ],
+ "smallTargetCount": 2,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "看更多實績與作品 →",
+   "h": 21,
+   "w": 143
+  }
+ ]
+}

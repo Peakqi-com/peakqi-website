@@ -1,0 +1,40 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/PeakOps.dc.html",
+ "vw": 768,
+ "vh": 1024,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 5,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "A・AI 接客起步方案",
+   "h": 38,
+   "w": 155
+  },
+  {
+   "t": "B・AI 業務流程方案",
+   "h": 38,
+   "w": 156
+  },
+  {
+   "t": "C・AI 營運整合方案",
+   "h": 38,
+   "w": 156
+  },
+  {
+   "t": "i",
+   "h": 26,
+   "w": 26
+  }
+ ]
+}

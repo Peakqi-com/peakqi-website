@@ -1,0 +1,118 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Home.dc.html",
+ "sp": 0.5,
+ "vw": 390,
+ "vh": 844,
+ "overlays": [
+  {
+   "tag": "A#pq-skip",
+   "z": "600",
+   "r": {
+    "x": 12,
+    "y": -60,
+    "w": 120,
+    "h": 44
+   }
+  },
+  {
+   "tag": "HEADER",
+   "z": "100",
+   "r": {
+    "x": 0,
+    "y": 0,
+    "w": 390,
+    "h": 68
+   }
+  },
+  {
+   "tag": "A#pq-backtop",
+   "z": "140",
+   "r": {
+    "x": 345,
+    "y": 712,
+    "w": 40,
+    "h": 40
+   }
+  }
+ ],
+ "textCount": 96,
+ "occludedCount": 6,
+ "occluded": [
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "接客 · AI 客服",
+   "fs": "11px",
+   "ox": 74,
+   "oy": 13,
+   "at": [
+    37,
+    63
+   ]
+  },
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "行銷 · 內容生成",
+   "fs": "11px",
+   "ox": 82,
+   "oy": 13,
+   "at": [
+    41,
+    63
+   ]
+  },
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "CRM · 追客",
+   "fs": "11px",
+   "ox": 63,
+   "oy": 13,
+   "at": [
+    31,
+    63
+   ]
+  },
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "品牌屋 · 平台層",
+   "fs": "11px",
+   "ox": 82,
+   "oy": 13,
+   "at": [
+    41,
+    63
+   ]
+  },
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "AI 導入 × 系統整合 × 企業流程",
+   "fs": "12px",
+   "ox": 234,
+   "oy": 16,
+   "at": [
+    133,
+    18
+   ]
+  },
+  {
+   "overlay": "HEADER",
+   "z": "100",
+   "text": "把 AI 接進你的",
+   "fs": "26.4px",
+   "ox": 171,
+   "oy": 26,
+   "at": [
+    101,
+    61
+   ]
+  }
+ ]
+}

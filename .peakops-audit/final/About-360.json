@@ -1,0 +1,59 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/hero-kit.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/favicon.svg>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/micro-engine.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/analytics.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/expo.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/interior.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/rouzhi.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/sparkspace.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/groupbuy.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion-config.js>",
+  "log: Failed to load resource: the server responded with a status of 404 (File not found) <http://127.0.0.1:8000/favicon-32.png>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/linesummary.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/About.dc.html",
+ "vw": 360,
+ "vh": 640,
+ "overflowX": 0,
+ "overlapCount": 3,
+ "overlaps": [
+  {
+   "a": "我們負責",
+   "b": "跨流程、跨角色的營運系統與權限設計。",
+   "ox": 75,
+   "oy": 21,
+   "y": 64,
+   "step": 4
+  },
+  {
+   "a": "適合誰",
+   "b": "需要重新整理品牌、網站與客戶進站後的服務",
+   "ox": 60,
+   "oy": 21,
+   "y": 520,
+   "step": 4
+  },
+  {
+   "a": "我們負責",
+   "b": "品牌網站、互動入口,以及進站之後的流程串",
+   "ox": 75,
+   "oy": 21,
+   "y": 583,
+   "step": 4
+  }
+ ],
+ "smallTargetCount": 1,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  }
+ ]
+}

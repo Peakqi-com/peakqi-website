@@ -1,0 +1,22 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/realestate.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/hungmen.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/shennong.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/autodraft.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/asml.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/greenpark.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/community.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/rental.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/forum.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "sp": 0.9,
+ "vw": 1440,
+ "count": 0,
+ "worst": 0,
+ "items": []
+}

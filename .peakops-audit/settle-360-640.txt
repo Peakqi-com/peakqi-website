@@ -1,0 +1,19 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/models/peakqi-camera-web.glb>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/logo.png>"
+ ],
+ "probeError": null
+}
+{
+ "vw": 360,
+ "vh": 640,
+ "variant": "pqm-stage pqm-v6",
+ "chars": 18,
+ "idxs": 6,
+ "notSettledCount": 0,
+ "notSettled": [],
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "runningAnims": 386
+}

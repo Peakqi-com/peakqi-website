@@ -1,0 +1,53 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/logo.png>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/analytics.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/realestate.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/groupbuy.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/nivora.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/expo.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "vw": 1440,
+ "vh": 900,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 16,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "解決方案",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "導入方法",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "案例",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "產品 ▼",
+   "h": 30,
+   "w": 48
+  }
+ ]
+}

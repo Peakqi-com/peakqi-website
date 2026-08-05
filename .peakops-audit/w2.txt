@@ -1,0 +1,107 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "docW": 390,
+ "scrollW": 430,
+ "count": 8,
+ "deepest": [
+  {
+   "tag": "SPAN",
+   "depth": 8,
+   "x": 381,
+   "w": 22,
+   "right": 403,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": ""
+  },
+  {
+   "tag": "SPAN",
+   "depth": 8,
+   "x": 381,
+   "w": 22,
+   "right": 403,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": ""
+  },
+  {
+   "tag": "SPAN",
+   "depth": 8,
+   "x": 381,
+   "w": 13,
+   "right": 394,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": ""
+  },
+  {
+   "tag": "BUTTON#pq-burger",
+   "depth": 7,
+   "x": 370,
+   "w": 44,
+   "right": 414,
+   "ov": "visible",
+   "disp": "flex",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": ""
+  },
+  {
+   "tag": "DIV",
+   "depth": 6,
+   "x": 0,
+   "w": 430,
+   "right": 430,
+   "ov": "visible",
+   "disp": "flex",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": "PeakQi 奇鋒國際 .pq-dd{position:re"
+  },
+  {
+   "tag": "H1",
+   "depth": 6,
+   "x": 20,
+   "w": 390,
+   "right": 410,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": "一套引擎,多張產業的臉"
+  },
+  {
+   "tag": "P",
+   "depth": 6,
+   "x": 20,
+   "w": 390,
+   "right": 410,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": "底層共用 47 模組 AI 業務引擎;每個品牌換的是知識庫、"
+  },
+  {
+   "tag": "DIV.pq-wrap.pq-sec",
+   "depth": 5,
+   "x": 0,
+   "w": 430,
+   "right": 430,
+   "ov": "visible",
+   "disp": "block",
+   "ws": "normal",
+   "ls": "normal",
+   "txt": "PRODUCTS · BRAND HOUSE 一套引擎,多張"
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 390,
+ "vh": 844,
+ "variant": "pqm-stage pqm-v5",
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "dlgOverflowY": 0,
+ "rows": 6,
+ "chars": 18,
+ "clickables": 10,
+ "blockedCount": 0,
+ "blocked": [],
+ "stuckCharCount": 0,
+ "stuck": [],
+ "eggAnimCount": 23,
+ "eggRunning": 22,
+ "actorsShown": 1
+}

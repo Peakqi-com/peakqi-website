@@ -1,0 +1,77 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Footer.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Footer\" threw: ./Footer.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    a",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/case-media.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/seo.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion-kit.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion/about.motion.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/about-hero.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/About.dc.html>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/favicon.svg>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/content.js",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/case-media.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/logo.png>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/hero-scenes.js>",
+  "log: Failed to load resource: the server responded with a status of 404 (File not found) <http://127.0.0.1:8000/favicon-32.png>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/About.dc.html",
+ "vw": 390,
+ "vh": 844,
+ "overflowX": 0,
+ "overlapCount": 5,
+ "overlaps": [
+  {
+   "a": "適合誰",
+   "b": "已有網站、CRM 或內部系統,希望加入 ",
+   "ox": 60,
+   "oy": 21,
+   "y": 130,
+   "step": 4
+  },
+  {
+   "a": "我們負責",
+   "b": "可接進既有流程的 AI 模組,不必更換現",
+   "ox": 75,
+   "oy": 21,
+   "y": 192,
+   "step": 4
+  },
+  {
+   "a": "適合誰",
+   "b": "需要串接客服、CRM、報價、專案與管理資",
+   "ox": 60,
+   "oy": 21,
+   "y": 419,
+   "step": 4
+  },
+  {
+   "a": "適合誰",
+   "b": "需要重新整理品牌、網站與客戶進站後的服務",
+   "ox": 60,
+   "oy": 21,
+   "y": 682,
+   "step": 4
+  },
+  {
+   "a": "我們負責",
+   "b": "品牌網站、互動入口,以及進站之後的流程串",
+   "ox": 75,
+   "oy": 21,
+   "y": 744,
+   "step": 4
+  }
+ ],
+ "smallTargetCount": 1,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  }
+ ]
+}

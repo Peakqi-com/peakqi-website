@@ -1,0 +1,445 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   第 3 組 染色派 ── v7 滴染 / v8 搖醒 / v9 凝視        【稽核修訂版】
+   共同時基:母時鐘一律 15s,戲在 0.3–7.5s 之間演完,其餘 7.5s 是空白,
+   所以「重播」感覺像牠隔一陣子又回來一次,而不是在跑迴圈。
+   共同幾何(全部是這兩個 clamp 的函數,沒有只在 375 成立的魔術數字):
+     FS  = clamp(24px,6vw,34px)          選單字級(mobileStyle 的 font)
+     PAD = clamp(20px,6vw,48px)          dialog 左右內距
+     連結列高 RH = 37px + 1.2*FS         (18+18 padding + 1.2*FS 行框 + 1px 分隔線)
+     第 k 字中心 x = PAD + 46px + (k-.5)*FS   (.pqm-idx 34px + gap 12px = 46px)
+
+   ★★ 第 05 列(產品)不是 RH,是固定 81px ★★  ← 本次稽核抓到的最大一個錯
+   那一列是 <button>,groupBtnStyle 裡有 minHeight:'44px';全站沒有任何
+   *{box-sizing:border-box}(只有 header 與浮動 CTA 兩個 inline 有寫),
+   所以 min-height 吃的是 content box → 列高 = 1(border) + 36(padding) + 44 = 81px,
+   而且因為 1.2*FS 最大只有 40.8(FS=34)< 44,這 81px 在任何寬度都是常數。
+   → 第 1–4 列頂 = 100px + (n-1)*RH          (16 上緣 + 60 標題列 + 24 nav margin-top)
+   → 第 6 列頂  = 100px + 4*RH + 81px = 329px + 4.8*FS    ← 不是 285px + 6*FS
+   原稿的 v9 用 285+6*FS 推 06 列,在 FS=24 差 15.2px、FS=34 差 3.2px:
+   滾滾會騎到「06 關於我們」那一行字上,而不是滾在它下面那 32px 的空隙裡
+   (實測 320x640 時滾滾的上緣比該列的下緣還高 19.7px)。已改。
+   耦合警告:81 這個值綁在 groupBtnStyle 的 min-height:44px、以及「產品是第 5 項」。
+   content.js 換順序或加/減 minHeight,v9 的兩個 top 要一起改。
+
+   ★ 閘門(本次修訂重點之一)★
+   三組規則的 @media 條件,必須與基礎檔關掉 .pqm-fore 的兩道閘門完全一致:
+       基礎檔:@media (min-width:960px){.pqm-fore{display:none}}
+               @media (max-height:559px){.pqm-fore{display:none}}
+   → 所以每一段都寫成
+       (prefers-reduced-motion:no-preference) and (max-width:959.98px) and (min-height:560px)
+   否則會出現「演員整層被藏起來、字卻還在自己變橘自己抖」的無主畫面 ——
+   手機在選單開著時橫置(812×375,高度 375 < 560)就會撞到,不是理論值。
+   失效方向:display:block 與定位一起關在這個 @media 內,所以 keyframes 拼錯、
+   瀏覽器不支援、動畫被停用、尺寸不符時,演員全部維持 display:none、字全部正常。
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── v7 滴染:染染垂到「03 導入方法」正上方,擠出一滴橘色顏料砸在第一個字上,
+      四個字由左到右一個接一個被染成品牌橘,再慢慢褪回原色;
+      窺窺從右邊縫裡擠出來看那一行,最後轉頭看你 ───────────────────────── */
+@media (prefers-reduced-motion:no-preference) and (max-width:959.98px) and (min-height:560px){
+  /* box 34×120:viewBox 34×44 以 meet 置中(比例 min(34/34,120/44)=1,不變形),
+     上下各留 38px 空白 —— 顏料滴才有地方往下掉而不被 svg 裁掉。
+     top 讓身體中心落在 02/03 的分隔線附近,上下只各吃到 4px 行框留白。 */
+  .pqm-v7 .pqm-a6{
+    display:block;width:34px;height:120px;
+    left:calc(clamp(20px,6vw,48px) + 29px + .5 * clamp(24px,6vw,34px));
+    top:calc(114px + 2.4 * clamp(24px,6vw,34px));
+    animation:pqmA7drop 15s linear both infinite;
+  }
+  .pqm-v7 .pqm-a6 .pqm-drip{animation:pqmA7drip 15s linear both infinite}
+  /* 窺窺卡在螢幕右緣,只擠進來 36px,高度對齊「04 案例」那一列 */
+  .pqm-v7 .pqm-a4{
+    display:block;right:-22px;
+    top:calc(207px + 4.2 * clamp(24px,6vw,34px));
+    animation:pqmA7peek 15s linear both infinite;
+  }
+  .pqm-v7 .pqm-a4 .pqm-iris{animation:pqmA7look 15s ease-in-out both infinite}
+  /* 波浪式染色:同一條 keyframes,靠 delay 串成一個字接一個字 */
+  .pqm-v7 .pqm-r3 .pqm-ch{animation:pqmA7dye 15s linear both infinite}
+  .pqm-v7 .pqm-r3 .pqm-ch:nth-child(2){animation-delay:.22s}
+  .pqm-v7 .pqm-r3 .pqm-ch:nth-child(3){animation-delay:.44s}
+  .pqm-v7 .pqm-r3 .pqm-ch:nth-child(4){animation-delay:.66s}
+}
+/* 0.3s 垂下 → 1.26s 著地擠一下 → 1.9s 傾身倒 → 2.13s 被反作用力甩一下
+   → 2.8s 得意跳一下 → 3.3s 收 → 4.35s 縮回上方看不見
+   ★ 修:躲藏位移 −300px → −340px。−300 只在 FS=24(≤430 寬)成立;
+     567–959 寬時 FS 被 clamp 拉到 34,列的位置整個往下,牠的盒底會停在 y=+15.6,
+     雖然那 38px 是 svg 的空白邊、畫不出東西,但盒子在畫面內就不算躲好。 */
+@keyframes pqmA7drop{
+  0%,2%    {transform:translate3d(0,-340px,0) rotate(0deg)     scale(1,1);animation-timing-function:cubic-bezier(.3,.9,.35,1)}
+  7%       {transform:translate3d(0,10px,0)   rotate(0deg)     scale(.92,1.1);animation-timing-function:cubic-bezier(.4,0,.6,1)}
+  8.4%     {transform:translate3d(0,0,0)      rotate(0deg)     scale(1.18,.84);animation-timing-function:cubic-bezier(.2,1.5,.4,1)}
+  9.8%     {transform:translate3d(0,2px,0)    rotate(-5deg)    scale(.96,1.06)}
+  11.2%    {transform:translate3d(0,0,0)      rotate(-11deg)   scale(1,1);animation-timing-function:ease-in-out}
+  12.8%    {transform:translate3d(0,0,0)      rotate(-12.5deg) scale(1,1);animation-timing-function:cubic-bezier(.3,1.4,.5,1)}
+  14.2%    {transform:translate3d(0,-3px,0)   rotate(6deg)     scale(1.06,.94)}
+  16%      {transform:translate3d(0,0,0)      rotate(-1deg)    scale(1,1);animation-timing-function:cubic-bezier(.3,1.4,.5,1)}
+  18.6%    {transform:translate3d(0,-9px,0)   rotate(0deg)     scale(.94,1.08)}
+  20.4%    {transform:translate3d(0,0,0)      rotate(0deg)     scale(1.12,.9)}
+  22%      {transform:translate3d(0,0,0)      rotate(0deg)     scale(1,1);animation-timing-function:cubic-bezier(.55,0,.85,.25)}
+  29%,100% {transform:translate3d(0,-340px,0) rotate(0deg)     scale(1,1)}
+}
+/* 顏料滴:先被拉成一條垂到字上(scaleY,原點在身體那一端)→ 斷開 → 落在字中央
+   → 啪一聲被字吸收(壓扁+淡出)→ 趁看不見的時候悄悄回位,下一輪才又長出來 */
+@keyframes pqmA7drip{
+  0%,10.4%  {transform:translate3d(0,0,0) scale(1,1);opacity:1;animation-timing-function:cubic-bezier(.4,0,.75,.4)}
+  12.8%     {transform:translate3d(0,0,0) scale(.8,2.5);opacity:1;animation-timing-function:cubic-bezier(.35,0,.6,1)}
+  13.8%     {transform:translate3d(0,9px,0) scale(1.06,1.04);opacity:1;animation-timing-function:cubic-bezier(.5,0,.9,.5)}
+  15%       {transform:translate3d(0,14px,0) scale(1,1);opacity:1}
+  15.7%     {transform:translate3d(0,16px,0) scale(1.55,.42);opacity:.5}
+  16.6%     {transform:translate3d(0,17px,0) scale(2.1,.16);opacity:0}
+  16.7%,42% {transform:translate3d(0,0,0) scale(1,1);opacity:0}
+  48%,100%  {transform:translate3d(0,0,0) scale(1,1);opacity:1}
+}
+/* 被顏料砸到:壓扁一下 → 回彈 → 橘色停 1.1s → 1.5s 慢慢褪回原色。
+   100% 一定是完全正常的字:transform:none;opacity:1;color:inherit。
+   全程 opacity 恆為 1,任何一格都沒有字是不見的。 */
+@keyframes pqmA7dye{
+  0%,14.4%{transform:none;opacity:1;color:inherit;animation-timing-function:cubic-bezier(.3,.88,.35,1)}
+  15.6%   {transform:translate3d(0,0,0) scale(1.2,.78);opacity:1;color:#FF6B2C}
+  16.9%   {transform:translate3d(0,0,0) scale(.92,1.1);opacity:1;color:#FF6B2C}
+  18.2%   {transform:translate3d(0,0,0) scale(1.03,.98);opacity:1;color:#FF6B2C}
+  19.4%   {transform:translate3d(0,0,0) scale(1,1);opacity:1;color:#FF6B2C;animation-timing-function:ease-in-out}
+  27%     {transform:translate3d(0,0,0) scale(1,1);opacity:1;color:#FF6B2C}
+  37%     {transform:none;opacity:1;color:inherit}
+  100%    {transform:none;opacity:1;color:inherit}
+}
+@keyframes pqmA7peek{
+  0%,21%   {transform:translate3d(76px,0,0) rotate(0deg);animation-timing-function:cubic-bezier(.24,1.3,.4,1)}
+  25%      {transform:translate3d(-7px,0,0) rotate(-4deg)}
+  27%      {transform:translate3d(0,0,0)    rotate(0deg);animation-timing-function:ease-in-out}
+  31%      {transform:translate3d(0,-2px,0) rotate(-3deg)}
+  35%      {transform:translate3d(0,0,0)    rotate(2.5deg)}
+  39%      {transform:translate3d(0,0,0)    rotate(0deg);animation-timing-function:cubic-bezier(.6,0,.9,.3)}
+  46%,100% {transform:translate3d(76px,0,0) rotate(0deg)}
+}
+/* 瞳孔:先抬頭看那一行變橘的字,再轉回正中央 —— 正中央就是「看著你」 */
+@keyframes pqmA7look{
+  0%,23%   {transform:translate3d(0,0,0)}
+  28%      {transform:translate3d(-4.6px,-3.2px,0)}
+  36%      {transform:translate3d(-4.6px,-3.2px,0)}
+  40%      {transform:translate3d(1.6px,.8px,0)}
+  44%,100% {transform:translate3d(0,0,0)}
+}
+
+/* ── v8 搖醒:三小隻從左邊一路蹦過「02 解決方案」,被牠們撞到的字整個醒過來,
+      一直抖一直抖(振幅遞減)過三秒才安靜;踏踏最後從天上掉下來,
+      一腳把第三個字踩扁,字彈回來,牠才滿意地跳走 ─────────────────────── */
+@media (prefers-reduced-motion:no-preference) and (max-width:959.98px) and (min-height:560px){
+  /* 66×22 = 78×26 的等比縮小(78/26 = 66/22),不變形。y 對齊字的中線,
+     所以牠們是「在字之間穿梭」而不是在字下面跑。 */
+  .pqm-v8 .pqm-a5{
+    display:block;width:66px;height:22px;left:0;
+    top:calc(144px + 1.8 * clamp(24px,6vw,34px));
+    animation:pqmA8run 15s linear both infinite;
+  }
+  /* ★ 修:三小隻的彈跳原本是 .34s × 12 輪的獨立短動畫,4.4s 後就永久停在
+     transform:none —— 但母動畫 pqmA8run 是 15s infinite,所以「第二次重播之後
+     三小隻就不跳了,像一張貼紙滑過去」。現在改成同一支 15s 母時鐘:
+     0–27.5% 之間排 11 次跳(每次 2.5% = 0.375s),27.5% 之後平躺到 100%。
+     跳完一樣是完全靜止、不留常駐位移;而且每一輪重播都跳,相位永遠對得上。
+     三隻的 delay 差 0.125s(= 一次跳的 1/3),所以是三個個體不是一塊招牌。 */
+  .pqm-v8 .pqm-a5 .pqm-t1{animation:pqmA8hop 15s cubic-bezier(.3,0,.5,1) 0s    both infinite}
+  .pqm-v8 .pqm-a5 .pqm-t2{animation:pqmA8hop 15s cubic-bezier(.3,0,.5,1) .125s both infinite}
+  .pqm-v8 .pqm-a5 .pqm-t3{animation:pqmA8hop 15s cubic-bezier(.3,0,.5,1) .25s  both infinite}
+  /* 踏踏正對「02 解決方案」的第 3 個字,腳底貼在那個字的底線上 */
+  .pqm-v8 .pqm-a1{
+    display:block;
+    left:calc(clamp(20px,6vw,48px) + 29px + 2.5 * clamp(24px,6vw,34px));
+    top:calc(121px + 2.2 * clamp(24px,6vw,34px));
+    /* 縮放與旋轉的軸都放在腳底:著地壓扁時腳不會離開字面(軸在中心會把腳提高 5px),
+       歪頭那兩格也變成「用腳跟撐著身體斜過來看」而不是整隻平移。 */
+    transform-origin:50% 100%;
+    animation:pqmA8jump 15s linear both infinite;
+  }
+  /* 旋轉軸改到「髖部」(基礎檔預設是腳底),腿張開才像張腿,不像整條腿平移 */
+  .pqm-v8 .pqm-a1 .pqm-legL,
+  .pqm-v8 .pqm-a1 .pqm-legR{transform-origin:50% 0}
+  .pqm-v8 .pqm-a1 .pqm-legL{animation:pqmA8legL 15s ease-in-out both infinite}
+  .pqm-v8 .pqm-a1 .pqm-legR{animation:pqmA8legR 15s ease-in-out both infinite}
+  /* delay 對應「最前面那一隻」掃過每個字的時刻,固定 0.21s 一個字。
+     見 pqmA8run 的註解:等速段的長度改寫成 3*FS / 0.63s,所以 0.21s 這個值
+     在 320–959 任何寬度、FS 24–34 都是精確值,不是只在 375 對。 */
+  .pqm-v8 .pqm-r2 .pqm-ch{animation:pqmA8shake 15s linear both infinite}
+  .pqm-v8 .pqm-r2 .pqm-ch:nth-child(2){animation-delay:.21s}
+  .pqm-v8 .pqm-r2 .pqm-ch:nth-child(3){animation-name:pqmA8crush;animation-delay:.42s}
+  .pqm-v8 .pqm-r2 .pqm-ch:nth-child(4){animation-delay:.63s}
+}
+/* ★ 修 1:對字的錨點從「三隻的正中央」改成「最前面那一隻(.pqm-t3)的正中央」。
+   t3 在 viewBox 的 cx=66,盒縮放 66/78=0.84615 → 距盒左緣 55.8px,
+   所以要讓 t3 壓在第 k 個字上,translateX = 字中心 − 55.8
+   = PAD + 46 + (k−.5)*FS − 55.8 = PAD − 9.8 + (k−.5)*FS。
+   原本用群體中心當錨點,結果是「最前面那隻早就跑過去了,字才醒」;
+   改成第一個碰到的那隻負責撞醒,因果才對得上。
+   ★ 修 2:等速段從 10.6%→16.2%(0.84s,距離 24px + 3*FS)改成
+   10.6%→14.8%(0.63s,距離正好 3*FS)。原式那個 +24px 是固定量,
+   只有 FS=24 時「一個字 = 0.21s」才剛好成立;FS=34(567px 以上)時第 4 個字
+   會差 7.6px。現在速度 = 3*FS/0.63s,每個字恆為 0.21s,與 FS 無關。
+   ★ 修 3:進場/離場的 easing 改成在交接點與等速段同速度(進場末速度 =
+   離場初速度 = 3*FS/0.63),不會出現「衝到字前面煞車、再重新起步」。 */
+@keyframes pqmA8run{
+  0%,2%    {transform:translate3d(-88px,0,0);animation-timing-function:cubic-bezier(.35,.05,.74,.66)}
+  10.6%    {transform:translate3d(calc(clamp(20px,6vw,48px) - 9.8px + .5 * clamp(24px,6vw,34px)),0,0);animation-timing-function:linear}
+  14.8%    {transform:translate3d(calc(clamp(20px,6vw,48px) - 9.8px + 3.5 * clamp(24px,6vw,34px)),0,0);animation-timing-function:cubic-bezier(.4,.23,.9,.75)}
+  27%,100% {transform:translate3d(calc(100vw + 40px),0,0)}
+}
+/* 11 次跳,全部掛在同一支 15s 母時鐘上(見上面的 ★ 修)。
+   兩行就寫完,不是 22 條 keyframes。 */
+@keyframes pqmA8hop{
+  0%,2.5%,5%,7.5%,10%,12.5%,15%,17.5%,20%,22.5%,25%,27.5%,100%{transform:translate3d(0,0,0) scale(1,1)}
+  1.25%,3.75%,6.25%,8.75%,11.25%,13.75%,16.25%,18.75%,21.25%,23.75%,26.25%{transform:translate3d(0,-5px,0) scale(1.04,.96)}
+}
+/* 被撞醒:第一下跳最高,之後振幅一路遞減到停;顏色同時被搖成橘色,再慢慢褪回。
+   最大位移 7px、最大旋轉 9deg —— 字從頭到尾都看得懂,沒有任何一格是不見的。
+   color 只在 0/10.6/11.8…16.6/28/100 宣告,16.6%→28% 那一段用母層的 linear
+   插值慢慢褪回;0% 與 100% 都有寫,所以不會產生「隱含關鍵影格」。 */
+@keyframes pqmA8shake{
+  0%,10.6%{transform:none;opacity:1;color:inherit;animation-timing-function:cubic-bezier(.3,.9,.35,1)}
+  11.8%   {transform:translate3d(0,-7px,0)   rotate(-9deg)   scale(1.05,1.06);opacity:1;color:#FF6B2C}
+  13%     {transform:translate3d(0,1px,0)    rotate(7.5deg)  scale(1.12,.9);opacity:1;color:#FF6B2C}
+  14.2%   {transform:translate3d(0,-5px,0)   rotate(-6.5deg) scale(1,1.05);opacity:1;color:#FF6B2C}
+  15.4%   {transform:translate3d(0,0,0)      rotate(5.4deg)  scale(1.05,.97);opacity:1;color:#FF6B2C}
+  16.6%   {transform:translate3d(0,-3.4px,0) rotate(-4.4deg) scale(1,1);opacity:1;color:#FF6B2C}
+  17.8%   {transform:translate3d(0,0,0)      rotate(3.5deg)  scale(1,1);opacity:1}
+  19%     {transform:translate3d(0,-2.4px,0) rotate(-2.8deg) scale(1,1);opacity:1}
+  20.2%   {transform:translate3d(0,0,0)      rotate(2.2deg)  scale(1,1);opacity:1}
+  21.4%   {transform:translate3d(0,-1.6px,0) rotate(-1.6deg) scale(1,1);opacity:1}
+  22.6%   {transform:translate3d(0,0,0)      rotate(1.2deg)  scale(1,1);opacity:1}
+  23.8%   {transform:translate3d(0,-.9px,0)  rotate(-.8deg)  scale(1,1);opacity:1}
+  25%     {transform:translate3d(0,0,0)      rotate(.5deg)   scale(1,1);opacity:1}
+  26.2%   {transform:translate3d(0,-.4px,0)  rotate(-.3deg)  scale(1,1);opacity:1}
+  28%     {transform:none;opacity:1;color:inherit}
+  100%    {transform:none;opacity:1;color:inherit}
+}
+/* 第 3 個字:一樣被搖醒,但在 4.185s 被踏踏一腳踩成 32% 高(仍然是看得見的字),
+   再像彈簧一樣彈回來。壓扁與著地是同一個時間點
+   (crush 25.1% × 15s + delay .42s = 4.185s = pqmA8jump 的 27.9% × 15s)。 */
+@keyframes pqmA8crush{
+  0%,10.6%{transform:none;opacity:1;color:inherit;animation-timing-function:cubic-bezier(.3,.9,.35,1)}
+  11.8%   {transform:translate3d(0,-7px,0)   rotate(-9deg)   scale(1.05,1.06);opacity:1;color:#FF6B2C}
+  13%     {transform:translate3d(0,1px,0)    rotate(7.5deg)  scale(1.12,.9);opacity:1;color:#FF6B2C}
+  14.2%   {transform:translate3d(0,-5px,0)   rotate(-6.5deg) scale(1,1.05);opacity:1;color:#FF6B2C}
+  15.4%   {transform:translate3d(0,0,0)      rotate(5.4deg)  scale(1.05,.97);opacity:1;color:#FF6B2C}
+  16.6%   {transform:translate3d(0,-3.4px,0) rotate(-4.4deg) scale(1,1);opacity:1;color:#FF6B2C}
+  17.8%   {transform:translate3d(0,0,0)      rotate(3.5deg)  scale(1,1);opacity:1;color:#FF6B2C}
+  19%     {transform:translate3d(0,-2.4px,0) rotate(-2.8deg) scale(1,1);opacity:1;color:#FF6B2C}
+  20.2%   {transform:translate3d(0,0,0)      rotate(2.2deg)  scale(1,1);opacity:1;color:#FF6B2C}
+  21.4%   {transform:translate3d(0,-1.6px,0) rotate(-1.6deg) scale(1,1);opacity:1;color:#FF6B2C}
+  22.6%   {transform:translate3d(0,0,0)      rotate(1.2deg)  scale(1,1);opacity:1;color:#FF6B2C}
+  24%     {transform:translate3d(0,0,0)      rotate(0deg)    scale(1,1);opacity:1;color:#FF6B2C;animation-timing-function:cubic-bezier(.7,0,.9,.4)}
+  25.1%   {transform:translate3d(0,0,0)      rotate(0deg)    scale(1.38,.32);opacity:1;color:#FF6B2C;animation-timing-function:cubic-bezier(.3,0,.6,1)}
+  26.4%   {transform:translate3d(0,0,0)      rotate(0deg)    scale(1.34,.36);opacity:1;color:#FF6B2C;animation-timing-function:cubic-bezier(.2,1.6,.4,1)}
+  28%     {transform:translate3d(0,-4px,0)   rotate(0deg)    scale(.9,1.16);opacity:1;color:#FF6B2C}
+  29.6%   {transform:translate3d(0,0,0)      rotate(0deg)    scale(1.06,.95);opacity:1}
+  31%     {transform:translate3d(0,0,0)      rotate(0deg)    scale(.99,1.01);opacity:1}
+  32.4%   {transform:none;opacity:1;color:inherit}
+  100%    {transform:none;opacity:1;color:inherit}
+}
+/* 3.3s 從天上掉下來 → 4.185s 落在第 3 個字上(與 pqmA8crush 的 25.1% 同一瞬間)
+   → 壓扁回彈 → 歪頭看一眼 → 5.79s 跳走。躲藏位移同樣 −300 → −340px。 */
+@keyframes pqmA8jump{
+  0%,22%   {transform:translate3d(0,-340px,0)   rotate(0deg)  scale(1,1);animation-timing-function:cubic-bezier(.55,0,.85,.35)}
+  27.9%    {transform:translate3d(0,0,0)        rotate(0deg)  scale(1.28,.7);animation-timing-function:cubic-bezier(.2,1.5,.4,1)}
+  29.4%    {transform:translate3d(0,-9px,0)     rotate(0deg)  scale(.9,1.14)}
+  30.8%    {transform:translate3d(0,0,0)        rotate(0deg)  scale(1.08,.94)}
+  32%      {transform:translate3d(0,0,0)        rotate(0deg)  scale(1,1);animation-timing-function:ease-in-out}
+  34%      {transform:translate3d(0,0,0)        rotate(-8deg) scale(1,1)}
+  36.4%    {transform:translate3d(0,0,0)        rotate(4deg)  scale(1,1);animation-timing-function:cubic-bezier(.3,0,.5,1)}
+  38.6%    {transform:translate3d(14px,-30px,0) rotate(10deg) scale(.94,1.08)}
+  41.5%,100%{transform:translate3d(30px,-340px,0) rotate(0deg) scale(1,1)}
+}
+@keyframes pqmA8legL{
+  0%,25%   {transform:rotate(0deg)}
+  26.6%    {transform:rotate(-16deg)}
+  27.9%    {transform:rotate(-30deg)}
+  29.6%    {transform:rotate(6deg)}
+  31%,36.4%{transform:rotate(0deg)}
+  38.6%    {transform:rotate(-22deg)}
+  41.5%,100%{transform:rotate(0deg)}
+}
+@keyframes pqmA8legR{
+  0%,25%   {transform:rotate(0deg)}
+  26.6%    {transform:rotate(16deg)}
+  27.9%    {transform:rotate(30deg)}
+  29.6%    {transform:rotate(-6deg)}
+  31%,36.4%{transform:rotate(0deg)}
+  38.6%    {transform:rotate(22deg)}
+  41.5%,100%{transform:rotate(0deg)}
+}
+
+/* ── v9 凝視:窺窺把整顆大眼擠進螢幕右緣,瞳孔由右往左一個字一個字「讀」
+      「06 關於我們」;被讀到的字變成品牌橘並開始慢慢脈動,讀完就放掉,
+      最後連編號 06 都被牠讀了一下,牠再轉回來看你。
+      滾滾在那一列下面滾過去,滾到橘字旁邊會煞住、往後縮一下再繼續 ——
+      牠也是在看,不是背景裝飾。
+      這一齣完全不移動任何一個字 —— 改的是字的顏色與呼吸。 ───────────── */
+@media (prefers-reduced-motion:no-preference) and (max-width:959.98px) and (min-height:560px){
+  /* 62×47 與 viewBox 58×44 幾乎同比例(58/44=1.3182,62/47=1.3191,letterbox 0.05px),
+     放大 6.8% 當作「貼在螢幕上」 */
+  /* ★ 修:06 列頂 = 329 + 4.8*FS(見檔頭「第 05 列是固定 81px」)。
+     窺窺 47px 高,置中於 06 列的行框中線 = 347 + 5.4*FS
+     → top = 347 + 5.4*FS − 23.5 = 323.5 + 5.4*FS。 */
+  .pqm-v9 .pqm-a4{
+    display:block;width:62px;height:47px;right:-20px;
+    top:calc(323.5px + 5.4 * clamp(24px,6vw,34px));
+    animation:pqmA9gaze 15s linear both infinite;
+  }
+  .pqm-v9 .pqm-a4 .pqm-iris{animation:pqmA9iris 15s ease-in-out both infinite}
+  /* 滾滾滾過 06 那一列與 Demo 按鈕之間的 32px 空隙,上下各留 3px,不擋到任何字。
+     ★ 修:06 列底 = 329 + 4.8*FS + 37 + 1.2*FS = 366 + 6*FS → top = 369 + 6*FS。
+     原本 325 + 7.2*FS 在 FS=24 時高了 15px,牠會壓在「06 關於我們」那行字上。 */
+  .pqm-v9 .pqm-a3{
+    display:block;width:26px;height:26px;left:0;
+    top:calc(369px + 6 * clamp(24px,6vw,34px));
+    animation:pqmA9roll 15s linear both infinite;
+  }
+  /* 視線由右往左,所以 delay 是 4→3→2→1 */
+  .pqm-v9 .pqm-r6 .pqm-ch{animation:pqmA9read 15s linear both infinite}
+  .pqm-v9 .pqm-r6 .pqm-ch:nth-child(3){animation-delay:.68s}
+  .pqm-v9 .pqm-r6 .pqm-ch:nth-child(2){animation-delay:1.36s}
+  .pqm-v9 .pqm-r6 .pqm-ch:nth-child(1){animation-delay:2.04s}
+  /* 最後連編號都讀了一下。★ 這一條的 0%/46%/100% 一定要「寫死」
+     color:rgba(242,239,232,.4) ★ 兩個都不能省:
+     (a) 不能寫 color:inherit —— .pqm-idx 的 inline color 是 rgba(242,239,232,.4),
+         inherit 會解析成整列的 #F2EFE8,序號會被永久調亮;
+     (b) 也不能整個省略 color —— 省略時瀏覽器補的是「隱含關鍵影格」,
+         它跨的是整個 0→34.6% 與 42→100%,實測序號會從第 0 秒就開始偏橘、
+         到第 8.5 秒還是橘的。寫死那個值才真的回得去。
+     代價:這裡耦合了 Nav.dc.html 裡 .pqm-idx 的 inline color,改那個值要同步改這裡。 */
+  .pqm-v9 .pqm-r6 .pqm-idx{animation:pqmA9idx 15s linear both infinite}
+}
+@keyframes pqmA9gaze{
+  0%,2%    {transform:translate3d(86px,0,0) rotate(0deg)    scale(1,1);animation-timing-function:cubic-bezier(.22,1.25,.38,1)}
+  7%       {transform:translate3d(-6px,0,0) rotate(-3deg)   scale(1.04,.96)}
+  8.6%     {transform:translate3d(0,0,0)    rotate(0deg)    scale(1,1);animation-timing-function:ease-in-out}
+  14%      {transform:translate3d(0,0,0)    rotate(-2.5deg) scale(1,1)}
+  20%      {transform:translate3d(-3px,0,0) rotate(-4deg)   scale(1,1)}
+  26%      {transform:translate3d(-5px,0,0) rotate(-5.5deg) scale(1,1)}
+  33%      {transform:translate3d(-5px,0,0) rotate(-5.5deg) scale(1,1);animation-timing-function:cubic-bezier(.3,1.4,.5,1)}
+  36%      {transform:translate3d(0,0,0)    rotate(0deg)    scale(1.06,.94)}
+  38%,44%  {transform:translate3d(0,0,0)    rotate(0deg)    scale(1,1);animation-timing-function:cubic-bezier(.6,0,.9,.3)}
+  50%,100% {transform:translate3d(86px,0,0) rotate(0deg)    scale(1,1)}
+}
+/* 瞳孔一格一格往左挪:第 4 字 → 第 3 → 第 2 → 第 1 → 編號 06 → 轉回來看你 */
+@keyframes pqmA9iris{
+  0%,9%    {transform:translate3d(0,0,0)}
+  12%      {transform:translate3d(-3px,.2px,0)}
+  17%      {transform:translate3d(-3.8px,.3px,0)}
+  22%      {transform:translate3d(-4.6px,.4px,0)}
+  27%      {transform:translate3d(-5.4px,.5px,0)}
+  32%,35.5%{transform:translate3d(-6px,.6px,0)}
+  38%      {transform:translate3d(0,0,0)}
+  46%,100% {transform:translate3d(0,0,0)}
+}
+/* 被讀到的字:變橘 + 慢慢起伏兩次(不是位移,是外觀與呼吸被改掉),
+   視線離開就放掉,1.9s 後完全回到原樣。全程 opacity 恆為 1。 */
+@keyframes pqmA9read{
+  0%,11.4%{transform:none;opacity:1;color:inherit;animation-timing-function:cubic-bezier(.3,.88,.35,1)}
+  12.6%   {transform:translate3d(0,0,0) scale(1.11,1.11);opacity:1;color:#FF6B2C;animation-timing-function:ease-in-out}
+  14.4%   {transform:translate3d(0,0,0) scale(1.01,1.01);opacity:1;color:#FF6B2C}
+  16.4%   {transform:translate3d(0,0,0) scale(1.07,1.07);opacity:1;color:#FF6B2C}
+  18.4%   {transform:translate3d(0,0,0) scale(1.01,1.01);opacity:1;color:#FF6B2C}
+  20.4%   {transform:translate3d(0,0,0) scale(1.05,1.05);opacity:1;color:#FF6B2C;animation-timing-function:cubic-bezier(.4,0,.45,1)}
+  24%     {transform:none;opacity:1;color:inherit}
+  100%    {transform:none;opacity:1;color:inherit}
+}
+@keyframes pqmA9idx{
+  0%,33%{transform:none;opacity:1;color:rgba(242,239,232,.4);animation-timing-function:cubic-bezier(.3,.9,.35,1)}
+  34.6% {transform:translate3d(0,0,0) scale(1.3,1.3);opacity:1;color:#FF6B2C}
+  36.4% {transform:translate3d(0,0,0) scale(1.04,1.04);opacity:1;color:#FF6B2C;animation-timing-function:ease-in-out}
+  39%   {transform:translate3d(0,0,0) scale(1.14,1.14);opacity:1;color:#FF6B2C}
+  42%   {transform:translate3d(0,0,0) scale(1.02,1.02);opacity:1;color:#FF6B2C;animation-timing-function:cubic-bezier(.4,0,.5,1)}
+  46%   {transform:none;opacity:1;color:rgba(242,239,232,.4)}
+  100%  {transform:none;opacity:1;color:rgba(242,239,232,.4)}
+}
+/* ★ 修:原版滾滾只是「有東西在左右滑過去」,而且輪子會打滑。兩件事一起修:
+   (a) 打滑:滾動的是那顆球,不是 26px 的盒。球在 viewBox 是 r=13.4 + 描邊 2.1
+       → 外緣 r=14.45,盒縮放 26/32=0.8125 → 螢幕外緣 r=11.74,周長 73.76px。
+       原本 2000deg 對應 410px,實際要走 495px(375 寬)—— 差 21%,是看得出來的滑。
+       現在把「進場段」的落點寫成 PAD/FS 的函數,距離在 320/375/430 分別是
+       201/203.5/214px,對 1000deg(=204.9px)的誤差只有 +1.9% / +0.7% / −4.2%。
+   (b) 演出:牠滾到那一列旁邊會煞住 → 往後縮 20px(= −98deg,一樣不打滑)→
+       再湊回去看一眼 → 才繼續滾出去。時間點 2.55–4.05s 正好是「們」「我」
+       兩個字是橘的那段,牠是被橘字嚇了一下,不是背景裝飾。 */
+@keyframes pqmA9roll{
+  0%,4%    {transform:translate3d(-40px,0,0) rotate(0deg);animation-timing-function:cubic-bezier(.32,0,.3,1)}
+  17%      {transform:translate3d(calc(clamp(20px,6vw,48px) + 45px + 4 * clamp(24px,6vw,34px)),0,0) rotate(1000deg);animation-timing-function:cubic-bezier(.45,0,.35,1)}
+  20%      {transform:translate3d(calc(clamp(20px,6vw,48px) + 25px + 4 * clamp(24px,6vw,34px)),0,0) rotate(902deg);animation-timing-function:cubic-bezier(.4,0,.4,1)}
+  23%,27%  {transform:translate3d(calc(clamp(20px,6vw,48px) + 45px + 4 * clamp(24px,6vw,34px)),0,0) rotate(1000deg);animation-timing-function:cubic-bezier(.42,0,.75,1)}
+  38%,100% {transform:translate3d(calc(100vw + 40px),0,0) rotate(2200deg)}
+}
+
+/* ── 矮螢幕修正 ──────────────────────────────────────────────────────────
+   dialog 是 column flex,內容一旦高過視窗,唯一壓得下去的 flex item 就是那條
+   height:60px 的標題列(nav / CTA / 聯絡區的 min-content 都等於自身高度,
+   一格都壓不動)。所以整份選單只會「整體上移一個固定量」。
+   ★ 修:那個量是 12px,不是 16px。標題列的 min-content = ✕ 鈕的外框高,
+     而 ✕ 鈕是 <button>,除了 width/height:44px 之外還吃到瀏覽器預設的
+     padding:1px 6px 與自己寫的 border:1px → 外框 44+2+2 = 48px,
+     不是 44px。60 → 48 = 12px。實測(headless Chrome,真實 DOM)
+     320×640 / 500×717 / 500×745 位移都恰為 12.00px,932 高時 0.00px。
+   內容總高 H = 591px + 6*FS(六列裡只有五列會隨 FS 長高,05 列固定 81px):
+     FS=24(≤400 寬)H=735、FS=25.8(430)H≈746、FS=34(≥567)H=795。
+   位移 = clamp(0, H − 視窗高, 12)。
+   → (max-height:723px) 這一段在任何寬度都一定吃滿 12px(因為 H 最小就是 735),
+     是可以證明的,不是量到剛好。
+   → H 隨寬度變,所以過渡帶(位移在 0–12 之間連續變化的那一段)也隨寬度變,
+     下面按 ≤430 / 431–566 / ≥567 三個寬度帶各給一組門檻,過渡帶一律取中間值 −6px。
+   誠實揭露:純 CSS 讀不到內容總高,過渡帶做不到完全精準。實測 69 個
+   (寬×高)組合:46 組誤差恰為 0.0px,其餘全部 ≤6.0px,沒有一組超過 6px。
+   6px 相對於 24px 的字級不影響任何一齣的讀法(顏料滴仍落在字內、腳仍踩在字上)。
+   (高度 ≤559px 時 .pqm-fore 本來就整層 display:none,已由 min-height:560px 一併擋掉。) */
+@media (prefers-reduced-motion:no-preference) and (max-width:959.98px) and (min-height:560px) and (max-height:723px){
+  .pqm-v7 .pqm-a6{top:calc(102px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(195px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(132px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(109px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(311.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(357px + 6 * clamp(24px,6vw,34px))}
+}
+@media (prefers-reduced-motion:no-preference) and (max-width:430.98px) and (min-height:724px) and (max-height:746px){
+  .pqm-v7 .pqm-a6{top:calc(108px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(201px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(138px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(115px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(317.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(363px + 6 * clamp(24px,6vw,34px))}
+}
+/* 431–566.98px 寬:6vw 還沒被 clamp 夾住,FS = 0.06w → H = 591 + 0.36w
+   ∈ [746, 795]。h ≤ 734 時 H−h ≥ 12,一定吃滿;735–795 是過渡帶,同樣取
+   中間值 −6px,最大殘差 6px(與手機帶一致)。 */
+@media (prefers-reduced-motion:no-preference) and (min-width:431px) and (max-width:566.98px) and (min-height:724px) and (max-height:734px){
+  .pqm-v7 .pqm-a6{top:calc(102px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(195px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(132px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(109px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(311.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(357px + 6 * clamp(24px,6vw,34px))}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:431px) and (max-width:566.98px) and (min-height:735px) and (max-height:795px){
+  .pqm-v7 .pqm-a6{top:calc(108px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(201px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(138px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(115px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(317.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(363px + 6 * clamp(24px,6vw,34px))}
+}
+/* ≥567px 寬時 6vw ≥ 34,FS 被 clamp 釘死在 34 → H = 591 + 204 = 795px 是常數,
+   所以這一帶的兩個門檻(783 = H−12、795 = H)是算出來的,不是量到剛好。
+   (可折疊裝置展開後的短邊視窗會落在這裡。) */
+@media (prefers-reduced-motion:no-preference) and (min-width:567px) and (max-width:959.98px) and (min-height:724px) and (max-height:783px){
+  .pqm-v7 .pqm-a6{top:calc(102px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(195px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(132px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(109px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(311.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(357px + 6 * clamp(24px,6vw,34px))}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:567px) and (max-width:959.98px) and (min-height:784px) and (max-height:795px){
+  .pqm-v7 .pqm-a6{top:calc(108px + 2.4 * clamp(24px,6vw,34px))}
+  .pqm-v7 .pqm-a4{top:calc(201px + 4.2 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a5{top:calc(138px + 1.8 * clamp(24px,6vw,34px))}
+  .pqm-v8 .pqm-a1{top:calc(115px + 2.2 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a4{top:calc(317.5px + 5.4 * clamp(24px,6vw,34px))}
+  .pqm-v9 .pqm-a3{top:calc(363px + 6 * clamp(24px,6vw,34px))}
+}

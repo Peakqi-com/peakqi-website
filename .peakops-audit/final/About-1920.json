@@ -1,0 +1,54 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/About.dc.html",
+ "vw": 1920,
+ "vh": 1080,
+ "overflowX": 0,
+ "overlapCount": 1,
+ "overlaps": [
+  {
+   "a": "適合誰",
+   "b": "已有網站、CRM 或內部系統,希望加入 ",
+   "ox": 66,
+   "oy": 24,
+   "y": 242,
+   "step": 5
+  }
+ ],
+ "smallTargetCount": 14,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "解決方案",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "導入方法",
+   "h": 30,
+   "w": 62
+  },
+  {
+   "t": "案例",
+   "h": 30,
+   "w": 33
+  },
+  {
+   "t": "產品 ▼",
+   "h": 30,
+   "w": 48
+  }
+ ]
+}

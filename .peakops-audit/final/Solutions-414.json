@@ -1,0 +1,40 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Solutions.dc.html",
+ "vw": 414,
+ "vh": 896,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 5,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "一般問題",
+   "h": 35,
+   "w": 84
+  },
+  {
+   "t": "預約",
+   "h": 35,
+   "w": 58
+  },
+  {
+   "t": "報價",
+   "h": 35,
+   "w": 58
+  },
+  {
+   "t": "轉真人",
+   "h": 35,
+   "w": 71
+  }
+ ]
+}

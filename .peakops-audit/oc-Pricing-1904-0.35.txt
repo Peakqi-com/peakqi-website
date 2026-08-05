@@ -1,0 +1,45 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Pricing.dc.html",
+ "sp": 0.35,
+ "vw": 1904,
+ "vh": 1000,
+ "overlays": [
+  {
+   "tag": "A#pq-skip",
+   "z": "600",
+   "r": {
+    "x": 12,
+    "y": -60,
+    "w": 120,
+    "h": 44
+   }
+  },
+  {
+   "tag": "HEADER",
+   "z": "100",
+   "r": {
+    "x": 0,
+    "y": 0,
+    "w": 1904,
+    "h": 68
+   }
+  },
+  {
+   "tag": "DIV",
+   "z": "150",
+   "r": {
+    "x": 18,
+    "y": 932,
+    "w": 1868,
+    "h": 50
+   }
+  }
+ ],
+ "textCount": 19,
+ "occludedCount": 0,
+ "occluded": []
+}

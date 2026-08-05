@@ -1,0 +1,36 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 360,
+ "vh": 640,
+ "variant": "pqm-stage pqm-v1",
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "dlgOverflowY": 86,
+ "rows": 6,
+ "chars": 18,
+ "clickables": 10,
+ "blockedCount": 1,
+ "blocked": [
+  {
+   "t": "(02) 6609-3699",
+   "hit": "A"
+  }
+ ],
+ "stuckCharCount": 1,
+ "stuck": [
+  {
+   "t": "入",
+   "op": 1,
+   "x": 84,
+   "y": -3,
+   "sx": 0.92,
+   "sy": 0.92
+  }
+ ],
+ "eggAnimCount": 23,
+ "eggRunning": 21,
+ "actorsShown": 2
+}

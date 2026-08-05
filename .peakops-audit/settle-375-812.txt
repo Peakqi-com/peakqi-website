@@ -1,0 +1,16 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 375,
+ "vh": 812,
+ "variant": "pqm-stage pqm-v13",
+ "chars": 18,
+ "idxs": 6,
+ "notSettledCount": 0,
+ "notSettled": [],
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "runningAnims": 372
+}

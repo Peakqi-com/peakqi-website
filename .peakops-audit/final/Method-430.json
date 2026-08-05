@@ -1,0 +1,25 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/",
+ "vw": 430,
+ "vh": 932,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 2,
+ "smallTargets": [
+  {
+   "t": "重新載入",
+   "h": 33,
+   "w": 84
+  },
+  {
+   "t": "詳細資料",
+   "h": 35,
+   "w": 86
+  }
+ ]
+}

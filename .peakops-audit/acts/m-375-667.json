@@ -1,0 +1,31 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 375,
+ "vh": 667,
+ "variant": "pqm-stage pqm-v3",
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "dlgOverflowY": 59,
+ "rows": 6,
+ "chars": 18,
+ "clickables": 10,
+ "blockedCount": 0,
+ "blocked": [],
+ "stuckCharCount": 1,
+ "stuck": [
+  {
+   "t": "頁",
+   "op": 1,
+   "x": 51,
+   "y": -26,
+   "sx": 0.96,
+   "sy": 0.96
+  }
+ ],
+ "eggAnimCount": 23,
+ "eggRunning": 19,
+ "actorsShown": 2
+}

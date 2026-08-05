@@ -1,0 +1,55 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Pricing.dc.html",
+ "navH": 68,
+ "scrollPaddingTop": "84px",
+ "checked": 6,
+ "bad": 0,
+ "out": [
+  {
+   "id": "p-selector",
+   "targetTop": 690,
+   "headingTop": 754,
+   "headingText": "三種起步範圍,按流程深度選擇",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "p-selector",
+   "targetTop": 90,
+   "headingTop": 154,
+   "headingText": "三種起步範圍,按流程深度選擇",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "p-compare",
+   "targetTop": 135,
+   "headingTop": 357,
+   "headingText": "不同做法,適合不同階段",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "p-selector",
+   "targetTop": 69,
+   "headingTop": 133,
+   "headingText": "三種起步範圍,按流程深度選擇",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "p-compare",
+   "targetTop": 139,
+   "headingTop": 361,
+   "headingText": "不同做法,適合不同階段",
+   "hiddenUnderNav": false
+  },
+  {
+   "id": "p-usage",
+   "targetTop": 539,
+   "headingTop": 655,
+   "headingText": "費用由三個部分組成",
+   "hiddenUnderNav": false
+  }
+ ]
+}

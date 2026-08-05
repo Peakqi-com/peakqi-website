@@ -1,0 +1,19 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Method.dc.html",
+ "vw": 1440,
+ "clashCount": 1,
+ "clashes": [
+  {
+   "a": "實際使用者測試中・回饋直接改流程",
+   "b": "每週小幅調整",
+   "y": 461,
+   "overlapPx": 91,
+   "aA": 1,
+   "bA": 0.4
+  }
+ ]
+}

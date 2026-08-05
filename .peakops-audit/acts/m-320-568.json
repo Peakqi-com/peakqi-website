@@ -1,0 +1,31 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 320,
+ "vh": 568,
+ "variant": "pqm-stage pqm-v7",
+ "overflowX": 0,
+ "dlgOverflowX": 0,
+ "dlgOverflowY": 158,
+ "rows": 6,
+ "chars": 18,
+ "clickables": 10,
+ "blockedCount": 2,
+ "blocked": [
+  {
+   "t": "jacky@peakqi.c",
+   "hit": "A"
+  },
+  {
+   "t": "(02) 6609-3699",
+   "hit": "A"
+  }
+ ],
+ "stuckCharCount": 0,
+ "stuck": [],
+ "eggAnimCount": 24,
+ "eggRunning": 23,
+ "actorsShown": 2
+}

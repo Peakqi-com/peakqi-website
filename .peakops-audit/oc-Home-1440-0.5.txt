@@ -1,0 +1,68 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Home.dc.html",
+ "sp": 0.5,
+ "vw": 1440,
+ "vh": 900,
+ "overlays": [
+  {
+   "tag": "A#pq-skip",
+   "z": "600",
+   "r": {
+    "x": 12,
+    "y": -60,
+    "w": 120,
+    "h": 44
+   }
+  },
+  {
+   "tag": "HEADER",
+   "z": "100",
+   "r": {
+    "x": 0,
+    "y": 0,
+    "w": 1440,
+    "h": 68
+   }
+  },
+  {
+   "tag": "DIV",
+   "z": "150",
+   "r": {
+    "x": 18,
+    "y": 832,
+    "w": 1404,
+    "h": 50
+   }
+  },
+  {
+   "tag": "A#pq-backtop",
+   "z": "140",
+   "r": {
+    "x": 18,
+    "y": 834,
+    "w": 48,
+    "h": 48
+   }
+  }
+ ],
+ "textCount": 107,
+ "occludedCount": 1,
+ "occluded": [
+  {
+   "overlay": "DIV",
+   "z": "150",
+   "text": "PEAKQI OPERATING SYSTEM",
+   "fs": "8px",
+   "ox": 125,
+   "oy": 10,
+   "at": [
+    1314,
+    875
+   ]
+  }
+ ]
+}

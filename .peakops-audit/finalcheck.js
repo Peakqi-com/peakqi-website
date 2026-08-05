@@ -28,8 +28,18 @@ for (let s = 0; s <= steps; s++) {
     const pe = n.parentElement;
     if (!pe) continue;
     const cs = getComputedStyle(pe);
-    if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity < 0.3) continue;
-    if (cs.position === 'fixed') continue;
+    if (cs.visibility === 'hidden' || cs.display === 'none') continue;
+    // 一路往上檢查:opacity 不會繼承(祖先 opacity:0 藏起來的堆疊文字會被誤判成可見,
+    // Home 的 hero 有好幾層這種動畫文字,一次誤報 371 組);
+    // 固定層(NAV、浮動 CTA)壓在捲動內容上是設計本來就會發生的,也不算互疊。
+    let eff = 1, an = pe, fixedAnc = false;
+    while (an && an !== document.body) {
+      const ac = getComputedStyle(an);
+      eff *= +ac.opacity;
+      if (ac.position === 'fixed') fixedAnc = true;
+      an = an.parentElement;
+    }
+    if (fixedAnc || eff < 0.3) continue;
     const rg = document.createRange(); rg.selectNodeContents(n);
     const r = rg.getBoundingClientRect();
     if (r.width < 10 || r.height < 8 || r.bottom < 0 || r.top > innerHeight) continue;
@@ -42,7 +52,14 @@ for (let s = 0; s <= steps; s++) {
     if (!ov) continue;
     const minH = Math.min(A.r.height, B.r.height), minW = Math.min(A.r.width, B.r.width);
     if (ov.oy > minH * 0.6 && ov.ox > minW * 0.35) {
-      overlapHits.push({ a: A.t, b: B.t, ox: F(ov.ox), oy: F(ov.oy), y: F(A.r.top), step: s });
+      // 再用命中測試確認「真的看得到兩段字疊在一起」:取重疊區中心,
+      // 若最上層元素不是這兩段文字之一,代表其中一段被別的東西蓋著,不是互疊。
+      const mx = Math.max(1, Math.min(innerWidth - 1, (Math.max(A.r.left, B.r.left) + Math.min(A.r.right, B.r.right)) / 2));
+      const my = Math.max(1, Math.min(innerHeight - 1, (Math.max(A.r.top, B.r.top) + Math.min(A.r.bottom, B.r.bottom)) / 2));
+      const topEl = document.elementFromPoint(mx, my);
+      if (topEl && (topEl === A.pe || topEl === B.pe || A.pe.contains(topEl) || B.pe.contains(topEl))) {
+        overlapHits.push({ a: A.t, b: B.t, ox: F(ov.ox), oy: F(ov.oy), y: F(A.r.top), step: s });
+      }
     }
   }
 }

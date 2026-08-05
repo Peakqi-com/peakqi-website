@@ -1,0 +1,20 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/PeakOps.dc.html",
+ "navH": 68,
+ "scrollPaddingTop": "84px",
+ "checked": 1,
+ "bad": 0,
+ "out": [
+  {
+   "id": "pain",
+   "targetTop": 1517,
+   "headingTop": 1679,
+   "headingText": "問題通常不在工具,而在三個斷點",
+   "hiddenUnderNav": false
+  }
+ ]
+}

@@ -1,0 +1,53 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Steampunk/three-d-stage.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/hero-scenes.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding-g2.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/interior.webp>",
+  "EXCEPTION: TypeError: Cannot destructure property 'THREE' of '(intermediate value)' as it is undefined.\n    at http://127.0.0.1:8000/Steampunk/peakqi-story.html:182:9",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/tables.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/linesummary.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "vw": 768,
+ "vh": 1024,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 6,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  },
+  {
+   "t": "查看完整案例 →",
+   "h": 21,
+   "w": 105
+  },
+  {
+   "t": "討論相似導入情境",
+   "h": 21,
+   "w": 112
+  },
+  {
+   "t": "放大截圖",
+   "h": 19,
+   "w": 50
+  },
+  {
+   "t": "造訪 ↗",
+   "h": 19,
+   "w": 41
+  }
+ ]
+}

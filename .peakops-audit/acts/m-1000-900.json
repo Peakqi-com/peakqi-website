@@ -1,0 +1,10 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Nav.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Nav\" threw: ./Nav.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    at mf (",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/seo.js>"
+ ],
+ "probeError": null
+}
+{"skip":"no burger (desktop)"}

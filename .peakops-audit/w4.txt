@@ -1,0 +1,23 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 1440,
+ "count": 1,
+ "deepest": [
+  {
+   "depth": 8,
+   "tag": "DIV.pq-dd",
+   "clientW": 48,
+   "scrollW": 252,
+   "over": 204,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "relative",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": "產品 ▼ Peak Ops 通用 AI 業務工具"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Cases.dc.html>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Nav.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Nav\" threw: ./Nav.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    at mf (",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Footer.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Footer\" threw: ./Footer.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    a",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/case-media.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/cases-validator.js>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/content.js",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/case-media.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/cases-hero.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/favicon.svg>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "vw": 375,
+ "vh": 812,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 1,
+ "smallTargets": [
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  }
+ ]
+}

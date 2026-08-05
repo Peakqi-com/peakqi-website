@@ -1,0 +1,75 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "vw": 430,
+ "count": 5,
+ "deepest": [
+  {
+   "depth": 4,
+   "tag": "SECTION",
+   "clientW": 390,
+   "scrollW": 430,
+   "over": 40,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "static",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": "PRODUCTS · BRAND HOUSE 一"
+  },
+  {
+   "depth": 3,
+   "tag": "DIV.sc-host",
+   "clientW": 390,
+   "scrollW": 430,
+   "over": 40,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "static",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": "跳到主要內容 PeakQi 奇鋒國際 .pq-d"
+  },
+  {
+   "depth": 2,
+   "tag": "DIV#dc-root",
+   "clientW": 390,
+   "scrollW": 430,
+   "over": 40,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "static",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": "跳到主要內容 PeakQi 奇鋒國際 .pq-d"
+  },
+  {
+   "depth": 1,
+   "tag": "BODY",
+   "clientW": 390,
+   "scrollW": 430,
+   "over": 40,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "static",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": "跳到主要內容 PeakQi 奇鋒國際 .pq-d"
+  },
+  {
+   "depth": 0,
+   "tag": "HTML",
+   "clientW": 390,
+   "scrollW": 430,
+   "over": 40,
+   "ov": "visible",
+   "disp": "block",
+   "pos": "static",
+   "gtc": "none",
+   "flex": "nowrap",
+   "txt": ".sc-placeholder{backgrou"
+  }
+ ]
+}

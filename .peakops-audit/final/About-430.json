@@ -1,0 +1,6 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/about-hero.js>"
+ ],
+ "probeError": null
+}

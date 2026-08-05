@@ -1,0 +1,50 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/hero-kit.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Demo.dc.html>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Nav.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Nav\" threw: ./Nav.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    at mf ("
+ ],
+ "probeError": null
+}
+{
+ "url": "/Demo.dc.html",
+ "vw": 768,
+ "vh": 1024,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 23,
+ "smallTargets": [
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  },
+  {
+   "t": "婚禮婚慶",
+   "h": 37,
+   "w": 78
+  },
+  {
+   "t": "室內設計",
+   "h": 37,
+   "w": 78
+  },
+  {
+   "t": "房仲不動產",
+   "h": 37,
+   "w": 91
+  },
+  {
+   "t": "美業",
+   "h": 37,
+   "w": 53
+  },
+  {
+   "t": "團購電商",
+   "h": 37,
+   "w": 78
+  }
+ ]
+}

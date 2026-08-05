@@ -1,0 +1,30 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Nav.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Nav\" threw: ./Nav.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    at mf (",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Footer.dc.html>",
+  "error: [dc-runtime] sibling fetch for \"Footer\" threw: ./Footer.dc.html TypeError: Failed to fetch\n    at ensureFetched (http://127.0.0.1:8000/support.js:1508:29)\n    at Dispatcher (http://127.0.0.1:8000/support.js:1052:9)\n    a",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/content.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Method.dc.html>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/seo.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion-kit.js>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Method.dc.html",
+ "vw": 1920,
+ "vh": 1080,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 1,
+ "smallTargets": [
+  {
+   "t": "首頁",
+   "h": 20,
+   "w": 28
+  }
+ ]
+}

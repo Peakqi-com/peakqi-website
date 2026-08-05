@@ -1,0 +1,45 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Demo.dc.html",
+ "vw": 390,
+ "vh": 844,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 24,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  },
+  {
+   "t": "婚禮婚慶",
+   "h": 37,
+   "w": 78
+  },
+  {
+   "t": "室內設計",
+   "h": 37,
+   "w": 78
+  },
+  {
+   "t": "房仲不動產",
+   "h": 37,
+   "w": 91
+  },
+  {
+   "t": "美業",
+   "h": 37,
+   "w": 53
+  }
+ ]
+}

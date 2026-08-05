@@ -1,0 +1,50 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/PeakOps.dc.html",
+ "vw": 375,
+ "vh": 812,
+ "overflowX": 0,
+ "overlapCount": 3,
+ "overlaps": [
+  {
+   "a": "標準模組的第一階段最快 10 個工作天:",
+   "b": "可以只做部分功能嗎?",
+   "ox": 162,
+   "oy": 25,
+   "y": 17,
+   "step": 7
+  },
+  {
+   "a": "文字類(對話、文案、報告、SEO 分析)",
+   "b": "可以只做部分功能嗎?",
+   "ox": 162,
+   "oy": 25,
+   "y": 90,
+   "step": 7
+  },
+  {
+   "a": "可以。方案由小到大:A 先把接客做好,B",
+   "b": "能不能串接 LINE 或既有流程?",
+   "ox": 225,
+   "oy": 25,
+   "y": 163,
+   "step": 7
+  }
+ ],
+ "smallTargetCount": 2,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  },
+  {
+   "t": "i",
+   "h": 26,
+   "w": 26
+  }
+ ]
+}

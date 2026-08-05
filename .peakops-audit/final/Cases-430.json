@@ -1,0 +1,42 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/support.js>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "vw": 430,
+ "vh": 932,
+ "overflowX": 0,
+ "overlapCount": 0,
+ "overlaps": [],
+ "smallTargetCount": 5,
+ "smallTargets": [
+  {
+   "t": "首頁",
+   "h": 19,
+   "w": 25
+  },
+  {
+   "t": "查看完整案例 →",
+   "h": 21,
+   "w": 105
+  },
+  {
+   "t": "討論相似導入情境",
+   "h": 21,
+   "w": 112
+  },
+  {
+   "t": "{{ t.label }}",
+   "h": 21,
+   "w": 77
+  },
+  {
+   "t": "放大截圖",
+   "h": 24,
+   "w": 50
+  }
+ ]
+}

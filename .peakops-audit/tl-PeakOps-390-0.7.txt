@@ -1,0 +1,62 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/PeakOps.dc.html",
+ "sp": 0.7,
+ "vw": 390,
+ "count": 1,
+ "tracks": [
+  {
+   "id": "pq-tl",
+   "vertical": false,
+   "lineW": 2,
+   "lineH": 0,
+   "trackW": 350,
+   "headX": 20,
+   "headY": 5503.7,
+   "dots": 5,
+   "litCount": 5,
+   "litOutsideLine": 0,
+   "lastGap": 1,
+   "detail": [
+    {
+     "i": 0,
+     "on": true,
+     "cx": 21,
+     "cy": 5508.7,
+     "covered": true
+    },
+    {
+     "i": 1,
+     "on": true,
+     "cx": 21,
+     "cy": 5589.2,
+     "covered": true
+    },
+    {
+     "i": 2,
+     "on": true,
+     "cx": 21,
+     "cy": 5694.2,
+     "covered": true
+    },
+    {
+     "i": 3,
+     "on": true,
+     "cx": 21,
+     "cy": 5774.7,
+     "covered": true
+    },
+    {
+     "i": 4,
+     "on": true,
+     "cx": 21,
+     "cy": 5855.2,
+     "covered": true
+    }
+   ]
+  }
+ ]
+}

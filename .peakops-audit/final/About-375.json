@@ -1,0 +1,41 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/linesummary.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/shennong.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/rental.webp>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/About.dc.html",
+ "vw": 375,
+ "vh": 812,
+ "overflowX": 0,
+ "overlapCount": 2,
+ "overlaps": [
+  {
+   "a": "適合誰",
+   "b": "需要串接客服、CRM、報價、專案與管理資",
+   "ox": 60,
+   "oy": 21,
+   "y": 460,
+   "step": 4
+  },
+  {
+   "a": "我們負責",
+   "b": "跨流程、跨角色的營運系統與權限設計。",
+   "ox": 75,
+   "oy": 21,
+   "y": 522,
+   "step": 4
+  }
+ ],
+ "smallTargetCount": 1,
+ "smallTargets": [
+  {
+   "t": "PeakQi 奇鋒國際",
+   "h": 36,
+   "w": 95
+  }
+ ]
+}

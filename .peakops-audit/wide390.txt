@@ -1,0 +1,30 @@
+{
+ "consoleErrors": [],
+ "probeError": null
+}
+{
+ "url": "/Products.dc.html",
+ "vw": 430,
+ "docW": 390,
+ "scrollW": 430,
+ "overflowX": 40,
+ "count": 1,
+ "bad": [
+  {
+   "tag": "DIV.pq-wrap",
+   "x": 0,
+   "w": 430,
+   "right": 430,
+   "over": 40,
+   "cs": {
+    "pos": "static",
+    "ov": "visible",
+    "minW": "0px",
+    "w": "390px",
+    "ws": "normal",
+    "disp": "block"
+   },
+   "txt": "PRODUCTS · BRAND HOUSE 一套引"
+  }
+ ]
+}
