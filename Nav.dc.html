@@ -26,6 +26,11 @@ html{scroll-padding-top:84px}
    2) iOS 的字體自動調整(text-size-adjust)會在直橫轉換與內嵌 WebView 裡偷改 px 字級
    這裡把 (2) 釘死;1rem 錨定在 16px,全站字級以 rem 標示後比例才可預期。 */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:1rem}
+/* ── EN 版排版基準(html[lang=en] 全站生效;英文比中文長 1.5~2.5 倍的防線)──
+   密度標準:H1 ≤3 詞/行 ×2 行、副標 ≤12 詞、卡片標 ≤4 詞、按鈕 ≤3 詞、選單項 1~2 詞 */
+html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{letter-spacing:-.015em}
+html[lang="en"] p{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty}
+html[lang="en"] h1{text-wrap:balance}
 
 #pq-burger{display:none}
 @media (max-width:959px){#pq-links{display:none!important}#pq-burger{display:flex!important}}
@@ -792,6 +797,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:1rem}
         </sc-if>
       </sc-for>
       <a href="/demo" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 .84375rem 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="預約 AI 導入評估" style-hover="background:#090B0E;color:#F2EFE8">預約 AI 導入評估</a>
+      <sc-if value="{{ langShow }}" hint-placeholder-val="{{ false }}">
+        <a href="{{ langHref }}" aria-label="Switch language" style="font:700 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#090B0E;text-decoration:none;border:1px solid rgba(9,11,14,.3);border-radius:999px;padding:8px 14px" style-hover="border-color:#FF6B2C;color:#FF6B2C">{{ langLabel }}</a>
+      </sc-if>
     </nav>
     <button id="pq-burger" ref="{{ burgerRef }}" onClick="{{ toggle }}" aria-label="開啟選單" aria-expanded="{{ menuExpanded }}" style="flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:1px solid rgba(9,11,14,.2);border-radius:2px;cursor:pointer;padding:0 10px">
       <span style="display:block;height:2px;background:#090B0E"></span>
@@ -1075,7 +1083,12 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:1rem}
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;height:60px">
       <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.36em;color:#FF6B2C">PEAKQI — MENU</span>
-      <button ref="{{ closeRef }}" onClick="{{ close }}" aria-label="關閉選單" style="width:44px;height:44px;background:none;border:1px solid rgba(242,239,232,.3);border-radius:2px;color:#F2EFE8;font-size:1.125rem;cursor:pointer">✕</button>
+      <span style="display:flex;align-items:center;gap:10px">
+        <sc-if value="{{ langShow }}" hint-placeholder-val="{{ false }}">
+          <a href="{{ langHref }}" aria-label="Switch language" style="font:700 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#F2EFE8;text-decoration:none;border:1px solid rgba(242,239,232,.3);border-radius:999px;padding:9px 14px" style-hover="border-color:#FF6B2C;color:#FF6B2C">{{ langLabel }}</a>
+        </sc-if>
+        <button ref="{{ closeRef }}" onClick="{{ close }}" aria-label="關閉選單" style="width:44px;height:44px;background:none;border:1px solid rgba(242,239,232,.3);border-radius:2px;color:#F2EFE8;font-size:1.125rem;cursor:pointer">✕</button>
+      </span>
     </div>
     <nav style="display:flex;flex-direction:column;margin-top:24px">
       <sc-for list="{{ links }}" as="l" hint-placeholder-count="5">
@@ -1128,9 +1141,13 @@ class Component extends DCLogic {
   // egg = 這次開選單要演的那一齣(1..15)。純 CSS 沒有亂數,所以在開啟的瞬間擲一次骰,
   // 把結果變成容器上的 class;動畫本身仍然 100% 由 CSS keyframes 驅動,沒有 rAF、沒有計時器。
   _acts = 15;   // 共 15 齣;新增齣別時同步改這裡與 CSS 的 .pqm-v1..v15
-  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null, egg: 1 };
+  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null, egg: 1, lang: null };
   componentDidMount() {
     import('./content.js').then(m => this.setState({ nav: m.navigation }));
+    // 語言切換鈕:只在「目前頁有另一語言版本」時現身(EN_READY 閘門,不會切去 404);絕對路徑,/en/ 下也解析得到
+    import('/i18n.js').then(m => {
+      if (m.hasEn()) this.setState({ lang: { href: m.altUrl(), label: m.LANG === 'en' ? '中文' : 'EN' } });
+    }).catch(() => {});
     import('./micro-engine.js').then(m => {
       if (window.__pqMicro) return;
       window.__pqMicro = m.createMicro();
@@ -1304,6 +1321,9 @@ class Component extends DCLogic {
     return {
       links,
       dlgCls: 'pqm-stage pqm-v' + this.state.egg + ' pqm-e' + (this._env || 1),
+      langShow: !!this.state.lang,
+      langHref: this.state.lang ? this.state.lang.href : '#',
+      langLabel: this.state.lang ? this.state.lang.label : '',
       open: this.state.open,
       menuExpanded: this.state.open ? 'true' : 'false',
       burgerRef: (el) => { this._burgerEl = el; },
