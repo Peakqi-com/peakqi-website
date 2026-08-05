@@ -73,13 +73,20 @@
   /* 章節說明卡:原本是一塊由深到透明的漸層、文字又貼在邊角(x/y 內距 0),
      沒有卡片感也讀不安穩。改成與右側 .card 同一套設計語言:
      實心底 + 橘色左軌 + 圓角 + 真正的內距 + 柔和陰影。 */
-  #secHead { position: fixed; left: max(12vw, 178px); top: 13vh; z-index: 6; pointer-events: none; max-width: 380px;
-    background: rgba(22, 19, 17, .84); border: 1px solid rgba(255,255,255,.1); border-left: 3px solid #fe6a2d;
-    border-radius: 12px; padding: 18px 24px 20px; backdrop-filter: blur(6px);
-    box-shadow: 0 18px 44px rgba(0,0,0,.42); }
-  #secHead .no { font-size: 11px; font-weight: 700; letter-spacing: .24em; color: #fe6a2d; }
-  #secHead h2 { margin: 8px 0 8px; font-size: clamp(21px, 2.6vw, 30px); font-weight: 900; letter-spacing: .04em; }
-  #secHead .sub { font-size: 13.5px; color: rgba(255,255,255,.72); line-height: 1.85; }
+  /* 樓層銅牌:與右側場景字卡(黑卡+橘左條)徹底區隔 —— 斜切角黃銅蝕刻牌 + 銅章樓號 */
+  #secHead { position: fixed; left: max(12vw, 178px); top: 13vh; z-index: 6; pointer-events: none; max-width: 400px;
+    background: linear-gradient(165deg, rgba(64,45,26,.93), rgba(33,23,14,.95));
+    border: 1px solid rgba(255,196,128,.55);
+    padding: 16px 24px 18px 26px; backdrop-filter: blur(6px);
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    box-shadow: inset 0 1px 0 rgba(255,224,178,.3), inset 0 -1px 0 rgba(0,0,0,.45);
+    filter: drop-shadow(0 16px 30px rgba(0,0,0,.45)); }
+  #secHead .no { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .28em; color: #1c130b;
+    background: linear-gradient(180deg, #ffd9a0, #e8a55c); border-radius: 2px; padding: 4px 8px 3px 12px; }
+  #secHead h2 { margin: 10px 0 8px; font-size: clamp(21px, 2.6vw, 30px); font-weight: 900; letter-spacing: .04em;
+    color: #ffe9cf; text-shadow: 0 1px 0 rgba(0,0,0,.6);
+    border-bottom: 1px dashed rgba(255,196,128,.4); padding-bottom: 9px; }
+  #secHead .sub { font-size: 13.5px; color: rgba(255,222,186,.78); line-height: 1.85; }
 
   #cards { position: fixed; right: 5vw; top: 0; bottom: 0; z-index: 6; width: min(400px, 40vw); pointer-events: none; }
   .card {
@@ -203,6 +210,14 @@ const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
 stage._controls.enabled = false;
+// 手機「滑到某處卡住不能捲」根因:OrbitControls 建構時把 canvas 設成 touch-action:none,
+// 而本頁所有覆蓋層都是 pointer-events:none → 觸控幾乎都落在 canvas 上,瀏覽器拒絕用它捲頁,
+// enabled=false 並不會還原 touchAction。控制器整個卸除,並明確允許垂直平移手勢。
+try { stage._controls.dispose(); } catch (e) {}
+try {
+  stage._renderer.domElement.style.touchAction = 'pan-y';
+  stage.style.touchAction = 'pan-y';
+} catch (e) {}
 // 重要：繞過 OrbitControls.update()—否則它每幀把相機拉回它自己的目標(俯視塔心)
 stage._renderer.setAnimationLoop(() => { stage._renderer.render(stage._scene, stage._camera); });
 stage._camera.near = 0.12;
@@ -687,6 +702,9 @@ function mountSection(i) {
     headEl.querySelector('.sub').textContent = '';
   }
 }
+// 手機節奏:原每層 ~166vh,重滑兩三下整棟塔就過完 —— 每層拉長 1.6 倍,
+// 一次重滑約走一層出頭,滑得久但不黏手;桌機滾輪維持原節奏。
+if (window.matchMedia('(max-width: 860px)').matches) SECS.forEach((s) => { s.vh = Math.round(s.vh * 1.6); });
 const totalVh = SECS.reduce((a, s) => a + s.vh, 0);
 const spacerEl = document.getElementById('spacer');
 spacerEl.style.height = totalVh + 'vh';
