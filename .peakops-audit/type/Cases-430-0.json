@@ -1,0 +1,20 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/content.js>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/content.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/cases-validator.js>",
+  "EXCEPTION: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:8000/cases-validator.js",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion-kit.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/motion-config.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/hero-config.js>"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "sp": 0,
+ "vw": 430,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}

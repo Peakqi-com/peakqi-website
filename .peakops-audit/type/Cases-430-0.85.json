@@ -1,0 +1,19 @@
+{
+ "consoleErrors": [
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Cases.dc.html?sp=0.85>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/Steampunk/three-d-stage.js>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/wedding-g2.webp>",
+  "log: Failed to load resource: net::ERR_CONNECTION_REFUSED <http://127.0.0.1:8000/assets/cases/interior-g1.webp>",
+  "EXCEPTION: TypeError: Cannot destructure property 'THREE' of '(intermediate value)' as it is undefined.\n    at http://127.0.0.1:8000/Steampunk/peakqi-story.html:182:9"
+ ],
+ "probeError": null
+}
+{
+ "url": "/Cases.dc.html",
+ "sp": 0.85,
+ "vw": 430,
+ "overflowX": 0,
+ "problems": 0,
+ "list": []
+}
