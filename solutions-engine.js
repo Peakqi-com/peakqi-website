@@ -78,11 +78,14 @@ export function createSolutions() {
 
   function follow() {
     const wrap = pin('follow', 200);
+    const sec = q('#follow');
     const card = q('#follow [data-fcard]');
     const cols = qa('#follow [data-fcol]');
-    if (!wrap || !card || !cols.length) return;
+    // 手機沒有 pin(pin 在 mobile 回 null)→ 原本整段直接 return,王小姐完全不動。
+    // 改用 section 本身當進度來源(未釘選),直式分支以「視窗中的那一塊」決定停點。
+    if ((!wrap && !ctx.mobile) || !card || !cols.length) return;
     const track = q('#follow [data-ftrack]');
-    ScrollChapter(ctx, wrap, (p) => {
+    ScrollChapter(ctx, wrap || sec, (p) => {
       const k = ez(sub(p, 0.08, 0.85));
       const idx = clamp(Math.floor(k * cols.length), 0, cols.length - 1);
       // 卡片一次「滑到定點」,不隨捲動連續位移 —— 連續位移會有卡在兩張中間、把兩邊都擋住的時刻。
@@ -112,7 +115,7 @@ export function createSolutions() {
         const labels = ['DAY 1・提醒已擬', 'DAY 3・補上案例', 'DAY 5・限時優惠', 'DAY 7・最後關心'];
         if (tag.textContent !== labels[idx]) tag.textContent = labels[idx];
       }
-    }, { pinned: true });
+    }, { pinned: !!wrap });
   }
 
   function nurture() {
@@ -132,10 +135,18 @@ export function createSolutions() {
 
   function modules() {
     const wrap = pin('modules', 260);
+    const sec = q('#modules');
     const rows = qa('#modules [data-smod]');
     const dets = qa('#modules [data-sdet]');
     const core = q('#modules [data-score]');
     if (!rows.length) return;
+    // 手機:桌機的「按鈕 → 右側面板切換」在手機看不到面板,切換無感。
+    // 把每張細節卡搬到自己那一列底下變手風琴;捲動導覽照樣逐列開合。
+    const mob = ctx.mobile;
+    if (mob) rows.forEach((el, i) => {
+      const d = dets[i];
+      if (d) { el.insertAdjacentElement('afterend', d); d.classList.add('pq-sdet-m'); }
+    });
     const setActive = (idx, anim) => {
       rows.forEach((el, i) => {
         const on = i === idx;
@@ -144,30 +155,33 @@ export function createSolutions() {
         el.style.background = on ? '#090B0E' : '#F2EFE8';
         el.style.color = on ? '#F2EFE8' : '#090B0E';
         el.setAttribute('aria-current', on ? 'true' : 'false');
+        if (mob) el.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
       dets.forEach((el, i) => {
         const on = i === idx;
+        if (mob) { el.classList.toggle('is-open', on); return; }   // 手風琴:CSS 控顯示
         if (anim) el.style.transition = 'opacity 240ms cubic-bezier(0.65,0,0.35,1), clip-path 240ms cubic-bezier(0.16,1,0.3,1)';
         el.style.opacity = on ? '1' : '0';
         el.style.clipPath = on ? 'inset(0 0 0 0)' : 'inset(0 0 14% 0)';
         el.style.pointerEvents = on ? 'auto' : 'none';
       });
     };
-    // hover/focus 查看細節(桌機),與捲動共用 setActive
+    // hover/focus(桌機)+ 點擊(手機手風琴),與捲動共用 setActive
     rows.forEach((el, i) => {
       const h = () => setActive(i, true);
       el.addEventListener('mouseenter', h);
       el.addEventListener('focus', h);
-      ctx.add(() => { el.removeEventListener('mouseenter', h); el.removeEventListener('focus', h); });
+      el.addEventListener('click', h);
+      ctx.add(() => { el.removeEventListener('mouseenter', h); el.removeEventListener('focus', h); el.removeEventListener('click', h); });
     });
-    if (!wrap) { setActive(0, false); return; }
     let cur = -1;
     setActive(0, false);
-    ScrollChapter(ctx, wrap, (p) => {
+    if (!wrap && !mob) return;   // 桌機沒 pin(reduced)維持靜態第一項
+    ScrollChapter(ctx, wrap || sec, (p) => {
       if (core) core.style.transform = 'translateY(' + ((0.5 - p) * 16).toFixed(1) + 'px)';
       const idx = clamp(Math.floor(sub(p, 0.04, 0.96) * rows.length), 0, rows.length - 1);
       if (idx !== cur) { cur = idx; setActive(idx, true); }
-    }, { pinned: true });
+    }, { pinned: !!wrap });
   }
 
   function integration() { // 結尾系統合併:三層 chips + 六模組收進控制台(pinned 可逆;mobile/reduced 走 IO 一次進場)

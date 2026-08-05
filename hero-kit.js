@@ -108,12 +108,19 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
       ? { x: W * .04, y: H * .5, w: W * .92, h: H * .46 }
       : { x: W * .5, y: H * .14, w: W * .46, h: H * .72 };
     if (opt.mobile) {
-      // 手機:繪圖區滿版寬,自「文案實際底部」起,往下吃到浮動 CTA pill 之上
-      // (pill = fixed bottom:18px + 44px 高 → 保留 74px;不再用 .56H 上限,收合後畫面要大方)
       const copyEl = stage.querySelector('[data-hero-copy]');
-      const cb = copyEl ? rectIn(copyEl).y + copyEl.offsetHeight + 12 : H * .3;
-      const top = Math.max(cb, H * .2);   // 嚴格貼文案底,絕不上頂(寧可靜止只露一角,不可疊到 CTA)
-      z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, H - 74 - top) };
+      if (stage.hasAttribute('data-hero-media-top')) {
+        // 動畫在上、文案在下(使用者指定的版式,stage 加 data-hero-media-top 啟用):
+        // 繪圖區自舞台頂往下吃到「文案實際頂部」之上;文案收合時 zone 跟著長高。
+        const ct = copyEl ? rectIn(copyEl).y : H * .62;
+        const top = Math.max(12, H * .02);
+        z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, ct - 14 - top) };
+      } else {
+        // 預設:繪圖區滿版寬,自「文案實際底部」起,往下吃到浮動 CTA pill 之上
+        const cb = copyEl ? rectIn(copyEl).y + copyEl.offsetHeight + 12 : H * .3;
+        const top = Math.max(cb, H * .2);   // 嚴格貼文案底,絕不上頂
+        z = { x: 10, y: top, w: Math.max(180, W - 20), h: Math.max(150, H - 74 - top) };
+      }
     }
     const pad = 6;
     zone = { x: z.x + pad, y: z.y + pad, w: Math.max(60, z.w - pad * 2), h: Math.max(60, z.h - pad * 2) };

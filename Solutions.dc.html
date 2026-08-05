@@ -278,6 +278,20 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
+/* 模組區(手機):桌機是「按鈕切換右側精緻動畫」,手機右側面板在摺線下,
+   切換完全無感。改成手風琴:細節卡直接展開在被點的那一列底下,
+   捲動導覽照樣逐列開合(引擎在手機把細節卡搬到各列後面)。 */
+[data-sdet].pq-sdet-m{position:static!important;opacity:1!important;clip-path:none!important;pointer-events:auto!important;overflow:hidden!important;display:none;padding:16px!important;margin:8px 0 16px;border:1px solid rgba(242,239,232,.18);border-radius:8px;background:#0C0F13;color:#F2EFE8}
+[data-sdet].pq-sdet-m.is-open{display:block;animation:pqSdetIn .3s cubic-bezier(.16,1,.3,1) both}
+@keyframes pqSdetIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+#pq-sol-detshell{display:none!important}
+@media (prefers-reduced-motion:reduce){[data-sdet].pq-sdet-m.is-open{animation:none}}
+
+/* 使用者指定版式(僅手機):動畫在上、標題與文字在下(搭配 stage 的 data-hero-media-top) */
+@media (max-width:899px){
+#pq-sol-hero-grid{display:flex!important;flex-direction:column-reverse!important}
+[data-hero-media]{min-height:34svh!important}
+}
 }
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
@@ -291,7 +305,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section id="overview" data-hero="solutions" data-screen-label="開場" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(56px,8vh,96px) clamp(20px,5vw,48px) clamp(64px,10vh,96px)">
+    <div data-hero-stage data-hero-media-top style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(56px,8vh,96px) clamp(20px,5vw,48px) clamp(64px,10vh,96px)">
       <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
       <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
       <div id="pq-sol-hero-grid" style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(24px,4vw,64px);align-items:center">
@@ -663,7 +677,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               </div>
             </sc-for>
           </div>
-          <div data-tilt style="position:relative;background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden;min-height:452px">
+          <div data-tilt id="pq-sol-detshell" style="position:relative;background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden;min-height:452px">
             <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
               <span style="width:7px;height:7px;border-radius:50%;background:#FF6B2C"></span>
               <span style="font:700 .75rem 'Noto Sans TC',sans-serif;letter-spacing:.12em;color:rgba(242,239,232,.85)">模組細節</span>
