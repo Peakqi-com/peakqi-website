@@ -79,6 +79,8 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
 [data-hero-media]{min-height:25svh!important}
+/* 進場「動畫在上、文字在下」;一收合(stage.pq-hero-compact)回到說明在上的原版式 */
+[data-hero="cases"] [data-hero-stage]:not(.pq-hero-compact){align-items:flex-end!important}
 }
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
@@ -93,7 +95,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 
 <section id="wall" data-hero="cases" data-screen-label="開場 PROOF IN MOTION" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
-    <div data-hero-stage style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,80px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
+    <div data-hero-stage data-hero-media-top="intro" style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:78vh;padding:clamp(48px,7vh,80px) clamp(20px,5vw,48px) clamp(64px,10vh,92px)">
       <div data-shotwall aria-hidden="true" style="position:absolute;inset:0;z-index:1;overflow:hidden">
         <sc-for list="{{ wallShots }}" as="s" hint-placeholder-count="10">
           <span data-shot="{{ s.slug }}" data-cat="{{ s.cat }}" data-feat="{{ s.feat }}" style="{{ s.style }}"></span>

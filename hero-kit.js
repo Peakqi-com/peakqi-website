@@ -109,7 +109,9 @@ export function HeroCanvas(ctx, canvas, stage, cfg, model, opt) {
       : { x: W * .5, y: H * .14, w: W * .46, h: H * .72 };
     if (opt.mobile) {
       const copyEl = stage.querySelector('[data-hero-copy]');
-      if (stage.hasAttribute('data-hero-media-top')) {
+      const _mt = stage.getAttribute('data-hero-media-top');
+      const _mtOn = _mt !== null && (_mt !== 'intro' || !stage.classList.contains('pq-hero-compact'));
+      if (_mtOn) {
         // 動畫在上、文案在下(使用者指定的版式,stage 加 data-hero-media-top 啟用):
         // 繪圖區自舞台頂往下吃到「文案實際頂部」之上;文案收合時 zone 跟著長高。
         const ct = copyEl ? rectIn(copyEl).y : H * .62;
@@ -508,7 +510,13 @@ function HeroMobileCollapse(ctx, root, canvasCtl) {
     // 一捲即收(死區會讓人感覺「卡在按鈕那裡」);展開只在幾乎回頂,遲滯防止閾值附近反覆開合
     const c = compact ? p > 0.004 : p > 0.012;
     const k = p >= 0.985;   // 最後一景要先跑完才把 CTA 放回來,不與動畫同時出現
-    if (c !== compact) { compact = c; copyCol.classList.toggle('pq-hero-compact', c); reflow(); }
+    if (c !== compact) {
+      compact = c;
+      copyCol.classList.toggle('pq-hero-compact', c);
+      const stageEl = root.querySelector('[data-hero-stage]');
+      if (stageEl) stageEl.classList.toggle('pq-hero-compact', c);   // 供「intro 才動畫在上」的版式判讀
+      reflow();
+    }
     if (cta && k !== keep) { keep = k; cta.classList.toggle('pq-clp-keep', k); reflow(); }
   } };
 }
