@@ -66,23 +66,12 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-copy]>div{gap:9px!important}
 [data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
 [data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
-[data-hero-media]{min-height:25svh!important}
 [data-hero-progress]{display:none!important}
+/* 草稿面板已移出 hero(見 #draft section);右欄佔位只在桌機保留給 canvas 取景 */
+[data-hero-canvaszone]{display:none!important}
 }
 @media (max-width:659px){#pq-ind-grid2{grid-template-columns:1fr!important}}
 @media (max-width:399px){[role="status"]{font-size:.5625rem!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
-/* 手機:草稿面板整組(含摘要與 CTA)原本被 82vh 撐到舞台外 —— 實測 390x844 時
-   面板底 1027 > 舞台底 844,末尾的草稿摘要與「帶著這份草稿」CTA 全被裁掉。
-   改為:容器高度鎖在舞台剩餘空間內、容器自身可捲;內層原捲動區改為順流,
-   單一捲動脈絡(巢狀雙捲在觸控上很難用),漸層遮罩移到容器上提示還有內容。 */
-@media (max-width:899px){
-  [data-hero-media]{
-    max-height:calc(100svh - 352px)!important;
-    overflow-y:auto!important;
-    -webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent);
-    mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent)}
-  [data-hero-media] div[style*="overflow-y:auto"],[data-hero-media] div[style*="overflow-y: auto"]{overflow-y:visible!important;flex:none!important}
-}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -90,7 +79,7 @@ window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catc
 window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
-<a id="pq-skip" href="#scene">跳到主要內容</a>
+<a id="pq-skip" href="#draft">跳到主要內容</a>
 <dc-import name="Nav" active="demo" hint-size="100%,68px"></dc-import>
 
 <section id="d-hero" data-hero="demo" data-screen-label="Demo 開場" style="background:#090B0E;color:#F2EFE8;position:relative">
@@ -151,19 +140,37 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             </div>
           </div>
           <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            <a data-hero-primary data-track="hero_demo_click" href="#pq-demo-grid" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 .90625rem 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始組合導入草稿</a>
+            <a data-hero-primary data-track="hero_demo_click" href="#draft" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 .90625rem 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">開始組合導入草稿</a>
             <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">先看相近案例</a>
           
             <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 .84375rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 .9375rem 'Space Grotesk',sans-serif">↓</span>往下捲動,開始組裝你的草稿</span></div>
           </div>
         </div>
-        <div data-hero-media style="position:relative;z-index:2;background:#0C0F13;border:1px solid rgba(242,239,232,.18);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:clamp(300px,50vh,470px);max-height:min(82vh,820px)">
+        <!-- 草稿面板已移出 hero,獨立成緊接在後的 #draft section(手機上面板與 hero 擠在
+             同段會被下一段蓋掉)。此佔位框保留桌機右欄空間給 canvas 敘事層取景。 -->
+        <div data-hero-canvaszone aria-hidden="true" style="position:relative;z-index:1;min-height:clamp(320px,52vh,480px);pointer-events:none"></div>
+      </div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</section>
+
+<section id="draft" data-screen-label="導入草稿" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px) clamp(72px,9vw,120px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">00</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">AI FLOW DRAFT・問卷從這裡開始</span>
+    </div>
+    <h2 style="margin:clamp(14px,2vw,20px) 0 0;max-width:760px;font:900 clamp(1.4375rem,2.6vw,2.25rem)/1.3 'Noto Sans TC',sans-serif">先點兩下,組一份你的導入草稿。</h2>
+    <p style="margin:10px 0 0;max-width:640px;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);text-wrap:pretty">選你的產業與最卡的流程,下面的面板會即時組出第一版草稿;選好的內容也會自動帶入後面的問卷,最後補上聯絡方式送出。</p>
+    <div style="margin-top:clamp(20px,3vw,32px);max-width:820px;background:#0C0F13;color:#F2EFE8;border-radius:10px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box">
           <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
             <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
             <span style="font:700 .75rem 'Noto Sans TC',sans-serif;letter-spacing:.12em">第一階段導入草稿・AI FLOW DRAFT</span>
             <span role="status" style="margin-left:auto;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
           </div>
-          <div style="padding:14px 16px 22px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0;overflow-y:auto">
+          <div style="padding:clamp(14px,2vw,22px) clamp(16px,2vw,22px) 26px;display:flex;flex-direction:column;gap:13px">
             <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
               <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
                 <span style="font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">詢問入口 → 需求辨識 → AI/人工處理 → 下一步</span>
@@ -220,9 +227,6 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             </div>
           </div>
           <a href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 .84375rem 'Noto Sans TC',sans-serif;text-decoration:none">帶著這份草稿,補上聯絡資料 ↓</a>
-        </div>
-      </div>
-      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
     </div>
   </div>
 </section>
@@ -360,15 +364,6 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           </div>
         </div>
       </sc-for>
-      <div style="background:#090B0E;color:#F2EFE8;border-radius:6px;padding:22px">
-        <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">DIRECT CONTACT</span>
-        <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
-          <a href="mailto:jacky@peakqi.com" style="color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">jacky@peakqi.com</a>
-          <a href="tel:0266093699" style="color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">(02) 6609-3699</a>
-          <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Noto Sans TC',sans-serif" style-hover="color:#06C755"><span style="width:7px;height:7px;border-radius:50%;background:#06C755"></span>LINE 官方帳號</a>
-        </div>
-        <button onClick="{{ copyEmail }}" style="margin-top:14px;background:none;border:1px solid rgba(242,239,232,.3);color:rgba(242,239,232,.8);padding:8px 14px;border-radius:2px;font:500 .78125rem 'Noto Sans TC',sans-serif;cursor:pointer">{{ copyLabel }}</button>
-      </div>
     </div>
     <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
       <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
@@ -462,6 +457,24 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
 </section>
 
+<!-- DIRECT CONTACT:原本插在「03 留下需求」中段,會讓人以為問卷已經填完 ——
+     移到整頁最後、Footer 之前,改用橘色淡染底,定位是「表單之外的直接聯絡管道」。 -->
+<section id="direct-contact" data-screen-label="直接聯絡" style="background:#F6E3D6;padding:clamp(52px,6.5vw,88px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(24px,4vw,56px);align-items:center;box-sizing:border-box">
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+      <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#A63A08">DIRECT CONTACT</span>
+      <h2 style="margin:0;font:900 clamp(1.375rem,2.4vw,2rem)/1.35 'Noto Sans TC',sans-serif">不想填表單?直接聯絡我們。</h2>
+      <p style="margin:0;max-width:560px;font:400 clamp(.9375rem,1.1vw,1rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);text-wrap:pretty">電話、Email 或 LINE 官方帳號都可以;上面的草稿填到一半也沒關係,聊的時候一起補。</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px;min-width:0;align-items:flex-start">
+      <a href="mailto:jacky@peakqi.com" style="color:#090B0E;text-decoration:none;font:600 clamp(1rem,1.3vw,1.125rem) 'Space Grotesk',sans-serif" style-hover="color:#D14E12">jacky@peakqi.com</a>
+      <a href="tel:0266093699" style="color:#090B0E;text-decoration:none;font:600 clamp(1rem,1.3vw,1.125rem) 'Space Grotesk',sans-serif" style-hover="color:#D14E12">(02) 6609-3699</a>
+      <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;color:#090B0E;text-decoration:none;font:600 clamp(.9375rem,1.2vw,1.0625rem) 'Noto Sans TC',sans-serif" style-hover="color:#06843A"><span style="width:8px;height:8px;border-radius:50%;background:#06C755"></span>LINE 官方帳號</a>
+      <button onClick="{{ copyEmail }}" style="margin-top:2px;background:none;border:1px solid rgba(9,11,14,.35);color:rgba(9,11,14,.8);padding:10px 16px;border-radius:2px;font:600 .8125rem 'Noto Sans TC',sans-serif;cursor:pointer;min-height:44px" style-hover="border-color:#FF6B2C;color:#D14E12">{{ copyLabel }}</button>
+    </div>
+  </div>
+</section>
+
 <dc-import name="Footer" hint-size="100%,460px"></dc-import>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -498,7 +511,12 @@ class Component extends DCLogic {
     });
     import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});
     import('./analytics.js').then(m => { this._track = m.track; }).catch(() => {});
-    import('./hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo'); }).catch(() => {});
+    // 頁面級覆寫:草稿面板已移出 hero(見 #draft section),右欄改為 canvas 舞台,
+    // 恢復畫布層讓四個任務的主題動畫可見 —— 只在執行期覆寫,不動 hero-config.js 檔案。
+    Promise.all([import('./hero-config.js'), import('./hero-kit.js')]).then(([hc, m]) => {
+      try { if (hc.heroConfig.demo && hc.heroConfig.demo.flags) delete hc.heroConfig.demo.flags.canvas; } catch (e) {}
+      if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo');
+    }).catch(() => {});
   }
   componentWillUnmount() {
     this._dead = true;
