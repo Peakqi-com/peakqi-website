@@ -52,7 +52,7 @@ export const heroConfig = {
       { id: 'bea', label: '美業預約',   kicker: '場域 04',   line: '預約、改期與前一日提醒自動完成。',               d: [.6, .8],   m: [.6, .8] },
       { id: 'sum', label: '換你的流程', kicker: '場域 05', line: '同一套系統接住不同場域,換你的流程跑一次。',           d: [.8, 1],    m: [.8, 1] }
     ],
-    reduced: ['detail', 'wall', 'focus', 'proof', 'index'],
+    reduced: ['wed', 'rea', 'sum'],   // 舊清單是早期場景 id,與現行不符 → reduced 關鍵畫面全空 k
     ctas: [
       { kind: 'primary', label: '查看所有案例', href: '#index', track: 'hero_case_click' },
       { kind: 'ghost', label: '把這個流程套用到我的公司', href: '/demo?case=接客追客養客整合流程', track: 'hero_demo_click' }
