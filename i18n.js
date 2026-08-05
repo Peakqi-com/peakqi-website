@@ -9,14 +9,20 @@ export const t = (zh, en) => (LANG === 'en' ? en : zh);
 
 // 已上線英文版的頁面(中文 clean path)。Phase 2 每完成一頁加一筆,
 // 語言切換鈕只在「對應英文版存在」的頁面現身──不會把使用者切去 404。
-export const EN_READY = ['/', '/about', '/solutions', '/method'];
+export const EN_READY = ['/', '/about', '/solutions', '/method', '/peakops', '/demo',
+  '/pricing', '/cases', '/case', '/products', '/bubble', '/ai-wedding-pro',
+  '/ai-interior-pro', '/contact', '/privacy'];
 
 // 路徑正規化:本機 /About.dc.html 與正式 /about 都收斂成 clean path
+// 別名:檔名與 clean path 不同形的頁(AIWeddingPro → /ai-wedding-pro)
+const ALIAS = { '/aiweddingpro': '/ai-wedding-pro', '/aiinteriorpro': '/ai-interior-pro' };
 const norm = (p) => {
   let q = p.replace(/\.dc\.html$/i, '').toLowerCase();
   if (q.endsWith('/home')) q = q.slice(0, -5);
   if (q === '' || q === '/en') q = q + '/';
-  return q || '/';
+  q = q || '/';
+  const bare = q.replace(/^\/en/, '') || '/';
+  return ALIAS[bare] ? (q.indexOf('/en') === 0 ? '/en' + ALIAS[bare] : ALIAS[bare]) : q;
 };
 export function zhPath() {
   const p = norm(location.pathname);

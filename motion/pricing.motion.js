@@ -1,13 +1,14 @@
+import { t } from '../i18n.js';
 // 方案價格頁動畫設定
 export default {
   key: 'pricing',
   chapters: [
-    { id: 'p-hero', label: '三方案' },
-    { id: 'p-selector', label: '方案選擇' },
-    { id: 'p-compare', label: '比較' },
-    { id: 'p-usage', label: 'AI 使用量' },
-    { id: 'p-custom', label: '客製報價' },
-    { id: 'p-timeline', label: '上線流程' },
+    { id: 'p-hero', label: t('三方案', 'Three plans') },
+    { id: 'p-selector', label: t('方案選擇', 'Choose a plan') },
+    { id: 'p-compare', label: t('比較', 'Compare') },
+    { id: 'p-usage', label: t('AI 使用量', 'AI usage') },
+    { id: 'p-custom', label: t('客製報價', 'Custom quote') },
+    { id: 'p-timeline', label: t('上線流程', 'Launch') },
     { id: 'p-faq', label: 'FAQ' }
   ],
   intro: null,

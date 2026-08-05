@@ -5,6 +5,7 @@
 // 殼層職責:隨機開幕(均等權重)、三點切換、單一 rAF 供幕使用、WebAudio 閘門(手勢後才建立)。
 // 各幕獨立檔案 allen-act1/2/3.js,export function createAct(stage, api) → { destroy() }。
 import { createMotionContext } from './motion-kit.js';
+import { t } from './i18n.js';
 
 export function mountAllenAvatar() {
   const stage = document.querySelector('[data-allen-stage]');
@@ -40,12 +41,12 @@ export function mountAllenAvatar() {
 
   // 切換點(右下三顆):目前幕亮橘
   const dots = document.createElement('div');
-  dots.setAttribute('aria-label', '切換 Allen 的三個小劇場');
+  dots.setAttribute('aria-label', t('切換 Allen 的三個小劇場', "Switch Allen's three acts"));
   dots.style.cssText = 'position:absolute;right:10px;bottom:10px;display:flex;gap:8px;z-index:9';
   const dotEls = ACTS.map((_, i) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.setAttribute('aria-label', '第 ' + (i + 1) + ' 幕');
+    b.setAttribute('aria-label', t('第 ' + (i + 1) + ' 幕', 'Act ' + (i + 1)));
     b.style.cssText = 'width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(242,239,232,.55);background:transparent;padding:0;cursor:pointer';
     b.addEventListener('click', (ev) => { ev.stopPropagation(); show(i); });
     dots.appendChild(b);

@@ -105,6 +105,56 @@
       "source": "/en/Privacy.dc.html",
       "destination": "/en/privacy",
       "permanent": true
+    },
+    {
+      "source": "/Products.dc.html",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/en/Products.dc.html",
+      "destination": "/en/products",
+      "permanent": true
+    },
+    {
+      "source": "/Bubble.dc.html",
+      "destination": "/bubble",
+      "permanent": true
+    },
+    {
+      "source": "/en/Bubble.dc.html",
+      "destination": "/en/bubble",
+      "permanent": true
+    },
+    {
+      "source": "/AIWeddingPro.dc.html",
+      "destination": "/ai-wedding-pro",
+      "permanent": true
+    },
+    {
+      "source": "/en/AIWeddingPro.dc.html",
+      "destination": "/en/ai-wedding-pro",
+      "permanent": true
+    },
+    {
+      "source": "/AIInteriorPro.dc.html",
+      "destination": "/ai-interior-pro",
+      "permanent": true
+    },
+    {
+      "source": "/en/AIInteriorPro.dc.html",
+      "destination": "/en/ai-interior-pro",
+      "permanent": true
+    },
+    {
+      "source": "/Contact.dc.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/en/Contact.dc.html",
+      "destination": "/en/contact",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -191,6 +241,50 @@
     {
       "source": "/en/privacy",
       "destination": "/en/Privacy.dc.html"
+    },
+    {
+      "source": "/products",
+      "destination": "/Products.dc.html"
+    },
+    {
+      "source": "/en/products",
+      "destination": "/en/Products.dc.html"
+    },
+    {
+      "source": "/bubble",
+      "destination": "/Bubble.dc.html"
+    },
+    {
+      "source": "/en/bubble",
+      "destination": "/en/Bubble.dc.html"
+    },
+    {
+      "source": "/ai-wedding-pro",
+      "destination": "/AIWeddingPro.dc.html"
+    },
+    {
+      "source": "/en/ai-wedding-pro",
+      "destination": "/en/AIWeddingPro.dc.html"
+    },
+    {
+      "source": "/ai-interior-pro",
+      "destination": "/AIInteriorPro.dc.html"
+    },
+    {
+      "source": "/en/ai-interior-pro",
+      "destination": "/en/AIInteriorPro.dc.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/Contact.dc.html"
+    },
+    {
+      "source": "/en/contact",
+      "destination": "/en/Contact.dc.html"
+    },
+    {
+      "source": "/en/404",
+      "destination": "/en/404.dc.html"
     }
   ]
 }
