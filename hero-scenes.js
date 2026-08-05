@@ -2,6 +2,45 @@
 // 繪製規則:編輯感細線、面板、資料線與節點;禁止粒子/發光球/幾何體/快速旋轉。
 // painter(g, env):env = { w,h,t,mobile,tier,zone,k(id),gp,C,s,F,d(工具集) }
 import { HERO_SHARED } from './hero-config.js';
+import { t } from './i18n.js';
+
+// ★ 各 painter 都會 `const { ..., t } = e` 把「動畫時間軸」解構成 t,直接遮蔽 i18n 的 t
+//   (實測 TypeError: t is not a function → 引擎連錯三次就把畫布永久關掉)。
+//   全檔取字一律用別名 tt(zh, en):語意與 t 完全相同,中文站回傳 zh、/en/ 回傳 en。
+const tt = t;
+
+// ── i18n 共用字串:同一句中文在多個景重複出現時,單一翻譯來源(中文站回傳值與原字串完全相同)
+const T_INQ_IN = tt('詢問進來', 'Inquiry in');
+const T_HUMAN = tt('人工確認', 'Human check');
+const T_WEBFORM = tt('網站表單', 'Web form');
+const T_QUOTE = tt('報價', 'Quotes');
+const T_CASES = tt('案例', 'Cases');
+const T_SLOT_HELD = tt('已為您保留時段,細節由專人確認', 'Slot held — we confirm details');
+const T_KEEP_TOOLS = tt('既有工具保留・資料線後方接通', 'Your tools stay · data connects behind');
+const T_INCLUDED = tt('INCLUDED — 文字 AI 不限量', 'INCLUDED — unlimited text AI');
+const T_USAGE = tt('USAGE-BASED — 圖片・影片,用多少算多少', 'USAGE-BASED — image · video, pay per use');
+const T_SCOPE_OK = tt('範圍確認,先做最有價值的一段', 'Scope set — highest-value piece first');
+const T_USER_TEST = tt('實際使用者測試中・回饋直接改流程', 'Real users testing · feedback tunes the flow');
+const T_SYS_LIVE = tt('系統上線,開始運作', 'System live, running');
+const T_AUDIT = tt('現況盤點', 'Current state');
+const T_VALIDATE = tt('建立驗證', 'Build & validate');
+const IND_WED = tt('婚禮婚慶', 'Weddings');
+const IND_INT = tt('室內設計', 'Interiors');
+const IND_REA = tt('房仲不動產', 'Real estate');
+const T_CUSTOM_QUOTE = tt('依需求報價', 'Custom quote');
+const T_BOOK_CALL = tt('預約諮詢', 'Book a call');
+const NEXT4 = [tt('補齊需求', 'Fill in needs'), tt('提供案例', 'Send cases'), tt('確認反應', 'Check reply'), tt('決定下一步', 'Decide next')];
+const MODS6 = [tt('客服', 'Support'), 'CRM', tt('行銷', 'Marketing'), T_QUOTE, tt('專案', 'Projects'), tt('數據', 'Data')];
+const STAT3 = [tt('今日新客', 'New today'), tt('平均回覆', 'Avg reply'), tt('本週轉換', 'Weekly conv.')];
+const SRC4 = [[tt('LINE 對話', 'LINE chats'), tt('詢問 ×12', 'Inquiries ×12')], [T_WEBFORM, tt('需求 ×5', 'Needs ×5')], [tt('試算表', 'Sheets'), tt('名單 ×3', 'Lists ×3')], ['CRM', tt('案件 ×8', 'Cases ×8')]];
+const ISSUE3 = [tt('重複輸入 ×3', 'Double entry ×3'), tt('漏追 ×2', 'Missed ×2'), tt('責任不清 ×1', 'No owner ×1')];
+const DEF3 = [[tt('目標', 'Goal'), tt('回覆不漏接', 'No dropped replies')], [tt('範圍', 'Scope'), tt('LINE 客服・一段流程', 'LINE support · one flow')], [T_HUMAN, tt('報價與例外由人把關', 'Quotes & exceptions stay human')]];
+const STEP4 = [tt('詢問', 'Inquiry'), tt('辨識', 'Parse'), tt('AI/人工', 'AI/human'), tt('下一步', 'Next')];
+const LIVE3 = [
+  ['tick', tt('第一階段上線', 'Phase one live'), tt('標準模組最快 10 個工作天', 'Standard modules in as few as 10 days')],
+  ['pulse', tt('觀察實際使用與例外', 'Watch usage & exceptions'), tt('例外自動記錄', 'Exceptions auto-logged')],
+  ['cycle', tt('每週小幅調整', 'Small weekly tweaks'), tt('依使用數據持續改善', 'Tuned by usage data')]
+];
 
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
@@ -189,7 +228,7 @@ function paintSolutions(g, e) {
   if (mobile) { fs = Math.max(17, fs); fsS = Math.max(13, fsS); fsB = Math.max(16, fsB); } // 手機大字方針:大方、爽
 
   const IDS = ['sig', 'layers', 'cap', 'fol', 'nur', 'align', 'console'];
-  const NAMES = ['詢問進來', '辨識需求', '回應與建檔', '安排下一步', '延續脈絡', '流程接通', '營運視圖'];
+  const NAMES = [T_INQ_IN, tt('辨識需求', 'Identify need'), tt('回應與建檔', 'Reply & file'), tt('安排下一步', 'Set next step'), tt('延續脈絡', 'Keep context'), tt('流程接通', 'Connect flows'), tt('營運視圖', 'Ops view')];
   const ks = IDS.map(id => k(id));
   // 當前站一律採用 hero-kit 傳來的 ai/aid(與 DOM 文案層同一個判定),
   // 自行用 k>0.02 推算會慢文案一步 → 出現「文案 03 / 軌道 02」。
@@ -321,8 +360,8 @@ function paintSolutions(g, e) {
       g.fillStyle = 'rgba(101,224,188,.2)'; g.fill();
       g.strokeStyle = C.green; g.lineWidth = 1.4; g.stroke();
       g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.green;
-      g.textAlign = 'center'; g.fillText('客', x + 16, y + 18); g.textAlign = 'left';
-      d.label('LINE・新訊息', x + 34, y + 18, fsS, 'rgba(242,239,232,.6)', .8);
+      g.textAlign = 'center'; g.fillText(tt('客', 'C'), x + 16, y + 18); g.textAlign = 'left';
+      d.label(tt('LINE・新訊息', 'LINE · New message'), x + 34, y + 18, fsS, 'rgba(242,239,232,.6)', .8);
       const bk = ez(sb(kv, .18, .42));
       if (bk < 1) { // 打字點(子動畫)
         g.globalAlpha = a * (1 - bk);
@@ -339,11 +378,11 @@ function paintSolutions(g, e) {
         g.fillStyle = 'rgba(101,224,188,.16)'; g.fill();
         g.strokeStyle = 'rgba(101,224,188,.55)'; g.stroke();
         g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
-        g.fillText('請問到府服務多少錢?可以這週嗎?', 10, bh * .66);
+        g.fillText(tt('請問到府服務多少錢?可以這週嗎?', 'Price for a visit? This week?'), 10, bh * .66);
         g.restore();
       }
       let xx = x;
-      ['LINE', '網站表單', '電話'].forEach((tx2, j2) => {
+      ['LINE', T_WEBFORM, tt('電話', 'Phone')].forEach((tx2, j2) => {
         const kc = ez(sb(kv, .45 + j2 * .12, .68 + j2 * .12));
         if (kc <= .02) return;
         g.globalAlpha = a * kc;
@@ -361,7 +400,7 @@ function paintSolutions(g, e) {
       grd.addColorStop(0, 'rgba(255,107,44,0)'); grd.addColorStop(.5, 'rgba(255,107,44,.3)'); grd.addColorStop(1, 'rgba(255,107,44,0)');
       g.fillStyle = grd; g.fillRect(sx + 2, beamY - 12, cw2 - 4, 24);
       g.globalAlpha = a;
-      [['需求', '到府清潔'], ['時段', '週五下午'], ['價格', '待人工確認']].forEach((r2, j2) => {
+      [[tt('需求', 'Need'), tt('到府清潔', 'Home cleaning')], [tt('時段', 'Slot'), tt('週五下午', 'Fri afternoon')], [tt('價格', 'Price'), tt('待人工確認', 'Human review')]].forEach((r2, j2) => {
         const kc = ez(sb(kv, .15 + j2 * .16, .4 + j2 * .16));
         if (kc <= .02) return;
         const ry2 = sy + 14 + j2 * (ch2 - 24) / 3;
@@ -371,7 +410,7 @@ function paintSolutions(g, e) {
         d.node(sx + cw2 - 16, ry2 + 4, 2.8, j2 === 2 ? C.orange : C.green, a * kc, kc < 1);
       });
       g.globalAlpha = a * ez(sb(kv, .6, .85));
-      d.label('AI 辨識中・敏感項標記給人', x, y + h - 8, fsS, 'rgba(242,239,232,.5)', .8);
+      d.label(tt('AI 辨識中・敏感項標記給人', 'AI parses · sensitive items to humans'), x, y + h - 8, fsS, 'rgba(242,239,232,.5)', .8);
     } else if (i === 2) { // 回應與建檔:回覆泡泡 + CRM 卡蓋章浮動(子)
       const bk = ez(sb(kv, .12, .38));
       if (bk > .02) {
@@ -381,7 +420,7 @@ function paintSolutions(g, e) {
         g.fillStyle = 'rgba(101,224,188,.15)'; g.fill();
         g.strokeStyle = 'rgba(101,224,188,.5)'; g.stroke();
         g.font = '600 ' + fsB + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(212,244,232,.95)';
-        g.fillText('已為您保留時段,細節由專人確認', x + w - bw2 + 10, y + 6 + bh * .66);
+        g.fillText(T_SLOT_HELD, x + w - bw2 + 10, y + 6 + bh * .66);
       }
       const ck = ez(sb(kv, .35, .65));
       if (ck > .02) {
@@ -393,9 +432,9 @@ function paintSolutions(g, e) {
         g.fillStyle = '#F2EFE8'; g.fill();
         g.strokeStyle = C.orange; g.lineWidth = 1.4; g.stroke();
         g.font = '800 ' + Math.max(13, 14 * S) + 'px "Noto Sans TC",sans-serif'; g.fillStyle = '#090B0E';
-        g.fillText('王小姐・到府清潔', sx + 10, sy + 20);
+        g.fillText(tt('王小姐・到府清潔', 'Ms. Wang · Home cleaning'), sx + 10, sy + 20);
         g.font = '600 ' + fsS + 'px "Space Grotesk",sans-serif'; g.fillStyle = '#D14E12';
-        g.fillText('CRM CARD・負責人已指定', sx + 10, sy + chh - 12);
+        g.fillText(tt('CRM CARD・負責人已指定', 'CRM CARD · Owner assigned'), sx + 10, sy + chh - 12);
         const stk = ez(sb(kv, .6, .8)); // 蓋章(子:落下+微震)
         if (stk > .02) {
           const drop = (1 - stk) * -14;
@@ -409,7 +448,7 @@ function paintSolutions(g, e) {
       }
     } else if (i === 3) { // 安排下一步:token 巡遊四站(子:沿線滑行)
       const m0 = x + 14, m1 = x + w - 14, ty2 = y + h * .34;
-      const steps = ['補齊需求', '提供案例', '確認反應', '決定下一步'];
+      const steps = NEXT4;
       // 進度正規化:本景 82% 前一定抵達最後一站(舊式 kv*3.2-.3 對末站需要 kv>1.03,永遠到不了)
       const conn = ez(sb(kv, .06, .82)) * (steps.length - 1);
       steps.forEach((tx2, j2) => {
@@ -438,8 +477,8 @@ function paintSolutions(g, e) {
         const shake = Math.sin(t * 10) * ez(sb(kv, .6, .7)) * 1.6; // 鈴鐺微震(子)
         g.save(); g.translate(x + 8 + shake, y + h - Math.max(24, 26 * S));
         let xx2 = 0;
-        xx2 += d.chip(0, 0, '提醒已排', true, fsS) + 8;
-        d.chip(xx2, 0, 'AI 擬稿・人確認', false, fsS);
+        xx2 += d.chip(0, 0, tt('提醒已排', 'Reminder set'), true, fsS) + 8;
+        d.chip(xx2, 0, tt('AI 擬稿・人確認', 'AI drafts · human OK'), false, fsS);
         g.restore();
       }
     } else if (i === 4) { // 延續脈絡:中心檔案 + 三衛星軌道(子:公轉)
@@ -450,12 +489,12 @@ function paintSolutions(g, e) {
       g.fillStyle = 'rgba(255,107,44,.14)'; g.fill();
       g.strokeStyle = C.orange; g.lineWidth = 1.6; g.stroke();
       g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
-      g.textAlign = 'center'; g.fillText('客戶脈絡', cx2, oy + 4); g.textAlign = 'left';
+      g.textAlign = 'center'; g.fillText(tt('客戶脈絡', 'Context'), cx2, oy + 4); g.textAlign = 'left';
       g.globalAlpha = a * ck * .5;
       g.setLineDash([3, 6]);
       g.beginPath(); g.arc(cx2, oy, orad, 0, TAU); g.strokeStyle = 'rgba(242,239,232,.3)'; g.lineWidth = 1; g.stroke();
       g.setLineDash([]);
-      ['報價', '案例', '服務'].forEach((tx2, j2) => {
+      [T_QUOTE, T_CASES, tt('服務', 'Care')].forEach((tx2, j2) => {
         const kc = ez(sb(kv, .3 + j2 * .14, .55 + j2 * .14));
         if (kc <= .02) return;
         const ang = t * .7 + j2 * Math.PI * 2 / 3; // 公轉(子)
@@ -468,9 +507,9 @@ function paintSolutions(g, e) {
         g.textAlign = 'center'; g.fillText(tx2, bx, by + 4); g.textAlign = 'left';
       });
       g.globalAlpha = a * ez(sb(kv, .65, .9));
-      d.label('同一份脈絡,不用重新整理', x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
+      d.label(tt('同一份脈絡,不用重新整理', 'One context, no re-explaining'), x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
     } else if (i === 5) { // 流程接通:模組逐一接通 + 火花(子) + 流動虛線(子)
-      const mods = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
+      const mods = MODS6;
       const m0 = x + 16, m1 = x + w - 16, my = y + h * .42;
       const conn = ez(sb(kv, .06, .8)) * (mods.length - 1); // 正規化:本景 80% 前接通到最後一個模組
       mods.forEach((tx2, j2) => {
@@ -495,9 +534,9 @@ function paintSolutions(g, e) {
         g.textAlign = 'center'; g.fillText(tx2, nx, my + Math.max(19, 21 * S)); g.textAlign = 'left';
       });
       g.globalAlpha = a * ez(sb(kv, .7, .95));
-      d.label('既有工具保留・資料線後方接通', x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
+      d.label(T_KEEP_TOOLS, x, y + h - 8, fsS, 'rgba(242,239,232,.55)', .8);
     } else { // 營運視圖:三統計磚 + 火花線(子:描繪循環)
-      const st = [['12', '今日新客', C.ivory], ['28s', '平均回覆', C.blue], ['18%', '本週轉換', C.green]];
+      const st = [['12', STAT3[0], C.ivory], ['28s', STAT3[1], C.blue], ['18%', STAT3[2], C.green]];
       const gw2 = (w - 20) / 3;
       st.forEach((r2, j2) => {
         // 收在本景 52% 前跑完:尾景 CTA 回來時,步驟已經演完(順序是先動畫、後按鈕)
@@ -546,12 +585,12 @@ function paintSolutions(g, e) {
     const kk = ez(sb(kv, .18, .8));
     g.globalAlpha = a;
     if (i === 0) { // 詢問進來:LINE 泡泡 + 來源列
-      bub(cx2, y + pad, Math.min(cw * .86, 300), '請問到府服務多少錢?', 'rgba(101,224,188,.14)', 'rgba(101,224,188,.5)');
+      bub(cx2, y + pad, Math.min(cw * .86, 300), tt('請問到府服務多少錢?', 'How much for a home visit?'), 'rgba(101,224,188,.14)', 'rgba(101,224,188,.5)');
       g.globalAlpha = a * kk;
-      d.label('LINE・網站表單・電話', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+      d.label(tt('LINE・網站表單・電話', 'LINE · Web form · Phone'), cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
     } else if (i === 1) { // 辨識需求:欄位晶片逐一亮
       let xx = cx2;
-      ['需求:到府清潔', '時段:週五下午', '價格:待人工'].forEach((tx2, j) => {
+      [tt('需求:到府清潔', 'Need: home cleaning'), tt('時段:週五下午', 'Slot: Fri afternoon'), tt('價格:待人工', 'Price: human review')].forEach((tx2, j) => {
         const kc = ez(sb(kv, .15 + j * .18, .4 + j * .18));
         if (kc <= 0.02) return;
         g.globalAlpha = a * kc;
@@ -559,9 +598,9 @@ function paintSolutions(g, e) {
         if (xx > cx2 + cw - 60) { xx = cx2; }
       });
       g.globalAlpha = a * ez(sb(kv, .6, .9));
-      d.label('AI 辨識・敏感項標記待確認', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+      d.label(tt('AI 辨識・敏感項標記待確認', 'AI parses · flags await human check'), cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
     } else if (i === 2) { // 回應與建檔:回覆泡泡 + CRM 卡生成
-      bub(cx2, y + pad, Math.min(cw * .9, 320), '已為您保留時段,細節由專人確認', 'rgba(255,107,44,.12)', 'rgba(255,107,44,.5)');
+      bub(cx2, y + pad, Math.min(cw * .9, 320), T_SLOT_HELD, 'rgba(255,107,44,.12)', 'rgba(255,107,44,.5)');
       const kc = ez(sb(kv, .4, .75));
       if (kc > 0.02) {
         const cw2 = Math.min(150 * S, cw * .6), chy = y + h - pad - Math.max(30, 32 * S);
@@ -570,13 +609,13 @@ function paintSolutions(g, e) {
         g.fillStyle = '#F2EFE8'; g.fill();
         g.strokeStyle = C.orange; g.lineWidth = 1.2; g.stroke();
         g.font = '800 ' + fsS + 'px "Noto Sans TC",sans-serif'; g.fillStyle = '#090B0E';
-        g.fillText('王小姐', cx2 + 8, chy + Math.max(12, 12 * S));
+        g.fillText(tt('王小姐', 'Ms. Wang'), cx2 + 8, chy + Math.max(12, 12 * S));
         g.font = '600 ' + Math.max(8.5, 8.5 * S) + 'px "Space Grotesk",sans-serif'; g.fillStyle = '#D14E12';
-        g.fillText('CRM CARD ・ 負責人已指定', cx2 + 8, chy + Math.max(23, 24 * S));
+        g.fillText(tt('CRM CARD ・ 負責人已指定', 'CRM CARD · Owner assigned'), cx2 + 8, chy + Math.max(23, 24 * S));
       }
     } else if (i === 3) { // 安排下一步:四步點軌
       const m0 = cx2 + 6, m1 = cx2 + cw - 6, ty2 = y + h * .46;
-      ['補齊需求', '提供案例', '確認反應', '決定下一步'].forEach((tx2, j) => {
+      NEXT4.forEach((tx2, j) => {
         const nx = m0 + (m1 - m0) * j / 3;
         const on = kv * 3.2 - .3 > j;
         d.node(nx, ty2, on ? 3.2 : 2.2, on ? C.blue : 'rgba(242,239,232,.3)', a, !on);
@@ -589,19 +628,19 @@ function paintSolutions(g, e) {
         if (j < 3) d.line(nx + 5, ty2, m0 + (m1 - m0) * (j + 1) / 3 - 5, ty2, clamp(kv * 3.2 - .45 - j, 0, 1), 'rgba(62,155,255,.5)', 1.2);
       });
       g.globalAlpha = a * ez(sb(kv, .7, .95));
-      d.label('AI 擬稿・人確認才送出', cx2, y + h - pad * .7, fsS, 'rgba(101,224,188,.8)', .8);
+      d.label(tt('AI 擬稿・人確認才送出', 'AI drafts · human OK before send'), cx2, y + h - pad * .7, fsS, 'rgba(101,224,188,.8)', .8);
     } else if (i === 4) { // 延續脈絡:同一份脈絡 → 三個用途
       g.globalAlpha = a;
-      d.han('同一份客戶脈絡', cx2, line1, fsB, 'rgba(242,239,232,.85)', 700);
+      d.han(tt('同一份客戶脈絡', 'One customer context'), cx2, line1, fsB, 'rgba(242,239,232,.85)', 700);
       let xx = cx2;
-      ['報價', '案例', '後續服務'].forEach((tx2, j) => {
+      [T_QUOTE, T_CASES, tt('後續服務', 'Follow-up')].forEach((tx2, j) => {
         const kc = ez(sb(kv, .25 + j * .18, .5 + j * .18));
         if (kc <= 0.02) return;
         g.globalAlpha = a * kc;
         xx += d.chip(xx, y + h * .52, tx2, true, fsS) + 8;
       });
     } else if (i === 5) { // 流程接通:模組節點連線
-      const mods = ['客服', 'CRM', '行銷', '報價', '專案', '數據'];
+      const mods = MODS6;
       const m0 = cx2 + 8, m1 = cx2 + cw - 8, my = y + h * .5;
       mods.forEach((tx2, j) => {
         const nx = m0 + (m1 - m0) * j / 5;
@@ -616,9 +655,9 @@ function paintSolutions(g, e) {
         g.textAlign = 'left';
       });
       g.globalAlpha = a * ez(sb(kv, .75, .95));
-      d.label('既有工具保留・資料線後方接通', cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
+      d.label(T_KEEP_TOOLS, cx2, y + h - pad * .7, fsS, 'rgba(242,239,232,.5)', .8);
     } else { // 營運視圖:三個統計膠囊(呼吸)
-      const st = [['12', '今日新客', C.ivory], ['28s', '平均回覆', C.blue], ['18%', '本週轉換', C.green]];
+      const st = [['12', STAT3[0], C.ivory], ['28s', STAT3[1], C.blue], ['18%', STAT3[2], C.green]];
       const gw2 = (cw - 16) / 3;
       st.forEach((r, j) => {
         const kc = ez(sb(kv, .15 + j * .16, .4 + j * .16));
@@ -671,7 +710,7 @@ function paintCases(g, e) {
   const py0 = z.y + Math.max(8, z.h * .02) + Math.max(0, (availH - ph * sc) / 2);
 
   const order = ['wed', 'int', 'rea', 'bea', 'sum'];
-  const NAME = { wed: '婚禮婚慶', int: '室內設計', rea: '房仲不動產', bea: '美業預約', sum: 'YOUR TURN' };
+  const NAME = { wed: IND_WED, int: IND_INT, rea: IND_REA, bea: tt('美業預約', 'Beauty'), sum: 'YOUR TURN' };
   const HUE = { wed: C.orange, int: C.orange, rea: C.blue, bea: C.green, sum: C.green };
 
   // ── 開場 ident:五場域星陣(2026-08 使用者回饋:靜止首屏的畫面與場域 01 完全重複)
@@ -749,7 +788,7 @@ function paintCases(g, e) {
         g.font = '800 ' + Math.max(13, 14 * S) + 'px "Space Grotesk",sans-serif';
         g.fillStyle = C.ivory; g.fillText('6 / 14', cx2, y + h * .4 + Math.max(14, 15 * S));
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
-        g.fillStyle = 'rgba(242,239,232,.6)'; g.fillText('檔期已保留', cx2, y + h * .4 + Math.max(26, 29 * S));
+        g.fillStyle = 'rgba(242,239,232,.6)'; g.fillText(tt('檔期已保留', 'Date reserved'), cx2, y + h * .4 + Math.max(26, 29 * S));
         g.textAlign = 'left';
       }
     } else if (id === 'int') { // 房間線框:牆/窗/沙發/光
@@ -792,7 +831,7 @@ function paintCases(g, e) {
         g.textAlign = 'center';
         g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif';
         g.fillStyle = 'rgba(242,239,232,.85)';
-        g.fillText('週六 14:00 帶看', cx2, hy2 + hh + Math.max(16, 18 * S));
+        g.fillText(tt('週六 14:00 帶看', 'Sat 14:00 viewing'), cx2, hy2 + hh + Math.max(16, 18 * S));
         g.textAlign = 'left';
       }
     } else if (id === 'bea') { // 預約時段格:2x3,一格點亮+勾
@@ -826,10 +865,10 @@ function paintCases(g, e) {
         g.globalAlpha = a * rk2;
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
         g.fillStyle = 'rgba(101,224,188,.85)';
-        g.fillText('前一日 18:00 自動提醒已排', gx0, gy0 + rows * (gh2 + 8) + Math.max(14, 16 * S));
+        g.fillText(tt('前一日 18:00 自動提醒已排', 'Reminder set · 18:00 day before'), gx0, gy0 + rows * (gh2 + 8) + Math.max(14, 16 * S));
       }
     } else { // sum:四場域小徽章 → 中央合流
-      const icons = ['婚', '裝', '房', '美'];
+      const icons = [tt('婚', 'W'), tt('裝', 'I'), tt('房', 'R'), tt('美', 'B')];
       icons.forEach((tx2, i) => {
         const ang = -Math.PI / 2 + i * Math.PI / 2;
         const rr2 = Math.min(w, h) * .34;
@@ -862,8 +901,8 @@ function paintCases(g, e) {
 
   // ── 對話帶:詢問(左)→ AI 回覆(右)
   function convo(id, kv, a, x, y, w, h) {
-    const Q = { wed: '請問 6 月還有檔期嗎?', int: '三房想改北歐風,怎麼算?', rea: '這間還在嗎?想約看屋', bea: '週五染髮有位子嗎?', sum: '把這流程換成你的產業?' };
-    const A2 = { wed: '已保留 6/14,細節專人確認', int: '已建檔,設計師今日回覆', rea: '已排週六 14:00 帶看', bea: '已預約,改期直接回這裡', sum: '15 分鐘,用你的場景跑一次' };
+    const Q = { wed: tt('請問 6 月還有檔期嗎?', 'Any June dates left?'), int: tt('三房想改北歐風,怎麼算?', '3-room Nordic redo — price?'), rea: tt('這間還在嗎?想約看屋', 'Still listed? Can I view?'), bea: tt('週五染髮有位子嗎?', 'Any color slots Friday?'), sum: tt('把這流程換成你的產業?', 'Your industry, same flow?') };
+    const A2 = { wed: tt('已保留 6/14,細節專人確認', '6/14 held — we confirm details'), int: tt('已建檔,設計師今日回覆', 'Filed — designer replies today'), rea: tt('已排週六 14:00 帶看', 'Viewing set: Sat 14:00'), bea: tt('已預約,改期直接回這裡', 'Booked — reply here to change'), sum: tt('15 分鐘,用你的場景跑一次', '15 min — run your scenario') };
     const bh = Math.max(24, 26 * S);
     const k1 = ez(sb(kv, .18, .42));
     if (k1 > .02) {
@@ -889,11 +928,11 @@ function paintCases(g, e) {
   // ── 底部狀態晶片列(統一位置=數字/狀態對齊)
   function chips(id, kv, a, x, yBase) {
     const rows = {
-      wed: ['檔期詢問 ✓', '保留 ✓', '專人確認'],
-      int: ['需求整理 ✓', '案件卡 ✓', '設計師接手'],
-      rea: ['物件比對 ✓', '帶看排程 ✓', '回報屋主'],
-      bea: ['預約 ✓', '提醒已排 ✓', '回頭客名單'],
-      sum: ['接住詢問', '自動建檔', '持續跟進']
+      wed: [tt('檔期詢問 ✓', 'Inquiry ✓'), tt('保留 ✓', 'Held ✓'), tt('專人確認', 'Team confirms')],
+      int: [tt('需求整理 ✓', 'Brief ✓'), tt('案件卡 ✓', 'Case card ✓'), tt('設計師接手', 'To designer')],
+      rea: [tt('物件比對 ✓', 'Matched ✓'), tt('帶看排程 ✓', 'Viewing set ✓'), tt('回報屋主', 'Owner updated')],
+      bea: [tt('預約 ✓', 'Booked ✓'), tt('提醒已排 ✓', 'Reminder ✓'), tt('回頭客名單', 'Repeat clients')],
+      sum: [tt('接住詢問', 'Catch leads'), tt('自動建檔', 'Auto-file'), tt('持續跟進', 'Follow up')]
     }[id];
     let xx = x;
     rows.forEach((tx2, j) => {
@@ -1025,7 +1064,7 @@ function paintCases(g, e) {
     g.font = '600 ' + Math.max(11, mobile ? 13 : 11.5 * SC) + 'px "Noto Sans TC",sans-serif';
     g.fillStyle = 'rgba(242,239,232,.62)';
     g.textAlign = 'center';
-    g.fillText('五個場域・同一套流程', cx, ty + Math.max(17, fs2 * .78));
+    g.fillText(tt('五個場域・同一套流程', 'Five industries · one flow'), cx, ty + Math.max(17, fs2 * .78));
     g.textAlign = 'left';
     g.restore(); g.globalAlpha = 1;
   }
@@ -1062,7 +1101,7 @@ function pricingRowsDesktop(g, e, ctx) {
   const priceW = mob ? (z.w - padX * 2) * .44 : clamp(z.w * .205, 92, 140);
   const chipsX0 = mob ? (z.x + padX) : (z.x + padX + nameW + 12);
   const chipsW = mob ? (z.w - padX * 2) : ((z.x + z.w - padX - priceW - 12) - chipsX0);
-  const counts = ['4 模組', '8 模組(含 A)', '12 模組(含 B)'];
+  const counts = [tt('4 模組', '4 modules'), tt('8 模組(含 A)', '8 modules (+A)'), tt('12 模組(含 B)', '12 modules (+B)')];
 
   meta.forEach(function (m, i) {
     const ka = ez(clamp(kR * 3 - i * .45, 0, 1));
@@ -1206,7 +1245,7 @@ function pricingRowsDesktop(g, e, ctx) {
       g.beginPath(); g.moveTo(lx0, ly1); g.lineTo(lx1, ly1); g.stroke();
       g.setLineDash([]); g.lineDashOffset = 0;
     }
-    d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - 9, fUse, C.green, 1.1);
+    d.label(T_INCLUDED, lx0, ly1 - 9, fUse, C.green, 1.1);
     const k2u = ez(sb(kU, .15, 1));
     d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
     for (let m2 = 1; m2 <= 8; m2++) {
@@ -1216,7 +1255,7 @@ function pricingRowsDesktop(g, e, ctx) {
       g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
       g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
     }
-    d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + fUse + 5, fUse, C.blue, 1.1);
+    d.label(T_USAGE, lx0, ly2 + fUse + 5, fUse, C.blue, 1.1);
     g.restore();
   }
 }
@@ -1239,9 +1278,9 @@ function paintPricing(g, e) {
   const ry = z.y + z.h * .05, rh = z.h * (mobile ? .48 : .50);   // 桌機收到 .50:下方要放得下價格框與模組數列
   const rx = (i) => z.x + i * (rw + gap);
   const meta = [
-    { zh: '接客', en: 'CAPTURE', kk: k1, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['自動回覆', '需求了解', '預約', '轉真人'], base: null },
-    { zh: '業務助理', en: 'ASSISTANT', kk: k2, c: C.orange, price: '依需求報價', mo: '預約諮詢', mods: ['CRM', '追蹤', '跟進序列', '分析'], base: '含 A 全部', badge: '最多人選' },
-    { zh: '營運平台', en: 'PLATFORM', kk: k3, c: C.blue, price: '依需求報價', mo: '預約諮詢', mods: ['行銷', '報價', '專案', '數據'], base: '含 B 全部' }
+    { zh: tt('接客', 'Intake'), en: 'CAPTURE', kk: k1, c: C.orange, price: T_CUSTOM_QUOTE, mo: T_BOOK_CALL, mods: [tt('自動回覆', 'Auto-reply'), tt('需求了解', 'Qualify'), tt('預約', 'Booking'), tt('轉真人', 'Handoff')], base: null },
+    { zh: tt('業務助理', 'Assistant'), en: 'ASSISTANT', kk: k2, c: C.orange, price: T_CUSTOM_QUOTE, mo: T_BOOK_CALL, mods: ['CRM', tt('追蹤', 'Tracking'), tt('跟進序列', 'Sequences'), tt('分析', 'Analytics')], base: tt('含 A 全部', 'All of A'), badge: tt('最多人選', 'Most popular') },
+    { zh: tt('營運平台', 'Platform'), en: 'PLATFORM', kk: k3, c: C.blue, price: T_CUSTOM_QUOTE, mo: T_BOOK_CALL, mods: MODS6.slice(2), base: tt('含 B 全部', 'All of B') }
   ];
   // 手機原本走欄式,但欄式在手機只畫卡框與空晶片、一個字都沒有(等於看不懂),
   // 現在同樣走橫向三列,只是列內改成上下兩段。舊欄式保留在 else 分支不再使用。
@@ -1309,7 +1348,7 @@ function paintPricing(g, e) {
         g.globalAlpha = ez(kC) * fadeO;
         const cy3 = ry + rh + 10 + (fPrice + fMo + 22) + 15;   // 接在價格框下方,不再用固定倍率
         d.tick(x + 9, cy3, Math.max(6, 6.5 * s), C.green, 1);
-        d.label(['4 模組', '8 模組(含A)', '12 模組(含B)'][i], x + 21, cy3 + 4, Math.max(11, 9 * s), 'rgba(242,239,232,.75)', .6);
+        d.label([tt('4 模組', '4 modules'), tt('8 模組(含A)', '8 modules (+A)'), tt('12 模組(含B)', '12 modules (+B)')][i], x + 21, cy3 + 4, Math.max(11, 9 * s), 'rgba(242,239,232,.75)', .6);
         g.globalAlpha = 1;
       }
       g.restore();
@@ -1330,7 +1369,7 @@ function paintPricing(g, e) {
         d.node(lx0 + (lx1 - lx0) * fd1, ly1, 2.5, C.green, a);
         d.node(lx0 + (lx1 - lx0) * fd2, ly2, 2.5, C.blue, a * ez(sb(kU, .15, 1)));
       }
-      d.label('INCLUDED — 文字 AI 不限量', lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
+      d.label(T_INCLUDED, lx0, ly1 - Math.max(10, 7 * s), 8.5 * s, C.green, 1.2);
       const k2u = ez(sb(kU, .15, 1));
       d.line(lx0, ly2, lx1, ly2, k2u, 'rgba(62,155,255,.6)', 2);
       for (let m2 = 1; m2 <= 8; m2++) {
@@ -1340,7 +1379,7 @@ function paintPricing(g, e) {
         g.strokeStyle = 'rgba(62,155,255,.8)'; g.lineWidth = 1.4;
         g.beginPath(); g.moveTo(mx, ly2 - 4); g.lineTo(mx, ly2 + 4); g.stroke();
       }
-      d.label('USAGE-BASED — 圖片・影片,用多少算多少', lx0, ly2 + Math.max(16, 15 * s), 8.5 * s, C.blue, 1.2);
+      d.label(T_USAGE, lx0, ly2 + Math.max(16, 15 * s), 8.5 * s, C.blue, 1.2);
       meta.forEach((m, i) => {
         const ax = rx(i) + rw / 2;
         d.line(ax, ry + rh + 70 * s, ax, ly1 - 5, ez(sb(kU, i * .15, .6 + i * .15)), 'rgba(242,239,232,.25)', 1);
@@ -1373,10 +1412,10 @@ function paintPricing(g, e) {
     const fKick = mobile ? Math.max(10, 11 * s) : Math.max(12, 12.5 * s);
     labelC('PEAKQI OS · RUNNING', cx, hy - fTitle - 14, fKick, C.orange, 2.2);
     g.font = '900 ' + fTitle + 'px "Noto Sans TC",sans-serif';
-    const tW = g.measureText('系統上線,開始運作').width;
+    const tW = g.measureText(T_SYS_LIVE).width;
     d.node(cx - tW / 2 - Math.max(14, 16 * s), hy - fTitle * .3, Math.max(5, 5.5 * s), C.green, a * pulse);
     g.textAlign = 'center';
-    d.han('系統上線,開始運作', cx, hy, fTitle, C.ivory, 900);
+    d.han(T_SYS_LIVE, cx, hy, fTitle, C.ivory, 900);
     g.textAlign = 'left';
     // 三個大藥丸:方案名 + 綠勾(逐一亮起)
     const fPill = mobile ? Math.max(12, 13 * s) : Math.max(15, 15 * s);
@@ -1409,7 +1448,7 @@ function paintPricing(g, e) {
         const fd = (t * .16) % 1;
         d.node(x0 + (x1 - x0) * fd, rely, 3, C.green, a * inK * railK);
         const fTal = Math.max(10, 10.5 * s);
-        ['4 模組', '8 模組', '12 模組'].forEach((txt, i2) => {
+        [tt('4 模組', '4 modules'), tt('8 模組', '8 modules'), tt('12 模組', '12 modules')].forEach((txt, i2) => {
           labelC(txt, z.x + i2 * (rw + gap) + rw / 2, rely + fTal + 12, fTal, 'rgba(242,239,232,.6)', .5);
         });
         g.globalAlpha = a * inK;
@@ -1431,7 +1470,7 @@ function paintPricing(g, e) {
     // 底部說明:誠實中性(移除未經確認的 24/7/不綁約/保證字樣)
     labelC('FIRST PHASE LIVE', cx, z.y + z.h * (mobile ? .8 : .84), mobile ? Math.max(9, 9.5 * s) : Math.max(10.5, 10.5 * s), 'rgba(242,239,232,.5)', 2);
     g.textAlign = 'center';
-    d.han('第一階段上線・依實際使用持續調整', cx, z.y + z.h * (mobile ? .87 : .91), mobile ? Math.max(11, 12.5 * s) : Math.max(13.5, 13.5 * s), 'rgba(242,239,232,.75)', 600);
+    d.han(tt('第一階段上線・依實際使用持續調整', 'Phase one live · tuned with real use'), cx, z.y + z.h * (mobile ? .87 : .91), mobile ? Math.max(11, 12.5 * s) : Math.max(13.5, 13.5 * s), 'rgba(242,239,232,.75)', 600);
     g.textAlign = 'left';
     g.restore();
   }
@@ -1502,7 +1541,7 @@ function paintAbout(g, e) {
   if (kP > 0) {
     const a = ez(kP) * (1 - ez(kO) * .6);
     const py = z.y + z.h * (mobile ? .3 : .38);
-    const names = ['理解場景', '整理資料', '建置模組', '測試校準', '上線'];
+    const names = [tt('理解場景', 'Scope'), tt('整理資料', 'Data prep'), tt('建置模組', 'Build'), tt('測試校準', 'Calibrate'), tt('上線', 'Launch')];
     const x0 = z.x + 14, x1 = z.x + z.w - 14;
     g.save(); g.globalAlpha = a;
     d.line(x0, py, x1, py, kP, 'rgba(242,239,232,.3)', 1.4);
@@ -1539,7 +1578,7 @@ function paintAbout(g, e) {
     });
     d.tick(x0, dy + 20 * s, 6 * s, C.green, a * ez(sb(kD, .7, 1)));
     g.globalAlpha = a * ez(sb(kD, .7, 1));
-    d.han('最快 10 個工作天上線', x0 + 14 * s, dy + 24 * s, Math.max(12.5, 11 * ts), C.ivory, 800);
+    d.han(tt('最快 10 個工作天上線', 'Live in as few as 10 working days'), x0 + 14 * s, dy + 24 * s, Math.max(12.5, 11 * ts), C.ivory, 800);
     g.restore();
   }
   // S7 品牌核心
@@ -1605,8 +1644,8 @@ function paintDemo(g, e) {
       const dy = (1 - ez(kI)) * 26;   // 進場:整景由下浮升
       g.save(); g.translate(0, dy); g.globalAlpha = a;
       d.panel(px, py, pw, ph, .96, false);
-      d.head(px, py, pw, 'TASK 01 — 選擇情境', 1, C.orange);
-      const LBL = ['婚禮婚慶', '室內設計', '房仲不動產', '教育培訓', '團購電商', '更多產業'];
+      d.head(px, py, pw, tt('TASK 01 — 選擇情境', 'TASK 01 — Pick a scenario'), 1, C.orange);
+      const LBL = [IND_WED, IND_INT, IND_REA, tt('教育培訓', 'Education'), tt('團購電商', 'E-commerce'), tt('更多產業', 'More industries')];
       const inX = px + 12, inW = pw - 24;
       const cw = (inW - gap * 2) / 3;
       const hov = Math.floor(t / 1.15) % 6;   // 子動畫:游標每 1.15s 輪巡下一張選卡
@@ -1635,7 +1674,7 @@ function paintDemo(g, e) {
         d.rr(inX, pvY, inW, prevH, 5); g.fillStyle = 'rgba(101,224,188,.07)'; g.fill();
         g.strokeStyle = 'rgba(101,224,188,.4)'; g.lineWidth = 1; g.stroke();
         d.node(inX + 13, pvY + prevH / 2, 3, C.green, a * kp * (.55 + .45 * Math.sin(t * 2.8)));
-        d.han('相似場景更新中:' + LBL[hov], inX + 24, pvY + prevH / 2 + fsS * .36, fsS, 'rgba(242,239,232,.75)', 600);
+        d.han(tt('相似場景更新中:', 'Similar cases: ') + LBL[hov], inX + 24, pvY + prevH / 2 + fsS * .36, fsS, 'rgba(242,239,232,.75)', 600);
         if (inW > 330) {
           const bw = inW * .2, bx = inX + inW - bw - 12;
           g.strokeStyle = 'rgba(242,239,232,.18)'; g.lineWidth = 1; g.strokeRect(bx, pvY + prevH / 2 - 2, bw, 4);
@@ -1655,8 +1694,8 @@ function paintDemo(g, e) {
       const dy = (1 - ez(kF)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
       d.panel(px, py, pw, ph, .96, false);
-      d.head(px, py, pw, 'TASK 02 — 找出卡點', 1, C.blue);
-      const NAMES = ['詢問進來', 'AI 回覆', '人工跟進', '成交'];
+      d.head(px, py, pw, tt('TASK 02 — 找出卡點', 'TASK 02 — Find the bottleneck'), 1, C.blue);
+      const NAMES = [T_INQ_IN, tt('AI 回覆', 'AI reply'), tt('人工跟進', 'Human follow-up'), tt('成交', 'Closed')];
       const ly = py + ph * .44;
       const inX = px + Math.max(20, pw * .07), inW = pw - Math.max(40, pw * .14);
       const xs = NAMES.map((_, i) => inX + inW * i / 3);
@@ -1691,7 +1730,7 @@ function paintDemo(g, e) {
         g.beginPath(); g.arc(gx, ly, 9 + pulse * 4, 0, TAU); g.strokeStyle = C.orange; g.lineWidth = 1.2; g.stroke();
         g.globalAlpha = a * kw2;
         g.textAlign = 'center';
-        d.han('最卡的一段', gx, ly - 20 * s - 4, fsS, C.orange, 800);
+        d.han(tt('最卡的一段', 'Where it stalls'), gx, ly - 20 * s - 4, fsS, C.orange, 800);
         g.textAlign = 'left';
       }
       const kc2 = ez(sb(kF, .55, .88));
@@ -1699,7 +1738,7 @@ function paintDemo(g, e) {
         g.globalAlpha = a * kc2;
         const cy2 = py + ph - Math.max(24, 28 * s);
         d.tick(px + 20, cy2, 6, C.green, a * kc2);
-        d.han('已勾選:人工跟進 — 草稿即時加入節點', px + 34, cy2 + fsS * .38, fsS, 'rgba(242,239,232,.78)', 600);
+        d.han(tt('已勾選:人工跟進 — 草稿即時加入節點', 'Picked: human follow-up — added to draft'), px + 34, cy2 + fsS * .38, fsS, 'rgba(242,239,232,.78)', 600);
       }
       g.restore();
     }
@@ -1714,12 +1753,12 @@ function paintDemo(g, e) {
       const dy = (1 - ez(kB)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
       d.panel(px, py, pw, ph, .96, false);
-      d.head(px, py, pw, 'TASK 03 — 組合第一階段', 1, C.orange);
+      d.head(px, py, pw, tt('TASK 03 — 組合第一階段', 'TASK 03 — Assemble phase 1'), 1, C.orange);
       const fx = px + 14, fw = pw * .56, fy = py + 36, fh = ph - 36 - Math.max(34, 40 * s);
       g.save(); g.setLineDash([5, 6]); g.strokeStyle = 'rgba(242,239,232,.3)'; g.lineWidth = 1.2;
       d.rr(fx, fy, fw, fh, 8); g.stroke(); g.restore();
       d.label('DRAFT', fx + 8, fy - 5, Math.max(9.5, fsS * .8), 'rgba(242,239,232,.45)', 1.4);
-      const MODS = [['AI 接住詢問', C.orange], ['需求辨識', C.blue], ['報價草稿', C.ivory]];
+      const MODS = [[tt('AI 接住詢問', 'AI catches inquiries'), C.orange], [tt('需求辨識', 'Needs analysis'), C.blue], [tt('報價草稿', 'Quote draft'), C.ivory]];
       // 三塊模組必須完整落在虛線框內:間距與內距依框高縮放,不用固定值硬撐
       const bTop = fh < 110 ? 8 : 12, bgap = fh < 110 ? 6 : 8;
       const bh = Math.max(18, (fh - bTop * 2 - bgap * 2) / 3);
@@ -1751,18 +1790,18 @@ function paintDemo(g, e) {
         g.globalAlpha = a * kg2 * (.25 + .3 * pulse2);
         g.beginPath(); g.arc(gLX, gy2, 8 + pulse2 * 3, 0, TAU); g.strokeStyle = C.green; g.lineWidth = 1; g.stroke();
         g.globalAlpha = a * kg2;
-        d.han('人工確認邊界', gLX + 12, gy2 + fsS * .36, fsS, C.green, 800);
+        d.han(tt('人工確認邊界', 'Human sign-off'), gLX + 12, gy2 + fsS * .36, fsS, C.green, 800);
         if (fh >= 70) {
           g.globalAlpha = a * kg2 * .85;
-          d.han('敏感動作停在這裡', gLX + 12, gy2 + fsS * 1.9, Math.max(10, fsS * .88), 'rgba(242,239,232,.6)', 500);
-          d.han('由真人確認', gLX + 12, gy2 + fsS * 3.2, Math.max(10, fsS * .88), 'rgba(242,239,232,.6)', 500);
+          d.han(tt('敏感動作停在這裡', 'Sensitive steps wait'), gLX + 12, gy2 + fsS * 1.9, Math.max(10, fsS * .88), 'rgba(242,239,232,.6)', 500);
+          d.han(tt('由真人確認', 'for human review'), gLX + 12, gy2 + fsS * 3.2, Math.max(10, fsS * .88), 'rgba(242,239,232,.6)', 500);
         }
       }
       const mk = ez(sb(kB, .2, .95));   // 底部進度計:第一版草稿組裝中
       const my = py + ph - Math.max(20, 24 * s);
       g.globalAlpha = a;
       d.meter(px + 14, my - 3, pw * .42, 6, mk, C.orange, null, null);
-      d.han(mk > .96 ? '第一版草稿完成' : '第一版草稿組裝中', px + 14 + pw * .42 + 12, my + 3, fsS, mk > .96 ? C.green : 'rgba(242,239,232,.7)', 600);
+      d.han(mk > .96 ? tt('第一版草稿完成', 'First draft ready') : tt('第一版草稿組裝中', 'Assembling first draft'), px + 14 + pw * .42 + 12, my + 3, fsS, mk > .96 ? C.green : 'rgba(242,239,232,.7)', 600);
       g.restore();
     }
   }
@@ -1776,11 +1815,11 @@ function paintDemo(g, e) {
       const dy = (1 - ez(kG)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
       d.panel(px, py, pw, ph, .96, false);
-      d.head(px, py, pw, 'TASK 04 — 確認並送出', 1, C.green);
+      d.head(px, py, pw, tt('TASK 04 — 確認並送出', 'TASK 04 — Confirm & send'), 1, C.green);
       const cw2 = Math.min(pw * .55, 300), cx2 = px + 14, cy0 = py + 36, chh2 = ph - 36 - 16;
       d.rr(cx2, cy0, cw2, chh2, 6); g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
       g.strokeStyle = 'rgba(242,239,232,.22)'; g.lineWidth = 1; g.stroke();
-      const FLD = ['產業', '最卡的流程', '聯絡方式'];
+      const FLD = [tt('產業', 'Industry'), tt('最卡的流程', 'Bottleneck'), tt('聯絡方式', 'Contact')];
       FLD.forEach((nm, i) => {
         const kr = ez(sb(kG, .06 + i * .14, .34 + i * .14));   // 進場:欄位逐一帶入 + 打勾
         if (kr <= .02) return;
@@ -1824,7 +1863,7 @@ function paintDemo(g, e) {
         d.tick(rx, ry2 + 1, rr2 * .6, C.green, a * kO * ez(sb(kO, .55, 1)));
         g.globalAlpha = a * kO;
         g.textAlign = 'right';
-        d.han('草稿送出,安排討論', px + pw - 14, ry2 + rr2 + fsS + 8, fsS, 'rgba(242,239,232,.8)', 600);
+        d.han(tt('草稿送出,安排討論', 'Draft sent, discussion next'), px + pw - 14, ry2 + rr2 + fsS + 8, fsS, 'rgba(242,239,232,.8)', 600);
         g.textAlign = 'left';
         g.restore();
       }
@@ -1859,12 +1898,12 @@ function paintMethod(g, e) {
     const a = ez(kM) * fd;
     if (a > 0.02) {
       g.save();
-      const rows = [['LINE 對話', '詢問 ×12'], ['網站表單', '需求 ×5'], ['試算表', '名單 ×3'], ['CRM', '案件 ×8']];
-      const chips = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1'];
+      const rows = SRC4;
+      const chips = ISSUE3;
       const ph = 26 + rows.length * rh + rh * 1.05;
       const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, false);
-      d.head(px0, py0, pw, mobile ? '現況盤點' : 'INTAKE — 現況盤點', a, C.orange);
+      d.head(px0, py0, pw, mobile ? T_AUDIT : tt('INTAKE — 現況盤點', 'INTAKE — Current state'), a, C.orange);
       rows.forEach((r, i) => {
         const kr = ez(sb(kM, .12 + i * .1, .4 + i * .1));
         if (kr <= 0.01) return;
@@ -1902,11 +1941,11 @@ function paintMethod(g, e) {
     const a = ez(kG) * fd;
     if (a > 0.02) {
       g.save();
-      const defs = [['目標', '回覆不漏接'], ['範圍', 'LINE 客服・一段流程'], ['人工確認', '報價與例外由人把關']];
+      const defs = DEF3;
       const ph = 26 + defs.length * rh + rh * .5;
       const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, true);
-      d.head(px0, py0, pw, mobile ? '第一階段' : 'PHASE 1 — 定義第一階段', a, C.orange);
+      d.head(px0, py0, pw, mobile ? tt('第一階段', 'Phase 1') : tt('PHASE 1 — 定義第一階段', 'PHASE 1 — Define the scope'), a, C.orange);
       defs.forEach((r, i) => {
         const kr = ez(sb(kG, .15 + i * .14, .45 + i * .14));
         if (kr <= 0.01) return;
@@ -1921,7 +1960,7 @@ function paintMethod(g, e) {
         const ty2 = py0 + 26 + defs.length * rh + rh * .22;
         d.tick(px0 + 18, ty2, Math.max(6, 7 * s), C.green, a * kt);
         g.globalAlpha = a * kt;
-        d.han('範圍確認,先做最有價值的一段', px0 + 32, ty2 + 4, fsS + 1, 'rgba(101,224,188,.9)', 600);
+        d.han(T_SCOPE_OK, px0 + 32, ty2 + 4, fsS + 1, 'rgba(101,224,188,.9)', 600);
       }
       const kf = ez(sb(kG, .3, .7));
       if (kf > 0.02) {
@@ -1942,8 +1981,8 @@ function paintMethod(g, e) {
       const ph = 26 + rh * 2.4 + rh * .9;
       const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, false);
-      d.head(px0, py0, pw, mobile ? '建立驗證' : 'PILOT — 建立驗證', a, C.blue);
-      const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
+      d.head(px0, py0, pw, mobile ? T_VALIDATE : tt('PILOT — 建立驗證', 'PILOT — Build & validate'), a, C.blue);
+      const steps = STEP4;
       const ty2 = py0 + 26 + rh * 1.15;
       const m0 = px0 + Math.max(26, pw * .08), m1 = px0 + pw - Math.max(26, pw * .08);
       const conn = ez(sb(kP, .06, .78)) * (steps.length - 1); // 正規化:末站也會接到(舊式需 kP>0.98)
@@ -1964,7 +2003,7 @@ function paintMethod(g, e) {
         const gx = m0 + (m1 - m0) * 2 / 3;
         g.globalAlpha = a * kg2;
         g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
-        const gt = '人工確認';
+        const gt = T_HUMAN;
         const gw = g.measureText(gt).width + 14;
         d.rr(gx - gw / 2, ty2 - rh * .95, gw, fsS * 2, fsS);
         g.fillStyle = 'rgba(101,224,188,.12)'; g.fill();
@@ -1978,7 +2017,7 @@ function paintMethod(g, e) {
         const ry = py0 + 26 + rh * 2.05;
         g.globalAlpha = a * kr2;
         d.node(px0 + 18, ry + rh * .32, 2.8, C.green, a * kr2 * (0.55 + 0.45 * Math.sin(t * 2.4)), false);
-        d.han('實際使用者測試中・回饋直接改流程', px0 + 32, ry + rh * .42, fsS + 1.5, 'rgba(242,239,232,.8)', 600);
+        d.han(T_USER_TEST, px0 + 32, ry + rh * .42, fsS + 1.5, 'rgba(242,239,232,.8)', 600);
       }
       g.restore(); g.globalAlpha = 1;
     }
@@ -1989,15 +2028,11 @@ function paintMethod(g, e) {
     const a = ez(kL);
     if (a > 0.02) {
       g.save();
-      const rows = [
-        ['tick', '第一階段上線', '標準模組最快 10 個工作天'],
-        ['pulse', '觀察實際使用與例外', '例外自動記錄'],
-        ['cycle', '每週小幅調整', '依使用數據持續改善']
-      ];
+      const rows = LIVE3;
       const ph = 26 + rows.length * rh + rh * .35;
       const py0 = pyOf(ph);
       d.panel(px0, py0, pw, ph, a * .96, true);
-      d.head(px0, py0, pw, mobile ? '上線運作' : 'LIVE — 上線與改善', a, C.green);
+      d.head(px0, py0, pw, mobile ? tt('上線運作', 'Live & running') : tt('LIVE — 上線與改善', 'LIVE — Launch & improve'), a, C.green);
       rows.forEach((r, i) => {
         const kr = ez(sb(kL, .12 + i * .16, .42 + i * .16));
         if (kr <= 0.01) return;
@@ -2019,7 +2054,7 @@ function paintMethod(g, e) {
       const kb = ez(sb(kL, .6, .9));
       if (kb > 0.02) {
         g.globalAlpha = a * kb;
-        d.han('不是一次到位,而是先把一段做順,再擴大。', px0 + 14, py0 + ph - rh * .28, fsS + 1, 'rgba(101,224,188,.85)', 600);
+        d.han(tt('不是一次到位,而是先把一段做順,再擴大。', 'Not all at once — smooth one flow, then expand.'), px0 + 14, py0 + ph - rh * .28, fsS + 1, 'rgba(101,224,188,.85)', 600);
       }
       g.restore(); g.globalAlpha = 1;
     }
@@ -2036,8 +2071,8 @@ function paintMethodMobile(g, e, sb, ks) {
   const fsT = 19.5, fsM = 16.5, fsN = 13;     // 手機大字方針:標題/內容/註記
   const AK = [C.orange, C.orange, C.blue, C.green];
   const BD = ['rgba(255,107,44,.5)', 'rgba(255,107,44,.5)', 'rgba(62,155,255,.5)', 'rgba(101,224,188,.5)'];
-  const TITLE = ['現況盤點', '定義第一階段', '建立驗證', '上線與改善'];
-  const SUB = ['四個來源匯成一份問題清單', '講清楚做什麼、不做什麼', '一段流程,跑得起來才算數', '先把一段做順,再擴大'];
+  const TITLE = [T_AUDIT, tt('定義第一階段', 'Define phase one'), T_VALIDATE, tt('上線與改善', 'Launch & improve')];
+  const SUB = [tt('四個來源匯成一份問題清單', 'Four sources, one problem list'), tt('講清楚做什麼、不做什麼', 'Clear on what we do and skip'), tt('一段流程,跑得起來才算數', 'One flow that actually runs'), tt('先把一段做順,再擴大', 'Smooth one flow, then expand')];
   const x = z.x + 2, w = z.w - 4, pad = 16;
   // 面板依「該景實際內容」裁高(有多少畫多少,空間不足時各列自動壓縮),整組再於可用高度內置中
   const railH = fsN + 36;
@@ -2045,7 +2080,7 @@ function paintMethodMobile(g, e, sb, ks) {
   const headH = pad + fsT + fsN + 21 + 16;
   const chipH = fsN * 2.1;
   g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
-  const chipRows = ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1']
+  const chipRows = ISSUE3
     .reduce((acc, tx) => g.measureText(tx).width + 18 + acc, 16) > w - pad * 2 ? 2 : 1;
   const needOf = (i) => headH + [4 * 54 + 10 + chipRows * (chipH + 8), 3 * 58 + 44, 150, 3 * 62 + 34][i] + pad;
   // 空間不足時「整組等比縮小」,而不是把列高壓到下限 —— 壓下限會讓每一列的字互相疊在一起
@@ -2092,7 +2127,7 @@ function paintMethodMobile(g, e, sb, ks) {
     const rh = Math.max(16, Math.min(54, areaH / 4));
     const chipsFit = chipTop > by + rh * 4 - 2;             // 放不下就不畫晶片,不硬擠
     const beam = by + areaH * (.5 + .5 * Math.sin(t * .85));
-    [['LINE 對話', '詢問 ×12'], ['網站表單', '需求 ×5'], ['試算表', '名單 ×3'], ['CRM', '案件 ×8']].forEach((r, i) => {
+    SRC4.forEach((r, i) => {
       const kr = ez(sb(kv, .1 + i * .09, .38 + i * .09));
       if (kr <= .01) return;
       const ry = by + i * rh, slide = (1 - kr) * 26;
@@ -2109,7 +2144,7 @@ function paintMethodMobile(g, e, sb, ks) {
       d.node(bx + bw - 5, ry + rh * .45, 3.8, kr >= 1 ? C.green : C.orange, a * kr * (.5 + .5 * near), kr < 1);
     });
     let chx = bx, chy = chipTop;
-    ['重複輸入 ×3', '漏追 ×2', '責任不清 ×1'].forEach((tx, i) => {
+    ISSUE3.forEach((tx, i) => {
       const kc = ez(sb(kv, .5 + i * .1, .74 + i * .1));
       if (kc <= .02 || !chipsFit) return;
       g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
@@ -2127,7 +2162,7 @@ function paintMethodMobile(g, e, sb, ks) {
     g.strokeStyle = 'rgba(255,107,44,.6)'; g.lineWidth = 1.2;
     d.rr(bx - 8, by - 10, bw + 16, rh * 3 + 14, 10); g.stroke();
     g.restore();
-    [['目標', '回覆不漏接'], ['範圍', 'LINE 客服・一段流程'], ['人工確認', '報價與例外由人把關']].forEach((r, i) => {
+    DEF3.forEach((r, i) => {
       const kr = ez(sb(kv, .12 + i * .13, .42 + i * .13));
       if (kr <= .01) return;
       const ry = by + i * rh, rise = (1 - kr) * 18;
@@ -2143,10 +2178,10 @@ function paintMethodMobile(g, e, sb, ks) {
       d.tick(bx + 10, ty, 8.5, C.green, a * kt);
       g.globalAlpha = a * kt;
       g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(101,224,188,.92)';
-      g.fillText('範圍確認,先做最有價值的一段', bx + 28, ty + 5);
+      g.fillText(T_SCOPE_OK, bx + 28, ty + 5);
     }
   } else if (cur === 2) { // 建立驗證:管線 + token 巡遊經閘門停頓(子)+ 資料線流動(子)
-    const steps = ['詢問', '辨識', 'AI/人工', '下一步'];
+    const steps = STEP4;
     const py = Math.max(by + 58, by + bh * .46);   // 閘門畫在節點上方 50px,不可低於面板上緣
     const m0 = bx + 20, m1 = bx + bw - 20;
     const conn = ez(sb(kv, .06, .78)) * (steps.length - 1); // 正規化:本景 78% 前一定接到最後一站
@@ -2174,7 +2209,7 @@ function paintMethodMobile(g, e, sb, ks) {
     if (kg > .02) {
       const gx = m0 + (m1 - m0) * 2 / 3, gy = py - 50;
       g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
-      const gt = '人工確認', gw = g.measureText(gt).width + 22;
+      const gt = T_HUMAN, gw = g.measureText(gt).width + 22;
       g.globalAlpha = a * kg * (.1 + .12 * Math.sin(t * 2.4));   // 閘門光暈脈動(子)
       d.rr(gx - gw / 2 - 6, gy - 5, gw + 12, fsN * 2.1 + 10, 16); g.fillStyle = C.green; g.fill();
       g.globalAlpha = a * kg;
@@ -2201,13 +2236,11 @@ function paintMethodMobile(g, e, sb, ks) {
       d.node(bx + 6, yy - 5, 3.6, C.green, a * kr * (.5 + .5 * Math.sin(t * 2.2)), false);
       g.globalAlpha = a * kr;
       g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.82)';
-      g.fillText('實際使用者測試中・回饋直接改流程', bx + 20, yy);
+      g.fillText(T_USER_TEST, bx + 20, yy);
     }
   } else { // 上線與改善:三列狀態(勾/呼吸/循環,皆為子動畫)+ 底部波形流動(子)
     const rh = Math.max(24, Math.min(62, (bh - 34) / 3));
-    [['tick', '第一階段上線', '標準模組最快 10 個工作天'],
-     ['pulse', '觀察實際使用與例外', '例外自動記錄'],
-     ['cycle', '每週小幅調整', '依使用數據持續改善']].forEach((r, i) => {
+    LIVE3.forEach((r, i) => {
       // 收在本景 52% 前跑完:尾景 CTA 回來時步驟已演完(先動畫、後按鈕)
       const kr = ez(sb(kv, .06 + i * .1, .3 + i * .1));
       if (kr <= .01) return;
