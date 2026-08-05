@@ -769,8 +769,8 @@ html[lang="en"] h1{text-wrap:balance}
 </helmet>
 <header style="position:fixed;top:0;left:0;right:0;height:68px;box-sizing:border-box;z-index:100;background:rgba(242,239,232,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(9,11,14,.12)">
   <div style="max-width:1400px;margin:0 auto;padding:0 clamp(16px,4vw,48px);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-    <a href="/" aria-label="{{ logoAria }}" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
-      <img src="assets/logo.png" alt="PeakQi" width="32" height="32" style="display:block">
+    <a href="{{ homeHref }}" aria-label="{{ logoAria }}" style="display:flex;align-items:center;gap:10px;color:#090B0E;text-decoration:none">
+      <img src="/assets/logo.png" alt="PeakQi" width="32" height="32" style="display:block">
       <span style="display:flex;flex-direction:column;gap:2px;line-height:1">
         <span style="font:800 1rem 'Space Grotesk',sans-serif;letter-spacing:.01em">PeakQi</span>
         <span style="font:600 .5625rem 'Noto Sans TC',sans-serif;letter-spacing:.24em;color:rgba(9,11,14,.5)">{{ brandSub }}</span>
@@ -796,7 +796,7 @@ html[lang="en"] h1{text-wrap:balance}
           </div>
         </sc-if>
       </sc-for>
-      <a href="/demo" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 .84375rem 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="{{ navCtaLabel }}" style-hover="background:#090B0E;color:#F2EFE8">{{ navCtaLabel }}</a>
+      <a href="{{ demoHref }}" onClick="{{ navDemoClick }}" style="display:inline-flex;align-items:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:10px 18px;border-radius:2px;font:700 .84375rem 'Noto Sans TC',sans-serif;letter-spacing:.05em;text-decoration:none" aria-label="{{ navCtaLabel }}" style-hover="background:#090B0E;color:#F2EFE8">{{ navCtaLabel }}</a>
       <sc-if value="{{ langShow }}" hint-placeholder-val="{{ false }}">
         <a href="{{ langHref }}" aria-label="Switch language" style="font:700 .78125rem 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#090B0E;text-decoration:none;border:1px solid rgba(9,11,14,.3);border-radius:999px;padding:8px 14px" style-hover="border-color:#FF6B2C;color:#FF6B2C">{{ langLabel }}</a>
       </sc-if>
@@ -1117,7 +1117,7 @@ html[lang="en"] h1{text-wrap:balance}
         </sc-if>
       </sc-for>
     </nav>
-    <a href="/demo" style="margin-top:32px;display:flex;align-items:center;justify-content:center;background:#FF6B2C;color:#090B0E;padding:16px;border-radius:2px;font:700 1rem 'Noto Sans TC',sans-serif;letter-spacing:.06em;text-decoration:none">{{ menuDemoLabel }}</a>
+    <a href="{{ demoHref }}" style="margin-top:32px;display:flex;align-items:center;justify-content:center;background:#FF6B2C;color:#090B0E;padding:16px;border-radius:2px;font:700 1rem 'Noto Sans TC',sans-serif;letter-spacing:.06em;text-decoration:none">{{ menuDemoLabel }}</a>
     <div style="margin-top:auto;padding-top:40px;display:flex;flex-direction:column;gap:6px;font:400 .8125rem 'Space Grotesk',sans-serif;color:rgba(242,239,232,.55)">
       <a href="mailto:jacky@peakqi.com" style="color:rgba(242,239,232,.75);text-decoration:none">jacky@peakqi.com</a>
       <a href="tel:0266093699" style="color:rgba(242,239,232,.75);text-decoration:none">(02) 6609-3699</a>
@@ -1147,6 +1147,7 @@ class Component extends DCLogic {
     // 語言切換鈕:只在「目前頁有另一語言版本」時現身(EN_READY 閘門,不會切去 404);絕對路徑,/en/ 下也解析得到
     import('/i18n.js').then(m => {
       this._t = m.t;   // renderVals 取字用;載入前 fallback 回傳中文
+      this._lang = m.LANG;   // EN 頁站內連結加 /en 前綴用
       const lang = m.hasEn() ? { href: m.altUrl(), label: m.LANG === 'en' ? '中文' : 'EN' } : null;
       this.setState({ lang, i18n: true });
     }).catch(() => {});
@@ -1191,6 +1192,9 @@ class Component extends DCLogic {
   renderVals() {
     const active = this.props.active ?? '';
     const T = this._t || ((z) => z);   // i18n 載入前 fallback 回傳中文(中文站永遠等同原文)
+    // EN 頁:站內連結自動加 /en 前綴(外部連結與錨點不動)
+    const EP = (h) => (this._lang === 'en' && typeof h === 'string' && h.charAt(0) === '/' && h.indexOf('/en/') !== 0)
+      ? (h === '/' ? '/en/' : '/en' + h) : h;
     const base = {
       font: "500 .875rem 'Noto Sans TC',sans-serif", letterSpacing: '.04em', textDecoration: 'none',
       padding: '4px 2px', transition: 'color .15s'
@@ -1223,7 +1227,8 @@ class Component extends DCLogic {
         ...l,
         idx: '0' + (i + 1),
         isGroup, isLink: !isGroup,
-        href: l.href || '#',
+        href: EP(l.href || '#'),
+        children: isGroup ? l.children.map((c) => ({ ...c, href: c.ext ? c.href : EP(c.href) })) : l.children,
         // 手機:子項預設收起。恆常展開時整份選單 1048px,iPhone 12 mini(812)裝不下,
         // 「關於我們」與底部 CTA 會被推到摺線下;收起後一屏看得完,chevron 同時是下拉提示。
         // 逐字 span:小怪獸要能「吃掉/踩扁/染色」單一個字,就必須讓每個字是獨立元素。
@@ -1345,6 +1350,8 @@ class Component extends DCLogic {
       toggle: () => { this.state.open ? closeMenu() : openMenu(); },
       close: closeMenu,
       logoAria: T('PeakQi 奇鋒國際 首頁', 'PeakQi home'),
+      homeHref: EP('/'),
+      demoHref: EP('/demo'),
       brandSub: T('奇鋒國際', 'PEAKQI INTERNATIONAL'),
       navCtaLabel: T('預約 AI 導入評估', 'Book an AI assessment'),
       menuDemoLabel: T('預約 15 分鐘場景 Demo', 'Book a 15-min scenario demo'),

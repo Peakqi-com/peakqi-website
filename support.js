@@ -1476,7 +1476,7 @@
   }
 
   // src/runtime.ts
-  var COMPONENT_DIR = (typeof window !== "undefined" && window.__dcComponentDir) || ".";
+  var COMPONENT_DIR = (((typeof window !== "undefined" && window.__dcComponentDir) || ".").replace(/\/+$/, ""));   // 去尾斜線:'/' → ''(拼出 /Nav.dc.html;不裁的話 '//Nav...' 會被解析成 protocol-relative 網址)
   function createRuntime(doc = document) {
     const registry = createRegistry();
     const pseudoClass = createPseudoSheet(doc);

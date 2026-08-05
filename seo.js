@@ -42,7 +42,7 @@ export function applySEO(key) {
   if (!document.head.querySelector('link[rel="icon"]')) document.head.appendChild(el('link', { rel: 'icon', type: 'image/png', href: 'assets/favicon.png' }));
   if (!document.head.querySelector('link[rel="apple-touch-icon"]')) document.head.appendChild(el('link', { rel: 'apple-touch-icon', href: 'assets/favicon.png' }));
   upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
-  upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: '奇鋒國際 PeakQi' });
+  upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: LANG === 'en' ? 'PeakQi International' : '奇鋒國際 PeakQi' });
   upsertMeta('meta[property="og:locale"]', { property: 'og:locale', content: LANG === 'en' ? 'en_US' : 'zh_TW' });
   upsertMeta('meta[property="og:title"]', { property: 'og:title', content: title });
   upsertMeta('meta[property="og:description"]', { property: 'og:description', content: desc });

@@ -42,11 +42,11 @@
         <a href="tel:0266093699" style="min-height:44px;display:inline-flex;align-items:center;color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">(02) 6609-3699</a>
         <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="min-height:44px;display:inline-flex;align-items:center;gap:8px;color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Noto Sans TC',sans-serif" style-hover="color:#06C755"><span style="width:8px;height:8px;border-radius:50%;background:#06C755"></span>{{ lineLabel }}</a>
         <a href="https://peakqi.com" target="_blank" rel="noopener" style="min-height:44px;display:inline-flex;align-items:center;color:#F2EFE8;text-decoration:none;font:500 .9375rem 'Space Grotesk',sans-serif" style-hover="color:#FF6B2C">peakqi.com</a>
-        <a href="/demo" aria-label="{{ demoLabel }}" style="margin-top:8px;min-height:44px;display:inline-flex;align-items:center;gap:8px;color:#FF6B2C;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif" style-hover="color:#F2EFE8">{{ demoLabel }} →</a>
+        <a href="{{ demoHref }}" aria-label="{{ demoLabel }}" style="margin-top:8px;min-height:44px;display:inline-flex;align-items:center;gap:8px;color:#FF6B2C;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif" style-hover="color:#F2EFE8">{{ demoLabel }} →</a>
       </div>
     </div>
     <div style="border-top:1px solid rgba(242,239,232,.14);padding-top:20px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center">
-      <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">© 2026 {{ legal }} PEAKQI Co., Ltd.<a href="/privacy" style="margin-left:14px;color:rgba(242,239,232,.55);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">{{ privacyLabel }}</a></span>
+      <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">© 2026 {{ legal }} PEAKQI Co., Ltd.<a href="{{ privacyHref }}" style="margin-left:14px;color:rgba(242,239,232,.55);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">{{ privacyLabel }}</a></span>
       <span style="font:500 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.35)">AI OPERATING SYSTEM FOR TAIWAN SMB</span>
     </div>
   </div>
@@ -57,22 +57,23 @@ class Component extends DCLogic {
   state = { i18n: false };
   componentDidMount() {
     // 共用 Footer 雙語:絕對路徑(/en/ 頁也解析得到);載入前 T fallback 回傳中文
-    import('/i18n.js').then(m => { this._t = m.t; this.setState({ i18n: true }); }).catch(() => {});
+    import('/i18n.js').then(m => { this._t = m.t; this._lang = m.LANG; this.setState({ i18n: true }); }).catch(() => {});
   }
   renderVals() {
     const T = this._t || ((z) => z);
+    const EP = (h) => (this._lang === 'en' && h.charAt(0) === '/' ? (h === '/' ? '/en/' : '/en' + h) : h);
     return {
       brandSub: T('奇鋒國際', 'PEAKQI INTERNATIONAL'),
       blurb: T('協助企業把 AI 接進真實營運流程的導入團隊。先盤點流程、選一個高價值場景驗證,再串接既有工具、資料與人員,並保留權限與人工審核。', 'A rollout team that plugs AI into how your business actually runs. We map the flow, prove one high-value scenario, then wire in your tools, data and people — with permissions and human review intact.'),
       siteLinks: [
-        { href: '/', label: T('首頁', 'Home') },
-        { href: '/solutions', label: T('解決方案', 'Solutions') },
-        { href: '/method', label: T('導入方法', 'How we deliver') },
-        { href: '/cases', label: T('案例與作品', 'Cases & work') },
-        { href: '/peakops', label: 'Peak Ops' },
-        { href: '/pricing', label: T('方案說明', 'Pricing') },
-        { href: '/about', label: T('關於 PeakQi', 'About PeakQi') },
-        { href: '/demo', label: T('預約 AI 導入評估', 'Book an AI assessment') }
+        { href: EP('/'), label: T('首頁', 'Home') },
+        { href: EP('/solutions'), label: T('解決方案', 'Solutions') },
+        { href: EP('/method'), label: T('導入方法', 'How we deliver') },
+        { href: EP('/cases'), label: T('案例與作品', 'Cases & work') },
+        { href: EP('/peakops'), label: 'Peak Ops' },
+        { href: EP('/pricing'), label: T('方案說明', 'Pricing') },
+        { href: EP('/about'), label: T('關於 PeakQi', 'About PeakQi') },
+        { href: EP('/demo'), label: T('預約 AI 導入評估', 'Book an AI assessment') }
       ],
       services: [
         T('AI 接客・LINE AI 客服', 'AI intake · LINE AI support'),
@@ -84,7 +85,9 @@ class Component extends DCLogic {
       lineLabel: T('LINE 官方帳號', 'LINE official account'),
       demoLabel: T('預約 AI 導入評估', 'Book an AI assessment'),
       legal: T('奇鋒國際有限公司', 'PeakQi International Ltd.'),
-      privacyLabel: T('隱私權政策', 'Privacy policy')
+      privacyLabel: T('隱私權政策', 'Privacy policy'),
+      demoHref: EP('/demo'),
+      privacyHref: EP('/privacy')
     };
   }
 }
