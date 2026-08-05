@@ -93,6 +93,16 @@ nav[aria-label="breadcrumb"]{align-items:center}
 .pq-bot3 .b-cur{animation:pqBotCursor 1.2s steps(1,end) infinite}
 .pq-bot3 .b-code{animation:pqBotPulse 2.7s ease-in-out infinite}
 .pq-bot3 .b-look{animation:pqBotLook 6.4s ease-in-out infinite}
+/* 四號機 Chars(CMO):同款待機 —— 點頭、眨眼、天線呼吸 + 星章脈動、大聲公出力、折線圖循環畫出 */
+.pq-bot .b-star{transform-box:fill-box;transform-origin:center}
+.pq-bot4 .b-head{animation:pqBotBob 3.4s ease-in-out .6s infinite}
+.pq-bot4 .b-eye{animation-duration:4.7s;animation-delay:.3s}
+.pq-bot4 .b-ant{animation-duration:1.7s}
+.pq-bot4 .b-mic{animation:pqBotPulse 1.6s ease-in-out infinite}
+.pq-bot4 .b-look{animation:pqBotLook 7.1s ease-in-out .8s infinite}
+.pq-bot4 .b-star{animation:pqBotPulse 2.1s ease-in-out .4s infinite}
+.pq-bot4 .b-chart{stroke-dasharray:52;animation:pqBotChart 3.4s ease-in-out infinite}
+@keyframes pqBotChart{0%,15%{stroke-dashoffset:52}60%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:52}}
 }
 @keyframes pqBotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes pqBotBlink{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
@@ -494,7 +504,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <svg class="pq-bot pq-bot1" viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><g class="b-head"><circle class="b-ant" cx="100" cy="30" r="6" fill="#FF6B2C"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#FF6B2C" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#20262E" stroke="#FF6B2C" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#20262E" stroke="#FF6B2C" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#20262E" stroke="#FF6B2C" stroke-width="2.5"/><circle cx="80" cy="88" r="14" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><circle cx="120" cy="88" r="14" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><path d="M94 88h12" stroke="#F2EFE8" stroke-width="3.5"/><path d="M66 86h-14M134 86h14" stroke="#F2EFE8" stroke-width="3" stroke-linecap="round"/><g class="b-eye"><circle cx="80" cy="88" r="4.5" fill="#F2EFE8"/><circle cx="120" cy="88" r="4.5" fill="#F2EFE8"/></g><path d="M84 116q16 12 32 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><g class="b-tie"><path d="M100 148l-9 14h18z" fill="#FF6B2C"/><rect x="94" y="162" width="12" height="16" rx="3" fill="#FF6B2C" opacity=".8"/></g></g></svg>
         <div style="display:flex;flex-direction:column;gap:6px">
           <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">FOUNDER ・ 創辦人</span>
-          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">Jacky(吳昭奇)</span>
+          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">Jacky</span>
           <p style="margin:4px 0 0;font:400 clamp(.90625rem,1.1vw,.96875rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">深耕商務開發與專案管理,橫跨都市更新、國際貿易、科技新創與音樂產業。曾任危老重建工作站站長,帶領 80 位以上推動師、推動 2 案事業計畫送審;具企業採購與海外市場拓展實戰經驗,專長商務開發、資源整合與團隊領導。</p>
         </div>
       </div>
@@ -503,8 +513,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <svg class="pq-bot pq-bot2" viewBox="0 0 200 200" role="img" aria-label="Allen 的互動機器人小劇場" style="display:block;width:100%;height:100%;position:absolute;inset:0"><g class="b-head"><circle class="b-ant" cx="100" cy="30" r="6" fill="#3E9BFF"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#3E9BFF" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#1C2430" stroke="#3E9BFF" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#1C2430" stroke="#3E9BFF" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#1C2430" stroke="#3E9BFF" stroke-width="2.5"/><rect x="38" y="76" width="10" height="26" rx="5" fill="#3E9BFF"/><rect x="152" y="76" width="10" height="26" rx="5" fill="#3E9BFF"/><path d="M46 74q54-30 108 0" stroke="#3E9BFF" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="64" y="76" width="30" height="24" rx="6" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><rect x="106" y="76" width="30" height="24" rx="6" fill="none" stroke="#F2EFE8" stroke-width="3.5"/><path d="M94 88h12" stroke="#F2EFE8" stroke-width="3.5"/><g class="b-eye"><circle cx="79" cy="88" r="4.5" fill="#F2EFE8"/><circle cx="121" cy="88" r="4.5" fill="#F2EFE8"/></g><path d="M82 116q18 14 36 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><g class="b-mic"><circle cx="100" cy="160" r="10" fill="none" stroke="#3E9BFF" stroke-width="3"/><circle cx="100" cy="160" r="3.5" fill="#3E9BFF"/></g></g></svg>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">COO ・ 共同創辦人暨營運長</span>
-          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">Allen</span>
+          <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#3E9BFF">CCO · CHIEF CHAOS OFFICER ・ 快樂的管家機器人</span>
+          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">O_O</span>
           <p style="margin:4px 0 0;font:400 clamp(.90625rem,1.1vw,.96875rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">艾倫,十年行走於文化、科技與 AI 的交界,慣於把混沌之物渡成可上線的產品。曾駐文化部影視及流行音樂產業專案辦公室,於影視與音樂產業工作,加入社會企業,入選全國美展。主導 10+ 個數位產品從 0 到上線——於他而言,是「有生於無」的日常練習。</p>
         </div>
       </div>
@@ -512,8 +522,16 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
         <svg class="pq-bot pq-bot3" viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><g class="b-head"><circle class="b-ant" cx="100" cy="30" r="6" fill="#65E0BC"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#65E0BC" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#1A2A26" stroke="#65E0BC" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#1A2A26" stroke="#65E0BC" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#1A2A26" stroke="#65E0BC" stroke-width="2.5"/><circle cx="80" cy="88" r="9" fill="#F2EFE8"/><circle cx="120" cy="88" r="9" fill="#F2EFE8"/><g class="b-look"><g class="b-eye"><circle cx="82" cy="88" r="4" fill="#090B0E"/><circle cx="122" cy="88" r="4" fill="#090B0E"/></g></g><path d="M82 118h24" stroke="#F2EFE8" stroke-width="4" stroke-linecap="round"/><rect class="b-cur" x="110" y="114" width="8" height="8" fill="#65E0BC"/><g class="b-code"><path d="M78 156l-10 8 10 8M122 156l10 8-10 8" stroke="#65E0BC" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></svg>
         <div style="display:flex;flex-direction:column;gap:6px">
           <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#65E0BC">CTO ・ 技術長</span>
-          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">TZ(丁家麒)</span>
+          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">TZ</span>
           <p style="margin:4px 0 0;font:400 clamp(.90625rem,1.1vw,.96875rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">10 年以上全端開發經驗(React/Vue/Next.js/Node.js),擅長 Chatbot 系統(LINE/FB Messenger/Discord)與產品從 0 到 1。曾任前端技術主管帶領 5 人團隊,規劃專案架構與開發時程。</p>
+        </div>
+      </div>
+      <div style="border:1px solid rgba(242,239,232,.16);border-radius:8px;background:rgba(242,239,232,.03);padding:clamp(20px,2.2vw,26px);display:flex;flex-direction:column;gap:14px;box-sizing:border-box;min-width:0">
+        <svg class="pq-bot pq-bot4" viewBox="0 0 200 200" role="img" aria-label="機器人頭貼(成員照片整理中)" style="display:block;width:100%;height:auto;background:linear-gradient(160deg,#1A1F26,#12161B);border-radius:6px"><g class="b-head"><circle class="b-ant" cx="100" cy="30" r="6" fill="#FF3B6B"/><rect x="97" y="34" width="6" height="14" rx="3" fill="#FF3B6B" opacity=".7"/><rect x="48" y="48" width="104" height="92" rx="22" fill="#2A151B" stroke="#FF3B6B" stroke-width="3"/><rect x="30" y="82" width="12" height="30" rx="6" fill="#2A151B" stroke="#FF3B6B" stroke-width="2.5"/><rect x="158" y="82" width="12" height="30" rx="6" fill="#2A151B" stroke="#FF3B6B" stroke-width="2.5"/><path d="M52 68q48-20 96 0" stroke="#FF3B6B" stroke-width="5.5" fill="none" stroke-linecap="round" opacity=".9"/><path class="b-star" d="M100 55l2.4 5 5.5.8-4 3.9 1 5.5-4.9-2.6-4.9 2.6 1-5.5-4-3.9 5.5-.8z" fill="#FF3B6B"/><rect x="64" y="78" width="28" height="21" rx="10.5" fill="#F2EFE8"/><rect x="108" y="78" width="28" height="21" rx="10.5" fill="#F2EFE8"/><g class="b-look"><g class="b-eye"><circle cx="80" cy="89" r="4.5" fill="#090B0E"/><circle cx="120" cy="89" r="4.5" fill="#090B0E"/></g></g><path d="M84 114q16 12 32 0" stroke="#F2EFE8" stroke-width="4" fill="none" stroke-linecap="round"/><g class="b-mic"><rect x="74" y="153" width="10" height="10" rx="2" fill="#FF3B6B" opacity=".85"/><path d="M84 158l22-11v22z" fill="#FF3B6B"/><path d="M112 152q7 6 0 12" stroke="#FF3B6B" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M119 147q11 11 0 22" stroke="#FF3B6B" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></g><polyline class="b-chart" points="128,170 137,160 144,164 156,150" fill="none" stroke="#FF3B6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M156 150l-6 1M156 150l-1 6" stroke="#FF3B6B" stroke-width="3" stroke-linecap="round"/></g></svg>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF3B6B">CMO ・ 行銷長</span>
+          <span style="font:900 clamp(1.25rem,1.7vw,1.5rem) 'Noto Sans TC',sans-serif">Chars</span>
+          <p style="margin:4px 0 0;font:400 clamp(.90625rem,1.1vw,.96875rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7);text-wrap:pretty">連續創業家,擅長 B2B 行銷;8 年連續創業與企業顧問、企劃經驗,服務約 500 名企業用戶。擅長商業模式、廣告投放與社群操作,曾透過顧問與行銷服務,累積為客戶創造 5 億營收。</p>
         </div>
       </div>
     </div>
