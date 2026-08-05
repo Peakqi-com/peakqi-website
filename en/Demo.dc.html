@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PeakQi International">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Book a 15-Minute Scenario Demo | PeakQi">
+<meta property="og:description" content="Bring your scenario — we run it end to end in 15 minutes. Pick a flow, pick an industry, watch PeakQi catch your customers first, then leave your needs. No hard sell: contract and adjustment terms are explained line by line before signing.">
+<meta property="og:url" content="https://www.peakqi.com/en/demo">
+<link rel="canonical" href="https://www.peakqi.com/en/demo">
+<meta property="og:image" content="https://www.peakqi.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PeakQi — AI catches every inquiry">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Book a 15-Minute Scenario Demo | PeakQi">
+<meta name="twitter:description" content="Bring your scenario — we run it end to end in 15 minutes. Pick a flow, pick an industry, watch PeakQi catch your customers first, then leave your needs. No hard sell: contract and adjustment terms are explained line by line before signing.">
+<meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Book a 15-Minute Scenario Demo | PeakQi</title>
+<meta name="description" content="Bring your scenario — we run it end to end in 15 minutes. Pick a flow, pick an industry, watch PeakQi catch your customers first, then leave your needs. No hard sell: contract and adjustment terms are explained line by line before signing.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#D14E12}
+::selection{background:#FF6B2C;color:#F2EFE8}
+input:focus,textarea:focus,select:focus{outline:2px solid #FF6B2C;outline-offset:0}
+button:focus-visible,a:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes pqDash{to{stroke-dashoffset:-60}}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}[data-flowline]{animation:none!important}}
+@media (max-width:899px){#pq-demo-grid,#pq-scene-grid{grid-template-columns:1fr!important}}
+nav[aria-label="breadcrumb"]{align-items:center}
+/* 捲動提示膠囊:箭頭輕彈,捲 320px 內淡出(不支援 scroll-timeline 則常駐) */
+@media (prefers-reduced-motion: no-preference){
+[data-scrollhint] [data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}
+@supports (animation-timeline: scroll()){[data-scrollhint]{animation:pqShFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}
+}
+@keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@keyframes pqShFade{to{opacity:0;visibility:hidden}}
+@media (max-width:899px){[data-scrollhint]{display:none!important}}
+/* 手機 hero 空間預算:舞台內距縮小+場景列緊湊,配合捲動收合讓視覺帶放大 */
+@media (max-width:899px){
+/* 使用者指定:任務步驟文案貼頂、下方留給大正方形動畫區(蓋過 hero-kit 收合置中) */
+section[data-hero="demo"] [data-hero-stage].pq-hero-compact{align-items:flex-start!important}
+[data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
+[data-hero-copy]>div{gap:9px!important}
+[data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
+[data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
+[data-hero-progress]{display:none!important}
+/* 草稿面板已移出 hero(見 #draft section);右欄佔位只在桌機保留給 canvas 取景 */
+[data-hero-canvaszone]{display:none!important}
+}
+@media (max-width:659px){#pq-ind-grid2{grid-template-columns:1fr!important}}
+@media (max-width:399px){[role="status"]{font-size:.5625rem!important;letter-spacing:.08em!important;white-space:nowrap!important;flex-shrink:0!important}}
+</style>
+<!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+</helmet>
+<a id="pq-skip" href="#draft">Skip to main content</a>
+<dc-import name="Nav" active="demo" hint-size="100%,68px"></dc-import>
+
+<section id="d-hero" data-hero="demo" data-screen-label="Demo opening" style="background:#090B0E;color:#F2EFE8;position:relative">
+  <div data-hero-wrap style="position:relative">
+    <div data-hero-stage data-hero-zone="square" style="position:relative;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;min-height:76vh;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px) clamp(60px,9vh,88px)">
+      <canvas data-hero-canvas aria-hidden="true" style="position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 700ms cubic-bezier(0.16,1,0.3,1);pointer-events:none"></canvas>
+      <div style="position:relative;z-index:2;max-width:1360px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+        <div data-hero-copy style="display:flex;flex-direction:column;gap:15px;position:relative;z-index:3">
+          <nav aria-label="breadcrumb" style="display:flex;gap:10px;font:500 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">
+            <a href="/en/" style="color:rgba(242,239,232,.5);text-decoration:none" style-hover="color:#FF6B2C">Home</a>
+            <span>/</span>
+            <span style="color:#F2EFE8;font-weight:700">Flow draft</span>
+          </nav>
+          <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">BUILD YOUR FIRST AI FLOW</span>
+          <h1 style="margin:0;font:900 clamp(1.62rem,3.3vw,3.3rem)/1.18 'Noto Sans TC',sans-serif">Pick the flow that hurts,<br>assemble your <span style="color:#FF6B2C">Phase-1 draft</span>.</h1>
+          <p style="margin:0;max-width:600px;font:400 clamp(1rem,1.3vw,1.09375rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">Pick your industry and flow, then set the human-approval line.</p>
+          <!-- 流程線:標籤改為正常流排版(原本三個 absolute 標籤在窄機會互相重疊),
+               字級用 clamp+vw,iPhone mini(375)也不爆版 -->
+          <div style="margin-top:2px;display:flex;flex-direction:column;gap:5px" aria-hidden="true">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 clamp(.59375rem,2.5vw,.65625rem) 'Space Grotesk',sans-serif;letter-spacing:.18em">
+              <span style="color:rgba(242,239,232,.55);white-space:nowrap">YOUR CUSTOMERS</span>
+              <span style="color:#FF6B2C;white-space:nowrap;text-align:right">{{ flowLabel }}</span>
+            </div>
+            <svg viewBox="0 0 1200 24" fill="none" preserveAspectRatio="none" style="width:100%;height:14px;display:block">
+              <path data-flowline d="M6 12 L1194 12" stroke="rgba(242,239,232,.3)" stroke-width="1.6" stroke-dasharray="4 8" vector-effect="non-scaling-stroke" style="animation:pqDash 2.6s linear infinite"></path>
+              <!-- 進度線吃整段 hero 進度("*"):任務 4/4 捲完才走到底。
+                   舊版寫 data-hero-line="wait",但本頁四景的 id 是 ind/flow/build/go,
+                   查不到就 ?? 1 當成已完成 —— 加上路徑本身只畫到 L440(1194 的 36.8%),
+                   結果整條線從進站第一秒就凍在 1/3,捲動完全不影響它。 -->
+              <path data-hero-line="*" d="M6 12 L1194 12" stroke="#FF6B2C" stroke-width="2.4" vector-effect="non-scaling-stroke"></path>
+              <circle cx="6" cy="12" r="4" fill="#FF6B2C"></circle>
+              <!-- 四個任務的中途站,線頭走到就亮(位置 = 各景的結束進度) -->
+              <circle data-hero-stop="0.25" cx="303" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
+              <circle data-hero-stop="0.5" cx="600" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
+              <circle data-hero-stop="0.78" cx="933" cy="12" r="4.5" fill="transparent" stroke="rgba(255,107,44,.55)" stroke-width="1.6" vector-effect="non-scaling-stroke"></circle>
+              <circle cx="1194" cy="12" r="5" fill="none" stroke="rgba(242,239,232,.4)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
+              <!-- 線頭圓點:座標由線的實際長度推算,永遠貼在線頭,不會與線分家 -->
+              <circle data-hero-dot="*" cx="6" cy="12" r="5.5" fill="#FF6B2C"></circle>
+            </svg>
+            <span style="font:600 clamp(.59375rem,2.5vw,.65625rem) 'Space Grotesk',sans-serif;letter-spacing:.18em;color:rgba(242,239,232,.45);text-align:right">Pick a flow and an industry to complete this line ↓</span>
+          </div>
+          <div data-hero-scenestage style="position:relative;min-height:96px">
+            <div data-hero-scene="ind" style="position:relative;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">Task 1 / 4 · Pick a scenario</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">Pick your industry or scenario; the cases and flow preview update with it.</p>
+            </div>
+            <div data-hero-scene="flow" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#3E9BFF">Task 2 / 4 · Find the snag</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">Tick the flow that hurts; the draft adds the matching nodes live.</p>
+            </div>
+            <div data-hero-scene="build" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#FF6B2C">Task 3 / 4 · Assemble Phase 1</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">Check capabilities and the human-approval line; assemble draft one.</p>
+            </div>
+            <div data-hero-scene="go" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:6px">
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.16em;color:#65E0BC">Task 4 / 4 · Confirm & send</span>
+              <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.68);max-width:540px;text-wrap:pretty">The draft fills the form — add contact info and send it over.</p>
+            </div>
+          </div>
+          <div data-hero-cta style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            <a data-hero-primary data-track="hero_demo_click" href="#draft" style="background:#FF6B2C;color:#090B0E;text-decoration:none;font:800 .90625rem 'Noto Sans TC',sans-serif;padding:14px 26px;border-radius:2px">Start assembling your draft</a>
+            <a data-track="hero_case_click" href="{{ heroCaseHref }}" style="color:#F2EFE8;text-decoration:none;font:700 .875rem 'Noto Sans TC',sans-serif;padding:13px 22px;border:1px solid rgba(242,239,232,.3);border-radius:2px" style-hover="border-color:#FF6B2C;color:#FF6B2C">See similar cases first</a>
+          
+            <div data-scrollhint aria-hidden="true" style="flex-basis:100%;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(242,239,232,.26);border-radius:999px;padding:9px 16px;font:600 .84375rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.8)"><span data-sh-arrow style="color:#FF6B2C;font:800 .9375rem 'Space Grotesk',sans-serif">↓</span>Scroll down to start assembling your draft</span></div>
+          </div>
+        </div>
+        <!-- 草稿面板已移出 hero,獨立成緊接在後的 #draft section(手機上面板與 hero 擠在
+             同段會被下一段蓋掉)。此佔位框保留桌機右欄空間給 canvas 敘事層取景。 -->
+        <div data-hero-canvaszone aria-hidden="true" style="position:relative;z-index:1;min-height:clamp(320px,52vh,480px);pointer-events:none"></div>
+      </div>
+      <div data-hero-progress aria-hidden="true" style="position:absolute;left:clamp(20px,5vw,48px);right:clamp(20px,5vw,48px);bottom:18px;z-index:4;display:none;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</section>
+
+<section id="draft" data-screen-label="Flow draft" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px) clamp(72px,9vw,120px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">00</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">AI FLOW DRAFT · THE FORM STARTS HERE</span>
+    </div>
+    <h2 style="margin:clamp(14px,2vw,20px) 0 0;max-width:760px;font:900 clamp(1.4375rem,2.6vw,2.25rem)/1.3 'Noto Sans TC',sans-serif">Two clicks in, your rollout draft takes shape.</h2>
+    <p style="margin:10px 0 0;max-width:640px;font:400 clamp(.9375rem,1.15vw,1.03125rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);text-wrap:pretty">Pick your industry and the flow that hurts most — the panel below assembles draft one live. Your picks also carry into the questionnaire; add contact info at the end and send.</p>
+    <div style="margin-top:clamp(20px,3vw,32px);max-width:820px;background:#0C0F13;color:#F2EFE8;border-radius:10px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box">
+          <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
+            <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+            <span style="font:700 .75rem 'Noto Sans TC',sans-serif;letter-spacing:.12em">AI FLOW DRAFT · PHASE 1</span>
+            <span role="status" style="margin-left:auto;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:#FF6B2C">{{ heroConsoleStatus }}</span>
+          </div>
+          <div style="padding:clamp(14px,2vw,22px) clamp(16px,2vw,22px) 26px;display:flex;flex-direction:column;gap:13px">
+            <sc-if value="{{ draftEmpty }}" hint-placeholder-val="{{ true }}">
+              <div aria-hidden="true" style="display:flex;flex-direction:column;gap:6px;opacity:.45;border:1px dashed rgba(242,239,232,.22);border-radius:6px;padding:12px 14px">
+                <span style="font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)">Inquiry in → Need triage → AI / human handling → Next step</span>
+                <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">Pick an industry and a flow — the first rollout scenario appears here live.</span>
+              </div>
+            </sc-if>
+            <div role="group" aria-label="Pick your industry (single choice)" style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">01 PICK YOUR INDUSTRY</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ heroIndOpts }}" as="n" hint-placeholder-count="11">
+                  <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div role="group" aria-label="The flow that hurts (single choice)" style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">02 THE FLOW THAT HURTS</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ heroFlowOpts }}" as="n" hint-placeholder-count="7">
+                  <button onClick="{{ n.pick }}" aria-pressed="{{ n.pressed }}" style="{{ n.style }}">{{ n.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div aria-live="polite" style="border:1px solid rgba(101,224,188,.35);border-radius:6px;overflow:hidden;background:#111419">
+              <sc-if value="{{ heroHasCase }}" hint-placeholder-val="{{ false }}">
+                <div role="img" aria-label="{{ heroCaseAlt }}" style="{{ heroCaseImgStyle }}"></div>
+                <div style="padding:10px 13px;display:flex;flex-direction:column;gap:2px">
+                  <span style="font:700 .78125rem 'Noto Sans TC',sans-serif">Similar scenario: {{ heroCaseName }}</span>
+                  <span style="font:400 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(242,239,232,.45)">REAL SCREENSHOT · {{ heroCasePage }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ heroNoCase }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:12px 13px;display:flex;flex-direction:column;gap:8px">
+                  <div aria-hidden="true" style="display:flex;gap:7px;align-items:center">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#FF6B2C"></span><span style="flex:1;height:2px;background:rgba(242,239,232,.2)"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#3E9BFF"></span><span style="flex:1;height:2px;background:rgba(242,239,232,.2)"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC"></span>
+                  </div>
+                  <span style="font:400 .71875rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ heroNoCaseNote }}</span>
+                </div>
+              </sc-if>
+            </div>
+            <div style="border-top:1px dashed rgba(242,239,232,.16);padding-top:11px;display:flex;flex-direction:column;gap:5px">
+              <span style="font:600 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.22em;color:rgba(242,239,232,.5)">DRAFT SUMMARY</span>
+              <span style="font:500 .78125rem/1.6 'Noto Sans TC',sans-serif">Industry: <b>{{ heroSumInd }}</b> · Flow: <b>{{ heroSumFlow }}</b></span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <span style="font:500 .78125rem 'Noto Sans TC',sans-serif">Likely to show:</span>
+                <sc-for list="{{ heroModChips }}" as="m" hint-placeholder-count="2">
+                  <span style="border:1px solid rgba(255,107,44,.5);border-radius:999px;padding:2px 9px;font:600 .65625rem 'Noto Sans TC',sans-serif;color:#FF6B2C">{{ m.t }}</span>
+                </sc-for>
+                <sc-if value="{{ heroNoMods }}" hint-placeholder-val="{{ true }}"><span style="font:400 .75rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">Pick a flow to load its modules</span></sc-if>
+              </div>
+              <span style="font:500 .78125rem/1.6 'Noto Sans TC',sans-serif">Preferred contact time: <b>{{ heroTime }}</b></span>
+              <span style="font:400 .78125rem/1.65 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">An early rollout draft — not a formal quote or a confirmed delivery scope.</span>
+            </div>
+          </div>
+          <a href="#pq-demo-grid" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#FF6B2C;color:#090B0E;padding:12px;font:800 .84375rem 'Noto Sans TC',sans-serif;text-decoration:none">Take this draft along — add your contact info ↓</a>
+    </div>
+  </div>
+</section>
+
+<section id="scene" data-screen-label="Scenario picks" style="padding:clamp(56px,7vw,88px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">01</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FLOWS TO IMPROVE (PICK ANY)</span>
+    </div>
+    <div id="pq-scene-grid" style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,2.6vw,36px);align-items:start">
+      <div role="group" aria-label="Pick the flows you most want to improve" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
+        <sc-for list="{{ sceneOpts }}" as="s" hint-placeholder-count="7">
+          <button onClick="{{ s.pick }}" aria-pressed="{{ s.pressed }}" style="{{ s.style }}">{{ s.label }}</button>
+        </sc-for>
+        <p style="margin:6px 0 0;font:400 .78125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);width:100%">The panel is a UI flow preview, not performance numbers; your picks carry into the form below automatically.</p>
+      </div>
+      <div aria-live="polite" style="background:#090B0E;color:#F2EFE8;border-radius:8px;box-shadow:0 22px 52px rgba(9,11,14,.18);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.12)">
+          <span style="width:8px;height:8px;border-radius:50%;background:#65E0BC;animation:pqPulse 1.8s ease-in-out infinite"></span>
+          <span style="font:700 .78125rem 'Noto Sans TC',sans-serif;letter-spacing:.12em">Your flow preview</span>
+          <span style="margin-left:auto;font:600 .625rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.4)">PREVIEW</span>
+        </div>
+        <div style="padding:18px;display:flex;flex-direction:column;gap:10px;min-height:250px">
+          <sc-for list="{{ pipeline }}" as="p" hint-placeholder-count="4">
+            <div style="{{ p.rowStyle }}">
+              <span style="{{ p.dotStyle }}"></span>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font:800 .875rem 'Noto Sans TC',sans-serif">{{ p.t }}</span>
+                <span style="font:400 .75rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55)">{{ p.d }}</span>
+              </div>
+              <span style="{{ p.stateStyle }}">{{ p.state }}</span>
+            </div>
+          </sc-for>
+          <p style="margin:auto 0 0;font:400 .71875rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ pipelineNote }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1360px;margin:clamp(32px,4vw,48px) auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(20px,3vw,36px)">
+    <div style="min-width:0">
+      <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">Which tools are you using today?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">Used only to understand where your data lives; actual integrations still depend on APIs, permissions and data structures.</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ toolOpts }}" as="tp" hint-placeholder-count="9">
+          <button onClick="{{ tp.pick }}" aria-pressed="{{ tp.pressed }}" style="{{ tp.style }}">{{ tp.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="min-width:0">
+      <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">Which actions need human sign-off?</h3>
+      <p style="margin:8px 0 0;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">AI can prepare data and drafts — your team still decides what must never auto-send.</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ humanOpts }}" as="hp2" hint-placeholder-count="7">
+          <button onClick="{{ hp2.pick }}" aria-pressed="{{ hp2.pressed }}" style="{{ hp2.style }}">{{ hp2.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1360px;margin:clamp(28px,3.6vw,44px) auto 0">
+    <h3 style="margin:0;font:900 clamp(1.1875rem,1.6vw,1.375rem) 'Noto Sans TC',sans-serif">Capabilities to start with</h3>
+    <p style="margin:8px 0 0;max-width:640px;font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">Only what you add to the draft is included; everything else can come later.</p>
+    <div aria-live="polite" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px">
+      <sc-for list="{{ recCards }}" as="rc" hint-placeholder-count="4">
+        <div style="{{ rc.cardStyle }}">
+          <span style="font:700 .8125rem 'Space Grotesk',sans-serif;letter-spacing:.18em;color:{{ rc.tagColor }}">{{ rc.tag }}</span>
+          <span style="font:800 clamp(1.03125rem,1.3vw,1.15625rem) 'Noto Sans TC',sans-serif">{{ rc.name }}</span>
+          <span style="font:400 clamp(.875rem,1.05vw,.9375rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.66);text-wrap:pretty">{{ rc.why }}</span>
+          <button onClick="{{ rc.toggle }}" aria-pressed="{{ rc.pressed }}" style="{{ rc.btnStyle }}">{{ rc.btnLabel }}</button>
+        </div>
+      </sc-for>
+      <sc-if value="{{ noRecs }}" hint-placeholder-val="{{ true }}">
+        <span style="font:400 .90625rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5);padding:12px 0">Pick a flow above and suggested capabilities appear here.</span>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<section id="industry" data-screen-label="Industry" style="padding:0 clamp(20px,5vw,48px) clamp(56px,7vw,88px)">
+  <div style="max-width:1360px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">02</span>
+      <span style="width:36px;height:1px;background:#FF6B2C"></span>
+      <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">YOUR INDUSTRY</span>
+    </div>
+    <div style="margin-top:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(18px,2.6vw,36px);align-items:start" id="pq-ind-grid2">
+      <div role="group" aria-label="Pick your industry" style="display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start">
+        <sc-for list="{{ indOpts }}" as="i" hint-placeholder-count="11">
+          <button onClick="{{ i.pick }}" aria-pressed="{{ i.pressed }}" style="{{ i.style }}">{{ i.label }}<sc-if value="{{ i.hasCase }}" hint-placeholder-val="{{ false }}"><span style="margin-left:7px;font:600 .59375rem 'Space Grotesk',sans-serif;color:#1e9a72">CASE</span></sc-if></button>
+        </sc-for>
+      </div>
+      <div aria-live="polite" style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 18px 44px rgba(9,11,14,.1);overflow:hidden">
+        <sc-if value="{{ indHasMedia }}" hint-placeholder-val="{{ false }}">
+          <div role="img" aria-label="{{ indAlt }}" style="{{ indImgStyle }}"></div>
+        </sc-if>
+        <sc-if value="{{ indNoMedia }}" hint-placeholder-val="{{ false }}">
+          <div aria-hidden="true" style="height:170px;background:#090B0E;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(9,11,14,.1)">
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="width:9px;height:9px;border-radius:50%;background:#FF6B2C"></span>
+              <span style="width:56px;height:2px;background:rgba(242,239,232,.3)"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#3E9BFF"></span>
+              <span style="width:56px;height:2px;background:rgba(242,239,232,.3)"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#65E0BC"></span>
+            </div>
+          </div>
+        </sc-if>
+        <div style="padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+          <span style="font:800 .9375rem 'Noto Sans TC',sans-serif">{{ indPanelName }}</span>
+          <span style="font:400 .8125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)">{{ indPanelD }}</span>
+          <sc-if value="{{ indHasLink }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ indHref }}" style="margin-top:4px;font:700 .8125rem 'Noto Sans TC',sans-serif;text-decoration:none">See this industry's case →</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Form & contact" style="padding:0 clamp(20px,5vw,48px) clamp(80px,10vw,130px)">
+  <div id="pq-demo-grid" style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(28px,4vw,56px);align-items:start">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font:700 .8125rem 'Space Grotesk',sans-serif;color:#FF6B2C">03</span>
+        <span style="width:36px;height:1px;background:#FF6B2C"></span>
+        <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">LEAVE YOUR NEEDS</span>
+      </div>
+      <sc-for list="{{ risks }}" as="r" hint-placeholder-count="3">
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:4px;padding:18px 20px;display:flex;gap:16px;align-items:baseline;background:rgba(9,11,14,.02)">
+          <span style="font:700 .75rem 'Space Grotesk',sans-serif;letter-spacing:.2em;color:#FF6B2C">{{ r.n }}</span>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font:900 1rem 'Noto Sans TC',sans-serif">{{ r.t }}</span>
+            <span style="font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ r.d }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border:1px solid rgba(9,11,14,.16);border-radius:8px;background:#F2EFE8;box-shadow:0 20px 48px rgba(9,11,14,.1);padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;position:relative">
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:balance">Add contact info, send the draft</h2>
+      <p style="margin:12px 0 0;max-width:600px;font:400 clamp(.96875rem,1.2vw,1.0625rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.68)">Your flow and industry picks are already filled in.</p>
+        <p style="margin:-6px 0 0;font:400 .8125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">Fields marked<span style="color:#D14E12;font-weight:700"> * </span>are required; leave at least one contact method (phone / Email / LINE).</p>
+        <input aria-hidden="true" tabindex="-1" autocomplete="off" name="website" value="{{ hp }}" onChange="{{ setHp }}" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">What should we call you<span style="color:#D14E12"> *</span>
+            <input id="pq-f-name" value="{{ vName }}" onChange="{{ setName }}" onBlur="{{ blurName }}" aria-invalid="{{ nameInvalid }}" aria-describedby="pq-e-name" placeholder="e.g. Mr. Wang" style="{{ nameStyle }}">
+            <span id="pq-e-name" role="alert" style="{{ nameErrStyle }}">{{ nameErr }}</span>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">Company / brand<span style="font-weight:400;color:rgba(9,11,14,.45)"> (optional)</span>
+            <input value="{{ vCompany }}" onChange="{{ setCompany }}" placeholder="e.g. Acme Interiors" style="{{ baseInput }}">
+          </label>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px">
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">Industry<span style="font-weight:400;color:rgba(9,11,14,.45)"> (optional — filled from above)</span>
+            <select value="{{ vIndustry }}" onChange="{{ setIndustry }}" style="{{ baseInput }}">
+              <option value="">Select…</option>
+              <sc-for list="{{ industryOpts }}" as="o" hint-placeholder-count="11">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">Preferred contact time<span style="font-weight:400;color:rgba(9,11,14,.45)"> (optional)</span>
+            <select value="{{ vTime }}" onChange="{{ setTime }}" style="{{ baseInput }}">
+              <option value="">Select…</option>
+              <sc-for list="{{ timeOpts }}" as="o" hint-placeholder-count="5">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+          </label>
+        </div>
+        <fieldset style="border:1px dashed rgba(9,11,14,.25);border-radius:4px;padding:12px 16px 15px;margin:0;display:flex;flex-direction:column;gap:11px">
+          <legend style="font:700 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);padding:0 8px">Contact — at least one<span style="color:#D14E12"> *</span></legend>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px">
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">Phone
+              <input id="pq-f-phone" type="tel" inputMode="tel" value="{{ vPhone }}" onChange="{{ setPhone }}" onBlur="{{ blurContact }}" aria-invalid="{{ phoneInvalid }}" aria-describedby="pq-e-contact" placeholder="09xx-xxx-xxx" style="{{ phoneStyle }}">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">Email
+              <input id="pq-f-email" type="email" inputMode="email" value="{{ vEmail }}" onChange="{{ setEmail }}" onBlur="{{ blurContact }}" aria-invalid="{{ emailInvalid }}" aria-describedby="pq-e-contact" placeholder="you@example.com" style="{{ emailStyle }}">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px;font:600 .78125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">LINE ID
+              <input id="pq-f-line" value="{{ vLine }}" onChange="{{ setLine }}" onBlur="{{ blurContact }}" aria-describedby="pq-e-contact" placeholder="LINE ID" style="{{ baseInput }}">
+            </label>
+          </div>
+          <span id="pq-e-contact" role="alert" style="{{ contactErrStyle }}">{{ contactErr }}</span>
+        </fieldset>
+        <label style="display:flex;flex-direction:column;gap:6px;font:600 .8125rem 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">The flow you most want to improve<span style="font-weight:400;color:rgba(9,11,14,.45)"> (optional — filled from above)</span>
+          <textarea id="pq-f-need" value="{{ vNeed }}" onChange="{{ setNeed }}" rows="4" placeholder="e.g. Late-night LINE inquiries keep slipping; our leads live in three different places…" style="{{ areaInput }}"></textarea>
+        </label>
+        <div style="border:1px solid rgba(9,11,14,.14);border-radius:6px;background:rgba(9,11,14,.03);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+          <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.26em;color:rgba(9,11,14,.5)">SUMMARY BEFORE SENDING</span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">Industry: <b>{{ sumIndustry }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">To improve: <b>{{ sumScenes }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">Current tools: <b>{{ sumTools }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">Capabilities in the draft: <b>{{ sumMods }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">Human sign-off: <b>{{ sumHuman }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif">Contact: <b>{{ sumContact }}</b></span>
+          <span style="font:500 .875rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">Phase-1 draft scenario: <b style="color:#090B0E">{{ sumDemo }}</b></span>
+          <span style="font:400 .84375rem/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">An early rollout draft — not a formal quote or a confirmed scope; existing systems, APIs, permissions, data and timelines still need assessment.</span>
+        </div>
+        <button onClick="{{ submit }}" disabled="{{ submitting }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
+        <p style="margin:10px 0 0;font:400 .78125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">By sending, you agree we may use the information you provide for contact and assessment under our <a href="/en/privacy" target="_blank" style="color:rgba(242,239,232,.7);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">Privacy Policy</a>.</p>
+      </sc-if>
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+          <div style="position:relative;height:40px" aria-hidden="true">
+            <svg viewBox="0 0 600 40" fill="none" style="width:100%;height:100%" preserveAspectRatio="xMidYMid meet">
+              <path d="M8 20 L560 20" stroke="#65E0BC" stroke-width="2"></path>
+              <circle cx="8" cy="20" r="4" fill="#65E0BC"></circle>
+              <circle cx="300" cy="20" r="4" fill="#65E0BC"></circle>
+              <circle cx="560" cy="20" r="9" fill="rgba(101,224,188,.18)" stroke="#65E0BC" stroke-width="1.5"></circle>
+              <path d="M556 20 L559 23 L565 16" stroke="#65E0BC" stroke-width="2" fill="none"></path>
+            </svg>
+          </div>
+          <h2 style="margin:0;font:900 clamp(1.3125rem,1.8vw,1.5625rem)/1.45 'Noto Sans TC',sans-serif">Your rollout draft is on its way</h2>
+          <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">We read your draft first, then set up the conversation the way you prefer; modules, timeline and cost are confirmed after assessment.</p>
+          <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <button onClick="{{ copyDraft }}" style="{{ copyDraftStyle }}">{{ copyDraftLabel }}</button>
+            <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;padding:13px 20px;border-radius:2px;font:700 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#05a648">Send it via LINE</a>
+            <a href="{{ mailtoHref }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="border-color:#FF6B2C;color:#D14E12">Open in your email app</a>
+            <a href="tel:0266093699" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(9,11,14,.3);color:#090B0E;padding:12px 18px;border-radius:2px;font:500 .875rem 'Space Grotesk',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">(02) 6609-3699</a>
+          </div>
+        </div>
+      </sc-if>
+      <div aria-live="polite" role="status" style="{{ statusStyle }}">{{ statusMsg }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECT CONTACT:原本插在「03 留下需求」中段,會讓人以為問卷已經填完 ——
+     移到整頁最後、Footer 之前,改用橘色淡染底,定位是「表單之外的直接聯絡管道」。 -->
+<section id="direct-contact" data-screen-label="Direct contact" style="background:#F6E3D6;padding:clamp(52px,6.5vw,88px) clamp(20px,5vw,48px)">
+  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(24px,4vw,56px);align-items:center;box-sizing:border-box">
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+      <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#A63A08">DIRECT CONTACT</span>
+      <h2 style="margin:0;font:900 clamp(1.375rem,2.4vw,2rem)/1.35 'Noto Sans TC',sans-serif">Rather skip the form? Contact us directly.</h2>
+      <p style="margin:0;max-width:560px;font:400 clamp(.9375rem,1.1vw,1rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65);text-wrap:pretty">Phone, Email or our LINE official account all work — and a half-finished draft above is fine; we fill in the rest when we talk.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px;min-width:0;align-items:flex-start">
+      <a href="mailto:jacky@peakqi.com" style="color:#090B0E;text-decoration:none;font:600 clamp(1rem,1.3vw,1.125rem) 'Space Grotesk',sans-serif" style-hover="color:#D14E12">jacky@peakqi.com</a>
+      <a href="tel:0266093699" style="color:#090B0E;text-decoration:none;font:600 clamp(1rem,1.3vw,1.125rem) 'Space Grotesk',sans-serif" style-hover="color:#D14E12">(02) 6609-3699</a>
+      <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;color:#090B0E;text-decoration:none;font:600 clamp(.9375rem,1.2vw,1.0625rem) 'Noto Sans TC',sans-serif" style-hover="color:#06843A"><span style="width:8px;height:8px;border-radius:50%;background:#06C755"></span>LINE Official Account</a>
+      <button onClick="{{ copyEmail }}" style="margin-top:2px;background:none;border:1px solid rgba(9,11,14,.35);color:rgba(9,11,14,.8);padding:10px 16px;border-radius:2px;font:600 .8125rem 'Noto Sans TC',sans-serif;cursor:pointer;min-height:44px" style-hover="border-color:#FF6B2C;color:#D14E12">{{ copyLabel }}</button>
+    </div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    d: null, media: null, copied: false,
+    scenes: [], indPick: '', heroInd: '', heroFlow: '',
+    tools: [], mods: [], human: [],
+    vName: '', vCompany: '', vIndustry: '', vTime: '', vPhone: '', vEmail: '', vLine: '', vNeed: '', hp: '',
+    touched: {}, submitting: false, done: false, doneMode: '', failMsg: '', needTouched: false, draftCopied: false
+  };
+  componentDidMount() {
+    import('/case-media.js').then(m => this.setState({ media: m })).catch(() => {});
+    import('/content.js').then(m => {
+      const patch = { d: m };
+      const slug = new URLSearchParams(window.location.search).get('case');
+      if (slug) {
+        // ?case= 維持中文 slug 比對(caseStudies.slug 未翻);顯示層改英文句
+        const CASE_LABELS = { '接客追客養客整合流程': 'the capture-follow-nurture integrated flow', '方案選擇與報價評估': 'plan selection and quote assessment', '婚禮產業AI大禮包': 'the Wedding Industry AI Suite', '室內設計AI整合平台': 'the Interior Design AI Platform', '房仲AI助手': 'the Real-Estate AI Assistant' };
+        const c = (m.caseStudies || []).find(x => x.slug === slug);
+        const label = c ? 'the "' + c.title + '" flow' : (CASE_LABELS[slug] || '"' + slug + '"');
+        patch.vNeed = 'We would like to apply ' + label + ' to our own workflow.';
+        patch.needTouched = true;
+        if (c) {
+          const opt = (m.demoIndustries || []).find(o => c.industry.includes(o) || o.includes(c.industry.slice(0, 2)));
+          patch.vIndustry = opt || 'Other';
+          patch.indPick = patch.vIndustry;
+        }
+      }
+      const qs = new URLSearchParams(window.location.search);
+      // ?ind=/?flow= 同時接受英文標籤與中文舊鍵(中文鍵先映射成英文標籤再比對)
+      const IND_ZH = { '婚禮婚慶': 'Weddings', '室內設計': 'Interior design', '房仲不動產': 'Real estate', '美業': 'Beauty', '團購電商': 'Group-buy commerce', '活動售票': 'Event ticketing', 'ESG 永續': 'ESG', '社區管理': 'Community management', '教育培訓': 'Education', '品牌官網': 'Brand sites', '其他': 'Other' };
+      const FLOW_ZH = { 'LINE 客服': 'LINE support', '名單追蹤': 'Lead follow-up', '報價提案': 'Quotes & proposals', '行銷內容': 'Marketing content', '專案管理': 'Project management', '數據報表': 'Data & reports', '客製流程': 'Custom flow' };
+      const fm0 = { 'LINE support': 'LINE support replies', 'Lead follow-up': 'Lead follow-up', 'Quotes & proposals': 'Quotes & proposals', 'Marketing content': 'Marketing content', 'Project management': 'Project management', 'Data & reports': 'Data & reports', 'Custom flow': 'Other custom flow' };
+      const qInd = IND_ZH[qs.get('ind')] || qs.get('ind'), qFlow = FLOW_ZH[qs.get('flow')] || qs.get('flow');
+      if (qInd && (m.demoIndustries || []).includes(qInd)) { patch.heroInd = qInd; patch.indPick = qInd; patch.vIndustry = qInd; }
+      if (qFlow && fm0[qFlow]) { patch.heroFlow = qFlow; patch.scenes = [fm0[qFlow]]; }
+      this.setState(patch);
+    });
+    import('/seo.js').then(m => m.applySEO('demo')).catch(() => {});
+    import('/analytics.js').then(m => { this._track = m.track; }).catch(() => {});
+    // canvas 已在 hero-config.js 正式開啟(flags:{}),直接掛 hero
+    import('/hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('demo'); }).catch(() => {});
+  }
+  componentWillUnmount() {
+    this._dead = true;
+    if (this._hero) this._hero.destroy();
+  }
+  _errors() {
+    const s = this.state;
+    const e = {};
+    if (!s.vName.trim()) e.name = 'Please tell us what to call you.';
+    const hasContact = s.vPhone.trim() || s.vEmail.trim() || s.vLine.trim();
+    if (!hasContact) e.contact = 'Leave at least one of phone, Email or LINE ID so we can get back to you.';
+    else {
+      if (s.vEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.vEmail.trim())) e.email = 'That Email does not look quite right — mind double-checking?';
+      if (s.vPhone.trim() && !/^[0-9+\-() ]{8,}$/.test(s.vPhone.trim())) e.phone = 'That phone number looks incomplete — mind double-checking?';
+    }
+    return e;
+  }
+  _payload() {
+    const s = this.state;
+    return {
+      name: s.vName.trim(), company: s.vCompany.trim(), industry: s.vIndustry,
+      phone: s.vPhone.trim(), email: s.vEmail.trim(), line: s.vLine.trim(),
+      scenes: s.scenes.join(', '),
+      tools: s.tools.join(', '), mods: s.mods.join(', '), human: s.human.join(', '),
+      need: s.vNeed.trim(), time: s.vTime, source: 'peakqi-site-demo-form', ts: new Date().toISOString()
+    };
+  }
+  _draftText() {
+    const p = this._payload();
+    return [
+      'Name: ' + (p.name || '(blank)'),
+      'Company / brand: ' + (p.company || '(blank)'),
+      'Industry: ' + (p.industry || '(blank)'),
+      'Flows to improve: ' + (p.scenes || '(none picked)'),
+      'Current tools: ' + (p.tools || '(none picked)'),
+      'Capabilities in the draft: ' + (p.mods || '(none added)'),
+      'Human sign-off: ' + (p.human || '(none picked)'),
+      'Phone: ' + (p.phone || '(blank)'),
+      'Email: ' + (p.email || '(blank)'),
+      'LINE ID: ' + (p.line || '(blank)'),
+      'Preferred contact time: ' + (p.time || '(blank)'),
+      'Notes:',
+      p.need || '(blank)'
+    ].join('\n');
+  }
+  _mailto() {
+    const p = this._payload();
+    const subject = 'AI rollout request' + (p.company ? ' — ' + p.company : '');
+    return 'mailto:jacky@peakqi.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(this._draftText());
+  }
+  async _send(payload) {
+    const cfg = (this.state.d && this.state.d.submitConfig) || { endpoint: null };
+    if (cfg.endpoint) {
+      const r = await fetch(cfg.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return 'api';
+    }
+    await new Promise(r => setTimeout(r, 450));
+    return 'demo';
+  }
+  _syncNeedFrom(prev, scenes, ind) {
+    if (prev.needTouched) return {};
+    const parts = [];
+    if (ind) parts.push('Industry: ' + ind);
+    if (scenes.length) parts.push('Most want to improve: ' + scenes.join(', '));
+    return parts.length ? { vNeed: parts.join('; ') + '.' } : { vNeed: '' };
+  }
+  renderVals() {
+    const s = this.state;
+    const d = s.d, mm = s.media;
+    const errs = this._errors();
+    const t = s.touched;
+    const showName = !!(t.name && errs.name);
+    const showContact = !!(t.contact && (errs.contact || errs.email || errs.phone));
+    const base = {
+      border: '1px solid rgba(9,11,14,.25)', borderRadius: '2px', background: '#FFFFFF',
+      padding: '12px 14px', font: "400 1rem 'Noto Sans TC',sans-serif", color: '#090B0E', width: '100%', boxSizing: 'border-box'
+    };
+    const errB = { ...base, border: '1.5px solid #D14E12' };
+    const errText = (on) => ({ font: "500 .78125rem/1.5 'Noto Sans TC',sans-serif", color: '#D14E12', display: on ? 'block' : 'none' });
+    const set = (k) => (e) => {
+      if (!this._started && this._track) { this._started = true; this._track('demo_form_start'); }
+      const patch = { [k]: e.target.value };
+      if (k === 'vNeed') patch.needTouched = true;
+      this.setState(patch);
+    };
+    // ---- 場景選擇(複選) ----
+    // key 為既有 option value(payload 相容),desc 為問題描述,steps 進流程草稿
+    const sceneDefs = [
+      { key: 'LINE support replies', desc: 'Common questions answered on repeat; data still sorted by hand.', steps: [{ t: 'AI catches inquiries', d: 'Reads the need, drafts the reply' }, { t: 'Important → human', d: 'Hands off whenever it cannot judge' }] },
+      { key: 'Lead follow-up', desc: 'Inquiries arrive with no owner, stage or next step.', steps: [{ t: 'CRM record', d: 'Chats become customer cards' }, { t: 'Follow up by status', d: 'System nudges, AI drafts, you approve and send' }] },
+      { key: 'Quotes & proposals', desc: 'Needs sit scattered in chats and must be rebuilt into plans and documents.', steps: [{ t: 'Quote draft', d: 'Needs organized into a confirmable quote' }, { t: 'Proposal draft', d: 'Assembled into a proposal document' }] },
+      { key: 'Marketing content', desc: 'Cases, assets and content get searched and rewritten over and over.', steps: [{ t: 'Content drafts', d: 'AI drafts first; you approve what ships' }, { t: 'Schedule management', d: 'Scheduling and tracking in one place' }] },
+      { key: 'Project management', desc: 'Needs and promises get lost in the handoff after the deal closes.', steps: [{ t: 'Tasks & timelines', d: 'Closed-deal info flows straight into tasks' }, { t: 'Progress nudges', d: 'Every to-do has a clear owner' }] },
+      { key: 'Data & reports', desc: 'Managers cannot quickly see inquiry sources and where flows stall.', steps: [{ t: 'Operations view', d: 'Sources, statuses and stalls in one place' }] },
+      { key: 'Other custom flow', desc: 'Not listed above? Write it down and we assess it together.', steps: [{ t: 'Custom assessment', d: 'Planned separately around your flow' }] }
+    ];
+    const toggleScene = (key) => {
+      this.setState(prev => {
+        const cur = prev.scenes.includes(key) ? prev.scenes.filter(x => x !== key) : [...prev.scenes, key];
+        return { scenes: cur, ...this._syncNeedFrom(prev, cur, prev.indPick) };
+      });
+    };
+    const sceneOpts = sceneDefs.map(sd => {
+      const on = s.scenes.includes(sd.key);
+      return {
+        label: (on ? '✓ ' : '') + sd.key + ' — ' + sd.desc,
+        pressed: on ? 'true' : 'false',
+        pick: () => toggleScene(sd.key),
+        style: {
+          cursor: 'pointer', borderRadius: '8px', padding: '13px 18px', textAlign: 'left',
+          font: "500 .9375rem/1.55 'Noto Sans TC',sans-serif", minHeight: '44px',
+          background: on ? '#090B0E' : '#FFFFFF',
+          color: on ? '#F2EFE8' : '#090B0E',
+          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.2)',
+          boxShadow: on ? '0 0 0 4px rgba(255,107,44,.1)' : 'none',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        }
+      };
+    });
+    // ---- 目前工具(複選;僅記錄資料分布,不承諾串接) ----
+    const TOOL_OPTS = ['LINE', 'Email', 'Web forms', 'CRM', 'Spreadsheets', 'Notion or knowledge tools', 'Internal systems', 'Not sure yet', 'Other'];
+    const chip = (on, activeBg) => ({
+      cursor: 'pointer', borderRadius: '999px', padding: '12px 20px', minHeight: '44px',
+      font: "600 .90625rem 'Noto Sans TC',sans-serif",
+      background: on ? (activeBg || '#090B0E') : '#FFFFFF',
+      color: on ? '#F2EFE8' : '#090B0E',
+      border: on ? '1.5px solid ' + (activeBg || '#090B0E') : '1px solid rgba(9,11,14,.25)',
+      transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+    });
+    const toggleIn = (k, key) => this.setState(prev => ({ [k]: prev[k].includes(key) ? prev[k].filter(x => x !== key) : [...prev[k], key] }));
+    const toolOpts = TOOL_OPTS.map(label => ({
+      label: (s.tools.includes(label) ? '✓ ' : '') + label,
+      pressed: s.tools.includes(label) ? 'true' : 'false',
+      pick: () => toggleIn('tools', label),
+      style: chip(s.tools.includes(label), '#1F63B8')
+    }));
+    // ---- 人工確認邊界(複選;預設不選,反映企業控制權) ----
+    const HUMAN_OPTS = ['Pricing', 'Special requests', 'Sensitive content', 'Low-confidence replies', 'Quote send-out', 'Booking confirmation', 'Contracts & commitments'];
+    const humanOpts = HUMAN_OPTS.map(label => ({
+      label: (s.human.includes(label) ? '✓ ' : '') + label,
+      pressed: s.human.includes(label) ? 'true' : 'false',
+      pick: () => toggleIn('human', label),
+      style: chip(s.human.includes(label), '#0F8A6A')
+    }));
+    // ---- 建議能力:依已選流程推薦;按「加入草稿」才算已加入(推薦 ≠ 已選) ----
+    const REC_MAP = {
+      'LINE support replies': [{ n: 'Need triage', w: 'Because you picked LINE support: identify the question and the need fields first.' }, { n: 'Human handoff', w: 'Exceptions and sensitive cases go back to a person — nothing auto-sends.' }],
+      'Lead follow-up': [{ n: 'Basic CRM records', w: 'Because you picked lead follow-up: chats are saved as customers and deals.' }, { n: 'Follow up by status', w: 'Nudges follow the deal status, not a fixed day count.' }],
+      'Quotes & proposals': [{ n: 'Quote drafts', w: 'Because you picked quotes: needs organized into a confirmable draft.' }],
+      'Marketing content': [{ n: 'Content drafts', w: 'Because you picked marketing content: AI drafts first, you approve before it ships.' }],
+      'Project management': [{ n: 'Tasks & timelines', w: 'Because you picked project management: closed-deal info flows into tasks.' }],
+      'Data & reports': [{ n: 'Operations view', w: 'Because you picked data & reports: sources and stalls in one visible place.' }],
+      'Other custom flow': [{ n: 'Custom assessment', w: 'Your flow needs its own assessment — listed as to-confirm.' }]
+    };
+    const recsAll = [];
+    s.scenes.forEach(k => (REC_MAP[k] || []).forEach(r => { if (!recsAll.find(x => x.n === r.n)) recsAll.push(r); }));
+    const recCards = recsAll.map(r => {
+      const added = s.mods.includes(r.n);
+      return {
+        name: r.n, why: r.w,
+        tag: added ? 'In the draft' : 'Suggested for Phase 1',
+        tagColor: added ? '#0F8A6A' : '#A63A08',
+        pressed: added ? 'true' : 'false',
+        toggle: () => toggleIn('mods', r.n),
+        btnLabel: added ? '✓ In the draft (click to remove)' : '+ Add to draft',
+        btnStyle: {
+          marginTop: 'auto', cursor: 'pointer', borderRadius: '4px', padding: '11px 14px', minHeight: '44px',
+          font: "700 .875rem 'Noto Sans TC',sans-serif",
+          background: added ? 'rgba(15,138,106,.1)' : '#090B0E',
+          color: added ? '#0F8A6A' : '#F2EFE8',
+          border: added ? '1.5px solid #0F8A6A' : 'none',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        },
+        cardStyle: {
+          border: added ? '1.5px solid rgba(15,138,106,.5)' : '1px solid rgba(9,11,14,.16)',
+          borderRadius: '8px', background: '#FFFFFF', padding: '18px',
+          display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box', minWidth: 0
+        }
+      };
+    });
+    // ---- 流程預覽組裝 ----
+    const baseSteps = [{ t: 'A customer comes in', d: 'LINE / form / phone inquiry', fixed: true }];
+    const chosen = sceneDefs.filter(sd => s.scenes.includes(sd.key)).flatMap(sd => sd.steps);
+    const endSteps = [{ t: 'One back office', d: 'You see everything in one place', fixed: true }];
+    const rows = [...baseSteps, ...(chosen.length ? chosen : [{ t: '(waiting for your picks)', d: 'Choose on the left; this assembles live', empty: true }]), ...endSteps];
+    const pipeline = rows.map((r, i) => ({
+      t: r.t, d: r.d,
+      state: r.empty ? 'TO PICK' : (r.fixed ? 'FIXED' : 'ADDED'),
+      rowStyle: {
+        display: 'flex', alignItems: 'center', gap: '12px',
+        border: r.empty ? '1px dashed rgba(242,239,232,.25)' : '1px solid rgba(242,239,232,.14)',
+        background: r.empty ? 'transparent' : '#14171C',
+        borderRadius: '6px', padding: '11px 14px',
+        opacity: r.empty ? 0.7 : 1,
+        transition: 'all 260ms cubic-bezier(0.16,1,0.3,1)'
+      },
+      dotStyle: { width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0, background: r.empty ? 'rgba(242,239,232,.3)' : (r.fixed ? '#3E9BFF' : '#FF6B2C') },
+      stateStyle: { marginLeft: 'auto', font: "700 .625rem 'Space Grotesk',sans-serif", letterSpacing: '.14em', color: r.empty ? 'rgba(242,239,232,.4)' : (r.fixed ? '#3E9BFF' : '#65E0BC'), flexShrink: 0 }
+    }));
+    // ---- 產業情境 ----
+    const indCaseMap = { 'Weddings': 'wedding', 'Interior design': 'interior', 'Real estate': 'realestate', 'Group-buy commerce': 'groupbuy', 'Event ticketing': 'labubu', 'ESG': 'doiiin', 'Community management': 'community', 'Education': 'ouros', 'Brand sites': 'rouzhi' };
+    // case-media.js 未 t() 化:顯示層以本頁字典把案例名/產業/類型/alt 投影成英文(slug 為鍵,查無則保留原值)
+    const EN_CASES = {
+      wedding: { name: 'Wedding Industry AI Suite', industry: 'Weddings', type: 'AI system', alt: 'Wedding Industry AI Suite screens: dress try-on previews, publishing hub and follow-up CRM' },
+      interior: { name: 'Interior Design AI Platform', industry: 'Interior design', type: 'AI system', alt: 'Interior Design AI Platform screens: space renders, style previews and auto proposal decks' },
+      realestate: { name: 'Real-Estate AI Assistant', industry: 'Real estate', type: 'AI system', alt: 'Real-Estate AI Assistant screens: LINE OA integration, auto listing replies and viewing bookings' },
+      groupbuy: { name: 'GroupBuy Go', industry: 'Group-buy commerce', type: 'Custom platform', alt: 'GroupBuy Go — commerce system with LINE OA integration (product screens)' },
+      labubu: { name: 'Labubu', industry: 'Event ticketing', type: 'Custom platform', alt: 'Labubu — event ticketing system (product screens)' },
+      doiiin: { name: 'DOIIIN ESG Platform', industry: 'ESG', type: 'Brand site', alt: 'DOIIIN ESG Platform — web design consulting and build (product screens)' },
+      community: { name: 'Community Management App', industry: 'Community management', type: 'Custom platform', alt: 'Community Management App with back office (product screens)' },
+      ouros: { name: 'OUROS', industry: 'Education', type: 'Brand site', alt: 'OUROS — AI course site design (product screens)' },
+      rouzhi: { name: 'ROUZHI', industry: 'Brand sites', type: 'Brand site', alt: 'ROUZHI — brand site (product screens)' }
+    };
+    const allMedia = mm ? [...mm.FEATURED_MEDIA, ...mm.WORKS_MEDIA] : [];
+    const findCase = (label) => {
+      const c = allMedia.find(x => x.slug === indCaseMap[label]);
+      if (!c) return null;
+      const e = EN_CASES[c.slug] || {};
+      return { ...c, name: e.name || c.name, industry: e.industry || c.industry, type: e.type || c.type, cover: { ...c.cover, alt: e.alt || c.cover.alt } };
+    };
+    const indList = d?.demoIndustries ?? [];
+    const pickInd = (label) => {
+      this.setState(prev => {
+        const next = prev.indPick === label ? '' : label;
+        return { indPick: next, vIndustry: next, ...this._syncNeedFrom(prev, prev.scenes, next) };
+      });
+    };
+    const indOpts = indList.map(label => {
+      const on = s.indPick === label;
+      return {
+        label,
+        hasCase: !!findCase(label),
+        pressed: on ? 'true' : 'false',
+        pick: () => pickInd(label),
+        style: {
+          cursor: 'pointer', borderRadius: '999px', padding: '11px 20px',
+          font: "600 .875rem 'Noto Sans TC',sans-serif",
+          background: on ? '#FF6B2C' : 'transparent',
+          color: on ? '#090B0E' : '#090B0E',
+          border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(9,11,14,.28)',
+          transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)'
+        }
+      };
+    });
+    const selCase = s.indPick ? findCase(s.indPick) : null;
+    const indHasMedia = !!selCase;
+    // ---- Hero BUILD YOUR DEMO SCENE:控制台選項 ----
+    const heroFlowMap = { 'LINE support': 'LINE support replies', 'Lead follow-up': 'Lead follow-up', 'Quotes & proposals': 'Quotes & proposals', 'Marketing content': 'Marketing content', 'Project management': 'Project management', 'Data & reports': 'Data & reports', 'Custom flow': 'Other custom flow' };
+    const heroModsMap = { 'LINE support': ['AI Support', 'Knowledge base'], 'Lead follow-up': ['CRM', 'Follow-up sequences'], 'Quotes & proposals': ['Quotes', 'Proposals'], 'Marketing content': ['Marketing', 'Scheduling'], 'Project management': ['Projects'], 'Data & reports': ['Insights', 'AI monthly report'], 'Custom flow': ['Custom module'] };
+    const syncURL = (ind, flow) => { try { const u = new URL(window.location.href); if (ind) u.searchParams.set('ind', ind); else u.searchParams.delete('ind'); if (flow) u.searchParams.set('flow', flow); else u.searchParams.delete('flow'); history.replaceState(null, '', u); } catch (e2) {} };
+    const heroChip = (on) => ({ cursor: 'pointer', borderRadius: '999px', padding: '8px 13px', font: "600 .78125rem 'Noto Sans TC',sans-serif", background: on ? '#FF6B2C' : 'transparent', color: on ? '#090B0E' : 'rgba(242,239,232,.85)', border: on ? '1.5px solid #FF6B2C' : '1px solid rgba(242,239,232,.3)', transition: 'all 180ms cubic-bezier(0.16,1,0.3,1)' });
+    const heroIndOpts = indList.map(label => {
+      const on = s.heroInd === label;
+      return {
+        label, pressed: on ? 'true' : 'false',
+        pick: () => this.setState(prev => {
+          const next = prev.heroInd === label ? '' : label;
+          syncURL(next, prev.heroFlow);
+          return { heroInd: next, indPick: next, vIndustry: next, ...this._syncNeedFrom(prev, prev.scenes, next) };
+        }),
+        style: heroChip(on)
+      };
+    });
+    const heroFlowOpts = Object.keys(heroFlowMap).map(label => {
+      const on = s.heroFlow === label;
+      return {
+        label, pressed: on ? 'true' : 'false',
+        pick: () => this.setState(prev => {
+          const next = prev.heroFlow === label ? '' : label;
+          syncURL(prev.heroInd, next);
+          const key = heroFlowMap[label];
+          let sc2 = prev.scenes;
+          if (next && !sc2.includes(key)) sc2 = [...sc2, key];
+          if (!next) sc2 = sc2.filter(x => x !== key);
+          return { heroFlow: next, scenes: sc2, ...this._syncNeedFrom(prev, sc2, prev.indPick) };
+        }),
+        style: heroChip(on)
+      };
+    });
+    const heroCase = s.heroInd ? findCase(s.heroInd) : null;
+    const heroMods = s.heroFlow ? (heroModsMap[s.heroFlow] || []) : [];
+    return {
+      heroIndOpts, heroFlowOpts,
+      toolOpts, humanOpts, recCards, noRecs: !recCards.length,
+      draftEmpty: !s.heroInd && !s.heroFlow && !s.scenes.length,
+      heroConsoleStatus: (!s.heroInd && !s.heroFlow) ? 'NOT STARTED' : (s.heroInd && s.heroFlow ? 'DRAFT READY' : 'ASSEMBLING'),
+      heroHasCase: !!heroCase,
+      heroNoCase: !heroCase,
+      heroCaseName: heroCase ? heroCase.name : '',
+      heroCaseAlt: heroCase ? heroCase.cover.alt : '',
+      heroCasePage: heroCase ? (heroCase.sourcePage || '').toUpperCase() : '',
+      heroCaseImgStyle: heroCase ? { width: '100%', height: '120px', backgroundImage: 'url("' + heroCase.cover.src + '")', backgroundSize: 'cover', backgroundPosition: 'top center', borderBottom: '1px solid rgba(242,239,232,.12)', backgroundColor: '#090B0E' } : {},
+      heroNoCaseNote: s.heroInd ? '"' + s.heroInd + '" is shown as a generic flow UI — the demo is built on your real scenario; we do not invent client cases.' : 'Pick an industry — where a matching case exists, its real screenshot shows here.',
+      heroCaseHref: heroCase ? (['wedding', 'interior', 'realestate'].includes(heroCase.slug) ? '/en/case?slug=' + heroCase.slug : '/en/cases#index') : '/en/cases',
+      heroModChips: heroMods.map(t2 => ({ t: t2 })),
+      heroNoMods: !heroMods.length,
+      heroSumInd: s.heroInd || 'To pick',
+      heroSumFlow: s.heroFlow || 'To pick',
+      heroTime: s.vTime || 'Pick in the form',
+      flowLabel: s.scenes.length || s.indPick ? 'ASSEMBLING YOUR FLOW' : 'PEAKQI CATCHES',
+      sceneOpts, pipeline,
+      pipelineNote: 'A UI flow preview — actual modules follow the demo and your plan; not performance numbers.',
+      indOpts,
+      indHasMedia,
+      indNoMedia: !indHasMedia,
+      indAlt: selCase ? selCase.cover.alt : '',
+      indImgStyle: selCase ? {
+        width: '100%', height: '170px',
+        backgroundImage: 'url("' + selCase.cover.src + '")',
+        backgroundSize: 'cover', backgroundPosition: 'top center',
+        borderBottom: '1px solid rgba(9,11,14,.1)', backgroundColor: '#090B0E'
+      } : {},
+      indPanelName: selCase ? selCase.name + ' (real case screens)' : (s.indPick ? s.indPick + ' — generic flow' : 'Pick an industry'),
+      indPanelD: selCase ? (selCase.industry + ' · ' + selCase.type + ' · ' + (selCase.sourcePage || '').toUpperCase()) : (s.indPick ? 'This industry is shown as a generic flow UI for now — at the demo we build on your real scenario; we do not invent client cases.' : "Industries with a matching case show that case's real screenshot."),
+      indHasLink: !!selCase,
+      indHref: selCase && ['wedding', 'interior', 'realestate'].includes(selCase.slug) ? '/en/case?slug=' + selCase.slug : '/en/cases#index',
+      risks: d?.risk ?? [],
+      industryOpts: indList,
+      timeOpts: d?.contactTimes ?? [],
+      copyLabel: s.copied ? 'Email copied ✓' : 'Copy Email',
+      copyEmail: () => {
+        try { navigator.clipboard && navigator.clipboard.writeText('jacky@peakqi.com'); } catch (e) {}
+        this.setState({ copied: true });
+        setTimeout(() => this.setState({ copied: false }), 2000);
+      },
+      hp: s.hp, setHp: (e) => this.setState({ hp: e.target.value }),
+      vName: s.vName, vCompany: s.vCompany, vIndustry: s.vIndustry, vTime: s.vTime,
+      vPhone: s.vPhone, vEmail: s.vEmail, vLine: s.vLine, vNeed: s.vNeed,
+      setName: set('vName'), setCompany: set('vCompany'),
+      setIndustry: (e) => this.setState({ vIndustry: e.target.value, indPick: e.target.value }),
+      setTime: (e) => this.setState({ vTime: e.target.value }),
+      setPhone: set('vPhone'), setEmail: set('vEmail'), setLine: set('vLine'), setNeed: set('vNeed'),
+      blurName: () => this.setState({ touched: { ...s.touched, name: true } }),
+      blurContact: () => this.setState({ touched: { ...s.touched, contact: true } }),
+      nameInvalid: showName ? 'true' : 'false',
+      nameErr: errs.name || '',
+      nameStyle: showName ? errB : base,
+      nameErrStyle: errText(showName),
+      phoneInvalid: (t.contact && errs.phone) ? 'true' : 'false',
+      emailInvalid: (t.contact && errs.email) ? 'true' : 'false',
+      phoneStyle: (t.contact && errs.phone) ? errB : base,
+      emailStyle: (t.contact && errs.email) ? errB : base,
+      contactErr: errs.contact || errs.email || errs.phone || '',
+      contactErrStyle: errText(showContact),
+      baseInput: base,
+      areaInput: { ...base, resize: 'vertical', lineHeight: 1.7 },
+      sumIndustry: s.vIndustry || 'Not picked (fine to leave blank)',
+      sumScenes: s.scenes.length ? s.scenes.join(', ') : 'Not picked (add it in the notes)',
+      sumContact: [s.vPhone && 'Phone', s.vEmail && 'Email', s.vLine && 'LINE'].filter(Boolean).join(' / ') + (s.vTime ? ' · ' + s.vTime : '') || 'Not filled yet',
+      sumDemo: (s.vIndustry ? s.vIndustry + ' × ' : '') + (s.scenes.length ? s.scenes.join(', ') : 'prepared from your notes'),
+      sumTools: s.tools.length ? s.tools.join(', ') : 'Not picked (fine to leave blank)',
+      sumMods: s.mods.length ? s.mods.join(', ') : 'None added (add suggested capabilities above)',
+      sumHuman: s.human.length ? s.human.join(', ') : 'Not picked (default flow applies)',
+      notDone: !s.done,
+      done: s.done,
+      doneNote: s.doneMode === 'demo'
+        ? 'This is a preview-environment demo submission — nothing was sent to a server. To make sure it reaches us, open your email app below (the content is pre-filled) or call (02) 6609-3699.'
+        : 'Your request is sent and recorded. We will reach out through your preferred channel; to add anything, copy the summary and send it by Email or LINE.',
+      mailtoHref: this._mailto(),
+      copyDraftLabel: s.draftCopied ? 'Request copied ✓' : 'Copy the request',
+      copyDraftStyle: {
+        cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', minHeight: '44px',
+        background: s.draftCopied ? '#0F8A6A' : '#090B0E', color: '#F2EFE8', border: 'none',
+        padding: '13px 20px', borderRadius: '2px', font: "700 .90625rem 'Noto Sans TC',sans-serif",
+        transition: 'background 200ms ease'
+      },
+      copyDraft: () => {
+        const text = this._draftText() + String.fromCharCode(10) + '(Email it to jacky@peakqi.com or paste it into LINE.)';
+        const done = () => { this.setState({ draftCopied: true }); setTimeout(() => this.setState({ draftCopied: false }), 2600); };
+        const fallback = () => {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta); done();
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(fallback);
+        } else fallback();
+      },
+      submitting: s.submitting,
+      submitLabel: s.submitting ? 'Sending…' : 'Send the rollout draft →',
+      submitStyle: {
+        background: s.submitting ? 'rgba(9,11,14,.35)' : '#FF6B2C', border: 'none', color: '#090B0E',
+        padding: '15px', borderRadius: '2px', font: "700 1rem 'Noto Sans TC',sans-serif", letterSpacing: '.04em',
+        cursor: s.submitting ? 'wait' : 'pointer'
+      },
+      statusMsg: s.failMsg || (s.done ? 'We read your request first, then arrange the right way to talk.' : ''),
+      statusStyle: { font: "500 .84375rem/1.7 'Noto Sans TC',sans-serif", color: s.failMsg ? '#D14E12' : '#1e9a72', minHeight: '1px', margin: 0 },
+      submit: async () => {
+        if (s.submitting || s.done) return;
+        if (s.hp) { this.setState({ done: true, doneMode: 'demo' }); return; }
+        const errsNow = this._errors();
+        if (Object.keys(errsNow).length) {
+          if (this._track) this._track('demo_form_error', { fields: Object.keys(errsNow).join(',') });
+          this.setState({ touched: { name: true, contact: true } });
+          const focusId = errsNow.name ? 'pq-f-name' : 'pq-f-phone';
+          setTimeout(() => { const el = document.getElementById(focusId); if (el) el.focus(); }, 60);
+          return;
+        }
+        this.setState({ submitting: true, failMsg: '' });
+        if (this._track) this._track('demo_form_submit');
+        try {
+          const mode = await this._send(this._payload());
+          if (this._track) this._track('demo_form_success', { mode });
+          this.setState({ submitting: false, done: true, doneMode: mode });
+        } catch (e) {
+          if (this._track) this._track('demo_form_error', { stage: 'send' });
+          this.setState({ submitting: false, failMsg: 'We could not send right now — please try again shortly, or reach us via the Email or phone on this page.' });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
