@@ -317,7 +317,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   .pq-cine-card ul li{white-space:nowrap;font-size:clamp(.59375rem,1.35svh,.71875rem);padding:clamp(4px,0.7svh,7px) 9px}
   /* 3) 深色段字卡:限高、收斂內容,不再吃掉大半個螢幕把相機蓋住 */
   .pq-cine-vcard{left:5vw;right:5vw;width:auto;top:auto;transform:none;
-    bottom:calc(68px + 15svh + env(safe-area-inset-bottom, 0px));
+    bottom:calc(68px + 21svh + env(safe-area-inset-bottom, 0px));
     max-height:44svh;overflow:hidden;padding:clamp(10px,1.6svh,16px) 16px}
   .pq-cine-vcard h2{font-size:clamp(0.95rem, min(4.8vw, 2.55svh), 1.45rem);margin:clamp(6px,1.1svh,12px) 0 clamp(5px,0.8svh,8px)}
   .pq-cine-vcard>p{font-size:clamp(.65625rem, min(3.3vw, 1.75svh), .8125rem);line-height:1.6}
@@ -481,7 +481,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
   padding:26px 32px 24px;min-height:0;display:flex;flex-direction:column;gap:12px;
   transition:background .4s cubic-bezier(.16,1,.3,1)}
 /* 欄間細線(桌機三欄:第 2、3 欄左緣) */
-.pq-mod:not(:nth-child(3n+1)){border-left:1px solid rgba(9,11,14,.16)}
+.pq-mod:not(:nth-child(3n+1)){border-left:2px solid #090B0E}
 .pq-mod::before{display:none}
 .pq-mod:hover{transform:none;box-shadow:none;background:rgba(9,11,14,.028)}
 /* 巨大實心編號:編輯設計的主角,靠左齊版心 */
@@ -501,7 +501,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 .pq-mod h3{margin:0;font:900 clamp(1.25rem,1.65vw,1.5rem)/1.2 'Noto Sans TC',sans-serif;letter-spacing:-.01em;color:#11161B}
 .pq-mod p{margin:0;max-width:30ch;font:400 clamp(.84375rem,1.05vw,.925rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)}
 /* 底部規格列:hairline + 極小等寬讀值 */
-.pq-mod .spec{margin-top:auto;padding-top:14px;border-top:1px solid rgba(9,11,14,.16);
+.pq-mod .spec{margin-top:auto;padding-top:14px;border-top:2px solid #090B0E;
   display:flex;justify-content:space-between;align-items:baseline;gap:10px;
   font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.42)}
 .pq-mod .spec b{font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--ac,#FF6B2C)}
@@ -1064,7 +1064,7 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
    只有第一列(站格線頂邊)有接上,其餘懸空。依欄數把非首列上移補償。 */
 @media (max-width:640px){.pq-mod:nth-child(n+2) .ico{margin-top:-16px}}
 /* 04 的畫稿遮帶位置與其他隻不同(實測手機還差 +21px),單獨補償 */
-@media (max-width:640px){.pq-mod.pqbrk4:nth-child(n+2) .ico{margin-top:-27px}}
+@media (max-width:640px){.pq-mod.pqbrk4:nth-child(n+2) .ico{margin-top:-21px}}
 @media (min-width:641px) and (max-width:980px){.pq-mod:nth-child(n+3) .ico{margin-top:-16px}}
 @media (min-width:981px){.pq-mod:nth-child(n+4) .ico{margin-top:-16px}}
 
