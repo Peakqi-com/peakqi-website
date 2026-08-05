@@ -5,6 +5,7 @@
 // 全站:PageProgressRail 章節導覽(母)。reduced-motion 一律靜態。
 import { createMotionContext, ScrollChapter, StickyProductStage } from './motion-kit.js';
 import { capabilityTier } from './motion-config.js';
+import { t } from './i18n.js';
 
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const sub = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
@@ -383,7 +384,7 @@ export function createHomeEngine() {
       for (let i = 1; i < BEATS; i++) {
         const b = document.createElement('button');
         b.type = 'button'; b.textContent = ('0' + i).slice(-2);
-        b.setAttribute('aria-label', '跳到分鏡 ' + i);
+        b.setAttribute('aria-label', t('跳到分鏡 ', 'Jump to shot ') + i);
         b.addEventListener('click', () => {
           const H = hero.offsetHeight, vh = window.innerHeight || 1;
           const topAbs = hero.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
@@ -442,18 +443,18 @@ export function createHomeEngine() {
     // 零件群組規則(CIS 配色)
     const CHASSIS = new Set(['body.001_low_41', 'body.002_low_1', 'body.019_low_18']);
     const INTERNALS = {
-      PQ_SENSOR: { id: 'sensor', label: 'IMAGE SENSOR / 知識核心', color: 0x65E0BC },
-      PQ_MAINBOARD: { id: 'mainboard', label: 'MAINBOARD / CRM 資料核心', color: 0x3E9BFF },
-      PQ_AI_CHIP: { id: 'chip', label: 'PQ-47 AI 處理器', color: 0xFF6B2C },
-      PQ_BATTERY: { id: 'battery', label: '自動運轉電源', color: 0xF2EFE8 },
-      PQ_RIBBON: { id: 'ribbon', label: '產業導入排線', color: 0xFF6B2C }
+      PQ_SENSOR: { id: 'sensor', label: t('IMAGE SENSOR / 知識核心', 'IMAGE SENSOR / Knowledge Core'), color: 0x65E0BC },
+      PQ_MAINBOARD: { id: 'mainboard', label: t('MAINBOARD / CRM 資料核心', 'MAINBOARD / CRM Data Core'), color: 0x3E9BFF },
+      PQ_AI_CHIP: { id: 'chip', label: t('PQ-47 AI 處理器', 'PQ-47 AI Processor'), color: 0xFF6B2C },
+      PQ_BATTERY: { id: 'battery', label: t('自動運轉電源', 'Autonomous Power'), color: 0xF2EFE8 },
+      PQ_RIBBON: { id: 'ribbon', label: t('產業導入排線', 'Industry Ribbon'), color: 0xFF6B2C }
     };
     function resolveRule(name) {
       if (INTERNALS[name]) return INTERNALS[name];
       if (name.startsWith('lenses')) return { id: 'optics', label: 'OPTICAL LENS ASSEMBLY', color: 0xFF6B2C };
-      if (name.startsWith('case_')) return { id: 'shell', label: 'OUTER SHELL / 平台層', color: 0xF2EFE8 };
+      if (name.startsWith('case_')) return { id: 'shell', label: t('OUTER SHELL / 平台層', 'OUTER SHELL / Platform Layer'), color: 0xF2EFE8 };
       if (name.startsWith('body_low') || CHASSIS.has(name)) return { id: 'chassis', label: 'CORE CHASSIS', color: 0xF2EFE8 };
-      if (name.startsWith('body')) return { id: 'controls', label: 'CONTROL / 操作介面', color: 0x3E9BFF };
+      if (name.startsWith('body')) return { id: 'controls', label: t('CONTROL / 操作介面', 'CONTROL / Interface'), color: 0x3E9BFF };
       return { id: 'controls', label: 'CAMERA BODY', color: 0x3E9BFF };
     }
 
@@ -512,11 +513,11 @@ export function createHomeEngine() {
     // 機身「主元件」= 整台機身(外殼/控制/機架 + 全部內部零件),移出放大時整台一起跑,不留下零件
     const BODY_GRP = ['controls', 'chassis', 'shell'].concat(INT_GRP);
     const STUDY = [
-      { action: 'ring',  side: 'right', code: 'LENS-R01', title: '對焦需求',     biz: '接住詢問、辨識需求、安排下一步', part: null, group: null },   // 01 對焦環(單件特寫)
-      { action: 'press', side: 'left',  code: 'REC-B02', title: '啟動下一步',   biz: '自動回覆、跟進、提醒與流程觸發', part: null, group: null },   // 02 錄影/快門鍵(單件特寫)
-      { action: 'iris',  side: 'right', code: 'IRIS-A03',  title: '調整每一次輸出', biz: '文案、圖片與影片內容',           part: null, group: null },   // 03 光圈(單件特寫)
-      { action: 'mark',  side: 'left',  code: 'LCD-D04', title: '推進每一件工作', biz: '報價、專案、進度與財務',         part: null, group: null },   // 04 LCD 螢幕(單件特寫)
-      { action: 'scan',  side: 'right', code: 'SD-S05',  title: '留下每一次結果', biz: '資料、紀錄、月報與營運判讀',     part: null, group: null }   // 05 記憶卡側蓋(單件特寫)
+      { action: 'ring',  side: 'right', code: 'LENS-R01', title: t('對焦需求', 'Focus on Needs'),     biz: t('接住詢問、辨識需求、安排下一步', 'Catch, qualify, and plan next steps'), part: null, group: null },   // 01 對焦環(單件特寫)
+      { action: 'press', side: 'left',  code: 'REC-B02', title: t('啟動下一步', 'Start Next Steps'),   biz: t('自動回覆、跟進、提醒與流程觸發', 'Auto replies, follow-ups, flow triggers'), part: null, group: null },   // 02 錄影/快門鍵(單件特寫)
+      { action: 'iris',  side: 'right', code: 'IRIS-A03',  title: t('調整每一次輸出', 'Tune Every Output'), biz: t('文案、圖片與影片內容', 'Copy, image and video content'),           part: null, group: null },   // 03 光圈(單件特寫)
+      { action: 'mark',  side: 'left',  code: 'LCD-D04', title: t('推進每一件工作', 'Drive Every Task'), biz: t('報價、專案、進度與財務', 'Quotes, projects, progress, finance'),         part: null, group: null },   // 04 LCD 螢幕(單件特寫)
+      { action: 'scan',  side: 'right', code: 'SD-S05',  title: t('留下每一次結果', 'Keep Every Result'), biz: t('資料、紀錄、月報與營運判讀', 'Data, records, reports and insights'),     part: null, group: null }   // 05 記憶卡側蓋(單件特寫)
     ];
     // 零件展示暫存向量/四元數(相機相對展示位置 + 換角度面向鏡頭)
     const _fwd = new THREE.Vector3(), _rgt = new THREE.Vector3(), _up2 = new THREE.Vector3(), _disp = new THREE.Vector3(), _dispL = new THREE.Vector3(), _WUP = new THREE.Vector3(0, 1, 0), _actQ = new THREE.Quaternion();
@@ -1092,10 +1093,10 @@ export function createHomeEngine() {
     const svgEl = (tag, cls) => { const e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; };
     const CARDW = ctx.mobile ? 150 : 248, CARDH = ctx.mobile ? 52 : 72;
     const ANNOT = [
-      { g: 'optics', idx: '01', biz: '接客 · AI 客服', note: '客人從這裡進來,AI 先接住、先理解', ax: 0.055, ay: 0.26, reveal: 0.70 },
-      { g: 'sensor', idx: '02', biz: '行銷 · 內容生成', note: '把產業 know-how 變成貼文、圖片、影片', ax: 0.055, ay: 0.60, reveal: 0.75 },
-      { g: 'mainboard', idx: '03', biz: 'CRM · 追客', note: '每個客人走到哪一步,都記在同一塊板上', ax: 0.945, ay: 0.26, reveal: 0.80 },
-      { g: 'shell', idx: '04', biz: '品牌屋 · 平台層', note: '同一顆引擎,換上不同產業的臉', ax: 0.945, ay: 0.60, reveal: 0.85 }
+      { g: 'optics', idx: '01', biz: t('接客 · AI 客服', 'Intake · AI Support'), note: t('客人從這裡進來,AI 先接住、先理解', 'Leads land here — AI catches them first'), ax: 0.055, ay: 0.26, reveal: 0.70 },
+      { g: 'sensor', idx: '02', biz: t('行銷 · 內容生成', 'Marketing · Content'), note: t('把產業 know-how 變成貼文、圖片、影片', 'Turns know-how into posts, images, video'), ax: 0.055, ay: 0.60, reveal: 0.75 },
+      { g: 'mainboard', idx: '03', biz: t('CRM · 追客', 'CRM · Follow-up'), note: t('每個客人走到哪一步,都記在同一塊板上', 'Every customer stage, on one board'), ax: 0.945, ay: 0.26, reveal: 0.80 },
+      { g: 'shell', idx: '04', biz: t('品牌屋 · 平台層', 'Brand House · Platform'), note: t('同一顆引擎,換上不同產業的臉', 'One engine, many industry faces'), ax: 0.945, ay: 0.60, reveal: 0.85 }
     ];
     const annItems = [];
     if (annotSvg) {
