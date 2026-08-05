@@ -1710,8 +1710,13 @@ function paintDemo(g, e) {
         const broken = i === 2;
         d.node(xs[i], ly, 4.5 * s + 1, broken ? C.orange : (i === 3 ? C.green : C.blue), a * kn, broken);
         g.globalAlpha = a * kn;
+        // 標籤置中於節點,但夾在面板內:英文首尾字(Inquiry in / Closed)比中文寬,
+        // 純置中會被畫到面板外(實測 EN 兩端各溢出約 6–10px)
+        g.font = '600 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        const halfW = g.measureText(nm).width / 2;
+        const lx = clamp(xs[i], px + 8 + halfW, px + pw - 8 - halfW);
         g.textAlign = 'center';
-        d.han(nm, xs[i], ly + 22 * s + 6, fsS, broken ? C.orange : 'rgba(242,239,232,.72)', broken ? 800 : 600);
+        d.han(nm, lx, ly + 22 * s + 6, fsS, broken ? C.orange : 'rgba(242,239,232,.72)', broken ? 800 : 600);
         g.textAlign = 'left';
       });
       const kt2 = ez(sb(kF, .3, .6));
