@@ -210,7 +210,7 @@ export function PageProgressRail(ctx, chapters, { active = true } = {}) {
   const isMobile = ctx.mobile;
   const nav = document.createElement('nav');
   nav.id = 'pq-rail';
-  nav.setAttribute('aria-label', '頁面章節導覽');
+  nav.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Page chapters' : '頁面章節導覽');
   const jumpBehavior = ctx.reduced ? 'auto' : 'smooth';
   const items = [];
   if (isMobile) {
@@ -230,7 +230,7 @@ export function PageProgressRail(ctx, chapters, { active = true } = {}) {
     chapters.forEach((ch, i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.setAttribute('aria-label', '跳到「' + ch.label + '」');
+      b.setAttribute('aria-label', (document.documentElement.lang === 'en' ? 'Jump to ' : '跳到') + ch.label);
       b.style.cssText = 'display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:4px;font:600 11px "Noto Sans TC",sans-serif;color:rgba(9,11,14,.55)';
       const tag = document.createElement('span');
       tag.textContent = ch.label;
