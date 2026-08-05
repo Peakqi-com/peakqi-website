@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Page Not Found (404) | PeakQi</title>
+<meta name="description" content="This page doesn't exist or has moved. Head back to PeakQi and see how AI catches every customer.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
+body{margin:0;background:#090B0E;color:#F2EFE8;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#F2EFE8}
+::selection{background:#FF6B2C;color:#F2EFE8}
+</style>
+<!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:clamp(24px,8vw,120px);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,232,.04) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
+  <div style="position:relative;display:flex;flex-direction:column;gap:22px;max-width:640px">
+    <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.34em;color:#FF6B2C">404 — NOT FOUND</span>
+    <h1 style="margin:0;font:700 clamp(4rem,14vw,9rem)/1 'Space Grotesk',sans-serif;color:transparent;-webkit-text-stroke:1.5px rgba(242,239,232,.6)">404</h1>
+    <p style="margin:0;font:900 clamp(1.4rem,3vw,2rem)/1.5 'Noto Sans TC',sans-serif;text-wrap:balance">This page slipped through.<br>Your customers won't.</p>
+    <p style="margin:0;font:400 .96875rem/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.65)">The page doesn't exist or has moved — pick a road back below.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:6px">
+      <a href="/en/" style="display:inline-flex;align-items:center;gap:10px;background:#FF6B2C;color:#090B0E;padding:15px 26px;border-radius:2px;font:700 .9375rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="background:#F2EFE8;color:#090B0E">Home →</a>
+      <a href="/en/cases" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:14px 22px;border-radius:2px;font:500 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">See cases</a>
+      <a href="/en/demo" style="display:inline-flex;align-items:center;border:1px solid rgba(242,239,232,.35);color:#F2EFE8;padding:14px 22px;border-radius:2px;font:500 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">Book a demo</a>
+    </div>
+    <span style="font:400 .8125rem 'Space Grotesk',sans-serif;color:rgba(242,239,232,.45)">jacky@peakqi.com · (02) 6609-3699</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
