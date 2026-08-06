@@ -41,6 +41,8 @@ const UI = {
     skyHint: '點畫面任一處,把星星連成星座', skyStars: '顆',
     skyAria: '互動式星空:點畫面或按 Enter 觀測一顆星星,連滿六顆完成一次觀測',
     skyDone: '觀測完成', skyLog: '觀測紀錄', skyScroll: '往下讀 · 觀點列表',
+    // 星空自走演出的字卡:獵戶座連完之後才報出名字;彩蛋那段的署名
+    skyOrion: '獵戶座', skyPeak: '奇鋒',
     all: '全部', back: '回到觀點', mins: '分鐘閱讀', empty: '這個標籤下還沒有文章。',
     related: '延伸閱讀', skip: '跳到主要內容', updated: '更新於',
     ctaTitle: '想知道這些流程在你的公司長什麼樣?',
@@ -56,6 +58,7 @@ const UI = {
     skyHint: 'Tap anywhere to connect the stars', skyStars: 'stars',
     skyAria: 'Interactive night sky: tap or press Enter to observe a star; six of them complete one observation',
     skyDone: 'Observation logged', skyLog: 'Observation log', skyScroll: 'Scroll · all insights',
+    skyOrion: 'Orion', skyPeak: 'PEAKQI',
     all: 'All', back: 'Back to Insights', mins: 'min read', empty: 'No posts under this tag yet.',
     related: 'Read next', skip: 'Skip to main content', updated: 'Updated',
     ctaTitle: 'Want to see what this looks like inside your company?',
@@ -447,7 +450,7 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
 
   const body = `
 <main id="pq-main" data-screen-label="${esc(u.idxTitle)}">
-  <header class="bl-head" data-immersive data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}">
+  <header class="bl-head" data-immersive data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}" data-orion="${esc(u.skyOrion)}" data-peak="${esc(u.skyPeak)}">
     <canvas tabindex="0" role="button" aria-label="${esc(u.skyAria)}"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">

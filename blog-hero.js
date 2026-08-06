@@ -4,21 +4,25 @@
 //   1 靜態天幕   夜空漸層 + 銀河帶            → 離屏預繪,每幀一次 blit
 //   2 星雲       程序化 value-noise + fbm     → 離屏預繪兩張低解析雜訊,每幀只位移/呼吸
 //   3 大氣輝光   地平線上的輝光帶,色相隨時間慢慢在暖橘與青綠之間走
-//   4/5/7 星場   遠 / 中 / 近三層,各自繞天極以不同轉速旋轉,近層有繞射十字星芒
+//   4/5/7 星場   遠 / 中 / 近三層。天球「不」整體轉動 —— 每顆星有自己的呼吸、自己的游移軌跡、
+//                自己的色溫與星芒長度,少數星偶爾爆閃。畫面是活的,但看不出整片往同一個方向走。
 //   6 行星       環系行星 + 兩顆衛星沿橢圓軌道公轉(軌道線可見)
-//   8 流星       偶發,含頭部光暈與拖尾
-//   9 觀測紀錄   已完成的星座留下淡淡殘影,最多疊 5 組,右側有編號讀數
-//  10 當前星座   點擊連成的線 + 每顆星的觀測環
-//  11 完成儀式   光暈擴散雙環 + 座標讀數 + 編號標記
-//  12 靜態地面   雙層山稜 + 觀測站圓頂剪影   → 離屏預繪(只有底部一條帶),蓋住地平線下的星
-//  13 觀測者     三腳架 / 赤道儀 / 主鏡 + 尋星鏡 / 目鏡,鏡筒轉向最新觀測目標
-//  14 目鏡視野圈 指標靠近時出現的放大圈:圈內是更密的暗星 + 刻度環 + 十字絲 + 赤經赤緯讀數
+//   8 演出       三段各 15 秒的自走演出(流星雨 / 獵戶座 / 峰),之間留安靜間隔;互動一來就退場
+//   9 流星       偶發,含頭部光暈與拖尾(演出進行中讓位,不搶戲)
+//  10 觀測紀錄   已完成的星座留下淡淡殘影,最多疊 5 組,右側有編號讀數
+//  11 當前星座   點擊連成的線 + 每顆星的觀測環
+//  12 完成儀式   光暈擴散雙環 + 座標讀數 + 編號標記
+//  13 靜態地面   雙層山稜 + 觀測站圓頂剪影   → 離屏預繪(只有底部一條帶),蓋住地平線下的星
+//  14 觀測者     三腳架 / 赤道儀 / 主鏡 + 尋星鏡 / 目鏡,鏡筒轉向最新觀測目標(或當下的演出)
+//  15 目鏡視野圈 指標靠近時出現的放大圈:圈內是更密的暗星 + 刻度環 + 十字絲 + 赤經赤緯讀數
 //
 // 互動:點畫面任一處 → 就近的星星被「觀測」到,依序連成星座;附近沒有星星就當場發現一顆。
 //       連滿 STAR_GOAL 顆完成一次觀測,標記編號後歸檔進觀測紀錄。
 //       桌機游標會帶著目鏡視野圈跑並輕微視差;手機輕點後視野圈停留兩秒。
+//       演出期間互動完全不被鎖住 —— 點下去就讓演出淡出,舞台立刻還給使用者。
 // 動畫全部掛在 motion-kit 的共用 rAF 上(整頁只有一個迴圈);離開視窗時自動停止繪製。
-// prefers-reduced-motion:不做任何持續動態,只有互動後重畫一次,點擊功能完整保留。
+// prefers-reduced-motion:不跑演出、不做任何持續動態(連游移與閃爍都關掉),
+//                        只有互動後重畫一次,點擊功能完整保留。
 // 文案不寫死在這裡,由 Blog.dc.html 用 data-* 傳進來 —— 這支模組中英共用。
 import { createMotionContext } from './motion-kit.js';
 
@@ -31,9 +35,57 @@ const TAU = Math.PI * 2;
 const CREAM = '242,239,232';
 const ORANGE = '255,107,44';
 const STEEL = '152,170,208';
-// 星等色溫:多數偏白,少數藍白與橙黃 —— 純白星場看起來像雜訊,有色溫才像天空
-const SPECTRA = [CREAM, CREAM, CREAM, '198,214,245', '255,223,182', '214,228,255'];
+// 星等色溫:多數偏白,少數藍白與橙黃 —— 純白星場看起來像雜訊,有色溫才像天空。
+// 存成數值三元組:每顆星在自己的兩個端點之間慢慢來回,色溫才會「各自」變化。
+const SPECTRA = [
+  [242, 239, 232], [242, 239, 232], [242, 239, 232],
+  [198, 214, 245], [255, 223, 182], [214, 228, 255]
+];
 const FAR_A = [0.055, 0.1, 0.155, 0.225, 0.31];   // 遠層星星的透明度分桶(批次填色用)
+
+// 每顆星的個別游移:半幅(px)與週期(ms),依層而異 —— 近層走得多一點,遠層幾乎只是呼吸。
+// 幅度刻意壓在個位數:這是「星星自己在動」,不是鏡頭在推。
+const DRIFT = [[0.4, 1.5], [0.8, 2.6], [1.3, 4.2]];
+const DPER = [[16000, 52000], [12000, 40000], [9000, 31000]];
+const FLARE_W = 0.035;                     // 爆閃佔自己週期的比例(週期 17–52 秒 → 亮 0.6–1.8 秒)
+
+// ── 演出 ──────────────────────────────────────────────────
+const SHOW_MS = 15000;                     // 每段演出長度
+const SHOW_FADE = 760;                     // 被互動打斷時的退場時間
+const SHOW_GAP = [22000, 34000];           // 兩段之間的安靜間隔
+const SHOW_IDLE = 6500;                    // 最後一次互動之後要安靜多久才開演
+const SHOW_FIRST = 9000;                   // 進場後先讓使用者自己看一段時間
+
+// 獵戶座:比例取自真實星圖。用等比方框塞進當下的可用天區,所以任何寬高下都是同一個形狀。
+// [id, x, y, 亮度, 色]
+const ORION = [
+  ['bet', 0.20, 0.140, 1.00, [255, 176, 122]],   // 參宿四 Betelgeuse:橙紅超巨星
+  ['bel', 0.74, 0.200, 0.72, [206, 222, 255]],   // 參宿五 Bellatrix
+  ['alt', 0.34, 0.500, 0.82, [226, 234, 255]],   // 腰帶 Alnitak
+  ['aln', 0.47, 0.520, 0.88, [232, 238, 255]],   // 腰帶 Alnilam
+  ['min', 0.60, 0.545, 0.80, [222, 232, 255]],   // 腰帶 Mintaka
+  ['sai', 0.26, 0.900, 0.68, [216, 228, 255]],   // 參宿六 Saiph
+  ['rig', 0.80, 0.860, 1.00, [206, 224, 255]],   // 參宿七 Rigel:藍白
+  ['mei', 0.46, 0.015, 0.40, [228, 232, 244]],   // 頭 Meissa
+  ['sw1', 0.445, 0.665, 0.30, [255, 206, 208]],  // 劍(獵戶座大星雲就掛在這)
+  ['sw2', 0.435, 0.760, 0.26, [255, 198, 202]]
+];
+const ORION_ORDER = ['alt', 'aln', 'min', 'bet', 'rig', 'bel', 'sai', 'mei', 'sw1', 'sw2'];
+const ORION_LINK = [
+  ['alt', 'aln'], ['aln', 'min'],            // 腰帶三星先連 —— 全天最好認的一段
+  ['bet', 'alt'], ['bel', 'min'],
+  ['alt', 'sai'], ['min', 'rig'],
+  ['bet', 'bel'],
+  ['aln', 'sw1'], ['sw1', 'sw2'],
+  ['mei', 'bet'], ['mei', 'bel']
+];
+// 彩蛋的稜線:一條有肩有峰的山形(index 3 是主峰)。PeakQi 的「峰」。
+const PEAK_PATH = [[0.02, 1.00], [0.22, 0.58], [0.34, 0.72], [0.52, 0.06], [0.70, 0.60], [0.82, 0.48], [0.98, 1.00]];
+const PEAK_TOP = 3;
+
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const seg = (k, a, b) => clamp01((k - a) / (b - a));
+const ez = (t) => t * t * (3 - 2 * t);
 
 export function mountBlogHero() {
   const root = document.querySelector('[data-blog-sky]');
@@ -49,7 +101,9 @@ export function mountBlogHero() {
     hint: root.getAttribute('data-hint') || '',
     done: root.getAttribute('data-done') || '',
     stars: root.getAttribute('data-stars') || '',
-    log: root.getAttribute('data-log') || ''
+    log: root.getAttribute('data-log') || '',
+    orion: root.getAttribute('data-orion') || '',
+    peak: root.getAttribute('data-peak') || ''
   };
   const live = root.querySelector('[data-sky-live]');
   const hoverable = !!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches);
@@ -65,19 +119,24 @@ export function mountBlogHero() {
   let doneAt = 0, doneTag = '', doneAtXY = null, nextShot = 3200, visible = true;
   let bgSky = null, bgGround = null, groundH = 0, neb = [], nebSrc = null;
   let dirty = true;                                 // reduced 模式下只有髒了才重畫
+  let T = 0;                                        // 當前幀時間:所有「各自動起來」的唯一時基
+
+  // 演出狀態。全部集中在這裡,收場時一次清乾淨,不會有殘留。
+  let show = null, showNext = 0, showSeq = 0, lastInput = 0;
+  let rain = [], rainCfg = null, orion = null, peak = null;
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const p2 = (n) => (n < 10 ? '0' : '') + n;
 
   // ── 程序化雜訊:value noise + fbm,預繪成一張小圖,放大後就是柔邊星雲 ──
-  function noiseCanvas(w, h, rgb, seed, scale, oct, cut) {
+  function noiseCanvas(w, h, rgb, seedN, scale, oct, cut) {
     const c = document.createElement('canvas');
     c.width = w; c.height = h;
     const b = c.getContext('2d');
     const im = b.createImageData(w, h);
     const d = im.data;
     const hashAt = (x, y) => {
-      let n = (x * 374761393 + y * 668265263 + seed * 1274126177) | 0;
+      let n = (x * 374761393 + y * 668265263 + seedN * 1274126177) | 0;
       n = (n ^ (n >> 13)) * 1274126177;
       return ((n ^ (n >> 16)) >>> 0) / 4294967295;
     };
@@ -121,7 +180,7 @@ export function mountBlogHero() {
     cv.style.height = H + 'px';
     g.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-    // 天球極點放在畫面外的右下:星星繞它轉,離極點越遠走得越多 —— 和真實星空一致
+    // 極點只剩下「赤經赤緯讀數」在用:星星不再繞它轉,但座標系統還是要有個原點才算得出來
     pole = { x: W * 0.74, y: H * 1.55 };
     lens.r = small ? 58 : mobile ? 68 : 96;
 
@@ -132,7 +191,9 @@ export function mountBlogHero() {
     scope.pivot = 30 * scope.s;                      // 雲台高度:鏡筒繞這個點轉,對準角度也從這裡算
 
     if (!layers.length) seed();
-    else { layers.forEach((L) => L.stars.forEach(project)); deep.forEach(project); if (planet) project(planet); }
+    // 星位以「畫面比例」儲存,resize 之後 posX/posY 直接算得出新座標,不需要重新投影。
+    // 正在演的那段和畫面尺寸綁在一起,重算版面等於重排舞台 —— 直接收掉比較乾淨。
+    if (show) endShow(performance.now());
     build();
     dirty = true;
   }
@@ -145,69 +206,109 @@ export function mountBlogHero() {
     return gb + Math.sin(k * 3.1 + 0.6) * gb * 0.2 + Math.sin(k * 7.3) * gb * 0.09;
   };
 
-  // 以「畫面比例」存位置,resize 後重算極座標 —— 星座不會因為轉向而錯位。
-  // born 是這顆星被建立時的天球轉角:點擊當場發現的星要落在「當下」的畫面位置,
-  // 少了這一項,resize 之後它會跳到別的地方。
-  function project(s) {
-    const x = s.nx * W, y = s.ny * H;
-    const dx = x - pole.x, dy = y - pole.y;
-    s.r = Math.hypot(dx, dy);
-    s.a0 = Math.atan2(dy, dx) - (s.born || 0);
-  }
+  // 三層的視差位移量(px)
+  const PARK = [4, 9, 16];
+  // 位置的唯一來源:版面基準 + 這顆星自己的游移 + 指標視差。
+  // 觀測環、星座線、目鏡圈裡的放大星、演出取的星全部走這兩支 —— 少走一支就會錯開十幾 px。
+  // 沒有任何全域轉角:每顆星的 dfx/dfy/dpx/dpy 都是獨立亂數,合起來不構成任何一致方向的位移。
+  const posX = (s) => s.nx * W + s.dax * Math.sin(T * s.dfx + s.dpx) + par.x * PARK[s.lr | 0];
+  const posY = (s) => s.ny * H + s.day * Math.sin(T * s.dfy + s.dpy) + par.y * PARK[s.lr | 0];
+  const starPos = (s) => ({ x: posX(s), y: posY(s) });
 
   // 星星的垂直分佈要跟著遮罩走:桌機的遮罩只吃左下角,星場往上堆才會落在開闊處;
   // 手機的遮罩由上而下吃到 68%,再往上堆就等於把星星藏在黑布後面,所以整片下移。
-  function mkStar(loMag, hiMag) {
+  function mkStar(loMag, hiMag, tier) {
+    const t = tier | 0;
+    const amp = DRIFT[t], per = DPER[t];
+    const ci = (Math.random() * SPECTRA.length) | 0;
+    const cj = (ci + 1 + ((Math.random() * (SPECTRA.length - 1)) | 0)) % SPECTRA.length;
     const s = {
       nx: Math.random(),
       ny: mobile
         ? 0.2 + Math.pow(Math.random(), 0.9) * 0.64
         : Math.pow(Math.random(), 1.32) * 0.86,
       mag: loMag + Math.pow(Math.random(), 1.8) * (hiMag - loMag),
-      tw: rnd(0, TAU), tws: rnd(0.55, 1.9),
-      col: SPECTRA[(Math.random() * SPECTRA.length) | 0],
+      lr: t,
+      // 明暗分兩個獨立諧波:慢的是呼吸,快的是大氣閃爍,相位與頻率都各自亂數
+      tw: rnd(0, TAU), tws: rnd(0.5, 1.9),
+      tw2: rnd(0, TAU), tws2: rnd(2.6, 6.4), tw2a: rnd(0.04, 0.2),
+      // 星芒長度自己伸縮的週期
+      spf: TAU / rnd(6500, 21000), spp: rnd(0, TAU),
+      // 個別游移:x/y 各自的幅度、頻率與相位 → 每顆星走自己的橢圓,方向彼此無關
+      dax: reduced ? 0 : rnd(amp[0], amp[1]),
+      day: reduced ? 0 : rnd(amp[0], amp[1]),
+      dfx: TAU / rnd(per[0], per[1]), dfy: TAU / rnd(per[0], per[1]),
+      dpx: rnd(0, TAU), dpy: rnd(0, TAU),
+      // 色溫:在自己的兩個端點之間慢慢來回(26–74 秒一趟)
+      c1: SPECTRA[ci], c2: SPECTRA[cj], cf: TAU / rnd(26000, 74000), cp: rnd(0, TAU),
+      fp: 0, fo: 0,
       lit: 0, want: false
     };
-    project(s);
+    // 爆閃:只有少數星有 —— 全部都閃就變成雜訊,偶爾一顆才會讓人回頭看
+    if (!reduced && t > 0 && Math.random() < (t === 2 ? 0.34 : 0.12)) {
+      s.fp = rnd(17000, 52000);
+      s.fo = rnd(0, s.fp);
+    }
     return s;
   }
 
   function seed() {
     const q = small ? 0.5 : mobile ? 0.62 : 1;       // 手機降粒子數
-    const mk = (n, lo, hi, rate, tier) => {
-      const L = { stars: [], rate, tier, spin: 0, buk: [[], [], [], [], []] };
-      for (let i = 0; i < n; i++) { const s = mkStar(lo, hi); s.lr = tier; L.stars.push(s); }
+    const mk = (n, lo, hi, tier) => {
+      const L = { stars: [], tier, buk: [[], [], [], [], []] };
+      for (let i = 0; i < n; i++) L.stars.push(mkStar(lo, hi, tier));
       return L;
     };
     layers = [
-      mk(Math.round(210 * q), 0, 0.34, 0.42, 0),      // 遠:密、暗、轉最慢
-      mk(Math.round(92 * q), 0.16, 0.82, 1, 1),       // 中:主要可觀測的星
-      mk(Math.round(22 * q), 0.62, 1, 1.62, 2)        // 近:亮星,有繞射星芒
+      mk(Math.round(210 * q), 0, 0.34, 0),            // 遠:密、暗
+      mk(Math.round(92 * q), 0.16, 0.82, 1),          // 中:主要可觀測的星
+      mk(Math.round(22 * q), 0.62, 1, 2)              // 近:亮星,有繞射星芒
     ];
     deep = [];
     const dn = Math.round(360 * q);                   // 只在目鏡圈裡看得到的暗星
-    for (let i = 0; i < dn; i++) { const s = mkStar(0, 0.42); s.lr = 1; deep.push(s); }
+    for (let i = 0; i < dn; i++) deep.push(mkStar(0, 0.42, 1));
 
     planet = {
       nx: rnd(0.26, 0.6), ny: mobile ? rnd(0.42, 0.58) : rnd(0.16, 0.34),
       rad: mobile ? 8.5 : 13, tilt: rnd(-0.5, -0.24), lr: 1,
+      // 行星也有自己極慢的游移,不然它會是畫面裡唯一釘死的東西
+      dax: reduced ? 0 : 0.9, day: reduced ? 0 : 0.7,
+      dfx: TAU / 47000, dfy: TAU / 61000, dpx: rnd(0, TAU), dpy: rnd(0, TAU),
       moons: [
         { d: mobile ? 22 : 34, sp: 0.00021, ph: rnd(0, TAU), r: mobile ? 1.7 : 2.3, sq: 0.34 },
         { d: mobile ? 34 : 52, sp: -0.000128, ph: rnd(0, TAU), r: mobile ? 1.3 : 1.8, sq: 0.5 }
       ]
     };
-    project(planet);
   }
 
-  // 三層的視差位移量(px)。所有「算位置」的地方都走這支,
-  // 否則觀測環、星座線、目鏡圈裡的星會跟畫面上看到的星差開十幾 px。
-  const PARK = [4, 9, 16];
-  const starPos = (s) => {
-    const li = s.lr | 0;
-    const a = s.a0 + layers[li].spin;
-    const k = PARK[li];
-    return { x: pole.x + s.r * Math.cos(a) + par.x * k, y: pole.y + s.r * Math.sin(a) + par.y * k };
-  };
+  // 爆閃:用「自己的週期取餘數」算,不留狀態 —— 演出被打斷、頁面切走再回來都不會卡在半亮
+  function flareOf(s) {
+    if (!s.fp || reduced) return 0;
+    const u = ((T + s.fo) % s.fp) / s.fp;
+    if (u > FLARE_W) return 0;
+    const k = u / FLARE_W;
+    return k < 0.16 ? k / 0.16 : Math.pow(1 - (k - 0.16) / 0.84, 2.2);
+  }
+
+  // 明暗:慢呼吸 × 快閃爍,再加上爆閃
+  function twinkleOf(s) {
+    if (reduced) return 1;
+    return (0.72 + 0.28 * Math.sin(T * 0.0016 * s.tws + s.tw))
+      * (1 + s.tw2a * Math.sin(T * 0.0016 * s.tws2 + s.tw2))
+      + flareOf(s) * 1.6;
+  }
+
+  // 色溫:每顆星在自己的兩個端點之間走,最多走 62% —— 再多就變成閃色燈。
+  // 一趟要 26–74 秒,所以沒必要每幀重算:每 120ms 更新一次,肉眼完全分不出來,
+  // 但省掉每幀上百次字串組裝(以及它帶來的 GC 壓力)。
+  function starCol(s) {
+    if (s._cs !== undefined && (reduced || T - s._ct < 120)) return s._cs;
+    const a = s.c1, b = s.c2;
+    const k = reduced ? 0 : (0.5 + 0.5 * Math.sin(T * s.cf + s.cp)) * 0.62;
+    s._ct = T;
+    s._cs = ((a[0] + (b[0] - a[0]) * k) | 0) + ',' + ((a[1] + (b[1] - a[1]) * k) | 0) + ',' + ((a[2] + (b[2] - a[2]) * k) | 0);
+    return s._cs;
+  }
 
   // ── 靜態層預繪:天幕(漸層+銀河)與地面(雙層山稜+觀測站) ──
   function build() {
@@ -236,7 +337,7 @@ export function mountBlogHero() {
     b.fillStyle = mw;
     b.fillRect(-W, -H * 0.24, W * 2, H * 0.48);
     b.fillStyle = `rgba(${CREAM},.5)`;
-    for (let i = 0; i < (mobile ? 90 : 190); i++) {   // 銀河裡的細塵埃:預繪,不參與轉動
+    for (let i = 0; i < (mobile ? 90 : 190); i++) {   // 銀河裡的細塵埃:預繪,不參與任何動態
       const gx = rnd(-W, W), gy = rnd(-H * 0.17, H * 0.17);
       b.globalAlpha = rnd(0.05, 0.3) * (1 - Math.abs(gy) / (H * 0.17));
       b.fillRect(gx | 0, gy | 0, 1, 1);
@@ -254,8 +355,8 @@ export function mountBlogHero() {
       ];
     }
     neb = [
-      { c: nebSrc[0], a: 0.68, sp: 0.0000185, bs: 0.00021, dx: -0.06, dy: -0.02 },
-      { c: nebSrc[1], a: 0.42, sp: -0.0000132, bs: 0.00016, dx: 0.1, dy: -0.08 }
+      { c: nebSrc[0], a: 0.68, bs: 0.000063, ph: 0, dx: -0.06, dy: -0.02 },      // 約 100 秒一次濃淡
+      { c: nebSrc[1], a: 0.42, bs: 0.000047, ph: 2.1, dx: 0.1, dy: -0.08 }       // 約 134 秒,相位錯開
     ];
     if (mobile) neb.length = 1;                      // 手機只留一層:少一次滿版合成
 
@@ -315,8 +416,8 @@ export function mountBlogHero() {
   }
 
   // ── 大氣輝光:地平線上的一層帶,色相在暖橘與青綠之間慢慢走 ──
-  function drawAirglow(now) {
-    const t = reduced ? 0.35 : (Math.sin(now * 0.000037) * 0.5 + 0.5);
+  function drawAirglow() {
+    const t = reduced ? 0.35 : (Math.sin(T * 0.000037) * 0.5 + 0.5);
     const band = Math.min(H * 0.42, 300);
     const top = H - groundY(W * 0.5) - band;
     const gr = g.createLinearGradient(0, top, 0, H - groundY(W * 0.5) + 8);
@@ -330,32 +431,29 @@ export function mountBlogHero() {
     g.fillRect(0, top, W, band + 10);
   }
 
-  function drawNebula(now) {
-    const t = reduced ? 0 : now;
+  // 星雲位置是釘死的:以前它每分鐘會橫移七、八十 px,那正是「整片天空在往同一個方向走」的來源之一。
+  // 現在只留兩層各自的濃淡呼吸(週期不同、相位不同)—— 位移為零,但雲氣的厚薄還是一直在變。
+  function drawNebula() {
+    const t = reduced ? 0 : T;
     g.globalCompositeOperation = 'lighter';
     for (let i = 0; i < neb.length; i++) {
-      const n = neb[i], ph = t * n.sp;
-      const ox = Math.sin(ph) * W * 0.05 + n.dx * W;
-      const oy = Math.cos(ph * 0.73) * H * 0.04 + n.dy * H;
-      g.globalAlpha = n.a * (reduced ? 0.9 : (0.8 + 0.2 * Math.sin(t * n.bs + i * 2)));
-      g.drawImage(n.c, -W * 0.22 + ox, -H * 0.22 + oy, W * 1.44, H * 1.44);
+      const n = neb[i];
+      g.globalAlpha = n.a * (reduced ? 0.9 : (0.78 + 0.22 * Math.sin(t * n.bs + n.ph)));
+      g.drawImage(n.c, -W * 0.22 + n.dx * W, -H * 0.22 + n.dy * H, W * 1.44, H * 1.44);
     }
     g.globalAlpha = 1;
     g.globalCompositeOperation = 'source-over';
   }
 
   // ── 星場 ────────────────────────────────────────────────
-  function drawFar(L, now) {
+  function drawFar(L) {
     const buk = L.buk;
     for (let b = 0; b < 5; b++) buk[b].length = 0;
-    const ox = par.x * PARK[0], oy = par.y * PARK[0];
     for (let i = 0; i < L.stars.length; i++) {
       const s = L.stars[i];
-      const a = s.a0 + L.spin;
-      const x = pole.x + s.r * Math.cos(a) + ox;
-      const y = pole.y + s.r * Math.sin(a) + oy;
+      const x = posX(s), y = posY(s);
       if (y > H - groundY(x) + 2 || y < -4 || x < -4 || x > W + 4) continue;
-      const tw = reduced ? 1 : 0.74 + 0.26 * Math.sin(now * 0.0016 * s.tws + s.tw);
+      const tw = twinkleOf(s);
       const al = (0.14 + s.mag * 0.72) * tw;
       const bi = al < 0.14 ? 0 : al < 0.24 ? 1 : al < 0.34 ? 2 : al < 0.46 ? 3 : 4;
       buk[bi].push(x | 0, y | 0);
@@ -368,9 +466,11 @@ export function mountBlogHero() {
     }
   }
 
-  function drawStar(s, x, y, now, tier) {
-    const tw = reduced ? 1 : 0.72 + 0.28 * Math.sin(now * 0.0016 * s.tws + s.tw);
-    const rad = (tier === 2 ? 1.15 : 0.6) + s.mag * (tier === 2 ? 1.5 : 1.35);
+  function drawStar(s, x, y, tier) {
+    const fl = flareOf(s);
+    const tw = Math.min(2.6, twinkleOf(s));
+    const col = starCol(s);
+    const rad = (tier === 2 ? 1.15 : 0.6) + s.mag * (tier === 2 ? 1.5 : 1.35) + fl * 1.2;
     if (s.lit > 0) {                                 // 被觀測到的星:橘色光暈
       const R = 15 + s.lit * 14;
       const gl = g.createRadialGradient(x, y, 0, x, y, R);
@@ -380,28 +480,29 @@ export function mountBlogHero() {
       g.beginPath();
       g.arc(x, y, R, 0, TAU);
       g.fill();
-    } else if (tier === 2 || s.mag > 0.72) {         // 亮星的柔光暈
-      const R = 4 + s.mag * (tier === 2 ? 13 : 7);
+    } else if (tier === 2 || s.mag > 0.72 || fl > 0.02) {   // 亮星的柔光暈(爆閃時暗星也會短暫長出來)
+      const R = (4 + s.mag * (tier === 2 ? 13 : 7)) * (1 + fl * 1.3);
       const gl = g.createRadialGradient(x, y, 0, x, y, R);
-      gl.addColorStop(0, `rgba(${s.col},${(0.16 + s.mag * 0.2) * tw})`);
-      gl.addColorStop(1, `rgba(${s.col},0)`);
+      gl.addColorStop(0, `rgba(${col},${Math.min(0.95, (0.16 + s.mag * 0.2) * tw)})`);
+      gl.addColorStop(1, `rgba(${col},0)`);
       g.fillStyle = gl;
       g.beginPath();
       g.arc(x, y, R, 0, TAU);
       g.fill();
     }
-    if (tier === 2) {                                // 繞射十字星芒:星等越亮芒越長
-      const len = (7 + s.mag * 26) * tw;
-      const a1 = 0.1 + s.mag * 0.26;
-      g.strokeStyle = `rgba(${s.col},${(a1 * tw).toFixed(3)})`;
+    if (tier === 2 || fl > 0.06) {                   // 繞射十字星芒:長度隨自己的週期伸縮,爆閃時再抽長
+      const sk = reduced ? 0.9 : 0.78 + 0.22 * Math.sin(T * s.spf + s.spp);
+      const len = Math.min(74, (7 + s.mag * 26) * (tier === 2 ? tw * sk : 0.6 + fl * 1.4));
+      const a1 = Math.min(0.9, (0.1 + s.mag * 0.26) * (tier === 2 ? tw : fl * 1.6));
+      g.strokeStyle = `rgba(${col},${a1.toFixed(3)})`;
       g.lineWidth = 0.9;
       g.beginPath();
       g.moveTo(x - len, y); g.lineTo(x + len, y);
       g.moveTo(x, y - len * 0.82); g.lineTo(x, y + len * 0.82);
       g.stroke();
-      if (s.mag > 0.86) {                            // 最亮的幾顆再加一組 45° 短芒
+      if (s.mag > 0.86 || fl > 0.4) {                // 最亮的幾顆再加一組 45° 短芒
         const d = len * 0.34;
-        g.strokeStyle = `rgba(${s.col},${(a1 * 0.5 * tw).toFixed(3)})`;
+        g.strokeStyle = `rgba(${col},${(a1 * 0.5).toFixed(3)})`;
         g.beginPath();
         g.moveTo(x - d, y - d); g.lineTo(x + d, y + d);
         g.moveTo(x + d, y - d); g.lineTo(x - d, y + d);
@@ -412,31 +513,28 @@ export function mountBlogHero() {
     g.arc(x, y, rad * (s.lit ? 1.45 : 1), 0, TAU);
     g.fillStyle = s.lit
       ? `rgba(${ORANGE},${0.72 + 0.28 * s.lit})`
-      : `rgba(${s.col},${((0.3 + s.mag * 0.66) * tw).toFixed(3)})`;
+      : `rgba(${col},${Math.min(1, (0.3 + s.mag * 0.66) * tw).toFixed(3)})`;
     g.fill();
   }
 
-  function drawLayer(L, now) {
-    const ox = par.x * PARK[L.tier], oy = par.y * PARK[L.tier];
+  function drawLayer(L) {
     for (let i = 0; i < L.stars.length; i++) {
       const s = L.stars[i];
-      const a = s.a0 + L.spin;
-      const x = pole.x + s.r * Math.cos(a) + ox;
-      const y = pole.y + s.r * Math.sin(a) + oy;
+      const x = posX(s), y = posY(s);
       if (y > H - groundY(x) + 4 || y < -30 || x < -30 || x > W + 30) continue;
-      drawStar(s, x, y, now, L.tier);
+      drawStar(s, x, y, L.tier);
     }
   }
 
   // ── 行星:環系 + 兩顆衛星沿橢圓軌道公轉 ──────────────────
-  function drawPlanet(now) {
+  function drawPlanet() {
     if (!planet) return;
     const p = starPos(planet);
     if (p.y > H - groundY(p.x) + 40 || p.x < -60 || p.x > W + 60) return;
-    paintPlanet(p.x, p.y, planet.rad, now);
+    paintPlanet(p.x, p.y, planet.rad);
   }
 
-  function paintPlanet(x, y, R, now) {
+  function paintPlanet(x, y, R) {
     const sc = R / planet.rad;
     g.save();
     g.translate(x, y);
@@ -450,7 +548,7 @@ export function mountBlogHero() {
       g.lineWidth = 0.7;
       g.stroke();
     });
-    const mAng = (m) => m.ph + (reduced ? 0 : now * m.sp);
+    const mAng = (m) => m.ph + (reduced ? 0 : T * m.sp);
     const back = [], front = [];
     planet.moons.forEach((m) => {
       const a = mAng(m);
@@ -498,10 +596,423 @@ export function mountBlogHero() {
     g.restore();
   }
 
+  // ── 三段演出 ────────────────────────────────────────────
+  // 共同規則:每段都有「起—中—收」,收完把自己的狀態清空;
+  //           全段乘上 show.a,被互動打斷時 show.a 在 SHOW_FADE 內歸零 → 一定乾淨退場。
+
+  function startShow(i, now) {
+    show = { i, t0: now, out: 0, a: 1 };
+    rain = []; orion = null; peak = null; rainCfg = null;
+    if (i === 0) startRain(now);
+    else if (i === 1) startOrion();
+    else startPeak();
+    nextShot = now + SHOW_MS + rnd(2500, 6000);      // 演出期間環境流星讓位
+  }
+
+  function endShow(now) {
+    show = null;
+    rain = []; rainCfg = null; orion = null; peak = null;
+    showNext = now + rnd(SHOW_GAP[0], SHOW_GAP[1]);
+  }
+
+  // 演出 1 ── 流星雨。節奏:留白 → 先導一顆 → 慢慢密起來 → 退潮 → 最後一顆長軌跡收尾。
+  function startRain(now) {
+    rainCfg = {
+      rx: mobile ? W * 0.66 : W * 0.72,
+      ry: mobile ? H * 0.30 : H * 0.11,
+      acc: 0, last: now, cap: mobile ? 5 : 9, peak: mobile ? 1.7 : 2.7,
+      herald: false, finale: false
+    };
+  }
+
+  function spawnMeteor(now, kind) {
+    if (!rainCfg || rain.length >= rainCfg.cap) return;
+    const big = kind !== 'rain';
+    const a = rnd(0.34, 1.06) * Math.PI;             // 從輻射點往下、往左散開
+    const off = kind === 'herald' ? rnd(40, 90) : rnd(24, 150);
+    rain.push({
+      x: rainCfg.rx + Math.cos(a) * off,
+      y: rainCfg.ry + Math.sin(a) * off,
+      a, t0: now,
+      life: kind === 'finale' ? 3000 : kind === 'herald' ? 2300 : rnd(1300, 2200),
+      run: kind === 'finale' ? 520 : kind === 'herald' ? 420 : rnd(190, 400),
+      len: big ? rnd(150, 230) : rnd(78, 168),
+      w: big ? 1.9 : rnd(0.7, 1.35),
+      warm: kind === 'finale' || Math.random() < 0.22,
+      peakA: kind === 'finale' ? 0.9 : big ? 0.82 : rnd(0.42, 0.86)
+    });
+  }
+
+  function paintMeteor(m, now, A) {
+    const k = (now - m.t0) / m.life;
+    if (k < 0 || k > 1) return;
+    const dx = Math.cos(m.a), dy = Math.sin(m.a);
+    const hx = m.x + dx * m.run * ez(k), hy = m.y + dy * m.run * ez(k);
+    if (hy > H - groundY(hx) + 10) return;
+    const a = Math.sin(Math.PI * k) * m.peakA * A;
+    if (a < 0.004) return;
+    const len = m.len * (0.45 + 0.55 * Math.sin(Math.PI * k));
+    const lg = g.createLinearGradient(hx, hy, hx - dx * len, hy - dy * len);
+    lg.addColorStop(0, `rgba(${CREAM},${a.toFixed(3)})`);
+    lg.addColorStop(0.34, `rgba(${m.warm ? ORANGE : CREAM},${(a * 0.4).toFixed(3)})`);
+    lg.addColorStop(1, `rgba(${CREAM},0)`);
+    g.strokeStyle = lg;
+    g.lineWidth = m.w;
+    g.beginPath();
+    g.moveTo(hx, hy);
+    g.lineTo(hx - dx * len, hy - dy * len);
+    g.stroke();
+    const hr = 2.6 + m.w * 2.4;
+    const hg = g.createRadialGradient(hx, hy, 0, hx, hy, hr);
+    hg.addColorStop(0, `rgba(${CREAM},${a.toFixed(3)})`);
+    hg.addColorStop(1, `rgba(${CREAM},0)`);
+    g.fillStyle = hg;
+    g.beginPath();
+    g.arc(hx, hy, hr, 0, TAU);
+    g.fill();
+  }
+
+  function showRain(k, now, A) {
+    const c = rainCfg;
+    if (!c) return;
+    const dt = Math.min(120, Math.max(0, now - c.last));
+    c.last = now;
+    // 節奏包絡:0.14 之前完全留白,0.48 到頂,0.82 收乾淨
+    const env = Math.sin(Math.PI * clamp01((k - 0.14) / 0.68));
+    if (!c.herald && k > 0.045) { c.herald = true; spawnMeteor(now, 'herald'); }
+    if (k > 0.14 && k < 0.82) {
+      c.acc += dt * 0.001 * c.peak * env;
+      while (c.acc >= 1) { c.acc -= 1; spawnMeteor(now, 'rain'); }
+    }
+    if (!c.finale && k > 0.845) { c.finale = true; spawnMeteor(now, 'finale'); }
+
+    // 輻射點:一圈很淡的暈,只是暗示「它們都是從這裡來的」
+    const ha = (0.05 + env * 0.07) * A * (1 - seg(k, 0.86, 1));
+    if (ha > 0.004) {
+      const R = mobile ? 74 : 122;
+      const gl = g.createRadialGradient(c.rx, c.ry, 0, c.rx, c.ry, R);
+      gl.addColorStop(0, `rgba(${CREAM},${ha.toFixed(3)})`);
+      gl.addColorStop(0.55, `rgba(${STEEL},${(ha * 0.4).toFixed(3)})`);
+      gl.addColorStop(1, `rgba(${CREAM},0)`);
+      g.fillStyle = gl;
+      g.beginPath();
+      g.arc(c.rx, c.ry, R, 0, TAU);
+      g.fill();
+    }
+    rain = rain.filter((m) => now - m.t0 < m.life);
+    for (let i = 0; i < rain.length; i++) paintMeteor(rain[i], now, A);
+  }
+
+  // 演出 2 ── 獵戶座。腰帶三星先亮 → 四角與頭 → 連線一筆一筆畫 → 大星雲與名字 → 留白 → 收。
+  function startOrion() {
+    const skyTop = mobile ? H * 0.54 : H * 0.06;
+    const skyBot = H - groundY(W * 0.5) - 14;
+    const avail = Math.max(90, skyBot - skyTop);
+    const hh = Math.min(avail * (mobile ? 0.9 : 0.62), mobile ? 320 : 400);
+    const ww = hh / 1.32;
+    const cx = mobile ? W * 0.5 : W * 0.6;
+    const cy = mobile ? (skyTop + skyBot) / 2 : skyTop + avail * 0.42;
+    const x0 = Math.min(Math.max(cx - ww / 2, 10), Math.max(10, W - ww - 10));
+    const y0 = Math.min(Math.max(cy - hh / 2, skyTop), Math.max(skyTop, skyBot - hh));
+    const map = {};
+    ORION.forEach((o) => { map[o[0]] = { x: x0 + o[1] * ww, y: y0 + o[2] * hh, m: o[3], c: o[4] }; });
+    orion = { map, x0, y0, w: ww, h: hh, sc: Math.max(0.5, hh / 360) };
+  }
+
+  // 演出用的「圖形星」:和一般星場分開畫,收場時整組消失,不會在星場留下任何殘留
+  function figureStar(x, y, r, c, a, spike) {
+    const col = c[0] + ',' + c[1] + ',' + c[2];
+    const R = r * 4.6;
+    const gl = g.createRadialGradient(x, y, 0, x, y, R);
+    gl.addColorStop(0, `rgba(${col},${(0.42 * a).toFixed(3)})`);
+    gl.addColorStop(1, `rgba(${col},0)`);
+    g.fillStyle = gl;
+    g.beginPath();
+    g.arc(x, y, R, 0, TAU);
+    g.fill();
+    if (spike > 0.6) {
+      const len = r * 5.2;
+      g.strokeStyle = `rgba(${col},${(0.3 * a).toFixed(3)})`;
+      g.lineWidth = 0.9;
+      g.beginPath();
+      g.moveTo(x - len, y); g.lineTo(x + len, y);
+      g.moveTo(x, y - len * 0.8); g.lineTo(x, y + len * 0.8);
+      g.stroke();
+    }
+    g.beginPath();
+    g.arc(x, y, r, 0, TAU);
+    g.fillStyle = `rgba(${col},${Math.min(1, 0.95 * a).toFixed(3)})`;
+    g.fill();
+  }
+
+  function showOrion(k, now, A) {
+    const o = orion;
+    if (!o) return;
+    const fadeAll = 1 - seg(k, 0.90, 1);             // 星最後才收
+    const lineFade = 1 - seg(k, 0.865, 0.945);       // 線先收
+    const breathe = 1 + 0.06 * Math.sin(now * 0.0011);
+
+    // 連線:11 段依序畫出來(腰帶最先),每段自己走 dash 進度
+    g.lineWidth = 1.1;
+    for (let i = 0; i < ORION_LINK.length; i++) {
+      const t0 = 0.38 + i * 0.019;
+      const p = ez(seg(k, t0, t0 + 0.05));
+      if (p < 0.004) continue;
+      const a = o.map[ORION_LINK[i][0]], b = o.map[ORION_LINK[i][1]];
+      g.strokeStyle = `rgba(${STEEL},${(0.34 * p * lineFade * fadeAll * A).toFixed(3)})`;
+      g.beginPath();
+      g.moveTo(a.x, a.y);
+      g.lineTo(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p);
+      g.stroke();
+    }
+
+    // 大星雲(M42):掛在劍上的一團暖色柔光,慢慢浮出來
+    const na = seg(k, 0.60, 0.73) * (1 - seg(k, 0.88, 0.98)) * A;
+    if (na > 0.004) {
+      const s1 = o.map.sw1;
+      const R = o.h * 0.13;
+      const gl = g.createRadialGradient(s1.x, s1.y, 0, s1.x, s1.y, R);
+      gl.addColorStop(0, `rgba(255,186,176,${(0.3 * na).toFixed(3)})`);
+      gl.addColorStop(0.45, `rgba(198,150,190,${(0.14 * na).toFixed(3)})`);
+      gl.addColorStop(1, 'rgba(198,150,190,0)');
+      g.fillStyle = gl;
+      g.beginPath();
+      g.arc(s1.x, s1.y, R, 0, TAU);
+      g.fill();
+    }
+
+    // 星:腰帶三顆先亮,再四角、頭與劍
+    for (let i = 0; i < ORION_ORDER.length; i++) {
+      const id = ORION_ORDER[i];
+      const t0 = 0.028 + i * 0.032;
+      const ap = ez(seg(k, t0, t0 + 0.045)) * fadeAll * A;
+      if (ap < 0.004) continue;
+      const s = o.map[id];
+      figureStar(s.x, s.y, (1.5 + s.m * 2.6) * o.sc * breathe, s.c, ap, s.m);
+    }
+
+    // 名字:認出形狀之後才給答案,不搶在前面
+    if (TXT.orion) {
+      const ta = seg(k, 0.63, 0.71) * (1 - seg(k, 0.88, 0.96)) * A * 0.62;
+      if (ta > 0.006) {
+        g.font = `600 ${small ? 10 : 11.5}px "Space Grotesk","Noto Sans TC",sans-serif`;
+        g.textAlign = 'center';
+        const tw = g.measureText(TXT.orion).width;
+        const tx = Math.min(Math.max(o.x0 + o.w / 2, tw / 2 + 12), W - tw / 2 - 12);
+        const below = o.y0 + o.h + 24 < H - groundY(tx) - 6;
+        g.fillStyle = `rgba(${CREAM},${ta.toFixed(3)})`;
+        g.fillText(TXT.orion, tx, below ? o.y0 + o.h + 24 : Math.max(16, o.y0 - 14));
+        g.textAlign = 'left';
+      }
+    }
+  }
+
+  // 演出 3 ── 彩蛋「峰」。一盞燈從地平線升起,沿著稜線爬到頂,
+  //           山形整條亮起,頂點的光化成一顆星併回天空,稜線再由下往上沉掉。
+  function startPeak() {
+    const ww = Math.min(mobile ? W * 0.8 : W * 0.44, mobile ? 300 : 470);
+    const hh = ww * 0.52;
+    const cx = mobile ? W * 0.5 : W * 0.56;
+    const base = H - groundY(cx) - (mobile ? 18 : 26);
+    const x0 = Math.min(Math.max(cx - ww / 2, 8), Math.max(8, W - ww - 8));
+    const y0 = Math.max(6, base - hh);
+    const pts = PEAK_PATH.map((p) => ({ x: x0 + p[0] * ww, y: y0 + p[1] * hh }));
+    const segLen = [];
+    let total = 0, toTop = 0;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const d = Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
+      segLen.push(d);
+      total += d;
+      if (i < PEAK_TOP) toTop += d;
+    }
+    peak = { pts, segLen, total, uTop: total > 0 ? toTop / total : 1, x0, y0, w: ww, h: hh, near: [], dest: null };
+
+    // 沿途會被輕輕點亮的星:離稜線最近的幾顆,各自記下自己在路徑上的位置
+    const cand = [];
+    for (let li = 1; li < layers.length; li++) {
+      const arr = layers[li].stars;
+      for (let i = 0; i < arr.length; i++) {
+        const s = arr[i];
+        const x = posX(s), y = posY(s);
+        let bd = 1e9, bu = 0, acc = 0;
+        for (let j = 0; j < pts.length - 1; j++) {
+          const d = Math.hypot(x - pts[j].x, y - pts[j].y);
+          if (d < bd) { bd = d; bu = total > 0 ? acc / total : 0; }
+          acc += segLen[j];
+        }
+        if (bd < 46) cand.push({ s, u: bu, d: bd });
+      }
+    }
+    cand.sort((a, b) => a.d - b.d);
+    peak.near = cand.slice(0, 7);
+
+    // 終點:挑一顆現在真的在天上的近層亮星,光飛過去就像「併回星空」
+    const free = layers[2].stars.filter((s) => {
+      const q = starPos(s);
+      return q.x > 30 && q.x < W - 30 && q.y > 24 && q.y < H - groundY(q.x) - 60
+        && Math.hypot(q.x - pts[PEAK_TOP].x, q.y - pts[PEAK_TOP].y) > Math.min(W, H) * 0.22;
+    });
+    peak.dest = free.length ? free[(Math.random() * free.length) | 0] : null;
+  }
+
+  // 沿稜線走到 u(0..1,弧長參數)的座標
+  function alongPeak(u) {
+    const p = peak;
+    let d = clamp01(u) * p.total;
+    for (let i = 0; i < p.segLen.length; i++) {
+      if (d <= p.segLen[i] || i === p.segLen.length - 1) {
+        const t = p.segLen[i] > 0 ? Math.min(1, d / p.segLen[i]) : 1;
+        const a = p.pts[i], b = p.pts[i + 1];
+        return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      }
+      d -= p.segLen[i];
+    }
+    return p.pts[p.pts.length - 1];
+  }
+
+  // 從 uA 描到 uB 的稜線
+  function strokePeak(uA, uB) {
+    const p = peak;
+    const A = alongPeak(uA), B = alongPeak(uB);
+    g.beginPath();
+    g.moveTo(A.x, A.y);
+    let acc = 0;
+    for (let i = 0; i < p.segLen.length; i++) {
+      acc += p.segLen[i];
+      const un = p.total > 0 ? acc / p.total : 1;
+      if (un > uA && un < uB) g.lineTo(p.pts[i + 1].x, p.pts[i + 1].y);
+    }
+    g.lineTo(B.x, B.y);
+    g.stroke();
+  }
+
+  function showPeak(k, now, A) {
+    const p = peak;
+    if (!p) return;
+    const top = p.pts[PEAK_TOP];
+    const ridgeFade = 1 - seg(k, 0.74, 0.90);
+    // 1) 起:一盞燈從地平線下方浮起來,慢慢升到稜線起點
+    const rise = ez(seg(k, 0, 0.16));
+    const climb = ez(seg(k, 0.16, 0.46));
+    const uLight = p.uTop * climb;
+    const lp = rise < 1
+      ? { x: p.pts[0].x, y: p.pts[0].y + 34 * (1 - rise) }
+      : alongPeak(uLight);
+
+    // 2) 中:走過的稜線亮起來;過了頂點,右半邊像回音一樣自己描出來
+    const echo = ez(seg(k, 0.46, 0.6));
+    g.lineWidth = 1.3;
+    g.strokeStyle = `rgba(${ORANGE},${(0.54 * rise * ridgeFade * A).toFixed(3)})`;
+    if (uLight > 0.002) strokePeak(0, uLight);
+    if (echo > 0.002) {
+      // 右半邊和左半邊同一個重量,不然山形會一邊實一邊虛
+      g.strokeStyle = `rgba(${ORANGE},${(0.54 * echo * ridgeFade * A).toFixed(3)})`;
+      strokePeak(p.uTop, p.uTop + (1 - p.uTop) * echo);
+    }
+    // 整條線再壓一層極淡的寬底,讓山形站得住,不會只是一條細線
+    if (climb > 0.02) {
+      g.lineWidth = 3.4;
+      g.strokeStyle = `rgba(${ORANGE},${(0.09 * climb * ridgeFade * A).toFixed(3)})`;
+      strokePeak(0, uLight);
+      if (echo > 0.002) strokePeak(p.uTop, p.uTop + (1 - p.uTop) * echo);
+      g.lineWidth = 1.3;
+    }
+
+    // 沿途被點亮的星:光走過才亮,亮完就一起隨稜線淡掉
+    for (let i = 0; i < p.near.length; i++) {
+      const n = p.near[i];
+      const na = clamp01((uLight - n.u) / 0.06) * ridgeFade * A;
+      if (na < 0.01) continue;
+      const q = starPos(n.s);
+      const R = 9 + na * 7;
+      const gl = g.createRadialGradient(q.x, q.y, 0, q.x, q.y, R);
+      gl.addColorStop(0, `rgba(${CREAM},${(0.3 * na).toFixed(3)})`);
+      gl.addColorStop(1, `rgba(${CREAM},0)`);
+      g.fillStyle = gl;
+      g.beginPath();
+      g.arc(q.x, q.y, R, 0, TAU);
+      g.fill();
+    }
+
+    // 3) 頂:一圈很輕的光暈擴散(只有一次,不是煙火)
+    const flash = seg(k, 0.455, 0.6);
+    if (flash > 0.002 && flash < 1) {
+      const e = ez(flash);
+      g.beginPath();
+      g.arc(top.x, top.y, 8 + e * (mobile ? 70 : 108), 0, TAU);
+      g.strokeStyle = `rgba(${ORANGE},${(0.34 * (1 - flash) * A).toFixed(3)})`;
+      g.lineWidth = 1.4 * (1 - flash) + 0.3;
+      g.stroke();
+    }
+
+    // 4) 收:頂點的光化成一顆星,飄向天上某顆真的星,再融進去
+    const merge = ez(seg(k, 0.6, 0.8));
+    const glowA = (rise * (1 - seg(k, 0.86, 1))) * A;
+    let gx = lp.x, gy = lp.y;
+    if (merge > 0 && p.dest) {
+      const q = starPos(p.dest);
+      gx = top.x + (q.x - top.x) * merge;
+      gy = top.y + (q.y - top.y) * merge;
+    } else if (climb >= 1) { gx = top.x; gy = top.y; }
+    if (glowA > 0.006) {
+      const twk = 1 + 0.35 * Math.sin(now * 0.006) * seg(k, 0.8, 0.88);
+      const R = (mobile ? 15 : 21) * (1 - merge * 0.4) * twk;
+      const gl = g.createRadialGradient(gx, gy, 0, gx, gy, R);
+      gl.addColorStop(0, `rgba(255,196,150,${(0.8 * glowA).toFixed(3)})`);
+      gl.addColorStop(0.35, `rgba(${ORANGE},${(0.3 * glowA).toFixed(3)})`);
+      gl.addColorStop(1, `rgba(${ORANGE},0)`);
+      g.fillStyle = gl;
+      g.beginPath();
+      g.arc(gx, gy, R, 0, TAU);
+      g.fill();
+      g.beginPath();
+      g.arc(gx, gy, (mobile ? 1.5 : 2) * twk, 0, TAU);
+      g.fillStyle = `rgba(${CREAM},${Math.min(1, 0.95 * glowA).toFixed(3)})`;
+      g.fill();
+    }
+
+    // 5) 署名:小、淡、只停一下下
+    if (TXT.peak) {
+      const ta = seg(k, 0.5, 0.58) * (1 - seg(k, 0.72, 0.82)) * A * 0.38;
+      if (ta > 0.006) {
+        g.font = `600 ${small ? 9.5 : 11}px "Space Grotesk","Noto Sans TC",sans-serif`;
+        g.textAlign = 'center';
+        const tw = g.measureText(TXT.peak).width;
+        const tx = Math.min(Math.max(top.x, tw / 2 + 12), W - tw / 2 - 12);
+        g.fillStyle = `rgba(${CREAM},${ta.toFixed(3)})`;
+        g.fillText(TXT.peak, tx, Math.max(16, top.y - 18));
+        g.textAlign = 'left';
+      }
+    }
+  }
+
+  const SHOWS = [showRain, showOrion, showPeak];
+
+  // 演出進行中,鏡筒也跟著看過去 —— 望遠鏡對著空無一物的天空會顯得兩件事沒關係
+  function showAim() {
+    if (!show) return null;
+    if (show.i === 0 && rainCfg) return { x: rainCfg.rx, y: rainCfg.ry };
+    if (show.i === 1 && orion) return orion.map.aln;
+    if (show.i === 2 && peak) return peak.pts[PEAK_TOP];
+    return null;
+  }
+
+  function runShow(now) {
+    // 排程:使用者安靜、沒有觀測進行中,才輪到演出
+    if (!show && now > showNext && now - lastInput > SHOW_IDLE && !picks.length && !doneAt) {
+      startShow(showSeq++ % SHOWS.length, now);
+    }
+    if (!show) return;
+    const el = now - show.t0;
+    if (show.out) show.a = Math.max(0, 1 - (now - show.out) / SHOW_FADE);
+    if (show.a <= 0 || el >= SHOW_MS) { endShow(now); return; }
+    SHOWS[show.i](clamp01(el / SHOW_MS), now, show.a);
+  }
+
   // ── 望遠鏡與觀測者 ──────────────────────────────────────
-  function drawAstronomer(now) {
+  function drawAstronomer() {
     const s = scope.s;
-    const bob = reduced ? 0 : Math.sin(now / 1400) * 1.2;
+    const bob = reduced ? 0 : Math.sin(T / 1400) * 1.2;
     const x = scope.x, y = scope.y + bob;
 
     g.save();
@@ -591,7 +1102,7 @@ export function mountBlogHero() {
   // ── 目鏡視野圈:圈內是放大後的天區 + 只有這裡看得到的暗星 + 刻度與座標 ──
   function coordText(x, y) {
     const dx = x - pole.x, dy = y - pole.y;
-    let a = Math.atan2(dy, dx) + layers[1].spin;
+    let a = Math.atan2(dy, dx);
     a = ((a % TAU) + TAU) % TAU;
     const hh = a / TAU * 24;
     const hr = Math.floor(hh), mi = Math.floor((hh - hr) * 60);
@@ -602,7 +1113,7 @@ export function mountBlogHero() {
     return ['RA ' + p2(hr) + 'h ' + p2(mi) + 'm', 'DEC ' + sg + p2(dd) + '° ' + p2(dm) + "'"];
   }
 
-  function drawLens(now) {
+  function drawLens() {
     if (lens.on < 0.02) return;
     const R = lens.r * (0.72 + 0.28 * lens.on);
     const lx = lens.x, ly = lens.y;
@@ -622,18 +1133,17 @@ export function mountBlogHero() {
     const push = (arr, tier) => {
       for (let i = 0; i < arr.length; i++) {
         const s = arr[i];
-        const p = starPos(s);
-        const x = p.x, y = p.y;
+        const x = posX(s), y = posY(s);
         if (Math.abs(x - lx) > reach || Math.abs(y - ly) > reach) continue;
         if (y > H - groundY(x) + 4) continue;
         const mx = lx + (x - lx) * M, my = ly + (y - ly) * M;
         if (tier === 0) {
-          g.fillStyle = `rgba(${s.col},${(0.24 + s.mag * 0.6).toFixed(3)})`;
+          g.fillStyle = `rgba(${starCol(s)},${(0.24 + s.mag * 0.6).toFixed(3)})`;
           g.beginPath();
           g.arc(mx, my, 0.5 + s.mag * 1.5, 0, TAU);
           g.fill();
         } else {
-          drawStar(s, mx, my, now, tier === 2 ? 2 : 1);
+          drawStar(s, mx, my, tier === 2 ? 2 : 1);
         }
       }
     };
@@ -643,7 +1153,7 @@ export function mountBlogHero() {
     if (planet) {                                    // 行星也要跟著放大,否則游標蓋上去它會憑空消失
       const pp = starPos(planet);
       if (Math.abs(pp.x - lx) < reach + planet.rad * 2.2 && Math.abs(pp.y - ly) < reach + planet.rad * 2.2) {
-        paintPlanet(lx + (pp.x - lx) * M, ly + (pp.y - ly) * M, planet.rad * 1.9, now);
+        paintPlanet(lx + (pp.x - lx) * M, ly + (pp.y - ly) * M, planet.rad * 1.9);
       }
     }
 
@@ -741,28 +1251,29 @@ export function mountBlogHero() {
   // ── 主繪製 ──────────────────────────────────────────────
   function frame(now) {
     if (!visible || !W || !bgSky) return;
+    T = now;
     // reduced:不做持續動態。只有互動或完成序列進行中才重畫一次。
     if (reduced && !dirty && !doneAt) return;
     dirty = false;
 
     if (!reduced) {
-      const base = 0.0000165;                        // 天球轉動:中層約 6 分鐘一圈
-      for (let i = 0; i < layers.length; i++) layers[i].spin += base * layers[i].rate;
       par.x += (par.tx - par.x) * 0.06;
       par.y += (par.ty - par.y) * 0.06;
     }
 
     g.drawImage(bgSky, 0, 0, W, H);
-    drawNebula(now);
-    drawAirglow(now);
-    drawFar(layers[0], now);
-    drawLayer(layers[1], now);
-    drawPlanet(now);
-    drawLayer(layers[2], now);
+    drawNebula();
+    drawAirglow();
+    drawFar(layers[0]);
+    drawLayer(layers[1]);
+    drawPlanet();
+    drawLayer(layers[2]);
 
-    // 流星:偶發,頭部有光暈,拖尾隨生命週期伸縮
+    if (!reduced) runShow(now);
+
+    // 環境流星:偶發,頭部有光暈,拖尾隨生命週期伸縮。演出進行中不排新的,免得兩件事互相干擾。
     if (!reduced) {
-      if (now > nextShot) {
+      if (!show && now > nextShot) {
         nextShot = now + rnd(4200, 10500);
         shots.push({ x: rnd(W * 0.06, W * 0.96), y: rnd(H * 0.03, H * 0.5), a: rnd(2.25, 2.9), t0: now, life: rnd(700, 1050), big: Math.random() < 0.28 });
       }
@@ -895,10 +1406,15 @@ export function mountBlogHero() {
 
     g.drawImage(bgGround, 0, H - groundH, W, groundH);
 
-    // 鏡筒轉向:idle 時緩慢掃過天空
-    if (!picks.length && !reduced) scope.aim = -1.3 + Math.sin(now / 5200) * 0.44;
+    // 鏡筒轉向:有演出就看演出,否則 idle 時緩慢掃過天空
+    if (!picks.length && !reduced) {
+      const t = showAim();
+      scope.aim = t
+        ? Math.atan2(t.y - (scope.y - 34 * scope.s), t.x - scope.x)
+        : -1.3 + Math.sin(now / 5200) * 0.44;
+    }
     scope.ang += (scope.aim - scope.ang) * (reduced ? 1 : 0.055);
-    drawAstronomer(now);
+    drawAstronomer();
 
     // 目鏡視野圈
     const want = hoverable ? lens.want : (now < lens.hold ? 1 : 0);
@@ -906,11 +1422,16 @@ export function mountBlogHero() {
     if (reduced) lens.on = want;
     lens.x += (lens.tx - lens.x) * (reduced ? 1 : 0.22);
     lens.y += (lens.ty - lens.y) * (reduced ? 1 : 0.22);
-    drawLens(now);
+    drawLens();
 
     // 完成後歸檔,重新開始一輪
     if (doneAt && now - doneAt > RESET_MS) {
-      logs.push({ pts: picks.map((s) => ({ r: s.r, a0: s.a0, lr: s.lr })) });
+      logs.push({
+        pts: picks.map((s) => ({
+          nx: s.nx, ny: s.ny, lr: s.lr,
+          dax: s.dax, day: s.day, dfx: s.dfx, dfy: s.dfy, dpx: s.dpx, dpy: s.dpy
+        }))
+      });
       if (logs.length > LOG_MAX) logs.shift();
       picks.forEach((s) => { s.want = false; s.lit = 0; });
       picks = [];
@@ -925,6 +1446,9 @@ export function mountBlogHero() {
   function observe(cx, cy) {
     if (doneAt) return;                              // 完成動畫播放中,先不接受新的點
     const nowT = performance.now();
+    // 互動永遠優先:正在演的那段開始退場(不是硬切),而且點擊本身照常生效
+    lastInput = nowT;
+    if (show && !show.out) show.out = nowT;
     ripples.push({ x: cx, y: cy, t0: nowT });
     dirty = true;
 
@@ -942,12 +1466,12 @@ export function mountBlogHero() {
     // 附近沒有星星就當場發現一顆 —— 點下去一定有反應,不會有「按了沒事」的空拍
     if (!best) {
       if (cy > H - groundY(cx) - 10) return;         // 但不在地面上生星星
-      best = {
-        nx: (cx - par.x * PARK[1]) / W, ny: (cy - par.y * PARK[1]) / H,
-        mag: 0.82, tw: 0, tws: 1, born: layers[1].spin,
-        col: SPECTRA[(Math.random() * SPECTRA.length) | 0], lit: 0, lr: 1
-      };
-      project(best);
+      best = mkStar(0.78, 0.86, 1);
+      best.nx = (cx - par.x * PARK[1]) / W;
+      best.ny = (cy - par.y * PARK[1]) / H;
+      // 相位對齊「被發現的當下」:讓這顆星的游移從 0 開始,不會一出生就跳開幾 px
+      best.dpx = -T * best.dfx;
+      best.dpy = -T * best.dfy;
       layers[1].stars.push(best);
     }
     best.want = true;
@@ -988,6 +1512,8 @@ export function mountBlogHero() {
     observe(p.x, p.y);
   };
   const onCancel = () => { down = null; };
+  // 指標移動只帶動目鏡圈與視差,不算「打斷演出」的互動 ——
+  // 游標剛好停在 hero 上就永遠等不到演出,那等於沒做。
   const onMove = (e) => {
     if (!hoverable) return;
     const p = local(e);
@@ -1003,7 +1529,7 @@ export function mountBlogHero() {
   const onKey = (e) => {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
     e.preventDefault();
-    // 只挑「現在真的在天上」的星:用 ny 判斷會在天球轉過之後選到已經沉到地平線下的星
+    // 只挑「現在真的在天上」的星:落到地平線下的不能選
     const free = layers[1].stars.filter((s) => {
       if (s.want) return false;
       const q = starPos(s);
@@ -1042,15 +1568,42 @@ export function mountBlogHero() {
   if (ro) ro.observe(root); else window.addEventListener('resize', relayout);
   ctx.add(() => { clearTimeout(rt); if (ro) ro.disconnect(); else window.removeEventListener('resize', relayout); });
 
-  // 離開視窗就不畫(捲到下面看文章時不該還在燒效能)
-  ctx.io(root, (es) => { visible = es[0].isIntersecting; if (visible) dirty = true; }, { rootMargin: '80px' });
+  // 離開視窗就不畫(捲到下面看文章時不該還在燒效能)。
+  // 回來的時候把下一段演出往後推 —— 一捲回來就開演會像在等你,不像在自己運轉。
+  ctx.io(root, (es) => {
+    visible = es[0].isIntersecting;
+    if (visible) {
+      dirty = true;
+      showNext = Math.max(showNext, performance.now() + 4000);
+    } else if (show) {
+      endShow(performance.now());
+    }
+  }, { rootMargin: '80px' });
 
   layout();
+  showNext = performance.now() + SHOW_FIRST;
   ctx.onFrame(frame);
   frame(performance.now());
 
   const hint = root.querySelector('[data-sky-hint]');
   if (hint && TXT.hint) hint.textContent = TXT.hint;
 
-  return () => ctx.destroy();
+  // 驗收掛勾(與站上其他 hero 同一套慣例):讀取星位、指定播放某一段、停掉排程。
+  // 只給 .peakops-audit 的探針用,不改變任何繪製結果。
+  window.__pqSky = {
+    mode: reduced ? 'reduced' : 'on',
+    pos: () => layers[1].stars.map((s) => [+posX(s).toFixed(3), +posY(s).toFixed(3)]),
+    state: () => ({
+      show: show ? { i: show.i, k: +clamp01((T - show.t0) / SHOW_MS).toFixed(3), a: +show.a.toFixed(3), out: !!show.out } : null,
+      rain: rain.length, shots: shots.length, picks: picks.length, logs: logs.length,
+      nextIn: Math.round(showNext - T)
+    }),
+    play: (i) => { if (reduced) return false; startShow(((i | 0) % SHOWS.length + SHOWS.length) % SHOWS.length, performance.now()); return true; },
+    hush: () => { if (show) endShow(performance.now()); showNext = Infinity; return true; }
+  };
+
+  return () => {
+    if (window.__pqSky) delete window.__pqSky;
+    ctx.destroy();
+  };
 }
