@@ -293,6 +293,22 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-media]{min-height:34svh!important}
 }
 }
+
+/* ── #capture 釘住的舞台必須裝得進一屏 ────────────────────────────
+   舞台 sticky 在 top:68,內容比視窗高的那一段永遠捲不到 —— 量到左欄 LINE 對話
+   被裁掉 232px(英文)/ 77px(中文),使用者只看得到上半截。
+   先壓縮固定部位(padding、標題、段落),再用 max-height 把網格鎖在剩餘空間內;
+   對話欄改成靠下對齊,溢出的是最舊的訊息,最新一則永遠看得到(真實聊天室就是這樣)。*/
+@media (min-width:900px){
+  #capture [data-stage]{padding-top:clamp(20px,2.2vw,34px)!important;padding-bottom:clamp(20px,2.2vw,34px)!important}
+  #capture h2{font-size:clamp(1.5rem,2.5vw,2.35rem)!important;margin-top:8px!important}
+  #capture [data-stage] p{margin-top:8px!important}
+  #pq-cap-grid{margin-top:clamp(10px,1.4vw,18px)!important}
+  /* 鎖高度只在引擎確認「這一屏真的裝得下」時才套。裝不下時引擎會取消釘住,改回一般捲動 —— 寧可少一段視差,也不要有永遠捲不到的內容。 */
+  #capture[data-capfit] #pq-cap-grid{max-height:calc(100svh - 68px - 250px);min-height:0;overflow:hidden;grid-template-rows:minmax(0,1fr)}
+  #capture[data-capfit] #pq-cap-grid>*{min-height:0;overflow:hidden}
+  #capture[data-capfit] #pq-cap-grid>*:first-child>*:nth-child(2){justify-content:flex-end;min-height:0!important;gap:9px!important;padding:14px!important}
+}
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}

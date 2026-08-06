@@ -73,7 +73,29 @@ export function createSolutions() {
       qa('#capture [data-ccrm]').forEach(c => { c.style.opacity = '1'; c.style.transform = 'none'; });
       return;
     }
-    if (wrap) ScrollChapter(ctx, wrap, switchByScroll, { pinned: true }); // 手機無 pin:Tab 用點擊
+    // 釘住時舞台被鎖成一屏高,比視窗高的部分永遠捲不到(量到左欄對話被裁 232px)。
+    // 先套上 data-capfit 把網格鎖進剩餘空間,再實測兩欄有沒有被切;
+    // 真的裝不下就整段取消釘住,回到一般捲動 —— 寧可少一段視差,也不要有讀不到的內容。
+    let pinned = !!wrap;
+    if (wrap) {
+      root.setAttribute('data-capfit', '');
+      const grid = q('#pq-cap-grid');
+      const clipped = () => !!grid && Array.from(grid.children).some((c) => c.scrollHeight - c.clientHeight > 24);
+      let checks = 0;
+      const verify = () => {
+        if (checks++ > 30) return;
+        if (!grid || !grid.clientHeight) { requestAnimationFrame(verify); return; }
+        if (!clipped()) return;                       // 裝得下 → 維持釘住
+        root.removeAttribute('data-capfit');
+        wrap.style.height = '';
+        ['position', 'top', 'minHeight', 'boxSizing'].forEach((k) => { stageEl && (stageEl.style[k] = ''); });
+        pinned = false;
+        ScrollChapter(ctx, root, switchByScroll, { pinned: false });
+      };
+      var stageEl = q('#capture [data-stage]');
+      requestAnimationFrame(() => requestAnimationFrame(verify));
+    }
+    if (wrap) ScrollChapter(ctx, wrap, (p) => { if (pinned) switchByScroll(p); }, { pinned: true }); // 手機無 pin:Tab 用點擊
     ctx.onFrame(autoplay);
   }
 
@@ -85,10 +107,14 @@ export function createSolutions() {
     // 手機沒有 pin(pin 在 mobile 回 null)→ 原本整段直接 return,王小姐完全不動。
     // 改用 section 本身當進度來源(未釘選),直式分支以「視窗中的那一塊」決定停點。
     if ((!wrap && !ctx.mobile) || !card || !cols.length) return;
-    const track = q('#follow [data-ftrack]');
     ScrollChapter(ctx, wrap || sec, (p) => {
+      // #capture 捲動切 Tab 會 setState,DC 會把所有 sc-for 區塊的節點整批重建。
+      // 初始化時抓的參照會變成孤兒節點(樣式寫進去也看不到),所以這裡每幀現查。
+      const card = q('#follow [data-fcard]');
+      const cols = qa('#follow [data-fcol]');
+      if (!card || !cols.length) return;
       const k = ez(sub(p, 0.08, 0.85));
-      const idx = clamp(Math.floor(k * cols.length), 0, cols.length - 1);
+      let idx = clamp(Math.floor(k * cols.length), 0, cols.length - 1);
       // 卡片一次「滑到定點」,不隨捲動連續位移 —— 連續位移會有卡在兩張中間、把兩邊都擋住的時刻。
       // 手機是直式時間軸:停哪一張改由「目前在視窗中的那張」決定,所以整段捲動王小姐都在畫面上。
       const vertical = cols.length > 1 && cols[1].offsetTop > cols[0].offsetTop + 4;
@@ -108,8 +134,9 @@ export function createSolutions() {
       idx = snap;
       cols.forEach((c, i) => {
         const on = i === idx;
-        c.style.borderColor = on ? '#FF6B2C' : 'rgba(9,11,14,.14)';
-        c.style.background = on ? 'rgba(255,107,44,.05)' : 'rgba(9,11,14,.02)';
+        // #follow 是深色區:未選中要用亮色低透明邊框,寫成淺色版的值會讓邊框整個消失
+        c.style.borderColor = on ? '#FF6B2C' : 'rgba(242,239,232,.14)';
+        c.style.background = on ? 'rgba(255,107,44,.08)' : '#14171C';
       });
       const tag = card.querySelector('[data-ftag]');
       if (tag) {
@@ -154,7 +181,10 @@ export function createSolutions() {
       rows.forEach((el) => el.setAttribute('aria-hidden', 'false'));
       return;   // 不掛 hover/click/捲動,細節卡的子動畫由 CSS 自己跑
     }
+    // 同樣的理由(setState 會重建 sc-for 節點):這裡每次都現查,不留參照
     const setActive = (idx, anim) => {
+      const rows = qa('#modules [data-smod]');
+      const dets = qa('#modules [data-sdet]');
       rows.forEach((el, i) => {
         const on = i === idx;
         el.style.transition = anim ? 'all 240ms cubic-bezier(0.16,1,0.3,1)' : 'none';
@@ -172,20 +202,32 @@ export function createSolutions() {
         el.style.pointerEvents = on ? 'auto' : 'none';
       });
     };
-    // hover/focus(桌機)+ 點擊(手機手風琴),與捲動共用 setActive
-    rows.forEach((el, i) => {
-      const h = () => setActive(i, true);
-      el.addEventListener('mouseenter', h);
-      el.addEventListener('focus', h);
-      el.addEventListener('click', h);
-      ctx.add(() => { el.removeEventListener('mouseenter', h); el.removeEventListener('focus', h); el.removeEventListener('click', h); });
+    // hover/focus/點擊都走事件委派:掛在個別列上的監聽器會隨著 sc-for 重建一起消失,
+    // 這也是「點擊切換突然沒反應、而且 console 乾乾淨淨」的原因。委派到 section 就不會掉。
+    // cur = 目前顯示的那一張;scrollIdx = 捲動位置換算出來的那一張。
+    // 兩者要分開:只在「捲動換算值真的變了」時才接管,否則使用者一點選,
+    // 下一幀就會因為 idx !== cur 被捲動邏輯搶回去(看起來就是點了沒反應)。
+    let cur = -1, scrollIdx = -1;
+    const hit = (e) => {
+      const row = e.target.closest && e.target.closest('[data-smod]');
+      if (!row || !sec.contains(row)) return;
+      const i = qa('#modules [data-smod]').indexOf(row);
+      if (i < 0 || i === cur) return;
+      cur = i;
+      setActive(i, true);
+    };
+    ['mouseover', 'focusin', 'click'].forEach((ev) => {
+      sec.addEventListener(ev, hit);
+      ctx.add(() => sec.removeEventListener(ev, hit));
     });
-    let cur = -1;
     setActive(0, false);
     if (!wrap) return;   // 桌機沒 pin(reduced)維持靜態第一項
     ScrollChapter(ctx, wrap, (p) => {
       if (core) core.style.transform = 'translateY(' + ((0.5 - p) * 16).toFixed(1) + 'px)';
-      const idx = clamp(Math.floor(sub(p, 0.04, 0.96) * rows.length), 0, rows.length - 1);
+      const n = qa('#modules [data-smod]').length || rows.length;
+      const idx = clamp(Math.floor(sub(p, 0.04, 0.96) * n), 0, n - 1);
+      if (idx === scrollIdx) return;          // 捲動沒換段 → 不碰使用者手動選的那一張
+      scrollIdx = idx;
       if (idx !== cur) { cur = idx; setActive(idx, true); }
     }, { pinned: true });
   }
@@ -238,10 +280,26 @@ export function createSolutions() {
 
   function start() {
     let tries = 0;
+    // 等的是「引擎真正需要的節點」,不是只等 #overview。
+    // #overview 是靜態 markup,一開始就在;但 [data-fcol]、[data-smod] 由 sc-for 產生,
+    // 要等 content.js 載入並 setState 後才存在。只等 #overview 會搶跑,
+    // follow() 與 modules() 就在 guard 那行靜默 return —— 卡片不滑、點擊沒反應,而且 console 乾淨。
+    const ready = () => q('#overview') && q('#follow [data-fcol]') && q('#modules [data-smod]');
     const boot = () => {
-      if (!q('#overview') && tries++ < 90) { requestAnimationFrame(boot); return; }
-      try { overview(); capture(); follow(); nurture(); modules(); integration(); } catch (e) {}
-      window.__pqSol = { ok: true };
+      if (!ready() && tries++ < 240) { requestAnimationFrame(boot); return; }
+      // 六段各自 try/catch:包在同一個 try 裡的話,前面任何一段丟例外,
+      // 後面全部靜默不執行(modules 的點擊切換就是這樣整段消失,而且 console 乾乾淨淨)。
+      const report = { mobile: ctx.mobile, reduced: ctx.reduced, vw: window.innerWidth };
+      [['overview', overview], ['capture', capture], ['follow', follow],
+        ['nurture', nurture], ['modules', modules], ['integration', integration]
+      ].forEach(([name, fn]) => {
+        try { fn(); report[name] = 'ok'; }
+        catch (e) {
+          report[name] = 'ERR: ' + (e && (e.message || e));
+          console.error('[solutions] ' + name + ' 初始化失敗:', e && (e.stack || e.message || e));
+        }
+      });
+      window.__pqSol = { ok: true, report };
     };
     boot();
     return ctx;
