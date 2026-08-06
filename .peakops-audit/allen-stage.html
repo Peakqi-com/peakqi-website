@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Allen 舞台 — 驗收</title>
+<style>
+  body{margin:0;background:#0B0E12;color:#F2EFE8;font:400 13px/1.6 'Noto Sans TC',system-ui,sans-serif}
+  .wrap{padding:16px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .card{border:1px solid rgba(242,239,232,.16);border-radius:8px;background:rgba(242,239,232,.03);
+        padding:14px;box-sizing:border-box;max-width:100%}
+  .stage{max-width:100%}
+  .stage{position:relative;aspect-ratio:1;background:linear-gradient(160deg,#1A1F26,#12161B);
+         border-radius:6px;overflow:hidden;touch-action:manipulation;user-select:none}
+  b{display:block;font:600 11px/2 system-ui;letter-spacing:.12em;color:rgba(242,239,232,.5)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" style="width:min(420px,100%)"><b>桌機卡寬(392px)</b>
+    <div class="stage" data-allen-stage style="width:min(392px,100%)"></div></div>
+  <div class="card" style="width:min(300px,100%)"><b>手機卡寬(272px)</b>
+    <div class="stage" style="width:min(272px,100%)" data-allen-stage-2></div></div>
+</div>
+<script>
+// 無頭瀏覽器幾乎不跑 rAF,所以驗收時把 rAF 換成手動時鐘:?step=N 用固定 dt 推 N 幀。
+// 這樣走的是正式掛載路徑(allen-avatar → 幕),但截圖是可重現的。
+// 不帶參數時還原成真實 rAF,人眼預覽用。
+const Q = new URLSearchParams(location.search);
+const STEP = parseInt(Q.get('step') || '0', 10);
+if (STEP) {
+  const q = [];
+  let now = 0;
+  window.requestAnimationFrame = (cb) => { q.push(cb); return q.length; };
+  window.cancelAnimationFrame = () => {};
+  window.__pump = (frames, dt) => {
+    for (let i = 0; i < frames; i++) {
+      now += dt;
+      const batch = q.splice(0, q.length);
+      batch.forEach((cb) => { try { cb(now); } catch (e) { (window.__errs = window.__errs || []).push(String(e)); } });
+    }
+  };
+}
+</script>
+<script type="module">
+import { mountAllenAvatar } from '../allen-avatar.js';
+// 第二座舞台:mountAllenAvatar 只認第一個 [data-allen-stage],所以手機那格自己掛
+const second = document.querySelector('[data-allen-stage-2]');
+mountAllenAvatar();
+setTimeout(() => {
+  second.setAttribute('data-allen-stage', '');
+  document.querySelector('[data-allen-stage]').removeAttribute('data-allen-stage');
+  mountAllenAvatar();
+  second.setAttribute('data-allen-stage', '');
+}, 0);
+
+if (STEP) {
+  // 幕是動態 import 進來的,等它到齊再推幀
+  const ready = () => document.querySelectorAll('.aw-figure svg').length >= 2;
+  const wait = setInterval(() => {
+    if (!ready()) return;
+    clearInterval(wait);
+    window.__pump(STEP, 1000 / 60);
+    const im = document.querySelector('.aw-bg');
+    const d = document.createElement('pre'); d.id='diag';
+    d.textContent = 'img=' + (im ? im.getAttribute('src') + ' complete=' + im.complete + ' nw=' + im.naturalWidth : 'MISSING')
+      + ' errs=' + JSON.stringify(window.__errs || []);
+    document.body.appendChild(d);
+    document.title = 'ready';
+  }, 30);
+}
+</script>
+</body>
+</html>

@@ -1,234 +1,58 @@
-// Allen —— 平塗卡通機器人。造型身分取自 Recraft 生成的參考稿,重畫成可綁骨的結構。
+// Allen —— 機器人角色。美術是 Recraft 生成的向量原稿(allen-art.js),這一份只負責讓它動。
 //
-// 從參考稿留下的:寬頭配側耳板、大白眼加深瞳孔、天線、分節軀幹(上下兩塊中間露出
-// 腰關節)、胸口面板、外八大腳掌。改掉的:配色從紅藍換成品牌橘配藍;四肢從分節
-// 機械臂換成一整條麵條(參考稿那組分節是提示詞裡 "metal collar" 被模型讀成
-// 「一節一節的環」的副作用,和「柔軟靈活」的要求相反)。
+// 原稿附了一張分解圖:整隻拆成九塊剛體(頭 / 頸 / 軀幹 / 雙臂 / 雙腿 / 雙腳),另外附了
+// 五個姿勢(站 / 揮手 / 走路 / 歡呼 / 坐)並直接給了每一塊的旋轉角與樞紐。那些角度不是
+// 這裡憑感覺調的,是照著分解圖抄下來的 —— POSE 裡的數字全部來自那張圖。
 //
-// 表情取自第二張參考稿的九宮格。九格裡有三格重複,實際是六種:微笑 / 開口笑 /
-// 大笑 / 驚訝 / 思考 / 半瞇,再加一個皺眉。不是複製它的路徑——那張的頭是方的,
-// 這裡是寬圓頂,幾何對不上——而是照它每一格的「構造邏輯」在 Allen 身上重畫:
-//   微笑   白眼球 + 瞳孔置中 + 上揚弧線嘴
-//   開口笑 眼窩收成 ∩ 弧 + 張嘴
-//   大笑   ∩ 弧 + 張嘴露白牙與舌
-//   驚訝   眼睛不變但瞳孔縮到四成 + 直立橢圓嘴
-//   思考   瞳孔偏右上 + 一字嘴
-//   半瞇   上眼皮壓下一半 + 小嘴
-//   皺眉   眉毛外側壓低 + 下彎嘴
+// 原稿那張分解圖是用 <use> + 九個矩形 clipPath 疊出來的,好處是不動原檔,壞處是旋轉時
+// 矩形會把圖形攔腰切斷(那張圖的「坐」姿勢腿根就裂開了)。這裡改成把 194 條路徑逐條歸位
+// 到九個部位,轉的是完整形狀,關節不會出現直線切口;只有那條跨部位的主墨線剪影仍然
+// 需要裁切,而它躺在所有色塊底下,裁切邊看不見。
 //
 // 檔案分兩段,中間那條線是刻意的:
-//   ART  —— 只有 SVG 標記與座標。美術再定稿時只換這一段。
-//   RIG  —— 只透過 [data-p] 名字與 J 錨點找零件,不認得任何顏色。
+//   ART  —— allen-art.js。美術再定稿時只換那一個檔。
+//   RIG  —— 這裡。只透過 [data-p] 名字與 J 錨點找零件,不認得任何顏色。
 //
 // 所有 transform 走 SVG 屬性而不是 CSS —— rotate(a,cx,cy) 自帶樞紐,不必依賴
 // transform-box:fill-box 在各家瀏覽器的差異。
 
-import { Spring, Spring2, Blinker, Pointer, FrameStep, boil, noodle, parts } from './puppet-kit.js';
+import { Spring, Blinker, Pointer, FrameStep, boil, parts } from './puppet-kit.js';
+import { allenArt, J, MOUTH } from './allen-art.js';
 
 // ─────────────────────────────────────────────────────────────
-// ART:美術定稿後換這一段
+// 姿勢:數字直接取自原稿分解圖的五張姿勢
 // ─────────────────────────────────────────────────────────────
 
-// 賽璐珞上色:同一色相 4 階「平」色,邊界銳利。不是漸層——漸層會立刻讀成現代扁平
-// 插畫,硬邊色塊才讀成手繪動畫的上色。光源固定左上,所有零件的暗面都在同一側。
-const C = {
-  oLight: '#FF9E70', o: '#FF6B2C', oShade: '#C94E19', oDeep: '#7A2E0C',
-  bLight: '#5EA8E0', b: '#2E86D4', bShade: '#0564B4', bDeep: '#08325C',
-  line: '#1D131A',
-  white: '#FFFFFF',
-  screen: '#0B1B2E',
+/** aL/aR 肩、gL/gR 髖(度);lift 全身位移;fL/fR 腳掌額外位移;
+ *  ff 是腳掌跟隨大腿旋轉的比例 —— 坐姿在原稿裡腳掌是純位移不跟著轉,所以是 0。
+ *  gnd 是「腳還踩在地上嗎」:1 = 影子跟著腳走,0 = 離地,影子留在原地改用縮小表示。
+ *
+ *  注意:坐姿是原稿分解圖那一張的原角度(髖 ±72°)。正面視角沒有側面圖可用,那張
+ *  本身就比較像劈腿而不是坐下 —— 這裡照抄不修,因為修了就不是原稿的姿勢了。
+ *  預設演出排程沒有用它。 */
+export const POSE = {
+  stand: { aL: 0, aR: 0, gL: 0, gR: 0, lift: 0, fL: [0, 0], fR: [0, 0], ff: 1, gnd: 1 },
+  wave: { aL: 0, aR: -125, gL: 0, gR: 0, lift: 0, fL: [0, 0], fR: [0, 0], ff: 1, gnd: 1 },
+  walk: { aL: 8, aR: -12, gL: 14, gR: -6, lift: 0, fL: [0, 0], fR: [0, 0], ff: 1, gnd: 1 },
+  cheer: { aL: 125, aR: -125, gL: 4, gR: -4, lift: -68, fL: [0, 0], fR: [0, 0], ff: 1, gnd: 0 },
+  sit: { aL: 0, aR: 0, gL: 72, gR: -72, lift: 350, fL: [-543, -432], fR: [543, -432], ff: 0, gnd: 1 },
 };
 
-// 關節錨點。RIG 只從這裡讀座標,不散在程式各處。
-// 頭高 56、全身 3~186。頭寬 72 對軀幹寬 40 = 1.8 倍 —— 大到在 96px 的團隊卡上
-// 還認得出五官,又不至於變成公仔。下巴刻意留長:眼睛佔掉頭的上半,張嘴的表情
-// 需要下半有位置,不然嘴會撞到鏡頭外框。
-const J = {
-  neck: [100, 78],
-  antenna: [100, 23],
-  eyeL: [85, 41], eyeR: [115, 41],
-  torsoPivot: [100, 142],
-  shoulderL: [86, 90], shoulderR: [114, 90],
-  wristL: [58, 124], wristR: [142, 124],
-  hipL: [91, 140], hipR: [109, 140],
-  ankleL: [86, 168], ankleR: [114, 168],
-  shadowRx: 36,
-};
-
-// 嘴形。閉嘴走 m-line(線條),張嘴走 m-open + m-teeth + m-tongue(填充)。
-// 兩套不能共用一條路徑 —— 線條嘴要 stroke-linecap 的圓頭,張嘴要實心的口腔。
-const MOUTH = {
-  smile: { line: 'M92.5,61 Q100,66 107.5,61' },
-  flat: { line: 'M93,63 L107,63' },
-  worry: { line: 'M92.5,65 Q100,60 107.5,65' },
-  small: { line: 'M96.5,63 L103.5,63' },
-  open: { open: 'M89,57.5 Q100,55 111,57.5 Q110,71 100,71 Q90,71 89,57.5 Z' },
-  laugh: {
-    open: 'M88,56.5 Q100,54 112,56.5 Q111,72 100,72 Q89,72 88,56.5 Z',
-    teeth: 'M89.6,57.6 Q100,55.4 110.4,57.6 L109.8,61 Q100,59.2 90.2,61 Z',
-    tongue: 'M94,66.5 Q100,63.2 106,66.5 Q104.8,71.6 100,71.6 Q95.2,71.6 94,66.5 Z',
-  },
-  o: { open: 'M100,56.5 C104,56.5 106.2,59.6 106.2,63.3 C106.2,67.2 104,70 100,70'
-    + ' C96,70 93.8,67.2 93.8,63.3 C93.8,59.6 96,56.5 100,56.5 Z' },
-};
-
-// 手掌:圓潤三指手套,左側一個拇指凸起。單一路徑,避免兩個圓交疊出現描邊接縫。
-const MITTEN = 'M0,-7.5C5,-7.5 8.2,-4 8.2,0C8.2,4.6 5,8.2 0,8.2C-3,8.2 -5.6,6.6 -6.6,4.6'
-  + 'C-9.2,4.1 -10.2,1.5 -9.2,-0.6C-8.4,-2.3 -6.6,-2.7 -5.3,-2C-4.6,-5.6 -2.6,-7.5 0,-7.5Z';
-
-// 寬圓頂 + 收窄下巴:最寬處在 y45(x64~136),下巴收到 52 寬。
-const HEAD_D = 'M74,71 C68,67 64,58 64,45 C64,29 78,20 100,20 C122,20 136,29 136,45'
-  + ' C136,58 132,67 126,71 C116,77 84,77 74,71 Z';
-
-const ART = (uid) => `
-<svg viewBox="0 0 200 200" role="img" style="display:block;width:100%;height:100%">
-  <defs>
-    <clipPath id="hd${uid}"><path d="${HEAD_D}"/></clipPath>
-    <clipPath id="tu${uid}"><rect x="80" y="80" width="40" height="30" rx="9"/></clipPath>
-    <clipPath id="tl${uid}"><rect x="82" y="114" width="36" height="28" rx="9"/></clipPath>
-  </defs>
-
-  <ellipse data-p="shadow" cx="100" cy="180" rx="${J.shadowRx}" ry="6" fill="${C.line}" opacity=".16"/>
-
-  <!-- 四肢是三層同 d 的 stroke:描邊 → 基本色 → 中央亮條。
-       亮條是老卡通畫圓管的固定手法,一條就讓平的線變成圓柱。 -->
-  <path data-p="leg-l-o" fill="none" stroke="${C.line}" stroke-width="13" stroke-linecap="round"/>
-  <path data-p="leg-r-o" fill="none" stroke="${C.line}" stroke-width="13" stroke-linecap="round"/>
-  <path data-p="leg-l-f" fill="none" stroke="${C.bShade}" stroke-width="9.4" stroke-linecap="round"/>
-  <path data-p="leg-r-f" fill="none" stroke="${C.bShade}" stroke-width="9.4" stroke-linecap="round"/>
-  <path data-p="leg-l-h" fill="none" stroke="${C.b}" stroke-width="4.4" stroke-linecap="round"/>
-  <path data-p="leg-r-h" fill="none" stroke="${C.b}" stroke-width="4.4" stroke-linecap="round"/>
-
-  <!-- 踝環:軟管插進金屬套環。這是「軟四肢」與「是機器人」唯一能同時成立的接法。 -->
-  <g data-p="foot-l">
-    <rect x="-6.5" y="-9" width="13" height="7" rx="2.6" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <ellipse cx="-2" cy="3" rx="12" ry="5.8" fill="${C.bShade}" stroke="${C.line}" stroke-width="3"/>
-    <ellipse cx="-3" cy="1.6" rx="9.4" ry="4" fill="${C.b}"/>
-  </g>
-  <g data-p="foot-r">
-    <rect x="-6.5" y="-9" width="13" height="7" rx="2.6" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <ellipse cx="2" cy="3" rx="12" ry="5.8" fill="${C.bShade}" stroke="${C.line}" stroke-width="3"/>
-    <ellipse cx="3" cy="1.6" rx="9.4" ry="4" fill="${C.b}"/>
-  </g>
-
-  <path data-p="arm-l-o" fill="none" stroke="${C.line}" stroke-width="12" stroke-linecap="round"/>
-  <path data-p="arm-r-o" fill="none" stroke="${C.line}" stroke-width="12" stroke-linecap="round"/>
-  <path data-p="arm-l-f" fill="none" stroke="${C.bShade}" stroke-width="8.4" stroke-linecap="round"/>
-  <path data-p="arm-r-f" fill="none" stroke="${C.bShade}" stroke-width="8.4" stroke-linecap="round"/>
-  <path data-p="arm-l-h" fill="none" stroke="${C.b}" stroke-width="3.8" stroke-linecap="round"/>
-  <path data-p="arm-r-h" fill="none" stroke="${C.b}" stroke-width="3.8" stroke-linecap="round"/>
-
-  <g data-p="torso">
-    <!-- 腰關節:上下軀幹之間刻意留縫露出來。分節軀幹是參考稿最強的機器人訊號之一,
-         而且不佔面積、不影響四肢的柔軟。 -->
-    <rect x="90" y="105" width="20" height="14" rx="4" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.6"/>
-
-    <rect x="82" y="114" width="36" height="28" rx="9" fill="${C.o}" stroke="none"/>
-    <path d="M107,110 C113,122 113,134 106,145 L126,145 L126,110 Z" fill="${C.oShade}" clip-path="url(#tl${uid})"/>
-    <g stroke="${C.oDeep}" stroke-width="2" stroke-linecap="round" opacity=".55">
-      <path d="M89,126 L111,126"/><path d="M89,131 L111,131"/><path d="M89,136 L111,136"/>
-    </g>
-    <rect x="82" y="114" width="36" height="28" rx="9" fill="none" stroke="${C.line}" stroke-width="3"/>
-
-    <rect x="80" y="80" width="40" height="30" rx="9" fill="${C.o}" stroke="none"/>
-    <path d="M106,76 C113,88 113,102 105,113 L126,113 L126,76 Z" fill="${C.oShade}" clip-path="url(#tu${uid})"/>
-    <path d="M78,92 C79,84 86,80 94,79 C86,82 82,86 81,94 Z" fill="${C.oLight}" clip-path="url(#tu${uid})"/>
-    <rect x="80" y="80" width="40" height="30" rx="9" fill="none" stroke="${C.line}" stroke-width="3"/>
-
-    <!-- 胸口面板:首頁 Loading 的累積 %數之後可以直接接到 chest-ring / chest-dot -->
-    <rect x="84" y="86" width="32" height="17" rx="3.5" fill="${C.screen}" stroke="${C.line}" stroke-width="2.6"/>
-    <circle data-p="chest-ring" cx="100" cy="94.5" r="6.5" fill="none" stroke="${C.o}" stroke-width="2.4"/>
-    <circle data-p="chest-dot" cx="100" cy="94.5" r="3.2" fill="${C.oLight}"/>
-  </g>
-
-  <!-- 頸:橫跨頭與軀幹的縫,轉頭時不會撕開 -->
-  <rect x="92" y="70" width="16" height="18" rx="6" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.8"/>
-
-  <g data-p="hand-l">
-    <rect x="-5.5" y="-11.5" width="11" height="6" rx="2.2" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <path d="${MITTEN}" fill="${C.b}" stroke="${C.line}" stroke-width="3"/>
-    <circle cx="-1.5" cy="-2.6" r="2.8" fill="${C.bLight}"/>
-  </g>
-  <g data-p="hand-r">
-    <rect x="-5.5" y="-11.5" width="11" height="6" rx="2.2" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <path d="${MITTEN}" fill="${C.b}" stroke="${C.line}" stroke-width="3"/>
-    <circle cx="-1.5" cy="-2.6" r="2.8" fill="${C.bLight}"/>
-  </g>
-
-  <g data-p="head">
-    <g data-p="antenna">
-      <rect x="97.5" y="10" width="5" height="14" rx="2.5" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-      <circle cx="100" cy="7.5" r="4.5" fill="${C.o}" stroke="${C.line}" stroke-width="2.4"/>
-      <path d="M97.5,6 A3.6 3.6 0 0 1 101,4.2 A4.5 4.5 0 0 0 97.5,6 Z" fill="${C.oLight}"/>
-    </g>
-
-    <!-- 側耳板:參考稿最好認的那組零件。畫在頭之前,只露出外半邊。 -->
-    <g>
-      <rect x="55" y="38" width="13" height="18" rx="3.5" fill="${C.bShade}" stroke="${C.line}" stroke-width="2.6"/>
-      <rect x="57.5" y="41.5" width="5" height="11" rx="2" fill="${C.b}"/>
-    </g>
-    <g>
-      <rect x="132" y="38" width="13" height="18" rx="3.5" fill="${C.bShade}" stroke="${C.line}" stroke-width="2.6"/>
-      <rect x="137.5" y="41.5" width="5" height="11" rx="2" fill="${C.b}"/>
-    </g>
-
-    <path d="${HEAD_D}" fill="${C.o}" stroke="none"/>
-    <path d="M118,14 C129,30 130,56 117,79 L148,79 L148,14 Z" fill="${C.oShade}" clip-path="url(#hd${uid})"/>
-    <path d="M68,42 C70,29 80,23 94,22 C82,26 75,32 72,44 Z" fill="${C.oLight}" clip-path="url(#hd${uid})"/>
-    <path d="${HEAD_D}" fill="none" stroke="${C.line}" stroke-width="3"/>
-
-    <!-- 鏡頭外框:眼白與瞳孔都保留,但裝進金屬框裡 —— 變成「機器的眼睛」。
-         外框在眨眼群組之外,眼睛壓扁時外框不動,像眼皮在框內閉起來。 -->
-    <ellipse cx="85" cy="41" rx="12.6" ry="13.6" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <ellipse cx="115" cy="41" rx="12.6" ry="13.6" fill="${C.bDeep}" stroke="${C.line}" stroke-width="2.4"/>
-    <g data-p="eye-l">
-      <ellipse cx="85" cy="41" rx="11" ry="12" fill="${C.white}"/>
-      <g data-p="pupil-l">
-        <circle data-p="iris-l" cx="85" cy="41" r="5.4" fill="${C.line}"/>
-        <circle cx="82.8" cy="38.3" r="2.1" fill="${C.white}"/>
-      </g>
-    </g>
-    <g data-p="eye-r">
-      <ellipse cx="115" cy="41" rx="11" ry="12" fill="${C.white}"/>
-      <g data-p="pupil-r">
-        <circle data-p="iris-r" cx="115" cy="41" r="5.4" fill="${C.line}"/>
-        <circle cx="112.8" cy="38.3" r="2.1" fill="${C.white}"/>
-      </g>
-    </g>
-
-    <!-- 笑眼:填充月牙,中間厚兩端收尖。等粗的 stroke 會很死,月牙才有生命力。
-         月牙是白的不是黑的 —— 眼白收掉之後露出來的是深藍鏡頭框,深色月牙疊在
-         深色框上會變成一團黑,^ ^ 的形狀整個看不見。 -->
-    <path data-p="happy-l" d="M73.5,44.5 Q85,28.5 96.5,44.5 Q85,38.5 73.5,44.5 Z" fill="${C.white}" opacity="0"/>
-    <path data-p="happy-r" d="M103.5,44.5 Q115,28.5 126.5,44.5 Q115,38.5 103.5,44.5 Z" fill="${C.white}" opacity="0"/>
-
-    <!-- 眉:外側壓低 = 為難。參考稿的皺眉格就是在眼睛外上角切一塊楔形。 -->
-    <path data-p="brow-l" d="M72,29 Q81,25 94,23.5 L94,27.5 Q81,29 72,33 Z" fill="${C.line}" opacity="0"/>
-    <path data-p="brow-r" d="M128,29 Q119,25 106,23.5 L106,27.5 Q119,29 128,33 Z" fill="${C.line}" opacity="0"/>
-
-    <g data-p="mouth">
-      <path data-p="m-open" d="${MOUTH.open.open}" fill="${C.line}" opacity="0"/>
-      <path data-p="m-teeth" d="${MOUTH.laugh.teeth}" fill="${C.white}" opacity="0"/>
-      <path data-p="m-tongue" d="${MOUTH.laugh.tongue}" fill="${C.oShade}" opacity="0"/>
-      <path data-p="m-line" d="${MOUTH.smile.line}" fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round"/>
-    </g>
-  </g>
-</svg>`;
-
 // ─────────────────────────────────────────────────────────────
-// RIG:只認 data-p 名字與 J 錨點,不認顏色
+// 表情
 // ─────────────────────────────────────────────────────────────
 
-/** 表情表。arch=∩ 笑眼、lid=眼皮額外下壓、brow=眉毛、pup=瞳孔縮放、
- *  look=鎖定視線(非 null 時蓋掉游標追蹤)。 */
+/** arch=笑起來眼睛瞇成弧、lid=眼皮額外下壓、pup=瞳孔縮放、look=鎖定視線(非 null
+ *  時蓋掉游標追蹤)。原稿的臉是平塗的,能動的只有眼白 / 瞳孔 / 嘴三樣,所以七種表情
+ *  全部由這四個維度組出來。 */
 const EXPR = {
-  idle: { mouth: 'smile', arch: 0, lid: 0, brow: 0, pup: 1, look: null },
-  happy: { mouth: 'open', arch: 1, lid: 0, brow: 0, pup: 1, look: null },
-  laugh: { mouth: 'laugh', arch: 1, lid: 0, brow: 0, pup: 1, look: null },
-  surprise: { mouth: 'o', arch: 0, lid: 0, brow: 0, pup: 0.42, look: [0, -0.15] },
-  think: { mouth: 'flat', arch: 0, lid: 0, brow: 0, pup: 1, look: [0.6, -0.7] },
-  sleepy: { mouth: 'small', arch: 0, lid: 0.5, brow: 0, pup: 1, look: [0, 0.35] },
-  worry: { mouth: 'worry', arch: 0, lid: 0.18, brow: 1, pup: 1, look: [0, 0.3] },
+  idle: { mouth: 'rest', arch: 0, lid: 0, pup: 1, look: null },
+  happy: { mouth: 'open', arch: 1, lid: 0, pup: 1, look: null },
+  laugh: { mouth: 'laugh', arch: 1, lid: 0, pup: 1, look: null },
+  surprise: { mouth: 'o', arch: 0, lid: 0, pup: 0.45, look: [0, -0.2] },
+  think: { mouth: 'flat', arch: 0, lid: 0, pup: 1, look: [0.65, -0.7] },
+  sleepy: { mouth: 'small', arch: 0, lid: 0.55, pup: 1, look: [0, 0.35] },
+  worry: { mouth: 'worry', arch: 0, lid: 0.2, pup: 1, look: [0, 0.3] },
 };
 // 閒置時偶爾自己演一下,角色才不會像只有 hover 才活著
 const IDLE_BEATS = ['think', 'sleepy', 'surprise', 'worry'];
@@ -242,33 +66,42 @@ const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
  *               不傳就只畫靜止姿勢,不動。
  *  opts.reduced true 時完全不註冊每幀回呼,停在靜止姿勢。
  *  opts.idleBeats false 可關掉閒置時的自動表情。
+ *  opts.interactive false 可關掉 hover/click(讓外部自己控制)。
+ *  opts.palette 'original'(原稿紅藍,預設)或 'brand'(站上的橘藍)。
+ *  opts.shadow  地面投影,預設開。
+ *  opts.pose    起始姿勢,預設 'stand'。
  *
- *  回傳 { el, setExpr, wave, destroy }。setExpr 吃 EXPR 的鍵。 */
-export function createAllenBot(mount, { raf = null, reduced = false, idleBeats = true } = {}) {
+ *  回傳 { el, setExpr, setPose, wave, expr, pose, destroy }。 */
+export function createAllenBot(mount, {
+  raf = null, reduced = false, idleBeats = true, interactive = true,
+  palette = 'original', shadow = true, pose = 'stand',
+} = {}) {
   // clipPath 的 id 必須每個實例唯一 —— 同一頁掛兩隻時,重複 id 會讓第二隻的裁切
-  // 指到第一隻,暗面色塊直接消失。
+  // 指到第一隻,墨線剪影直接錯位。
   const uid = 'a' + Math.random().toString(36).slice(2, 8);
-  mount.innerHTML = ART(uid);
+  mount.innerHTML = allenArt(uid, { palette, shadow });
   const svg = mount.querySelector('svg');
   const p = parts(svg);
 
-  function paintLimb(name, [ax, ay], [bx, by], vx, vy, sag, endName) {
-    const n = noodle(ax, ay, bx, by, vx, vy, { sag });
-    // 描邊 / 基本色 / 中央亮條共用同一條路徑,只有 stroke-width 不同
-    p[name + '-o'].setAttribute('d', n.d);
-    p[name + '-f'].setAttribute('d', n.d);
-    p[name + '-h'].setAttribute('d', n.d);
-    if (endName && p[endName]) {
-      p[endName].setAttribute('transform', `translate(${r1(bx)},${r1(by)}) rotate(${r1(n.angle - 90)})`);
-    }
-  }
+  // 主墨線剪影被切成五份分放在各部位底下,設 transform 時要一起設,否則墨線會脫隊。
+  const T = (name, t) => {
+    const el = p[name];
+    if (el) el.setAttribute('transform', t);
+    const ink = p['ink-' + name];
+    if (ink) ink.setAttribute('transform', t);
+  };
+  /** 某個部位轉太多角度時把它那份墨線剪影淡出(見 arm-l/arm-r 的用法) */
+  const inkFade = (name, ang) => {
+    const ink = p['ink-' + name];
+    if (ink) ink.style.opacity = r1(clamp((55 - Math.abs(ang)) / 15, 0, 1));
+  };
 
-  /** 換嘴形。閉嘴只換線條的 d,張嘴切到填充那三片。 */
+  /** 換嘴形。原稿那張嘴(rest)是填充的,換表情才切到描邊或張嘴那三片。 */
   function paintMouth(key) {
-    const m = MOUTH[key] || MOUTH.smile;
-    const isOpen = !!m.open;
-    p['m-line'].style.opacity = isOpen ? 0 : 1;
-    p['m-open'].style.opacity = isOpen ? 1 : 0;
+    const m = MOUTH[key] || MOUTH.rest;
+    p['m-rest'].style.opacity = m.rest ? 1 : 0;
+    p['m-line'].style.opacity = m.line ? 1 : 0;
+    p['m-open'].style.opacity = m.open ? 1 : 0;
     p['m-teeth'].style.opacity = m.teeth ? 1 : 0;
     p['m-tongue'].style.opacity = m.tongue ? 1 : 0;
     if (m.line) p['m-line'].setAttribute('d', m.line);
@@ -277,22 +110,28 @@ export function createAllenBot(mount, { raf = null, reduced = false, idleBeats =
     if (m.tongue) p['m-tongue'].setAttribute('d', m.tongue);
   }
 
-  // 靜止姿勢:reduced 與「還沒開始跑」共用這一組,兩者看起來一致
-  const rest = () => {
-    paintLimb('arm-l', J.shoulderL, J.wristL, 0, 0, 5, 'hand-l');
-    paintLimb('arm-r', J.shoulderR, J.wristR, 0, 0, 5, 'hand-r');
-    paintLimb('leg-l', J.hipL, J.ankleL, 0, 0, 2, 'foot-l');
-    paintLimb('leg-r', J.hipR, J.ankleR, 0, 0, 2, 'foot-r');
-    paintMouth('smile');
-  };
+  /** 靜止姿勢。reduced 與「還沒開始跑」共用這一組,兩者看起來一致 —— 而且這一組
+   *  完全不寫任何 transform,畫出來與原稿逐像素相同。 */
+  const rest = () => paintMouth('rest');
 
-  if (reduced || !raf) { rest(); return { el: svg, setExpr() {}, wave() {}, destroy() {} }; }
+  if (reduced || !raf) {
+    rest();
+    return { el: svg, setExpr() {}, setPose() {}, wave() {}, get expr() { return 'idle'; }, get pose() { return pose; }, destroy() {} };
+  }
 
   // ---- 狀態 ----
-  const wl = Spring2(J.wristL[0], J.wristL[1], { k: 55, d: 9 });
-  const wr = Spring2(J.wristR[0], J.wristR[1], { k: 55, d: 9 });
-  const al = Spring2(J.ankleL[0], J.ankleL[1], { k: 150, d: 20 });   // 腳要撐體重,調硬
-  const ar = Spring2(J.ankleR[0], J.ankleR[1], { k: 150, d: 20 });
+  // 姿勢是一組彈簧,不是切換 —— 從站到揮手之間要有過程,不然像換貼圖
+  const SP = { k: 46, d: 12 };
+  if (!POSE[pose]) pose = 'stand';         // pose 是公開選項,給錯名字不該讓整隻炸掉
+  const P0 = POSE[pose];
+  const aL = Spring(P0.aL, SP), aR = Spring(P0.aR, SP);
+  const gL = Spring(P0.gL, SP), gR = Spring(P0.gR, SP);
+  const lift = Spring(P0.lift, { k: 60, d: 15 });
+  const fLx = Spring(P0.fL[0], SP), fLy = Spring(P0.fL[1], SP);
+  const fRx = Spring(P0.fR[0], SP), fRy = Spring(P0.fR[1], SP);
+  const foll = Spring(P0.ff, SP);
+  const gnd = Spring(P0.gnd, SP);
+
   const headX = Spring(0, { k: 90, d: 15 });
   const headY = Spring(0, { k: 90, d: 15 });
   const headR = Spring(0, { k: 90, d: 15 });
@@ -302,7 +141,6 @@ export function createAllenBot(mount, { raf = null, reduced = false, idleBeats =
   // 臉:每個維度一條彈簧,表情之間才是「過渡」不是「切換」
   const fArch = Spring(0, { k: 200, d: 24 });
   const fLid = Spring(0, { k: 170, d: 22 });
-  const fBrow = Spring(0, { k: 190, d: 23 });
   const fPup = Spring(1, { k: 210, d: 25 });
 
   const blink = Blinker();
@@ -313,21 +151,36 @@ export function createAllenBot(mount, { raf = null, reduced = false, idleBeats =
   let expr = 'idle', hover = false, waveT = -1;
   let t = 0, last = 0, shut = 0, popT = 99, beatT = 7 + Math.random() * 7, beatBack = -1;
 
-  const enter = () => { hover = true; setExpr('happy'); };
-  const leave = () => { hover = false; setExpr('idle'); };
-  const tap = () => { setExpr('laugh'); waveT = 0; beatBack = -1; };
-  mount.addEventListener('pointerenter', enter);
-  mount.addEventListener('pointerleave', leave);
-  mount.addEventListener('click', tap);
+  /** 吃 POSE 的鍵,或直接吃一組關節角(給走路循環這種要逐幀驅動的用)。
+   *  兩種都只是「設定彈簧目標」,所以無論誰來設,中間都會有過程。 */
+  function setPose(nameOrJoints) {
+    if (!nameOrJoints) return;
+    const named = typeof nameOrJoints === 'string';
+    const q = named ? POSE[nameOrJoints] : { ...POSE.stand, ...nameOrJoints };
+    if (!q) return;
+    pose = named ? nameOrJoints : 'custom';
+    aL.to(q.aL); aR.to(q.aR); gL.to(q.gL); gR.to(q.gR); lift.to(q.lift);
+    fLx.to(q.fL[0]); fLy.to(q.fL[1]); fRx.to(q.fR[0]); fRy.to(q.fR[1]);
+    foll.to(q.ff); gnd.to(q.gnd);
+  }
 
   function setExpr(name) {
     const e = EXPR[name];
     if (!e || name === expr) return;
     expr = name;
-    fArch.to(e.arch); fLid.to(e.lid); fBrow.to(e.brow); fPup.to(e.pup);
+    fArch.to(e.arch); fLid.to(e.lid); fPup.to(e.pup);
     paintMouth(e.mouth);
     popT = 0;                       // 換嘴形彈一下,不然像換貼圖
     if (e.arch) blink.blink();
+  }
+
+  const enter = () => { hover = true; setExpr('happy'); };
+  const leave = () => { hover = false; setExpr('idle'); };
+  const tap = () => { setExpr('laugh'); waveT = 0; beatBack = -1; };
+  if (interactive) {
+    mount.addEventListener('pointerenter', enter);
+    mount.addEventListener('pointerleave', leave);
+    mount.addEventListener('click', tap);
   }
 
   const off = raf((now) => {
@@ -352,103 +205,114 @@ export function createAllenBot(mount, { raf = null, reduced = false, idleBeats =
       }
     }
 
+    // 揮手:點一下,右手抬到分解圖那個角度,擺三下再放回去。
+    // 收尾只還原右手 —— 用 setPose('stand') 會把十條彈簧全部歸零,在別的姿勢中途
+    // 被點一下就等於把那個姿勢取消掉。
+    if (waveT >= 0) {
+      waveT += dt;
+      if (waveT > 1.9) {
+        waveT = -1;
+        aR.to((POSE[pose] || POSE.stand).aR);
+        if (!hover) setExpr('idle');
+      } else {
+        const fade = waveT > 1.4 ? (1.9 - waveT) / 0.5 : 1;
+        aR.to(POSE.wave.aR * Math.min(1, waveT / 0.25) * fade + Math.sin(waveT * 15) * 13 * fade);
+      }
+    }
+
     const br = Math.sin(t * 1.5);                      // 呼吸
-    fArch.step(dt); fLid.step(dt); fBrow.step(dt); fPup.step(dt);
+    fArch.step(dt); fLid.step(dt); fPup.step(dt);
     const arch = clamp(fArch.value, 0, 1);
-    shut = Math.max(blink.step(dt), arch, clamp(fLid.value, 0, 1));
+    shut = Math.max(blink.step(dt), arch * 0.62, clamp(fLid.value, 0, 1));
 
     // 表情鎖定視線時蓋掉游標追蹤 —— 思考就要看向別處,不能還盯著滑鼠
     const lock = EXPR[expr].look;
     const gx = lock ? lock[0] : ptr.x;
     const gy = lock ? lock[1] : ptr.y;
 
-    headX.to(gx * 3.6); headY.to(gy * 2.2 - br * 1.2); headR.to(gx * 5);
+    headX.to(gx * 32); headY.to(gy * 20 - br * 10); headR.to(gx * 4.5);
     headX.step(dt); headY.step(dt); headR.step(dt);
     antR.to(headR.value); antR.step(dt);               // 永遠慢一步,差值就是甩動
-    pupX.to(gx * 3.4); pupY.to(gy * 2.6);
+    pupX.to(gx * 30); pupY.to(gy * 24 + arch * 10);
     pupX.step(dt); pupY.step(dt);
 
-    // 揮手:點一下,右手抬起來擺三下再放回去
-    let wrTarget = [J.wristR[0], J.wristR[1]];
-    if (waveT >= 0) {
-      waveT += dt;
-      if (waveT > 1.7) { waveT = -1; if (!hover) setExpr('idle'); }
-      else {
-        const up = Math.min(1, waveT / 0.22);
-        const s = Math.sin(waveT * 17) * 9 * (waveT > 1.2 ? (1.7 - waveT) / 0.5 : 1);
-        wrTarget = [J.wristR[0] + 6 + s * up, J.wristR[1] - 46 * up];
-      }
-    }
-
-    // 麵條四肢:閒置時各自漂移,相位錯開才不會像在做體操
-    const sway = (ph, amp) => Math.sin(t * 0.9 + ph) * amp;
-    wl.to(J.wristL[0] + sway(0, 2.4) - gx * 3, J.wristL[1] + sway(1.7, 2) - arch * 5);
-    wr.to(wrTarget[0] + (waveT < 0 ? sway(2.9, 2.4) - gx * 3 : 0),
-          wrTarget[1] + (waveT < 0 ? sway(4.4, 2) - arch * 5 : 0));
-    al.to(J.ankleL[0] + sway(1.1, 0.8), J.ankleL[1]);
-    ar.to(J.ankleR[0] + sway(3.6, 0.8), J.ankleR[1]);
-    wl.step(dt); wr.step(dt); al.step(dt); ar.step(dt);
+    aL.step(dt); aR.step(dt); gL.step(dt); gR.step(dt); lift.step(dt);
+    fLx.step(dt); fLy.step(dt); fRx.step(dt); fRy.step(dt); foll.step(dt); gnd.step(dt);
 
     // ═══ 畫面:只在 12 格/秒的格子邊界更新。 ═══
     if (!fs.step(dt)) return;
     const F = fs.frame;
     // 線條沸騰:每一格給每個零件一個固定的次像素偏移,模擬「這一格是重畫的」。
     // 種子用格數不用時間,所以同一格永遠抖同一個量,是沸騰不是雜訊。
-    const jx = (seed) => boil(F, seed, 0.55);
+    const jx = (seed) => boil(F, seed, 4);
 
-    p.torso.setAttribute('transform',
-      `translate(${r1(jx(1))},${r1(jx(2))}) `
-      + `translate(${J.torsoPivot[0]},${J.torsoPivot[1]}) `
-      + `scale(${r1(1 - br * 0.009)},${r1(1 + br * 0.014)}) `
-      + `translate(${-J.torsoPivot[0]},${-J.torsoPivot[1]})`);
+    // 全身:呼吸的上下浮動 + 姿勢的整體位移 + 站著時很慢的重心左右移
+    const swayX = Math.sin(t * 0.62) * 6;
+    T('body', `translate(${r1(swayX + jx(0))},${r1(lift.value - br * 5 + jx(1))})`);
 
-    p.head.setAttribute('transform',
-      `translate(${r1(headX.value + jx(3))},${r1(headY.value + jx(4))}) `
+    // 軀幹吸氣時橫向收、縱向長,胸口因此上抬 —— 上面的零件要跟著抬,不然頸子會脫節
+    const sy = 1 + br * 0.011, sx = 1 - br * 0.007;
+    T('torso', `translate(${J.torso[0]},${J.torso[1]}) scale(${r1(sx)},${r1(sy)}) `
+      + `translate(${-J.torso[0]},${-J.torso[1]})`);
+    const riseHead = r1((J.neck[1] - J.torso[1]) * (sy - 1));
+    const riseArm = r1((J.shoulderL[1] - J.torso[1]) * (sy - 1));
+
+    T('neck', `translate(${r1(headX.value * 0.3 + jx(2))},${r1(riseHead + jx(3))})`);
+    T('head', `translate(${r1(headX.value + jx(4))},${r1(headY.value + riseHead + jx(5))}) `
       + `rotate(${r1(headR.value)},${J.neck[0]},${J.neck[1]})`);
+    T('antenna', `rotate(${r1(clamp((headR.value - antR.value) * 3.2, -20, 20))},${J.antenna[0]},${J.antenna[1]})`);
 
-    p.antenna.setAttribute('transform',
-      `rotate(${r1(clamp((headR.value - antR.value) * 2.6, -18, 18))},${J.antenna[0]},${J.antenna[1]})`);
+    T('arm-l', `translate(${r1(jx(6))},${r1(riseArm + jx(7))}) `
+      + `rotate(${r1(aL.value)},${J.shoulderL[0]},${J.shoulderL[1]})`);
+    T('arm-r', `translate(${r1(jx(8))},${r1(riseArm + jx(9))}) `
+      + `rotate(${r1(aR.value)},${J.shoulderR[0]},${J.shoulderR[1]})`);
+    // 手臂那兩份墨線剪影的裁切框連軀幹側邊一起帶著,轉過四十幾度就會從肩膀甩出
+    // 一根黑刺(揮手 -125°、歡呼 ±125° 都會踩到)。抬高就把它收掉 —— 手臂自己的
+    // 路徑本來就帶外框,少了這一份看不出差別,留著才難看。
+    inkFade('arm-l', aL.value); inkFade('arm-r', aR.value);
 
-    const pt = `translate(${r1(pupX.value)},${r1(pupY.value)})`;
-    p['pupil-l'].setAttribute('transform', pt);
-    p['pupil-r'].setAttribute('transform', pt);
+    const ff = clamp(foll.value, 0, 1);
+    const legT = (leg, foot, ang, hip, ankle, fx, fy, seed) => {
+      T(leg, `translate(${r1(jx(seed))},0) rotate(${r1(ang)},${hip[0]},${hip[1]})`);
+      // 腳掌先繞自己的踝點轉回一點(鞋底才不會翹),再整個跟著大腿繞髖轉。
+      // 順序不能顛倒:SVG 的 transform 串列是右邊先套用,所以「繞踝點」必須寫在
+      // 「繞髖」的右邊,而且樞紐要用旋轉前的踝點 —— 寫成旋轉後的踝點就會把腳掌
+      // 甩離小腿(站姿看不出來,走路差 ~7px,坐姿過渡時差到 40px)。
+      const fa = ang * ff;
+      T(foot, `translate(${r1(fx + jx(seed + 1))},${r1(fy)}) `
+        + `rotate(${r1(fa)},${hip[0]},${hip[1]}) `
+        + `rotate(${r1(-fa * 0.82)},${ankle[0]},${ankle[1]})`);
+    };
+    legT('leg-l', 'foot-l', gL.value, J.hipL, J.ankleL, fLx.value, fLy.value, 10);
+    legT('leg-r', 'foot-r', gR.value, J.hipR, J.ankleR, fRx.value, fRy.value, 12);
+
+    // 眨眼、笑瞇眼、睏眼都壓扁眼白,取最閉的那個。瞳孔在眼白群組裡面,一起壓。
+    const lidS = r1(Math.max(0.05, 1 - shut * 0.95));
+    const eye = (name, c) => p[name].setAttribute('transform',
+      `translate(${c[0]},${c[1]}) scale(1,${lidS}) translate(${-c[0]},${-c[1]})`);
+    eye('eye-l', J.eyeL); eye('eye-r', J.eyeR);
+
     // 驚訝:瞳孔縮小。眼白不動、只有瞳孔變小,那個「嚇一跳」才讀得出來。
-    const pr = r1(5.4 * clamp(fPup.value, 0.2, 1));
-    p['iris-l'].setAttribute('r', pr);
-    p['iris-r'].setAttribute('r', pr);
-
-    // 眨眼、笑眼、睏眼都壓扁平常眼,取最閉的那個
-    const ey = J.eyeL[1];
-    const eye = (name, cx) => p[name].setAttribute('transform',
-      `translate(${cx},${ey}) scale(1,${r1(Math.max(0.02, 1 - shut * 0.96))}) translate(${-cx},${-ey})`);
-    eye('eye-l', J.eyeL[0]); eye('eye-r', J.eyeR[0]);
-    p['eye-l'].style.opacity = p['eye-r'].style.opacity = r1(1 - arch);
-    p['happy-l'].style.opacity = p['happy-r'].style.opacity = r1(arch);
-    // 月牙跟著笑意長出來,不是硬切換
-    const hs = `scale(1,${r1(0.4 + arch * 0.6)})`;
-    p['happy-l'].setAttribute('transform', `translate(${J.eyeL[0]},${ey}) ${hs} translate(${-J.eyeL[0]},${-ey})`);
-    p['happy-r'].setAttribute('transform', `translate(${J.eyeR[0]},${ey}) ${hs} translate(${-J.eyeR[0]},${-ey})`);
-
-    // 眉毛:淡入的同時往下壓,才像「眉頭皺起來」而不是「浮出一條線」
-    const bw = clamp(fBrow.value, 0, 1);
-    p['brow-l'].style.opacity = p['brow-r'].style.opacity = r1(bw);
-    p['brow-l'].setAttribute('transform', `translate(0,${r1(-3 + bw * 3)})`);
-    p['brow-r'].setAttribute('transform', `translate(0,${r1(-3 + bw * 3)})`);
+    const ps = r1(clamp(fPup.value, 0.25, 1));
+    const pup = (name, c) => p[name].setAttribute('transform',
+      `translate(${r1(pupX.value)},${r1(pupY.value)}) `
+      + `translate(${c[0]},${c[1]}) scale(${ps}) translate(${-c[0]},${-c[1]})`);
+    pup('pupil-l', J.pupilL); pup('pupil-r', J.pupilR);
 
     // 換嘴形時彈一下(200ms 的指數衰減),不然像換貼圖
-    const pop = popT < 0.3 ? 1 + 0.22 * Math.exp(-popT * 14) : 1;
+    const pop = popT < 0.3 ? 1 + 0.2 * Math.exp(-popT * 14) : 1;
     p.mouth.setAttribute('transform',
-      `translate(100,63) scale(${r1(pop)}) translate(-100,-63)`);
+      `translate(${J.mouth[0]},${J.mouth[1]}) scale(${r1(pop)}) translate(${-J.mouth[0]},${-J.mouth[1]})`);
 
-    paintLimb('arm-l', J.shoulderL, [wl.x + jx(5), wl.y + jx(6)], wl.vx, wl.vy, 5, 'hand-l');
-    paintLimb('arm-r', J.shoulderR, [wr.x + jx(7), wr.y + jx(8)], wr.vx, wr.vy, 5, 'hand-r');
-    paintLimb('leg-l', J.hipL, [al.x + jx(9), al.y], al.vx, al.vy, 2, 'foot-l');
-    paintLimb('leg-r', J.hipR, [ar.x + jx(10), ar.y], ar.vx, ar.vy, 2, 'foot-r');
-
-    // 胸口指示環:呼吸同步的明滅;笑的時候亮起來
-    p['chest-ring'].style.opacity = r1(0.55 + 0.25 * (br * 0.5 + 0.5) + arch * 0.2);
-    p['chest-dot'].setAttribute('r', r1(3.2 + br * 0.4 + arch * 1.2));
-    p.shadow.setAttribute('rx', r1(J.shadowRx - br * 0.8));
+    // 投影跟著「腳踩在哪」,不是跟著身體 —— 坐姿把身體往下移 350、腳掌卻往上收 432,
+    // 只看 lift 的話影子會掉到腳底下四百多單位遠,整個脫離角色。
+    // gnd=0(歡呼那種離地)時影子不跟著上升,改用縮小表示離地。
+    const contact = lift.value + (fLy.value + fRy.value) / 2;
+    const on = clamp(gnd.value, 0, 1);
+    const h = clamp(1 + Math.min(0, contact * (1 - on)) / 900, 0.45, 1.1);
+    p.shadow.setAttribute('rx', r1(J.shadowRx * h - br * 8));
+    p.shadow.setAttribute('cx', r1(J.shadow[0] + swayX));
+    p.shadow.setAttribute('cy', r1(J.shadow[1] + contact * on));
   });
 
   rest();
@@ -456,15 +320,19 @@ export function createAllenBot(mount, { raf = null, reduced = false, idleBeats =
   return {
     el: svg,
     setExpr,
-    /** 給驗收與外部事件用:目前表情 */
+    setPose,
+    /** 給驗收與外部事件用 */
     get expr() { return expr; },
+    get pose() { return pose; },
     wave() { waveT = 0; },
     destroy() {
       off && off();
       ptr.destroy();
-      mount.removeEventListener('pointerenter', enter);
-      mount.removeEventListener('pointerleave', leave);
-      mount.removeEventListener('click', tap);
+      if (interactive) {
+        mount.removeEventListener('pointerenter', enter);
+        mount.removeEventListener('pointerleave', leave);
+        mount.removeEventListener('click', tap);
+      }
     },
   };
 }

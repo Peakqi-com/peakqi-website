@@ -10,12 +10,16 @@
   h1{font:700 20px/1.4 system-ui;margin:0 0 4px}
   h2{font:600 12px/1 system-ui;letter-spacing:.14em;color:rgba(242,239,232,.45);margin:26px 0 12px}
   p.note{margin:0 0 8px;color:rgba(242,239,232,.55);font-size:13px}
+  p.note a{color:#FF9E70}
   .row{display:flex;gap:14px;flex-wrap:wrap}
   .cell b{display:block;font:600 11px/1 system-ui;letter-spacing:.1em;color:rgba(242,239,232,.5);margin-bottom:6px}
   .card{position:relative;border-radius:8px;overflow:hidden;touch-action:manipulation;user-select:none;cursor:pointer}
+  /* 表情格只看臉:整隻縮圖時五官太小,放大到頭部才看得出差別 */
+  .card.face>*{transform:scale(2.9);transform-origin:50% 14%}
   .dark{background:linear-gradient(160deg,#1A1F26,#12161B)}
   .paper{background:#F2EFE8}
   .sky{background:linear-gradient(180deg,#BFE3F5 0%,#BFE3F5 62%,#E8D9B8 62%,#E8D9B8 100%)}
+  .shop{background:#DCE4EE url('/assets/allen/workshop.webp') center 62%/cover}
   .s150{width:150px;height:150px}
   .s240{width:240px;height:240px}
   .s96{width:96px;height:96px}
@@ -24,18 +28,31 @@
 <body>
 <div class="wrap">
   <h1>Allen 機器人 — 綁定預覽</h1>
-  <p class="note">開發用,不在網站路由上。畫面固定 12 格/秒。</p>
+  <p class="note">開發用,不在網站路由上。畫面固定 12 格/秒。
+    姿勢對照見 <a href="./allen-poses.html">allen-poses.html</a>,
+    正式舞台見 <a href="./allen-stage.html">allen-stage.html</a>。</p>
 
-  <h2>七種表情(鎖定,不受互動影響)</h2>
+  <h2>七種表情(鎖定,不受互動影響;放大看臉)</h2>
   <div class="row" id="exprRow"></div>
 
   <h2>互動 · 滑鼠移動 → 眼睛與頭跟著看 · 移入 → 開口笑 · 點一下 → 大笑並揮手</h2>
   <div class="row">
+    <div class="cell"><b>工作間(正式場景)</b><div class="card shop s240" id="a0"></div></div>
     <div class="cell"><b>團隊卡 · 深底</b><div class="card dark s240" id="a1"></div></div>
     <div class="cell"><b>紙白底</b><div class="card paper s240" id="a2"></div></div>
     <div class="cell"><b>亮景</b><div class="card sky s240" id="a3"></div></div>
-    <div class="cell"><b>96(最小可用)</b><div class="card dark s96" id="a4"></div></div>
+    <div class="cell"><b>96(過小,五官糊掉)</b><div class="card dark s96" id="a4"></div></div>
     <div class="cell"><b>靜止態(reduced)</b><div class="card dark s150" id="a5"></div></div>
+  </div>
+  <p class="note">實測下限約 240px:到 96px 時整張臉塌成兩個點,表情完全讀不出來,別用在那麼小的位置。</p>
+
+  <h2>配色 · original 是原稿的紅藍,brand 是站上的橘藍(只換色票,不動路徑)</h2>
+  <p class="note">brand 放深底看:工作間背景本身有紅色圓窗、紅抽屜、紅檯燈,橘色角色擺進去會和背景的紅打架。
+    要用 brand 就別配這張背景。</p>
+  <div class="row">
+    <div class="cell"><b>original · 工作間</b><div class="card shop s240" id="p1"></div></div>
+    <div class="cell"><b>brand · 工作間(會打架)</b><div class="card shop s240" id="p2"></div></div>
+    <div class="cell"><b>brand · 深底</b><div class="card dark s240" id="p3"></div></div>
   </div>
 </div>
 
@@ -50,7 +67,7 @@ requestAnimationFrame(loop);
 const raf = (cb) => { cbs.add(cb); return () => cbs.delete(cb); };
 
 const EXPRS = [
-  ['idle', '微笑'], ['happy', '開口笑'], ['laugh', '大笑'],
+  ['idle', '原稿的嘴'], ['happy', '開口笑'], ['laugh', '大笑'],
   ['surprise', '驚訝'], ['think', '思考'], ['sleepy', '半瞇'], ['worry', '皺眉'],
 ];
 const row = document.getElementById('exprRow');
@@ -60,21 +77,21 @@ for (const [key, label] of EXPRS) {
   cell.className = 'cell';
   cell.innerHTML = '<b>' + label + '</b>';
   const card = document.createElement('div');
-  card.className = 'card dark s150';
+  card.className = 'card dark s150 face';
   cell.appendChild(card);
   row.appendChild(cell);
-  // 鎖定表情:關掉閒置演出,並且吃掉 hover/click,否則一移過去全部變成笑
-  const bot = createAllenBot(card, { raf, idleBeats: false });
+  // 鎖定表情:關掉閒置演出與互動,否則一移過去全部變成笑
+  const bot = createAllenBot(card, { raf, idleBeats: false, interactive: false });
   bot.setExpr(key);
-  card.addEventListener('pointerenter', (e) => e.stopPropagation(), true);
-  ['pointerenter', 'pointerleave', 'click'].forEach((ev) =>
-    card.addEventListener(ev, () => bot.setExpr(key)));
   locked.push({ key, bot, card });
 }
 
-const live = ['a1', 'a2', 'a3', 'a4'].map((id) =>
+const live = ['a0', 'a1', 'a2', 'a3', 'a4'].map((id) =>
   createAllenBot(document.getElementById(id), { raf }));
 live.push(createAllenBot(document.getElementById('a5'), { reduced: true }));
+live.push(createAllenBot(document.getElementById('p1'), { raf, palette: 'original' }));
+live.push(createAllenBot(document.getElementById('p2'), { raf, palette: 'brand' }));
+live.push(createAllenBot(document.getElementById('p3'), { raf, palette: 'brand' }));
 
 window.__pqAllen = { locked, live, exprs: EXPRS.map((e) => e[0]) };
 </script>

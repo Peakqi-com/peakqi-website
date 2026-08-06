@@ -83,12 +83,15 @@ export function Blinker({ min = 2.6, max = 6.5, close = 0.075, open = 0.095 } = 
 export function Pointer(el, { wander = true } = {}) {
   const st = { x: 0, y: 0, active: false, destroy() {} };
   let wx = 0, wy = 0, wtx = 0, wty = 0, wt = 0, idle = 0;
+  let cx = 0, cy = 0, cw = 0, ch = 0;   // 快取的元件中心與尺寸
 
+  // getBoundingClientRect 只在每幀的 step() 裡量一次,不在 pointermove 裡量 ——
+  // 角色每秒寫十二次 SVG 屬性,版面幾乎永遠是髒的,在 move 裡量等於每次移動都
+  // 強迫同步 reflow;而觸控裝置捲動整頁都會發 pointermove,那條路徑最痛。
   const onMove = (ev) => {
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    st.x = clamp((ev.clientX - (r.left + r.width / 2)) / (r.width * 0.9), -1, 1);
-    st.y = clamp((ev.clientY - (r.top + r.height / 2)) / (r.height * 0.9), -1, 1);
+    if (!cw || !ch) return;
+    st.x = clamp((ev.clientX - cx) / (cw * 0.9), -1, 1);
+    st.y = clamp((ev.clientY - cy) / (ch * 0.9), -1, 1);
     st.active = true;
     idle = 0;
   };
@@ -96,6 +99,8 @@ export function Pointer(el, { wander = true } = {}) {
   st.destroy = () => window.removeEventListener('pointermove', onMove);
 
   st.step = (dt) => {
+    const r = el.getBoundingClientRect();
+    cw = r.width; ch = r.height; cx = r.left + r.width / 2; cy = r.top + r.height / 2;
     idle += dt;
     // 游標停了兩秒就交還給漫遊,角色不會盯著最後一個位置不放
     if (st.active && idle > 2) st.active = false;

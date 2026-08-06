@@ -13,6 +13,7 @@
 - `micro-engine.js` — CTA 微互動/tilt/cursor/spotlight
 - `seo.js` — canonical/OG/Twitter/schema 注入;`analytics.js` — 事件 adapter
 - `sequence/manifest.js` — Hero 影格序列設定;`robots.txt`、`sitemap.xml`
+- `allen-art.js`(產生檔)/ `allen-bot.js` / `allen-workshop.js` — About 團隊卡的 Allen 角色
 
 ## 如何替換 Hero sequence(影格版分鏡)
 1. 把影格放進 `sequence/desktop|tablet|mobile/`,命名 `frame-0001.webp` 起連號。
@@ -23,6 +24,24 @@
 ## 如何替換案例/作品圖片
 1. 新圖放 `assets/works/`(建議寬 1200、上緣即畫面重點;WebP/AVIF 佳,PNG 可)。
 2. `content.js` 裡改對應項的 `img` 與 `alt`(`caseStudies`、`worksFeatured`、`portfolioAI/Web`)。
+
+## 如何替換 Allen(About 團隊卡的機器人角色)
+角色分成三層,要改哪一層就只動哪一層:
+- `allen-art.js` — **產生檔,不要手改**。Recraft 原稿的 194 條路徑,依原稿附的分解圖歸位
+  成九塊剛體(頭/頸/軀幹/雙臂/雙腿/雙腳)加臉部零件(眼白/瞳孔/嘴)。
+  換原稿:新的姿勢表放進 `assets/svg/`,跑 `node tools/gen-allen-art.mjs`。
+  產生器會擋下路徑數量或色值對不上的情況 —— 那代表部位歸屬(`PARTS`)要重新核對。
+- `allen-bot.js` — 綁定與演出。只認 `data-p` 名字與 `J` 錨點,不認顏色。
+  `POSE` 的五個姿勢(站/揮手/走路/歡呼/坐)角度直接抄自原稿分解圖。
+- `allen-workshop.js` — About 卡片上的第一幕:背景(`assets/allen/workshop.webp`)、站位、演出排程。
+
+配色:`createAllenBot(el, { palette: 'brand' })` 可換成站上的橘藍,只換色票不動路徑;
+預設 `'original'` 是原稿的紅藍。
+
+驗收頁(不在網站路由上):`.peakops-audit/allen-preview.html`(表情/配色)、
+`allen-poses.html`(五個姿勢)、`allen-stage.html`(正式掛載路徑)。
+無頭瀏覽器幾乎不跑 rAF,所以後兩頁支援 `?step=N`:把 rAF 換成固定 dt 的手動時鐘推 N 幀,
+截圖因此可重現。
 
 ## 如何設定表單 API
 `content.js` → `export const submitConfig = { endpoint: null }`。

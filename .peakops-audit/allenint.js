@@ -1,4 +1,4 @@
-// Allen 舞台整合驗收:載入指定幕(?allenact=N)→ 確認幕已掛、三點切換、點另一幕能切
+// Allen 舞台整合驗收:載入指定幕(?allenact=N)→ 確認幕已掛、四點切換、點另一幕能切
 const stage = document.querySelector('[data-allen-stage]');
 if (!stage) return JSON.stringify({ err: 'no stage' });
 stage.scrollIntoView({ block: 'center' });
@@ -10,8 +10,8 @@ const kids = stage.children.length;
 const onIdx = dots.findIndex((b) => b.style.background.indexOf('rgb(255, 107, 44)') >= 0 || b.style.background.indexOf('#FF6B2C') >= 0);
 // 切到另一幕
 let switched = null;
-if (dots.length === 3) {
-  const tgt = (onIdx + 1) % 3;
+if (dots.length >= 2) {
+  const tgt = (onIdx + 1) % dots.length;
   dots[tgt].dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
   dots[tgt].click();
   await new Promise((r) => setTimeout(r, 2200));

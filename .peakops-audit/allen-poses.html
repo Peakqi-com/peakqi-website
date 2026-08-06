@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Allen 姿勢 — 對照原稿分解圖</title>
+<style>
+  body{margin:0;background:#fff;color:#111;font:400 12px/1.5 system-ui,sans-serif}
+  .row{display:flex;flex-wrap:wrap}
+  .c{width:290px}
+  .c b{display:block;text-align:center;font:600 12px/2 system-ui}
+  .k{width:290px;height:373px}
+</style>
+</head>
+<body>
+<div class="row" id="row"></div>
+<script type="module">
+// 無頭瀏覽器只會給一兩個 rAF,所以驗收時不靠真實時鐘:?step=N 用固定 dt 手動推 N 幀,
+// 截圖因此是可重現的。不帶參數時走真實 rAF,人眼預覽用。
+import { createAllenBot, POSE } from '../allen-bot.js';
+
+const q = new URLSearchParams(location.search);
+const step = parseInt(q.get('step') || '0', 10);
+const pal = q.get('palette') || 'original';
+const cbs = new Set();
+const raf = (cb) => { cbs.add(cb); return () => cbs.delete(cb); };
+if (!step) {
+  const loop = (t) => { cbs.forEach((cb) => cb(t / 1000)); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+
+const row = document.getElementById('row');
+const bots = [];
+for (const key of Object.keys(POSE)) {
+  const cell = document.createElement('div');
+  cell.className = 'c';
+  cell.innerHTML = '<b>' + key + '</b>';
+  const box = document.createElement('div');
+  box.className = 'k';
+  cell.appendChild(box);
+  row.appendChild(cell);
+  bots.push(createAllenBot(box, { raf, idleBeats: false, interactive: false, pose: key, palette: pal }));
+}
+
+if (step) {
+  const dt = 1 / 60;
+  for (let i = 1; i <= step; i++) cbs.forEach((cb) => cb(i * dt));
+  document.title = 'ready';
+}
+window.__pqPoses = bots;
+</script>
+</body>
+</html>
