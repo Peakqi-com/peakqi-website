@@ -78,6 +78,7 @@ nav[aria-label="breadcrumb"]{align-items:center}
 [data-hero-media]{min-height:25svh!important}
 [data-hero="cases"] [data-hero-stage]:not(.pq-hero-compact){align-items:flex-end!important}
 }
+@media (max-width:899px){#pq-bh-runway{height:1000vh!important}}
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <!-- 進站一律從最上面開始 -->
@@ -182,14 +183,16 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 </section>
 
 <!-- ============ 品牌屋 3D:中文版體驗為主,EN 頁改為導覽連結(不內嵌中文 iframe)============ -->
-<section id="brandhouse" data-screen-label="Brand House 3D" style="background:#0B0E12;color:#F2EFE8;padding:clamp(48px,6vw,80px) clamp(20px,5vw,48px);border-top:1px solid rgba(242,239,232,.08)">
-  <div style="max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(20px,3vw,40px);align-items:center;justify-content:space-between">
-    <div style="display:flex;flex-direction:column;gap:10px;max-width:640px">
-      <span style="font:600 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(242,239,232,.45)">BRAND HOUSE — 3D TOUR</span>
-      <h2 style="margin:0;font:900 clamp(1.4rem,3vw,2.4rem)/1.25 'Noto Sans TC',sans-serif">A walking brand house, six rooms of business</h2>
-      <p style="margin:0;font:400 .9375rem/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">A scroll-driven 3D story of how the whole operation fits together. A scroll-driven walk through the whole operation.</p>
+<!-- ============ Brand House 3D tour (Steampunk parallax, driven by parent scroll) ============
+     結構與中文版逐項相同:2200vh 跑道 + sticky 舞台 + iframe(pointer-events:none,
+     由父頁捲動驅動);只有 iframe 來源換成英文版塔樓。 -->
+<section id="brandhouse" data-screen-label="Brand House 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
+  <div id="pq-bh-runway" style="height:2200vh;position:relative;padding-top:clamp(24px,4vw,40px);box-sizing:border-box">
+    <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
+      <iframe id="pq-bh-frame" src="/Steampunk/peakqi-story-en.html" title="PeakQi brand house 3D tour"
+        loading="lazy" scrolling="no"
+        style="display:block;width:100%;height:100%;border:0;pointer-events:none"></iframe>
     </div>
-    <a href="/en/tour" aria-label="Open the 3D brand house tour" style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(242,239,232,.32);color:#F2EFE8;padding:15px 24px;border-radius:2px;font:700 .9375rem 'Noto Sans TC',sans-serif;text-decoration:none" style-hover="border-color:#FF6B2C;color:#FF6B2C">Enter the 3D tour →</a>
   </div>
 </section>
 
@@ -361,6 +364,34 @@ class Component extends DCLogic {
       try { this._missing = val.devReport(mm); } catch (e) {}
     });
     import('/seo.js').then(m => m.applySEO('cases')).catch(() => {});
+    // 品牌屋 3D:用父頁在該區塊的捲動進度,程式化捲動 iframe → 完整重用原本的視差引擎,零改動
+    this._bhInit = () => {
+      const run = document.getElementById('pq-bh-runway');
+      const fr = document.getElementById('pq-bh-frame');
+      // DC 為非同步渲染:掛載當下元素可能還沒進 DOM → 重試直到出現
+      if (!run || !fr) { if ((this._bhTry = (this._bhTry || 0) + 1) < 60) setTimeout(this._bhInit, 100); return null; }
+      let ticking = false;
+      const apply = () => {
+        ticking = false;
+        const r = run.getBoundingClientRect();
+        const total = run.offsetHeight - window.innerHeight;
+        if (total <= 0) return;
+        const p = Math.min(1, Math.max(0, -r.top / total));
+        try {
+          const w = fr.contentWindow, d = fr.contentDocument;
+          if (!w || !d || !d.documentElement) return;
+          const sh = d.documentElement.scrollHeight - w.innerHeight;
+          if (sh > 0) w.scrollTo(0, p * sh);
+        } catch (e) {}
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      fr.addEventListener('load', apply);
+      apply();
+      return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+    };
+    this._bh = this._bhInit();
     Promise.all([import('/motion-kit.js'), import('/motion/cases.motion.js')])
       .then(([kit, cfg]) => {
         if (this._dead || this._motion) return;
@@ -378,6 +409,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     this._dead = true;
+    if (this._bh) this._bh();
     if (this._hero) this._hero.destroy();
     if (this._ch) this._ch.destroy();
     if (this._motion) this._motion.destroy();

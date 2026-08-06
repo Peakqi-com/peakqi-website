@@ -32,7 +32,7 @@ export const navigation = [
 export const stats = [
   { v: '30+', l: t('已上線的系統與網站', 'systems & sites shipped'), d: t('累計交付並實際上線的 AI 系統、客製平台與品牌網站專案。', 'AI systems, custom platforms and brand sites delivered and live.') },
   { v: '8+', l: t('導入過的產業情境', 'industries deployed'), d: t('實際做過導入的產業與流程情境,不是可服務產業的清單。', 'Industries we have actually shipped in — not a list of industries we could serve.') },
-  { v: t('最快 10 天', '10 days'), l: t('標準模組第一階段上線', 'fastest Phase-1 launch'), d: t('以標準模組估算的最快工作天數。客製串接、資料遷移與跨部門平台另行評估。', 'Fastest working-day estimate with standard modules. Custom integrations, data migration and cross-team platforms are scoped separately.') },
+  { v: t('最快 10 天', 'From 10 days'), l: t('標準模組第一階段上線', 'Phase-1 launch, standard modules'), d: t('以標準模組估算的最快工作天數。客製串接、資料遷移與跨部門平台另行評估。', 'Best-case working-day estimate with standard modules. Custom integrations, data migration and cross-team platforms are scoped separately.') },
   { v: t('24 小時', '24 hours'), l: t('AI 持續接收詢問', 'AI keeps taking inquiries'), d: t('系統全天候接收、分類並整理客戶詢問。需要判斷的內容仍在上班時間由專人接手。', 'The system receives, sorts and organizes inquiries around the clock. Judgment calls still go to your team during work hours.') }
 ];
 
