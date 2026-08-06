@@ -1270,6 +1270,8 @@ export function mountBlogHero() {
 
   function setCond(i, now) {
     condI = ((i | 0) % CONDS.length + CONDS.length) % CONDS.length;
+    moonPhase = 0.06 + Math.random() * 0.88;   // 每次隨機一個月相(避開極新月,不然幾乎看不到)
+    moonCv = null;
     condT0 = now; condIn = 0;
     passT0 = now + rnd(2500, 5000);                  // 天體類:切換後很快先來一次
     passGap = rnd(17000, 26000);
@@ -1405,26 +1407,127 @@ export function mountBlogHero() {
     g.restore();
   }
 
-  // 月出:弦月從地平線升起,整片天空的光調跟著變
+  // ── 月亮 ────────────────────────────────────────────────
+  // 舊版是「一個黑圓疊在亮圓上」,那不是月相的幾何 —— 真正的明暗界線是橢圓弧
+  // (半長軸 = 月球半徑,半短軸 = R·|cos θ|),θ 是相位角。所以:
+  //   上弦(θ=90°)  → 短軸 0,界線是直線
+  //   眉月(θ<90°)  → 界線往受光側凹進去,形成細細的弦月
+  //   凸月(θ>90°)  → 界線往暗側凸出去,形成飽滿的凸月
+  // 月面用離屏畫布做一次:臨邊昏暗 + 月海(位置取自真實月面的大致分布)+ 幾個亮坑,
+  // 再用 destination-in 把受光區域切出來。相位每次進站/換天象時隨機。
+  let moonCv = null, moonR = 0, moonPhase = 0.18;
+
+  function buildMoon(R) {
+    if (moonCv && moonR === R) return moonCv;
+    moonR = R;
+    const S = Math.ceil(R * 2) + 2;
+    moonCv = document.createElement('canvas');
+    moonCv.width = S; moonCv.height = S;
+    const m = moonCv.getContext('2d');
+    const c = S / 2;
+
+    // 本體 + 臨邊昏暗:邊緣比中心暗,月亮才有球體感
+    const base = m.createRadialGradient(c - R * 0.22, c - R * 0.22, R * 0.1, c, c, R);
+    base.addColorStop(0, '#F4F1E6');
+    base.addColorStop(0.62, '#E4DFD0');
+    base.addColorStop(0.9, '#C9C2B0');
+    base.addColorStop(1, '#AEA695');
+    m.beginPath(); m.arc(c, c, R, 0, TAU); m.fillStyle = base; m.fill();
+
+    // 月海:大致對應實際月面(雨海、靜海、危海、澄海…),用柔邊橢圓疊出不規則邊界
+    const MARIA = [
+      [-0.30, -0.34, 0.30, 0.24, -0.4, 0.42],
+      [-0.05, -0.44, 0.20, 0.15, 0.3, 0.34],
+      [0.20, -0.22, 0.19, 0.16, 0.1, 0.36],
+      [0.03, -0.10, 0.26, 0.20, -0.2, 0.32],
+      [-0.34, 0.06, 0.24, 0.30, 0.35, 0.34],
+      [-0.10, 0.30, 0.22, 0.18, 0.0, 0.28],
+      [0.34, 0.22, 0.14, 0.12, 0.0, 0.24]
+    ];
+    m.save();
+    m.beginPath(); m.arc(c, c, R, 0, TAU); m.clip();
+    for (const [mx, my, rx, ry, rot, al] of MARIA) {
+      const gx = c + mx * R, gy = c + my * R;
+      m.save(); m.translate(gx, gy); m.rotate(rot); m.scale(1, ry / rx);
+      // 漸層必須在變換「之後」以區域座標建立:先建再變換的話,漸層中心會跟著位移到別的地方,
+      // 填到的就是完全透明的那一端(第一版月海看不見就是這個原因)。
+      const rg = m.createRadialGradient(0, 0, 0, 0, 0, rx * R);
+      rg.addColorStop(0, 'rgba(72,76,92,' + al + ')');
+      rg.addColorStop(0.68, 'rgba(72,76,92,' + (al * 0.7) + ')');
+      rg.addColorStop(1, 'rgba(72,76,92,0)');
+      m.beginPath(); m.arc(0, 0, rx * R, 0, TAU);
+      m.fillStyle = rg; m.fill();
+      m.restore();
+    }
+    // 隕石坑:亮環 + 內側淡陰影,少量就有質感
+    const CRAT = [
+      [0.30, 0.52, 0.055], [-0.44, 0.42, 0.038], [0.52, -0.16, 0.03],
+      [-0.52, -0.14, 0.026], [0.10, 0.62, 0.024], [-0.18, -0.62, 0.028]
+    ];
+    for (const [cxr, cyr, rr] of CRAT) {
+      const gx = c + cxr * R, gy = c + cyr * R, rad = rr * R;
+      m.beginPath(); m.arc(gx, gy, rad, 0, TAU);
+      m.fillStyle = 'rgba(250,247,238,.5)'; m.fill();
+      m.beginPath(); m.arc(gx + rad * 0.18, gy + rad * 0.18, rad * 0.66, 0, TAU);
+      m.fillStyle = 'rgba(120,118,110,.28)'; m.fill();
+    }
+    // 第谷坑的輻射紋:月亮最好認的特徵
+    const tx = c + 0.30 * R, ty = c + 0.52 * R;
+    for (let i = 0; i < 14; i++) {
+      const th = (i / 14) * TAU + 0.3;
+      const len = R * (0.3 + 0.45 * ((i * 37) % 11) / 11);
+      const lg = m.createLinearGradient(tx, ty, tx + Math.cos(th) * len, ty + Math.sin(th) * len);
+      lg.addColorStop(0, 'rgba(252,250,244,.30)');
+      lg.addColorStop(1, 'rgba(252,250,244,0)');
+      m.strokeStyle = lg; m.lineWidth = R * 0.022;
+      m.beginPath(); m.moveTo(tx, ty);
+      m.lineTo(tx + Math.cos(th) * len, ty + Math.sin(th) * len); m.stroke();
+    }
+    m.restore();
+
+    // 相位遮罩。不用一條路徑硬湊(橢圓的繪製方向旗標很容易反,實測上弦側整個不見),
+    // 改成兩個好推理的步驟:先填「受光半圓」,再依受光比例決定要挖掉還是補上明暗界線橢圓。
+    //   受光比例 f = (1 - cos θ) / 2   → f<0.5 眉月:把橢圓從半圓裡挖掉
+    //                                    f>0.5 凸月:把橢圓補到暗側
+    // 暗面是「切掉」不是「塗黑」—— 月球的暗面本來就該讓背後的星空透出來。
+    const th = moonPhase * TAU;
+    const cosT = Math.cos(th);
+    const f = (1 - cosT) / 2;
+    const waxing = moonPhase < 0.5;
+    const mk = document.createElement('canvas');
+    mk.width = S; mk.height = S;
+    const k2 = mk.getContext('2d');
+    k2.fillStyle = '#fff';
+    k2.beginPath();
+    if (waxing) k2.arc(c, c, R, -Math.PI / 2, Math.PI / 2);
+    else k2.arc(c, c, R, Math.PI / 2, Math.PI * 1.5);
+    k2.closePath(); k2.fill();
+    k2.globalCompositeOperation = f < 0.5 ? 'destination-out' : 'source-over';
+    k2.beginPath(); k2.ellipse(c, c, R * Math.abs(cosT), R, 0, 0, TAU); k2.fill();
+    m.globalCompositeOperation = 'destination-in';
+    m.drawImage(mk, 0, 0);
+    m.globalCompositeOperation = 'source-over';
+    return moonCv;
+  }
+
   function condMoon(now, a) {
     const k = clamp01((now - condT0) / 26000);
     const ez2 = k * k * (3 - 2 * k);
-    const cx = W * 0.24, cy = H - groundY(cx) - ez2 * H * 0.52;
-    const r = Math.min(W, H) * (mobile ? 0.052 : 0.045);
+    const R = Math.min(W, H) * (mobile ? 0.075 : 0.068);
+    const cx = W * 0.22, cy = H - groundY(cx) - ez2 * (H * 0.5) - R;
+    const cv2 = buildMoon(R);
+    // 地照:受光比例越低,光暈越小 —— 眉月不該像滿月一樣亮
+    const lit = (1 - Math.cos(moonPhase * TAU)) / 2;
     g.globalCompositeOperation = 'lighter';
-    const halo = g.createRadialGradient(cx, cy, r * 0.4, cx, cy, r * 9);
-    halo.addColorStop(0, 'rgba(236,232,214,' + (0.3 * a * ez2).toFixed(3) + ')');
-    halo.addColorStop(1, 'rgba(236,232,214,0)');
+    const halo = g.createRadialGradient(cx, cy, R * 0.5, cx, cy, R * 11);
+    halo.addColorStop(0, 'rgba(232,230,216,' + (0.13 * a * ez2 * (0.35 + 0.65 * lit)).toFixed(3) + ')');
+    halo.addColorStop(1, 'rgba(232,230,216,0)');
     g.fillStyle = halo;
-    g.fillRect(cx - r * 9, cy - r * 9, r * 18, r * 18);
+    g.fillRect(cx - R * 11, cy - R * 11, R * 22, R * 22);
     g.globalCompositeOperation = 'source-over';
-    g.beginPath(); g.arc(cx, cy, r, 0, TAU);
-    g.fillStyle = 'rgba(238,234,218,' + (0.94 * a).toFixed(3) + ')'; g.fill();
-    // 用背景色的圓切出弦月
-    g.save();
-    g.globalCompositeOperation = 'destination-out';
-    g.beginPath(); g.arc(cx - r * 0.66, cy - r * 0.26, r * 0.92, 0, TAU); g.fill();
-    g.restore();
+    g.globalAlpha = a * (0.25 + 0.75 * ez2);
+    g.drawImage(cv2, cx - R - 1, cy - R - 1);
+    g.globalAlpha = 1;
   }
 
   // 環形太空站:甜甜圈狀,緩慢自轉,帶航行燈
@@ -1886,6 +1989,7 @@ export function mountBlogHero() {
     cond: () => CONDS[condI].id,
     setCond: (i) => { setCond(i, performance.now()); return CONDS[condI].id; },
     conds: () => CONDS.map((c) => c.id),
+    setMoon: (ph) => { moonPhase = ph; moonCv = null; dirty = true; return moonPhase; },
     condErr: () => condErr
   };
 
