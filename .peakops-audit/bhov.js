@@ -1,0 +1,10 @@
+await new Promise(r=>setTimeout(r,3000));
+const ui=document.getElementById('pq-bh-ui');
+const run=document.getElementById('pq-bh-runway');
+const top=run.getBoundingClientRect().top+scrollY;
+scrollTo(0,Math.round(top+ (run.offsetHeight-innerHeight)*0.3)); await new Promise(r=>setTimeout(r,900));
+const ov=ui.querySelector('.bh-ov'), list=ui.querySelector('.bh-list');
+const before={hidden:list.hidden, aria:ov.getAttribute('aria-expanded'), items:list.children.length};
+ov.click(); await new Promise(r=>setTimeout(r,400));
+const after={hidden:list.hidden, aria:ov.getAttribute('aria-expanded'), disp:getComputedStyle(list).display, vis:getComputedStyle(list).visibility, h:Math.round(list.getBoundingClientRect().height)};
+return JSON.stringify({before,after, 處理器有跑: before.aria!==after.aria});
