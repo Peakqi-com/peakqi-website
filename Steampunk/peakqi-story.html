@@ -209,6 +209,21 @@ const angryBub = root.getObjectByName('referral_person_bubble');
 const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+// 室內道具的貼地暗部:主光在塔外(4,7,5),六層房間全被外牆擋住,室內只剩半球光與
+// 環境光——兩者都不投射陰影,所以桌椅像貼紙貼在地板上。這裡替每個「真的踩在某個
+// 面上」的道具補一片柔和暗部(向下射線判定,放在桌上的東西就落在桌上)。
+// 全部收成單一 InstancedMesh,整棟塔只多一個 draw call。
+// anim_ 開頭的零件由動畫每幀移動,靜止的暗部會對不上,排除。
+// 只補六間室內。塔外的引擎、鍋爐、油槽、煙囪照得到主光,本來就有真的投射陰影,
+// 再疊一片假的會變雙重陰影。
+stage.addContactShadows({
+  groups: /^floor\d/,
+  filter: (o) => !/^anim_/.test(o.name || ''),
+});
+// 牆與地板的交界:現實中環境光鑽不進去,那一圈會比較暗。少了它,房間就是
+// 一塊平色地板接一塊平色牆,看起來像示意圖。六間室內都補,陽台不補(它朝天空
+// 開放,而且主光本來就照得到)。
+stage.addEdgeShade({ surfaces: /^(gov|film|funeral|estate|interior|wedding)_floor$/ });
 stage._controls.enabled = false;
 // 手機「滑到某處卡住不能捲」根因:OrbitControls 建構時把 canvas 設成 touch-action:none,
 // 而本頁所有覆蓋層都是 pointer-events:none → 觸控幾乎都落在 canvas 上,瀏覽器拒絕用它捲頁,

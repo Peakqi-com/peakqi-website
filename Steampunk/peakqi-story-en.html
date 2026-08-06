@@ -216,6 +216,23 @@ const angryBub = root.getObjectByName('referral_person_bubble');
 const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+// Contact shadows for interior props — the key light sits outside the tower,
+// so every closed room is lit by hemisphere + environment only, neither of
+// which casts. Without this the furniture reads as pasted onto the floor.
+// One InstancedMesh for the whole model: a single extra draw call.
+// anim_ parts are moved every frame; a static blob under them would drift.
+// Interiors only. The engine, boiler, tanks and stack sit outside the shell
+// where the key light reaches them, so they already cast real shadows —
+// adding a fake one there would double up.
+stage.addContactShadows({
+  groups: /^floor\d/,
+  filter: (o) => !/^anim_/.test(o.name || ''),
+});
+// Floor-to-wall seam. Ambient light can't reach a crease, so it should read
+// darker; without it a room is one flat colour meeting another and the whole
+// interior looks like a diagram. Interiors only — the balcony is open to the
+// sky and the key light already reaches it.
+stage.addEdgeShade({ surfaces: /^(gov|film|funeral|estate|interior|wedding)_floor$/ });
 stage._controls.enabled = false;
 // 手機「滑到某處卡住不能捲」根因:OrbitControls 建構時把 canvas 設成 touch-action:none,
 // 而本頁所有覆蓋層都是 pointer-events:none → 觸控幾乎都落在 canvas 上,瀏覽器拒絕用它捲頁,

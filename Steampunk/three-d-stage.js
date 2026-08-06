@@ -226,10 +226,11 @@
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.25 : 2));
       renderer.shadowMap.enabled = true;
-      // 接觸陰影的柔和度:桌機用 PCFSoft(2048 陰影圖下多出來的取樣成本可忽略),
-      // 觸控從 Basic 升到 PCF —— Basic 是硬邊、會有明顯鋸齒。
-      // 抗鋸齒維持「觸控不開」:那一項有真實的效能風險,沒有可信的實機幀時間就不動。
-      renderer.shadowMap.type = isTouchDevice ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
+      // 陰影過濾:PCF(柔邊)。three r184 已移除 PCFSoftShadowMap —— 指定它只會
+      // 收到 deprecation 警告然後被換回 PCF,所以不再分桌機/觸控,直接寫實際生效的那個。
+      // 室內道具的貼地暗部不靠這張陰影圖,走 addContactShadows()。
+      // 抗鋸齒維持「觸控不開」:實機檢視無階梯感,沒有理由付那個效能代價。
+      renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       this._renderer = renderer;
@@ -348,6 +349,243 @@
       }
       this._scene.add(object);
       this._setButtonsEnabled(true);
+    }
+
+    /** Soft contact shadows for objects that stand on a surface.
+     *
+     *  Only the key light casts shadows, so anything the key light can't
+     *  reach — every prop inside a closed interior — receives no shadow at
+     *  all and reads as pasted onto the floor. This drops one soft dark
+     *  ellipse under each object whose underside actually rests on
+     *  something. "Rests on" is decided by a downward raycast, not by
+     *  height, so a lamp standing on a desk lands its shadow on the desk
+     *  and a hanging lamp gets none.
+     *
+     *  Everything shares a single InstancedMesh — one extra draw call for
+     *  the whole model, which is what makes this affordable on phones.
+     *
+     *  opts.groups  RegExp matched against top-level child names; their
+     *               direct children become the candidates (default: the
+     *               object's own direct children)
+     *  opts.filter  (obj) => boolean, false to skip a candidate
+     *  opts.maxFoot largest footprint that still counts as a prop (world
+     *               units) — above this it's a wall, deck or ceiling
+     *  opts.maxGap  largest allowed gap to the surface below; more than
+     *               this and the object is floating, not standing
+     *  opts.opacity peak darkness at the centre of the blob
+     *  opts.spread  blob size as a multiple of the object's footprint
+     *
+     *  Returns the number of shadows placed. */
+    addContactShadows(opts = {}) {
+      const THREE = this._THREE;
+      if (!THREE) throw new Error('three-d-stage: not ready — await stage.ready first');
+      const root = this._object;
+      if (!root) return 0;
+      const {
+        groups = null, filter = null, maxFoot = 1.1, maxGap = 0.09,
+        opacity = 0.55, spread = 1.18, minFoot = 0.04,
+        minHeight = 0.1, minAspect = 0.2,
+      } = opts;
+
+      const pool = groups
+        ? root.children.filter((g) => groups.test(g.name || ''))
+        : [root];
+      const cands = [];
+      for (const g of pool) for (const ch of g.children) cands.push(ch);
+      if (!cands.length) return 0;
+
+      root.updateWorldMatrix(true, true);
+      const box = new THREE.Box3(), size = new THREE.Vector3(), mid = new THREE.Vector3();
+      const DOWN = new THREE.Vector3(0, -1, 0);
+      const from = new THREE.Vector3();
+      const rc = new THREE.Raycaster();
+      rc.far = maxGap + 0.4;
+      // The ray starts just above the underside so an object sunk a
+      // millimetre into the deck still sees the deck, not what's beneath it.
+      const LIFT = 0.02;
+      const own = (hit, obj) => { for (let p = hit; p; p = p.parent) if (p === obj) return true; return false; };
+
+      const hits = [];
+      for (const o of cands) {
+        if (!o.visible || o.userData.noShadow) continue;
+        if (filter && !filter(o)) continue;
+        box.setFromObject(o);
+        if (box.isEmpty()) continue;
+        box.getSize(size); box.getCenter(mid);
+        const foot = Math.max(size.x, size.z);
+        // Above maxFoot it is architecture — a porch or a dome — and a soft
+        // ellipse under a wall-sized thing reads as a stain, not a shadow.
+        if (foot > maxFoot) continue;
+        // Wide and paper-thin means a band, a decal or a rug lying against a
+        // surface, not an object standing on one.
+        if (size.y < minHeight || size.y < foot * minAspect) continue;
+        rc.set(from.set(mid.x, box.min.y + LIFT, mid.z), DOWN);
+        const under = rc.intersectObject(root, true).find((h) => !own(h.object, o));
+        if (!under) continue;
+        const gap = under.distance - LIFT;
+        if (gap > maxGap) continue;
+        // A bigger gap means a shadow that has spread and softened. Peak
+        // darkness is shared by every instance, so widening is the only
+        // knob available — which happens to be the right one.
+        const soften = 1 + Math.max(0, gap) * 2.2;
+        hits.push({
+          y: under.point.y,
+          x: mid.x, z: mid.z,
+          sx: Math.max(minFoot, size.x) * spread * soften,
+          sz: Math.max(minFoot, size.z) * spread * soften,
+        });
+      }
+      if (!hits.length) return 0;
+
+      // Radial falloff, denser in the middle than a linear ramp — a plain
+      // gradient reads as a grey disc rather than a shadow. The exponent
+      // is what keeps the blob hugging the object instead of haloing it.
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 128;
+      const g2 = cv.getContext('2d');
+      const grad = g2.createRadialGradient(64, 64, 0, 64, 64, 64);
+      for (let i = 0; i <= 12; i++) {
+        const t = i / 12;
+        grad.addColorStop(t, 'rgba(255,255,255,' + Math.pow(1 - t, 2.6).toFixed(4) + ')');
+      }
+      g2.fillStyle = grad;
+      g2.fillRect(0, 0, 128, 128);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.colorSpace = THREE.NoColorSpace;
+
+      const geo = new THREE.PlaneGeometry(1, 1);
+      geo.rotateX(-Math.PI / 2);
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0x000000, alphaMap: tex, transparent: true, opacity,
+        depthWrite: false, toneMapped: false,
+        polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4,
+      });
+      const inst = new THREE.InstancedMesh(geo, mat, hits.length);
+      inst.name = 'contact_shadows';
+      inst.castShadow = false;
+      inst.receiveShadow = false;
+      inst.userData.noShadow = true;
+      // One mesh spanning the whole model can't be usefully culled, and
+      // it is a single draw call either way.
+      inst.frustumCulled = false;
+      inst.renderOrder = 1;
+
+      // Blobs live under the object so they follow it if it is ever moved.
+      const toLocal = new THREE.Matrix4().copy(root.matrixWorld).invert();
+      const m = new THREE.Matrix4();
+      const pos = new THREE.Vector3();
+      const rot = new THREE.Quaternion();
+      const scl = new THREE.Vector3();
+      for (let i = 0; i < hits.length; i++) {
+        const h = hits[i];
+        m.compose(
+          pos.set(h.x, h.y + 0.004, h.z),
+          rot.identity(),
+          scl.set(h.sx, 1, h.sz)
+        );
+        inst.setMatrixAt(i, m.premultiply(toLocal));
+      }
+      inst.instanceMatrix.needsUpdate = true;
+      root.add(inst);
+      this._contactShadows = inst;
+      return hits.length;
+    }
+
+    /** Cheap ambient occlusion for the seam where a floor meets its walls.
+     *
+     *  Real AO darkens creases because ambient light can't reach them. A
+     *  full screen-space AO pass costs a second render every frame; for a
+     *  fixed model the same read comes from one soft ring laid on each
+     *  floor — clear in the middle, darkening toward the perimeter where
+     *  the walls stand. Without it a room's floor meets its wall on a flat
+     *  colour boundary and the whole interior reads as a diagram.
+     *
+     *  The ring is elliptical and sits at 0.98 of the floor's own bounds,
+     *  so it can never spill past the floor edge onto the background —
+     *  which a rectangular overlay would do on any non-rectangular room.
+     *
+     *  opts.surfaces RegExp matched against mesh names (e.g. /_floor$/)
+     *  opts.opacity  darkness at the ring's peak
+     *  opts.inner    radius where darkening starts (0–1 of the half-width)
+     *  opts.peak     radius of maximum darkness
+     *
+     *  Returns the number of surfaces shaded. */
+    addEdgeShade(opts = {}) {
+      const THREE = this._THREE;
+      if (!THREE) throw new Error('three-d-stage: not ready — await stage.ready first');
+      const root = this._object;
+      if (!root) return 0;
+      const { surfaces, opacity = 0.2, inner = 0.72, peak = 0.95 } = opts;
+      if (!surfaces) return 0;
+
+      root.updateWorldMatrix(true, true);
+      const box = new THREE.Box3(), size = new THREE.Vector3(), mid = new THREE.Vector3();
+      const found = [];
+      root.traverse((o) => {
+        if (!o.isMesh || !o.visible || !surfaces.test(o.name || '')) return;
+        box.setFromObject(o);
+        if (box.isEmpty()) return;
+        box.getSize(size); box.getCenter(mid);
+        if (size.x < 0.3 || size.z < 0.3) return;
+        found.push({ x: mid.x, y: box.max.y, z: mid.z, sx: size.x * 0.98, sz: size.z * 0.98 });
+      });
+      if (!found.length) return 0;
+
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 128;
+      const g2 = cv.getContext('2d');
+      const grad = g2.createRadialGradient(64, 64, 0, 64, 64, 64);
+      const smooth = (a, b, t) => {
+        const u = Math.min(1, Math.max(0, (t - a) / (b - a)));
+        return u * u * (3 - 2 * u);
+      };
+      for (let i = 0; i <= 24; i++) {
+        const t = i / 24;
+        // Rise from `inner` to `peak`, then release to nothing by the rim so
+        // the ellipse never ends on a hard edge.
+        const a = smooth(inner, peak, t) * (1 - smooth(peak, 1, t));
+        grad.addColorStop(t, 'rgba(255,255,255,' + a.toFixed(4) + ')');
+      }
+      g2.fillStyle = grad;
+      g2.fillRect(0, 0, 128, 128);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.colorSpace = THREE.NoColorSpace;
+
+      const geo = new THREE.PlaneGeometry(1, 1);
+      geo.rotateX(-Math.PI / 2);
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0x000000, alphaMap: tex, transparent: true, opacity,
+        depthWrite: false, toneMapped: false,
+        polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+      });
+      const inst = new THREE.InstancedMesh(geo, mat, found.length);
+      inst.name = 'edge_shade';
+      inst.castShadow = false;
+      inst.receiveShadow = false;
+      inst.userData.noShadow = true;
+      inst.frustumCulled = false;
+      // Under the contact blobs: the seam shading is the room's ambient
+      // floor, the blobs sit on top of it.
+      inst.renderOrder = 0.5;
+
+      const toLocal = new THREE.Matrix4().copy(root.matrixWorld).invert();
+      const m = new THREE.Matrix4();
+      const pos = new THREE.Vector3();
+      const rot = new THREE.Quaternion();
+      const scl = new THREE.Vector3();
+      for (let i = 0; i < found.length; i++) {
+        const f = found[i];
+        m.compose(
+          pos.set(f.x, f.y + 0.002, f.z),
+          rot.identity(),
+          scl.set(f.sx, 1, f.sz)
+        );
+        inst.setMatrixAt(i, m.premultiply(toLocal));
+      }
+      inst.instanceMatrix.needsUpdate = true;
+      root.add(inst);
+      this._edgeShade = inst;
+      return found.length;
     }
 
     get _basename() {
