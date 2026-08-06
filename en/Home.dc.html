@@ -577,14 +577,22 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 /* ── Phase 5 字卡進退場:opacity 0→1、translateY 18px→0、blur 5px→0 ──
    退場為 opacity 1→0、translateY 0→-12px,且先於主要物件離場(時間軸在引擎端)。
    規格明訂不使用大幅 scale、不從左右高速飛入。 */
+/* 進退場的模糊時序刻意「不對稱」──
+   退場時如果模糊和淡出同步,會出現一段「完全看得見但整個糊掉」的畫面(量到 41 個取樣點中有 7 點),
+   停在那裡就像卡在載入中。所以退場讓模糊延後 .26s 才追上來:先乾淨地淡出,快消失時才糊。
+   進場則相反,模糊立刻收掉(見 .is-active),文字一出現就是可讀的。
+   中間態總長壓到 .42s,符合「進退場各佔一小段、其餘時間是完整構圖」的原則。 */
 #hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card{
   filter:blur(5px);
-  transition:opacity .55s cubic-bezier(0.16,1,0.3,1),transform .55s cubic-bezier(0.16,1,0.3,1),filter .45s ease-out}
+  transition:opacity .42s cubic-bezier(0.16,1,0.3,1),transform .42s cubic-bezier(0.16,1,0.3,1),filter .22s ease-out .26s}
 #hero.pq-cine-on .pq-cine-intro:not(.is-active),#hero.pq-cine-on .pq-cine-card:not(.is-active){
   transform:translateY(calc(-50% - 12px))}
-#hero.pq-cine-on .is-active{filter:blur(0)}
-.pq-cine-vcard{filter:blur(5px);transform:translateY(calc(-50% + 18px))}
-.pq-cine-vcard.is-on{filter:blur(0)}
+#hero.pq-cine-on .is-active{filter:blur(0);
+  transition:opacity .42s cubic-bezier(0.16,1,0.3,1),transform .42s cubic-bezier(0.16,1,0.3,1),filter .26s ease-out}
+.pq-cine-vcard{filter:blur(5px);transform:translateY(calc(-50% + 18px));
+  transition:opacity .42s cubic-bezier(0.16,1,0.3,1),transform .42s cubic-bezier(0.16,1,0.3,1),filter .22s ease-out .26s}
+.pq-cine-vcard.is-on{filter:blur(0);
+  transition:opacity .42s cubic-bezier(0.16,1,0.3,1),transform .42s cubic-bezier(0.16,1,0.3,1),filter .26s ease-out}
 .pq-study-card{filter:blur(calc((1 - var(--on,0))*5px))}
 @media (prefers-reduced-motion:reduce){
   #hero.pq-cine-on .pq-cine-intro,#hero.pq-cine-on .pq-cine-card,
