@@ -39,7 +39,8 @@ const UI = {
     idxLede: 'AI 導入、流程自動化與客戶經營的實作觀點。寫我們實際做過的事,以及做的時候踩到什麼。',
     idxMeta: 'PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點,來自實際交付的專案現場。',
     skyHint: '點畫面任一處,把星星連成星座', skyStars: '顆',
-    skyAria: '星空觀測互動:按 Enter 觀測一顆星星,連成星座',
+    skyAria: '互動式星空:點畫面或按 Enter 觀測一顆星星,連滿六顆完成一次觀測',
+    skyDone: '觀測完成', skyLog: '觀測紀錄', skyScroll: '往下讀 · 觀點列表',
     all: '全部', back: '回到觀點', mins: '分鐘閱讀', empty: '這個標籤下還沒有文章。',
     related: '延伸閱讀', skip: '跳到主要內容', updated: '更新於',
     ctaTitle: '想知道這些流程在你的公司長什麼樣?',
@@ -53,7 +54,8 @@ const UI = {
     idxLede: 'Notes on AI adoption, workflow automation and customer operations — what we actually built, and what we ran into while building it.',
     idxMeta: 'PeakQi on AI adoption, workflow automation and customer operations — written from the delivery floor.',
     skyHint: 'Tap anywhere to connect the stars', skyStars: 'stars',
-    skyAria: 'Stargazing interaction: press Enter to observe a star and draw a constellation',
+    skyAria: 'Interactive night sky: tap or press Enter to observe a star; six of them complete one observation',
+    skyDone: 'Observation logged', skyLog: 'Observation log', skyScroll: 'Scroll · all insights',
     all: 'All', back: 'Back to Insights', mins: 'min read', empty: 'No posts under this tag yet.',
     related: 'Read next', skip: 'Skip to main content', updated: 'Updated',
     ctaTitle: 'Want to see what this looks like inside your company?',
@@ -206,28 +208,50 @@ const ARTICLE_CSS = `
 @media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}`;
 
 const INDEX_CSS = `
-/* 開場是一整片夜空 canvas,文字疊在上面。桌機文案靠下左、觀測者在右下;
-   手機改成文案在上、下半留給星空與觀測者,兩者不會疊在一起。 */
-.bl-head{position:relative;overflow:hidden;background:#070A10;color:#F2EFE8;display:flex;align-items:flex-end;min-height:clamp(340px,50vh,480px)}
+/* 開場是滿版夜空 canvas(高度扣掉固定 NAV 的 68px,底下刻意露出 68px 的卡片區當作「還有內容」的訊號)。
+   桌機:文案壓在左下、觀測者在右下、上半整片留給星空;
+   手機:文案在上、下半留給星空與觀測者,兩者不會疊在一起。
+   用 svh 而不是 vh:手機網址列收合時 vh 會跳,滿版 hero 跳起來特別明顯。 */
+.bl-head{position:relative;overflow:hidden;background:#05070C;color:#F2EFE8;display:flex;flex-direction:column;min-height:calc(100vh - 68px);min-height:calc(100svh - 68px)}
 .bl-head canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:manipulation}
 .bl-head canvas:focus-visible{outline:2px solid #FF6B2C;outline-offset:-4px}
 /* 文案底下的遮罩:使用者可以在任何位置點亮星星,包含文字後方 —— 沒有這層,
-   星光和星座線會直接洗掉文案。桌機由左、手機由上淡出,星空仍然透得出來。 */
-.bl-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.78) 30%,rgba(7,10,16,.28) 52%,rgba(7,10,16,0) 68%)}
-@media(max-width:719px){.bl-scrim{background:linear-gradient(180deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.82) 34%,rgba(7,10,16,.3) 58%,rgba(7,10,16,0) 76%)}}
+   星光和星座線會直接洗掉文案。滿版後改成從左下角出發的徑向遮罩:
+   只壓文案那一角,上半的星空、行星與流星完全不被壓暗;底部再補一道橫向漸層托住捲動提示。 */
+.bl-scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(126% 86% at 4% 94%,rgba(5,7,12,.95) 0%,rgba(5,7,12,.87) 24%,rgba(5,7,12,.46) 46%,rgba(5,7,12,.08) 68%,rgba(5,7,12,0) 80%),linear-gradient(0deg,rgba(5,7,12,.72) 0%,rgba(5,7,12,.2) 11%,rgba(5,7,12,0) 24%),linear-gradient(180deg,rgba(5,7,12,.5) 0%,rgba(5,7,12,0) 14%)}
+@media(max-width:719px){.bl-scrim{background:linear-gradient(180deg,rgba(5,7,12,.96) 0%,rgba(5,7,12,.9) 26%,rgba(5,7,12,.58) 40%,rgba(5,7,12,.14) 55%,rgba(5,7,12,0) 68%),linear-gradient(0deg,rgba(5,7,12,.8) 0%,rgba(5,7,12,.24) 13%,rgba(5,7,12,0) 27%)}}
 /* 文案不吃指標事件:點畫面任何一處都要能傳到 canvas 觀測星星 */
-.bl-headin{position:relative;z-index:1;pointer-events:none;width:100%;max-width:1160px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,48px) clamp(28px,3.4vw,42px)}
+.bl-headin{position:relative;z-index:1;pointer-events:none;box-sizing:border-box;width:100%;max-width:1160px;margin:auto auto 0;padding:clamp(36px,7vw,88px) clamp(20px,5vw,48px) 0}
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
 .bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
 .bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
 .bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
 .bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
 @keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
-@media(prefers-reduced-motion:reduce){.bl-hint::before{animation:none;opacity:.75}}
+/* 捲動提示:滿版把卡片推出首屏,這條軌道上有一顆往下掉的光點,
+   比單純一個箭頭多一點「還在運轉」的感覺。 */
+.bl-scroll{position:relative;z-index:1;pointer-events:none;box-sizing:border-box;width:100%;max-width:1160px;margin:0 auto;padding:clamp(24px,3vw,40px) clamp(20px,5vw,48px) clamp(20px,2.4vw,32px);display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.bl-scroll .t{font:600 10.5px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.2em;color:rgba(242,239,232,.5)}
+.bl-scroll .r{position:relative;display:block;width:1px;height:34px;background:linear-gradient(180deg,rgba(242,239,232,.04),rgba(242,239,232,.32),rgba(242,239,232,.02))}
+.bl-scroll .r::after{content:"";position:absolute;left:-2px;top:-4px;width:5px;height:5px;border-radius:50%;background:#FF6B2C;animation:pqDrop 2.6s cubic-bezier(.55,0,.5,1) infinite}
+@keyframes pqDrop{0%{transform:translateY(0);opacity:0}16%{opacity:1}80%{opacity:1}100%{transform:translateY(38px);opacity:0}}
+.bl-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){.bl-hint::before{animation:none;opacity:.75}.bl-scroll .r::after{animation:none;top:14px;opacity:.9}}
 @media(max-width:719px){
-  .bl-head{align-items:flex-start;min-height:clamp(440px,74vh,580px)}
-  .bl-headin{padding-bottom:clamp(130px,28vh,200px)}
+  .bl-headin{margin:0 auto auto;padding-top:clamp(26px,7vw,44px)}
   .bl-head p{max-width:none}
+  /* 手機底部有全站的 LINE 浮動列(約 62px 高、幾乎滿寬),捲動提示要讓開它才讀得到 */
+  .bl-scroll{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+}
+/* 矮螢幕(iPhone SE 這一類):滿版扣掉文案與捲動提示後只剩百來 px 的天空,
+   把文案的行距與留白收一輪,把畫面還給星空與觀測者。 */
+@media(max-width:719px) and (max-height:660px){
+  .bl-headin{padding-top:clamp(16px,4vw,24px)}
+  .bl-head h1{font-size:1.8rem}
+  .bl-head p{margin-top:11px;line-height:1.7}
+  .bl-hint{margin-top:13px}
+  .bl-scroll{padding-top:14px;gap:8px}
+  .bl-scroll .r{height:28px}
 }
 .bl-filter{max-width:1160px;margin:0 auto;padding:clamp(22px,3vw,32px) clamp(20px,5vw,48px) 0;display:flex;flex-wrap:wrap;gap:8px}
 .bl-chip{appearance:none;-webkit-appearance:none;border:1px solid rgba(9,11,14,.16);background:none;border-radius:999px;padding:9px 16px;min-height:40px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
@@ -423,7 +447,7 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
 
   const body = `
 <main id="pq-main" data-screen-label="${esc(u.idxTitle)}">
-  <header class="bl-head" data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}">
+  <header class="bl-head" data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}">
     <canvas tabindex="0" role="button" aria-label="${esc(u.skyAria)}"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">
@@ -432,6 +456,11 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
       <p>${esc(u.idxLede)}</p>
       <span class="bl-hint" data-sky-hint>${esc(u.skyHint)}</span>
     </div>
+    <div class="bl-scroll" aria-hidden="true">
+      <span class="t">${esc(u.skyScroll)}</span>
+      <span class="r"></span>
+    </div>
+    <span class="bl-sr" data-sky-live aria-live="polite"></span>
   </header>${chips}
   <div class="bl-grid" id="bl-grid">
 ${cards}
