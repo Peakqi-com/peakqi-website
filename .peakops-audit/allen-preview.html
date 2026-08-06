@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Allen 機器人 — 綁定預覽(開發用)</title>
+<style>
+  body{margin:0;background:#0B0E12;color:#F2EFE8;font:400 14px/1.6 'Noto Sans TC',system-ui,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  h1{font:700 20px/1.4 system-ui;margin:0 0 4px}
+  p.note{margin:0 0 28px;color:rgba(242,239,232,.55);font-size:13px}
+  .row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+  .cell{flex:0 0 auto}
+  .cell b{display:block;font:600 11px/1 system-ui;letter-spacing:.12em;color:rgba(242,239,232,.5);margin-bottom:8px}
+  .card{position:relative;border-radius:8px;overflow:hidden;touch-action:manipulation;user-select:none;cursor:pointer}
+  .dark{background:linear-gradient(160deg,#1A1F26,#12161B)}
+  .paper{background:#F2EFE8}
+  .sky{background:linear-gradient(180deg,#BFE3F5 0%,#BFE3F5 62%,#E8D9B8 62%,#E8D9B8 100%)}
+  .s280{width:280px;height:280px}
+  .s160{width:160px;height:160px}
+  .s96{width:96px;height:96px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Allen 機器人 — 綁定預覽</h1>
+  <p class="note">開發用,不在網站路由上。滑鼠移動 → 眼睛與頭跟著看;移入 → 笑眼;點一下 → 揮手。畫面固定 12 格/秒。</p>
+
+  <div class="row">
+    <div class="cell"><b>團隊卡尺寸 · 深底</b><div class="card dark s280" id="a1"></div></div>
+    <div class="cell"><b>紙白底</b><div class="card paper s280" id="a2"></div></div>
+    <div class="cell"><b>參考圖那種亮景</b><div class="card sky s280" id="a3"></div></div>
+  </div>
+
+  <div class="row">
+    <div class="cell"><b>160</b><div class="card dark s160" id="a4"></div></div>
+    <div class="cell"><b>96(最小可用)</b><div class="card dark s96" id="a5"></div></div>
+    <div class="cell"><b>靜止態(reduced motion)</b><div class="card dark s160" id="a6"></div></div>
+  </div>
+</div>
+
+<script type="module">
+import { createAllenBot } from '../allen-bot.js';
+
+// 這頁自己養一個 rAF —— 它不在網站路由上,不受「整站單一 rAF」的約束。
+// 正式掛載時走 allen-avatar 的 api.raf。
+const cbs = new Set();
+const loop = (t) => { const s = t / 1000; cbs.forEach((cb) => cb(s)); requestAnimationFrame(loop); };
+requestAnimationFrame(loop);
+const raf = (cb) => { cbs.add(cb); return () => cbs.delete(cb); };
+
+const bots = [];
+['a1', 'a2', 'a3', 'a4', 'a5'].forEach((id) => {
+  bots.push(createAllenBot(document.getElementById(id), { raf }));
+});
+bots.push(createAllenBot(document.getElementById('a6'), { reduced: true }));
+window.__pqAllen = { bots, count: bots.length };
+</script>
+</body>
+</html>
