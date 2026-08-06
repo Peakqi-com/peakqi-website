@@ -73,7 +73,7 @@ export const features = [
 export const baseSupport = [t('安全穩定', 'Secure & stable'), t('雲端架構', 'Cloud-based'), t('資料整合', 'Data integration'), t('開放整合', 'Open APIs'), t('彈性擴充', 'Scales with you')];
 
 export const industries = [t('婚禮婚慶', 'Weddings'), t('室內設計', 'Interior design'), t('房仲不動產', 'Real estate'), t('美業', 'Beauty'), t('團購電商', 'Group-buy commerce'), t('活動售票', 'Event ticketing'), t('ESG 永續', 'ESG'), t('社區管理', 'Community management'), t('教育培訓', 'Education'), t('品牌官網', 'Brand sites')];
-export const industriesNote = t('新產業版本以標準模組建置,第一階段最快 10 個工作天可部署;客製需求另行評估。', 'New industry builds use standard modules — Phase 1 can deploy in as fast as 10 working days. Custom work is scoped separately.');
+export const industriesNote = t('新產業版本以標準模組建置,第一階段最快 10 個工作天可部署;客製需求另行評估。', 'New industry builds use standard modules — Phase 1 can deploy in as little as 10 working days. Custom work is scoped separately.');
 
 export const caseStudies = [
   {
@@ -236,7 +236,7 @@ export const faq = [
   { q: t('客戶資料安全嗎?', 'Is customer data safe?'), a: t('獨立存放、加密保護。資料不外流,也不會拿去訓練別人的模型。', "Stored separately and encrypted. Your data does not leave, and it is not used to train anyone else's models.") },
   { q: t('AI 會不會亂回話?', 'Will the AI make things up?'), a: t('上線前會用你的實際情境反覆校準;遇到判斷不了的問題,馬上轉真人,不會硬答。', 'We calibrate on your real scenarios before launch. When it cannot judge, it hands off to a person instead of guessing.') },
   { q: t('AI 跟真人怎麼分工?', 'How do AI and people split the work?'), a: t('AI 顧前線:接待、了解需求、先篩選;對話中出現重要內容,直接轉給你接手。', 'AI covers the front line — greeting, understanding needs, first-pass filtering. The moment something important comes up, it hands the conversation to you.') },
-  { q: t('多久可以上線?', 'How fast can we launch?'), a: t('標準模組的第一階段最快 10 個工作天:DAY 0 簽約、DAY 1–4 建置、DAY 5–7 測試、DAY 7–10 校準、DAY 10 上線。客製串接、資料遷移與跨部門平台依現有系統複雜度另行評估;完整垂直平台或大型客製參考約六週起。', 'Phase 1 on standard modules: as fast as 10 working days — sign on Day 0, build Days 1–4, test Days 5–7, calibrate Days 7–10, live on Day 10. Custom integrations, migrations and cross-team platforms are scoped separately; large custom builds start around six weeks.') },
+  { q: t('多久可以上線?', 'How fast can we launch?'), a: t('標準模組的第一階段最快 10 個工作天:DAY 0 簽約、DAY 1–4 建置、DAY 5–7 測試、DAY 7–10 校準、DAY 10 上線。客製串接、資料遷移與跨部門平台依現有系統複雜度另行評估;完整垂直平台或大型客製參考約六週起。', 'Phase 1 on standard modules: as little as 10 working days — sign on Day 0, build Days 1–4, test Days 5–7, calibrate Days 7–10, live on Day 10. Custom integrations, migrations and cross-team platforms are scoped separately; large custom builds start around six weeks.') },
   { q: t('AI 使用量怎麼計費?', 'How is AI usage billed?'), a: t('文字類(對話、文案、報告、SEO 分析)的標準用量含在月費內,實際額度與公平使用範圍依方案確認;圖片與影片類(場景渲染、風格模擬、短影音)按使用量計費,用多少付多少。', 'Standard text usage (chat, copy, reports, SEO analysis) is included in the monthly fee, with allowances confirmed per plan. Image and video (renders, style previews, short video) are pay-per-use.') },
   { q: t('可以只做部分功能嗎?', 'Can we start with just part of it?'), a: t('可以。方案由小到大:A 先把接客做好,B 加上跟進與 CRM,C 才是完整營運平台;之後要擴充,再往上加就好。', 'Yes. Plans stack: A nails intake, B adds follow-up and CRM, C is the full operations platform. Expand later by adding on top.') },
   { q: t('能不能串接 LINE 或既有流程?', 'Can it connect to LINE or our current flow?'), a: t('可以。LINE 官方帳號串接是我們的核心場景(房仲助手、團購通都是實例);既有工具與流程的整合範圍,Demo 時依你的情況確認。', 'Yes. LINE official-account integration is a core scenario for us (the real-estate assistant and GroupBuy Go are live examples). Integration scope for your tools is confirmed at the demo.') }

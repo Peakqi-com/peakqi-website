@@ -72,7 +72,7 @@ export function applySEO(key) {
       provider: { '@type': 'Organization', name: LANG === 'en' ? 'PeakQi International' : '奇鋒國際 PeakQi' },
       areaServed: 'TW',
       description: LANG === 'en'
-        ? 'An operations platform for Taiwan SMBs that unifies AI intake, LINE AI support, CRM, marketing content, quotes and project management — live in as fast as 10 working days.'
+        ? 'An operations platform for Taiwan SMBs that unifies AI intake, LINE AI support, CRM, marketing content, quotes and project management — live in as little as 10 working days.'
         : '為台灣中小企業整合 AI 接客、LINE AI 客服、CRM、行銷內容、報價與專案管理的營運系統,最快 10 個工作天上線。',
       offers: [
         { '@type': 'Offer', name: 'AI 接客方案', priceCurrency: 'TWD', price: '39000' },

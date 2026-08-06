@@ -79,7 +79,7 @@ export const heroConfig = {
     reduced: ['racks', 'plat', 'cmp', 'use', 'run'],
     ctas: [
       { kind: 'primary', label: t('用我的需求比較方案', 'Compare plans for my needs'), href: '#p-selector', track: 'hero_case_click' },
-      { kind: 'ghost', label: t('預約 15 分鐘 Demo', 'Book a 15-min demo'), href: ep('/demo'), track: 'hero_demo_click' }
+      { kind: 'ghost', label: t('預約 15 分鐘 Demo', 'Book a 15-min call'), href: ep('/demo'), track: 'hero_demo_click' }
     ],
     flags: {}
   },
@@ -111,11 +111,11 @@ export const heroConfig = {
       { id: 'map',   label: t('盤點現況', 'Map the present'),  kicker: t('階段 1 / 4', 'Stage 1 / 4'), line: t('找出詢問從哪進來、案件停在哪,產出問題清單。', 'Find where inquiries enter and deals stall; produce the problem list.'), d: [0, .26],   m: [0, .28] },
       { id: 'goal',  label: t('定義第一階段', 'Define Phase 1'), kicker: t('階段 2 / 4', 'Stage 2 / 4'), line: t('定出範圍與人工確認邊界,先做最有價值的一段。', 'Set the scope and the human-approval line; build the highest-value slice first.'), d: [.26, .5],  m: [.28, .55] },
       { id: 'pilot', label: t('建立驗證', 'Build the pilot'),    kicker: t('階段 3 / 4', 'Stage 3 / 4'), line: t('接出流程讓使用者實測,確認閘門就在裡面。', 'Wire the flow, let real users test it — approval gates built in.'), d: [.5, .76],  m: [.55, .8] },
-      { id: 'live',  label: t('上線與改善', 'Launch & improve'), kicker: t('階段 4 / 4', 'Stage 4 / 4'), line: t('標準模組最快 10 個工作天上線,再依使用調整。', 'Standard modules go live in as fast as 10 working days, then tune from usage.'), d: [.76, 1],   m: [.8, 1] }
+      { id: 'live',  label: t('上線與改善', 'Launch & improve'), kicker: t('階段 4 / 4', 'Stage 4 / 4'), line: t('標準模組最快 10 個工作天上線,再依使用調整。', 'Standard modules go live in as little as 10 working days, then tune from usage.'), d: [.76, 1],   m: [.8, 1] }
     ],
     reduced: ['map', 'goal', 'pilot', 'live'],
     ctas: [
-      { kind: 'primary', label: t('預約 AI 導入評估', 'Book an AI assessment'), href: ep('/demo'), track: 'hero_demo_click' },
+      { kind: 'primary', label: t('預約 AI 導入評估', 'Build your Phase-1 draft'), href: ep('/demo'), track: 'hero_demo_click' },
       { kind: 'ghost', label: t('查看實際案例', 'See real cases'), href: ep('/cases'), track: 'hero_case_click' }
     ],
     flags: {}

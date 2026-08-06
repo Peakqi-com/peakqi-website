@@ -334,7 +334,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
             <span style="color:#F2EFE8;font-weight:700">Solutions</span>
           </nav>
           <span style="font:600 .875rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:#FF6B2C">FROM INQUIRY TO OPERATION</span>
-          <h1 style="margin:0;font:900 clamp(1.7rem,3.8vw,3.9rem)/1.18 'Noto Sans TC',sans-serif">Inquiries deserve<br>more than <span style="color:#FF6B2C">chat</span>.</h1>
+          <!-- 字級上限比中文版低一階:英文這句比原本長,3.8vw 會讓第一行放不下而斷成三行(中文版不受影響) -->
+          <h1 style="margin:0;font:900 clamp(1.6rem,3.2vw,2.9rem)/1.18 'Noto Sans TC',sans-serif">Every inquiry deserves<br>more than a <span style="color:#FF6B2C">reply</span>.</h1>
           <p style="margin:0;max-width:600px;font:400 clamp(1rem,1.3vw,1.125rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.75);text-wrap:pretty">Watch one inquiry travel seven stages. Humans confirm the key steps.</p>
           <p style="margin:0;max-width:560px;font:400 clamp(.90625rem,1.1vw,.96875rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.55);text-wrap:pretty">Your existing LINE, forms and CRM keep working.</p>
           <svg aria-hidden="true" viewBox="0 0 600 14" preserveAspectRatio="none" fill="none" style="display:block;width:min(440px,100%);height:14px;margin:0">
@@ -404,7 +405,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">CAPTURE</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:end;justify-content:space-between">
-          <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">Read the need, then decide the reply</h2>
+          <h2 style="margin:14px 0 0;max-width:720px;font:900 clamp(1.6rem,3.9vw,3.3rem)/1.2 'Noto Sans TC',sans-serif;text-wrap:pretty">Understand the need. Choose the right response.</h2>
           <p style="margin:14px 0 0;max-width:640px;font:400 clamp(1rem,1.3vw,1.09375rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7);text-wrap:pretty">AI answers common questions from your approved data; pricing and sensitive topics go to a person.</p>
           <div role="tablist" aria-label="Capture scenarios" onKeyDown="{{ scKeys }}" style="display:inline-flex;gap:6px;background:rgba(9,11,14,.06);border:1px solid rgba(9,11,14,.14);border-radius:999px;padding:5px;flex-wrap:wrap">
             <sc-for list="{{ scTabs }}" as="t" hint-placeholder-count="4">
