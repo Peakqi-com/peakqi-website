@@ -6,36 +6,36 @@
 <title>Allen 機器人 — 綁定預覽(開發用)</title>
 <style>
   body{margin:0;background:#0B0E12;color:#F2EFE8;font:400 14px/1.6 'Noto Sans TC',system-ui,sans-serif}
-  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 20px 60px}
   h1{font:700 20px/1.4 system-ui;margin:0 0 4px}
-  p.note{margin:0 0 28px;color:rgba(242,239,232,.55);font-size:13px}
-  .row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
-  .cell{flex:0 0 auto}
-  .cell b{display:block;font:600 11px/1 system-ui;letter-spacing:.12em;color:rgba(242,239,232,.5);margin-bottom:8px}
+  h2{font:600 12px/1 system-ui;letter-spacing:.14em;color:rgba(242,239,232,.45);margin:26px 0 12px}
+  p.note{margin:0 0 8px;color:rgba(242,239,232,.55);font-size:13px}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .cell b{display:block;font:600 11px/1 system-ui;letter-spacing:.1em;color:rgba(242,239,232,.5);margin-bottom:6px}
   .card{position:relative;border-radius:8px;overflow:hidden;touch-action:manipulation;user-select:none;cursor:pointer}
   .dark{background:linear-gradient(160deg,#1A1F26,#12161B)}
   .paper{background:#F2EFE8}
   .sky{background:linear-gradient(180deg,#BFE3F5 0%,#BFE3F5 62%,#E8D9B8 62%,#E8D9B8 100%)}
-  .s280{width:280px;height:280px}
-  .s160{width:160px;height:160px}
+  .s150{width:150px;height:150px}
+  .s240{width:240px;height:240px}
   .s96{width:96px;height:96px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Allen 機器人 — 綁定預覽</h1>
-  <p class="note">開發用,不在網站路由上。滑鼠移動 → 眼睛與頭跟著看;移入 → 笑眼;點一下 → 揮手。畫面固定 12 格/秒。</p>
+  <p class="note">開發用,不在網站路由上。畫面固定 12 格/秒。</p>
 
-  <div class="row">
-    <div class="cell"><b>團隊卡尺寸 · 深底</b><div class="card dark s280" id="a1"></div></div>
-    <div class="cell"><b>紙白底</b><div class="card paper s280" id="a2"></div></div>
-    <div class="cell"><b>參考圖那種亮景</b><div class="card sky s280" id="a3"></div></div>
-  </div>
+  <h2>七種表情(鎖定,不受互動影響)</h2>
+  <div class="row" id="exprRow"></div>
 
+  <h2>互動 · 滑鼠移動 → 眼睛與頭跟著看 · 移入 → 開口笑 · 點一下 → 大笑並揮手</h2>
   <div class="row">
-    <div class="cell"><b>160</b><div class="card dark s160" id="a4"></div></div>
-    <div class="cell"><b>96(最小可用)</b><div class="card dark s96" id="a5"></div></div>
-    <div class="cell"><b>靜止態(reduced motion)</b><div class="card dark s160" id="a6"></div></div>
+    <div class="cell"><b>團隊卡 · 深底</b><div class="card dark s240" id="a1"></div></div>
+    <div class="cell"><b>紙白底</b><div class="card paper s240" id="a2"></div></div>
+    <div class="cell"><b>亮景</b><div class="card sky s240" id="a3"></div></div>
+    <div class="cell"><b>96(最小可用)</b><div class="card dark s96" id="a4"></div></div>
+    <div class="cell"><b>靜止態(reduced)</b><div class="card dark s150" id="a5"></div></div>
   </div>
 </div>
 
@@ -49,12 +49,34 @@ const loop = (t) => { const s = t / 1000; cbs.forEach((cb) => cb(s)); requestAni
 requestAnimationFrame(loop);
 const raf = (cb) => { cbs.add(cb); return () => cbs.delete(cb); };
 
-const bots = [];
-['a1', 'a2', 'a3', 'a4', 'a5'].forEach((id) => {
-  bots.push(createAllenBot(document.getElementById(id), { raf }));
-});
-bots.push(createAllenBot(document.getElementById('a6'), { reduced: true }));
-window.__pqAllen = { bots, count: bots.length };
+const EXPRS = [
+  ['idle', '微笑'], ['happy', '開口笑'], ['laugh', '大笑'],
+  ['surprise', '驚訝'], ['think', '思考'], ['sleepy', '半瞇'], ['worry', '皺眉'],
+];
+const row = document.getElementById('exprRow');
+const locked = [];
+for (const [key, label] of EXPRS) {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  cell.innerHTML = '<b>' + label + '</b>';
+  const card = document.createElement('div');
+  card.className = 'card dark s150';
+  cell.appendChild(card);
+  row.appendChild(cell);
+  // 鎖定表情:關掉閒置演出,並且吃掉 hover/click,否則一移過去全部變成笑
+  const bot = createAllenBot(card, { raf, idleBeats: false });
+  bot.setExpr(key);
+  card.addEventListener('pointerenter', (e) => e.stopPropagation(), true);
+  ['pointerenter', 'pointerleave', 'click'].forEach((ev) =>
+    card.addEventListener(ev, () => bot.setExpr(key)));
+  locked.push({ key, bot, card });
+}
+
+const live = ['a1', 'a2', 'a3', 'a4'].map((id) =>
+  createAllenBot(document.getElementById(id), { raf }));
+live.push(createAllenBot(document.getElementById('a5'), { reduced: true }));
+
+window.__pqAllen = { locked, live, exprs: EXPRS.map((e) => e[0]) };
 </script>
 </body>
 </html>
