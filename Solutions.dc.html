@@ -21,6 +21,7 @@
 <meta name="twitter:title" content="解決方案|ONE SYSTEM, THREE OPERATIONS|奇鋒國際 PeakQi">
 <meta name="twitter:description" content="看一筆客戶詢問如何走完整流程:進入、辨識、回應、建檔、分派、跟進、報價與專案,重要節點保留人工確認;既有 LINE、表單與 CRM 可以保留運作。AI 30 秒接住詢問、CRM 跟進不漏客、內容編排養客,六模組同一個後台。">
 <meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<script>/* 有 JS 才預留 hero 釘選跑道:沒有 JS 時 hero-kit 不會撐高,預留了會變成一大片空白 */try{document.documentElement.classList.add("pq-js");}catch(e){}</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -309,6 +310,15 @@ nav[aria-label="breadcrumb"]{align-items:center}
   #capture[data-capfit] #pq-cap-grid>*{min-height:0;overflow:hidden}
   #capture[data-capfit] #pq-cap-grid>*:first-child>*:nth-child(2){justify-content:flex-end;min-height:0!important;gap:9px!important;padding:14px!important}
 }
+/* ── 釘選跑道高度先留好,避免載入後整頁被撐高 ────────────────────────
+   hero-kit 會在 JS 載入後把 [data-hero-wrap] 設成 hero-config 的 totalVh。
+   沒有先留就等於首屏之後整段被推下去 —— 實測 cases 手機 CLS 0.58。
+   數值必須與 hero-config.js 的 totalVh 一致(desktop / tablet / mobile),改一邊要改另一邊。
+   斷點沿用 motion-config 的 BP:mobile 900、wide 1200。*/
+html.pq-js [data-hero="solutions"] [data-hero-wrap]{min-height:380vh}
+@media (max-width:1199px){html.pq-js [data-hero="solutions"] [data-hero-wrap]{min-height:280vh}}
+@media (max-width:899px){html.pq-js [data-hero="solutions"] [data-hero-wrap]{min-height:320vh}}
+
 </style>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}

@@ -21,6 +21,7 @@
 <meta name="twitter:title" content="關於 PeakQi|企業 AI 導入與系統整合團隊|奇鋒國際">
 <meta name="twitter:description" content="PeakQi 從企業真實流程出發,整合 AI、既有工具、資料與人員工作,協助團隊從單一流程驗證逐步走到正式上線與持續優化。">
 <meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<script>/* 有 JS 才預留 hero 釘選跑道:沒有 JS 時 hero-kit 不會撐高,預留了會變成一大片空白 */try{document.documentElement.classList.add("pq-js");}catch(e){}</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -250,6 +251,15 @@ nav[aria-label="breadcrumb"]{align-items:center}
 .pq-ind-vig i,.pq-ind-vig b,.pq-ind-vig i::before,.pq-ind-vig i::after,.pq-ind-vig b::before,.pq-ind-vig b::after{animation:none!important}
 .pq-ind{transition:none}
 }
+/* ── 釘選跑道高度先留好,避免載入後整頁被撐高 ────────────────────────
+   hero-kit 會在 JS 載入後把 [data-hero-wrap] 設成 hero-config 的 totalVh。
+   沒有先留就等於首屏之後整段被推下去 —— 實測 cases 手機 CLS 0.58。
+   數值必須與 hero-config.js 的 totalVh 一致(desktop / tablet / mobile),改一邊要改另一邊。
+   斷點沿用 motion-config 的 BP:mobile 900、wide 1200。*/
+html.pq-js [data-hero="about"] [data-hero-wrap]{min-height:300vh}
+@media (max-width:1199px){html.pq-js [data-hero="about"] [data-hero-wrap]{min-height:245vh}}
+@media (max-width:899px){html.pq-js [data-hero="about"] [data-hero-wrap]{min-height:240vh}}
+
 </style>
 <script>document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.getAttribute&&t.getAttribute('data-fb')&&t.src.indexOf(t.getAttribute('data-fb'))<0)t.src=t.getAttribute('data-fb');},true);</script>
 <!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
