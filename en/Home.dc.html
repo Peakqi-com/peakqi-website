@@ -58,6 +58,8 @@
     return f.call(this,u,o);
   };
 })();</script>
+<script>/* hero 版型必須在第一次繪製就定案:等 JS 決定會先排一次堆疊版再跳位。 */
+try{var _c=document.createElement("canvas");var _ok=!!(window.WebGLRenderingContext&&(_c.getContext("webgl")||_c.getContext("experimental-webgl")));if(_ok&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))document.documentElement.classList.add("pq-cine-pre");}catch(e){}</script>
 <script src="/support.js"></script>
 </head>
 <body>
@@ -430,6 +432,24 @@ body{animation:pqPageIn 240ms cubic-bezier(0.16,1,0.3,1)}
 #hero.pq-cine-on .pq-cine-card[data-align="right"]{right:clamp(20px,6vw,72px)}
 #hero.pq-cine-on .is-active{opacity:1;transform:translateY(-50%);pointer-events:auto}
 #hero.pq-cine-on #pq-hero-svg{display:none}
+/* ── 第一次繪製就用最終版型(消除 hero 縮彈)──────────────────────────
+   電影式定位原本只掛在 #hero.pq-cine-on 上,而那個 class 要等 three.js 載完、
+   WebGL renderer 建立成功才加(home-engine.js)。在那之前瀏覽器先用一般文件流排一次,
+   引擎接手時整批跳位 —— 實測手機 CLS 0.90,單一次位移 298px。
+   head 的同步腳本先測 WebGL(與引擎啟用條件一致),測得過就先掛 html.pq-cine-pre,
+   把同一組幾何提前套上;引擎啟動時移除 pq-cine-pre 交棒,兩組宣告一致所以不會有位移。
+   測不過(沒有 WebGL 或 reduced-motion)則維持堆疊版,內容照樣看得到。*/
+html.pq-cine-pre #hero .pq-cine-stage{height:100vh}
+html.pq-cine-pre #hero .pq-cine-intro,
+html.pq-cine-pre #hero .pq-cine-card{position:absolute;top:50%;margin:0;opacity:0;transform:translateY(calc(-50% + 26px));pointer-events:none;filter:blur(5px)}
+html.pq-cine-pre #hero .pq-cine-intro{width:min(620px,46vw);left:clamp(20px,6vw,72px)}
+html.pq-cine-pre #hero .pq-cine-card{width:min(430px,40vw)}
+html.pq-cine-pre #hero .pq-cine-card[data-align="left"]{left:clamp(20px,6vw,72px)}
+html.pq-cine-pre #hero .pq-cine-card[data-align="right"]{right:clamp(20px,6vw,72px)}
+html.pq-cine-pre #hero #pq-hero-svg{display:none}
+/* 引擎接手前先讓開場字卡可見,否則第一屏是空的 */
+html.pq-cine-pre #hero .pq-cine-intro{opacity:1;filter:blur(0);transform:translateY(-50%)}
+
 #hero.pq-cine-on .pq-cine-rail{display:flex;position:absolute;right:clamp(12px,2.2vw,26px);top:50%;transform:translateY(-50%);z-index:5;flex-direction:column;gap:13px}
 #hero.pq-cine-on .pq-cine-rail button{background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:flex-end;gap:9px;color:rgba(242,239,232,.42);font:700 .5625rem 'Space Grotesk',sans-serif;letter-spacing:.1em;transition:color .3s}
 #hero.pq-cine-on .pq-cine-rail button::after{content:"";width:12px;height:1px;background:currentColor;transition:width .3s,box-shadow .3s}

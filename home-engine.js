@@ -310,6 +310,8 @@ export function createHomeEngine() {
     renderer.toneMappingExposure = 1.18;
 
     hero.classList.add('pq-cine-on');
+    // 交棒:預掛的幾何(html.pq-cine-pre)與 #hero.pq-cine-on 宣告一致,移除不會造成位移
+    try { document.documentElement.classList.remove('pq-cine-pre'); } catch (e) {}
     canvas.style.opacity = '1';
     // 更長的視差行程
     // ── Phase 1:虛擬場景表(scene table)──────────────────────────────
