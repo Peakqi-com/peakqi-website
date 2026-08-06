@@ -115,7 +115,6 @@ export function mountBlogHero() {
   let scope = { x: 0, y: 0, s: 1, pivot: 0, ang: -1.1, aim: -1.1 };
   let planet = null;
   let lens = { x: 0, y: 0, tx: 0, ty: 0, on: 0, want: 0, hold: 0, r: 90 };
-  let par = { x: 0, y: 0, tx: 0, ty: 0 };
   let doneAt = 0, doneTag = '', doneAtXY = null, nextShot = 3200, visible = true;
   let bgSky = null, bgGround = null, groundH = 0, neb = [], nebSrc = null;
   let dirty = true;                                 // reduced 模式下只有髒了才重畫
@@ -207,12 +206,15 @@ export function mountBlogHero() {
   };
 
   // 三層的視差位移量(px)
-  const PARK = [4, 9, 16];
+  // 指標視差已移除:它會讓三層星場整批往同一方向平移(實測滑鼠橫移一次,92 顆星
+  //   位移約 20px、方向一致度 R = 1.000)—— 那正是使用者說的「整塊移動」。
+  //   深度感改由每顆星自己的振幅/頻率/相位、以及分層的亮度與星芒差異來表現。
+  //   目鏡視野圈仍然跟著指標走,所以「畫面會回應你」這件事沒有消失。
   // 位置的唯一來源:版面基準 + 這顆星自己的游移 + 指標視差。
   // 觀測環、星座線、目鏡圈裡的放大星、演出取的星全部走這兩支 —— 少走一支就會錯開十幾 px。
   // 沒有任何全域轉角:每顆星的 dfx/dfy/dpx/dpy 都是獨立亂數,合起來不構成任何一致方向的位移。
-  const posX = (s) => s.nx * W + s.dax * Math.sin(T * s.dfx + s.dpx) + par.x * PARK[s.lr | 0];
-  const posY = (s) => s.ny * H + s.day * Math.sin(T * s.dfy + s.dpy) + par.y * PARK[s.lr | 0];
+  const posX = (s) => s.nx * W + s.dax * Math.sin(T * s.dfx + s.dpx);
+  const posY = (s) => s.ny * H + s.day * Math.sin(T * s.dfy + s.dpy);
   const starPos = (s) => ({ x: posX(s), y: posY(s) });
 
   // 星星的垂直分佈要跟著遮罩走:桌機的遮罩只吃左下角,星場往上堆才會落在開闊處;
@@ -1257,8 +1259,7 @@ export function mountBlogHero() {
     dirty = false;
 
     if (!reduced) {
-      par.x += (par.tx - par.x) * 0.06;
-      par.y += (par.ty - par.y) * 0.06;
+
     }
 
     g.drawImage(bgSky, 0, 0, W, H);
@@ -1467,8 +1468,8 @@ export function mountBlogHero() {
     if (!best) {
       if (cy > H - groundY(cx) - 10) return;         // 但不在地面上生星星
       best = mkStar(0.78, 0.86, 1);
-      best.nx = (cx - par.x * PARK[1]) / W;
-      best.ny = (cy - par.y * PARK[1]) / H;
+      best.nx = cx / W;
+      best.ny = cy / H;
       // 相位對齊「被發現的當下」:讓這顆星的游移從 0 開始,不會一出生就跳開幾 px
       best.dpx = -T * best.dfx;
       best.dpy = -T * best.dfy;
@@ -1520,11 +1521,10 @@ export function mountBlogHero() {
     lens.tx = p.x; lens.ty = p.y;
     if (!lens.on) { lens.x = p.x; lens.y = p.y; }
     lens.want = 1;
-    par.tx = (p.x / W - 0.5) * 2;
-    par.ty = (p.y / H - 0.5) * 2;
+
     dirty = true;
   };
-  const onLeave = () => { lens.want = 0; par.tx = 0; par.ty = 0; dirty = true; };
+  const onLeave = () => { lens.want = 0; dirty = true; };
   // 鍵盤操作:Enter / Space 隨機觀測一顆,鍵盤使用者也玩得到
   const onKey = (e) => {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
