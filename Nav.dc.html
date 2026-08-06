@@ -1194,7 +1194,10 @@ class Component extends DCLogic {
   }
   renderVals() {
     const active = this.props.active ?? '';
-    const T = this._t || ((z) => z);   // i18n 載入前 fallback 回傳中文(中文站永遠等同原文)
+    // 語言只看網址,可以「同步」判定 —— 不必等 import('/i18n.js') 回來。
+    // 以前備援一律回中文,英文頁會先畫一輪中文選單再跳成英文(量到整列位移 255px)。
+    if (!this._lang) this._lang = /^\/en(\/|$)/i.test(location.pathname) ? 'en' : 'zh';
+    const T = this._t || ((z, e) => (this._lang === 'en' && e != null ? e : z));
     // EN 頁:站內連結自動加 /en 前綴(外部連結與錨點不動)
     const EP = (h) => (this._lang === 'en' && typeof h === 'string' && h.charAt(0) === '/' && h.indexOf('/en/') !== 0)
       ? (h === '/' ? '/en/' : '/en' + h) : h;
@@ -1202,14 +1205,23 @@ class Component extends DCLogic {
       font: "500 .875rem 'Noto Sans TC',sans-serif", letterSpacing: '.04em', textDecoration: 'none',
       padding: '4px 2px', transition: 'color .15s'
     };
-    // 注意:實際選單來自 content.js 的 navigation(下面這組只是載入前的備援,改它不會生效)
+    // content.js 載入前的備援。**必須逐項對齊 content.js 的 navigation**:
+    // 少一項或少 children,content.js 一回來整列就會重排(量到 105px 位移)。
+    // 改選單請兩邊一起改。
     const items = this.state.nav ?? [
       { href: '/', key: 'home', label: T('首頁', 'Home') },
       { href: '/solutions', key: 'solutions', label: T('解決方案', 'Solutions') },
       { href: '/method', key: 'method', label: T('導入方法', 'How we deliver') },
       { href: '/cases', key: 'cases', label: T('案例', 'Cases') },
-      { href: '/peakops', key: 'product', label: T('產品', 'Products') },
-      { href: '/about', key: 'about', label: T('關於我們', 'About') }
+      { key: 'product', label: T('產品', 'Products'), children: [
+        { href: '/peakops', label: 'Peak Ops', desc: T('通用 AI 業務工具', 'AI business toolkit') },
+        { href: 'https://www.aiweddingpro360.com/', label: 'AI Wedding Pro', desc: T('婚禮 AI', 'Wedding AI'), ext: true },
+        { href: 'https://www.aiinteriorpro360.com/', label: 'AI Interior Pro', desc: T('室內設計 AI', 'Interior design AI'), ext: true },
+        { href: 'https://bubble.tw', label: T('冒泡', 'Bubble'), desc: T('房仲 AI', 'Real-estate AI'), ext: true },
+        { href: '/pricing', label: T('方案說明', 'Pricing'), desc: T('Peak Ops 三種規劃與導入範圍', 'Three Peak Ops plans & scope') }
+      ] },
+      { href: '/about', key: 'about', label: T('關於我們', 'About') },
+      { href: '/blog', key: 'blog', label: T('觀點', 'Insights') }
     ];
     const childStyle = {
       display: 'flex', flexDirection: 'column', gap: '2px', textDecoration: 'none',
@@ -1328,12 +1340,27 @@ class Component extends DCLogic {
       const back = this._lastFocus || this._burgerEl;
       if (back && back.focus) setTimeout(() => back.focus(), 40);
     };
+    // 語言鈕也要在第一次繪製就定案:晚一步出現會把整列往左推(量到 78px)。
+    // 全部用同步可得的資訊判斷,不重抄 i18n.js 的 EN_READY 清單:
+    //   /en/ 頁 → 一定有對應中文頁
+    //   文章頁 → build-blog.mjs 只在有英文版時把 hreflang 靜態寫進 head,讀它即可
+    //   其餘靜態頁 → 目前 EN_READY 全涵蓋,先顯示;i18n.js 回來後仍以它為準
+    // (日後若出現「沒有英文版的靜態頁」,那一頁會閃一下才收掉 —— 屆時把它加進這個判斷。)
+    const isArticle = /^\/(en\/)?blog\//i.test(location.pathname);
+    const headEn = !!document.head.querySelector('link[rel="alternate"][hreflang="en"]');
+    const p0 = location.pathname.replace(/\.dc\.html$/i, '').replace(/\/home$/i, '/') || '/';
+    const syncLang = (this._lang === 'en' || !isArticle || headEn) ? {
+      href: this._lang === 'en' ? (p0.replace(/^\/en/i, '') || '/') : (p0 === '/' ? '/en/' : '/en' + p0),
+      label: this._lang === 'en' ? '中文' : 'EN'
+    } : null;
+    // i18n.js 回來之前用同步答案,回來之後以它為準(state.i18n 才分得出「還沒載入」與「載入後說沒有」)
+    const langBtn = this.state.i18n ? this.state.lang : syncLang;
     return {
       links,
       dlgCls: 'pqm-stage pqm-v' + this.state.egg + ' pqm-e' + (this._env || 1),
-      langShow: !!this.state.lang,
-      langHref: this.state.lang ? this.state.lang.href : '#',
-      langLabel: this.state.lang ? this.state.lang.label : '',
+      langShow: !!langBtn,
+      langHref: langBtn ? langBtn.href : '#',
+      langLabel: langBtn ? langBtn.label : '',
       open: this.state.open,
       menuExpanded: this.state.open ? 'true' : 'false',
       burgerRef: (el) => { this._burgerEl = el; },
