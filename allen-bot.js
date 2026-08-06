@@ -72,11 +72,15 @@ const ART = (uid) => `
   <path data-p="leg-r-f" fill="none" stroke="${C.shade}" stroke-width="9.5" stroke-linecap="round"/>
   <path data-p="leg-l-h" fill="none" stroke="${C.body}" stroke-width="4.6" stroke-linecap="round"/>
   <path data-p="leg-r-h" fill="none" stroke="${C.body}" stroke-width="4.6" stroke-linecap="round"/>
+  <!-- 踝環:軟管插進金屬套環。這是「軟四肢」與「是機器人」唯一能同時成立的
+       接法——沒有它,麵條四肢會把角色整個推向絨毛玩偶。 -->
   <g data-p="foot-l">
+    <rect x="-6" y="-8" width="12" height="6.5" rx="2.4" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
     <ellipse cx="1" cy="3" rx="10" ry="5.6" fill="${C.shade}" stroke="${C.line}" stroke-width="3"/>
     <ellipse cx="0" cy="1.8" rx="8" ry="4" fill="${C.body}"/>
   </g>
   <g data-p="foot-r">
+    <rect x="-6" y="-8" width="12" height="6.5" rx="2.4" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
     <ellipse cx="-1" cy="3" rx="10" ry="5.6" fill="${C.shade}" stroke="${C.line}" stroke-width="3"/>
     <ellipse cx="0" cy="1.8" rx="8" ry="4" fill="${C.body}"/>
   </g>
@@ -96,16 +100,21 @@ const ART = (uid) => `
     <rect x="76" y="79" width="48" height="51" rx="15" fill="${C.body}" stroke="${C.line}" stroke-width="3"/>
     <!-- 暗面:硬邊色塊,不是漸層。光源在左上,所以暗面一律在右下。 -->
     <path d="M109,74 C116,94 116,114 107,135 L134,135 L134,74 Z" fill="${C.shade}" clip-path="url(#ts${uid})"/>
+    <!-- 面板接縫:機殼是拼起來的。我先前把 panel lines 寫進負面提示詞是錯的,
+         這是機器人少數幾個不佔面積又有效的訊號。 -->
+    <path d="M76,116 L124,116" stroke="${C.line}" stroke-width="2" opacity=".45" clip-path="url(#ts${uid})"/>
     <rect x="76" y="79" width="48" height="51" rx="15" fill="none" stroke="${C.line}" stroke-width="3"/>
     <circle data-p="chest-ring" cx="100" cy="102" r="9.5" fill="none" stroke="${C.accent}" stroke-width="3.4"/>
     <circle data-p="chest-dot" cx="100" cy="102" r="3.2" fill="${C.accent}"/>
   </g>
 
   <g data-p="hand-l">
+    <rect x="-5.5" y="-11.5" width="11" height="6" rx="2.2" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
     <path d="${MITTEN}" fill="${C.body}" stroke="${C.line}" stroke-width="3"/>
     <circle cx="-1.5" cy="-2.6" r="2.8" fill="${C.light}"/>
   </g>
   <g data-p="hand-r">
+    <rect x="-5.5" y="-11.5" width="11" height="6" rx="2.2" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
     <path d="${MITTEN}" fill="${C.body}" stroke="${C.line}" stroke-width="3"/>
     <circle cx="-1.5" cy="-2.6" r="2.8" fill="${C.light}"/>
   </g>
@@ -116,23 +125,33 @@ const ART = (uid) => `
       <circle cx="100" cy="9" r="5" fill="${C.accent}" stroke="${C.line}" stroke-width="2.4"/>
       <path d="M97,7.5 A4 4 0 0 1 101,5.5 A5 5 0 0 0 97,7.5 Z" fill="${C.light}" opacity=".8"/>
     </g>
+    <!-- 側頭圓盤(伺服器蓋/喇叭):畫在頭之前,只露出外半邊。這是最便宜的
+         「這是一台機器」訊號,而且參考圖那隻沒有,順便再拉開一次剪影。 -->
+    <g><circle cx="69" cy="52" r="7.5" fill="${C.deep}" stroke="${C.line}" stroke-width="2.6"/>
+       <circle cx="69" cy="52" r="3" fill="${C.shade}"/></g>
+    <g><circle cx="131" cy="52" r="7.5" fill="${C.deep}" stroke="${C.line}" stroke-width="2.6"/>
+       <circle cx="131" cy="52" r="3" fill="${C.shade}"/></g>
     <path d="${HEAD_D}" fill="${C.body}" stroke="none"/>
     <path d="M116,16 C126,34 127,58 115,80 L146,80 L146,16 Z" fill="${C.shade}" clip-path="url(#hd${uid})"/>
     <path d="M72,44 C74,32 84,26 97,25 C86,29 79,34 76,46 Z" fill="${C.light}" clip-path="url(#hd${uid})"/>
     <path d="${HEAD_D}" fill="none" stroke="${C.line}" stroke-width="3"/>
 
+    <!-- 鏡頭外框:眼白與瞳孔都保留,但裝進金屬框裡 —— 變成「機器的眼睛」。
+         外框在眨眼群組之外,眼睛壓扁時外框不動,像眼皮在框內閉起來。 -->
+    <ellipse cx="85" cy="47" rx="12.4" ry="13.9" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
+    <ellipse cx="115" cy="47" rx="12.4" ry="13.9" fill="${C.deep}" stroke="${C.line}" stroke-width="2.4"/>
     <g data-p="eye-l">
-      <ellipse cx="85" cy="47" rx="11.5" ry="13" fill="${C.white}" stroke="${C.line}" stroke-width="3"/>
+      <ellipse cx="85" cy="47" rx="10.8" ry="12.2" fill="${C.white}"/>
       <g data-p="pupil-l">
-        <circle cx="85" cy="47" r="5.6" fill="${C.line}"/>
-        <circle cx="82.8" cy="44.4" r="2.1" fill="${C.white}"/>
+        <circle cx="85" cy="47" r="5.2" fill="${C.line}"/>
+        <circle cx="82.9" cy="44.5" r="2" fill="${C.white}"/>
       </g>
     </g>
     <g data-p="eye-r">
-      <ellipse cx="115" cy="47" rx="11.5" ry="13" fill="${C.white}" stroke="${C.line}" stroke-width="3"/>
+      <ellipse cx="115" cy="47" rx="10.8" ry="12.2" fill="${C.white}"/>
       <g data-p="pupil-r">
-        <circle cx="115" cy="47" r="5.6" fill="${C.line}"/>
-        <circle cx="112.8" cy="44.4" r="2.1" fill="${C.white}"/>
+        <circle cx="115" cy="47" r="5.2" fill="${C.line}"/>
+        <circle cx="112.9" cy="44.5" r="2" fill="${C.white}"/>
       </g>
     </g>
 
