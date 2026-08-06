@@ -88,7 +88,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#stories">Skip to main content</a>
-<dc-import name="Nav" active="cases" hint-size="100%,68px"></dc-import>
+<dc-import name="Nav" active="cases" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
 
 <section id="wall" data-hero="cases" data-screen-label="Opening PROOF IN MOTION" style="background:#090B0E;color:#F2EFE8;position:relative">
   <div data-hero-wrap style="position:relative">
@@ -186,7 +186,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <!-- ============ Brand House 3D tour (Steampunk parallax, driven by parent scroll) ============
      結構與中文版逐項相同:2200vh 跑道 + sticky 舞台 + iframe(pointer-events:none,
      由父頁捲動驅動);只有 iframe 來源換成英文版塔樓。 -->
-<section id="brandhouse" data-screen-label="Brand House 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
+<section id="brandhouse" data-immersive data-screen-label="Brand House 3D" style="position:relative;background:#0B0E12;color:#F2EFE8">
   <div id="pq-bh-runway" style="height:2200vh;position:relative;padding-top:clamp(24px,4vw,40px);box-sizing:border-box">
     <div style="position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0E12">
       <iframe id="pq-bh-frame" src="/Steampunk/peakqi-story-en.html" title="PeakQi brand house 3D tour"

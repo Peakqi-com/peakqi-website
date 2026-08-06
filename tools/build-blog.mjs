@@ -328,7 +328,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 </style>
 </helmet>
 <a id="pq-skip" href="#pq-main">${esc(u.skip)}</a>
-<dc-import name="Nav" active="${active}" hint-size="100%,68px"></dc-import>
+<dc-import name="Nav" active="${active}" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
 ${body}
 <dc-import name="Footer" hint-size="100%,460px"></dc-import>
 </x-dc>
@@ -447,7 +447,7 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
 
   const body = `
 <main id="pq-main" data-screen-label="${esc(u.idxTitle)}">
-  <header class="bl-head" data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}">
+  <header class="bl-head" data-immersive data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}">
     <canvas tabindex="0" role="button" aria-label="${esc(u.skyAria)}"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">

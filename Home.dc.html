@@ -1922,10 +1922,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
 <script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)e.preventDefault();if(r.indexOf('AbortError')>=0)e.preventDefault();});</script>
 </helmet>
 <a id="pq-skip" href="#brands">跳到主要內容</a>
-<dc-import name="Nav" active="home" sticky="{{ stickyVal }}" cta-threshold="0.35" hint-size="100%,68px"></dc-import>
+<dc-import name="Nav" active="home" sticky="{{ stickyVal }}" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
 
 <!-- ============ HERO：爆炸攝影機捲動分鏡(母=捲動組裝/爆炸/切章,子=時間邊線閃爍/微塵/光脈衝) ============ -->
-<section id="hero" data-screen-label="Hero">
+<section id="hero" data-immersive data-screen-label="Hero">
   <div class="pq-cine-stage" data-cine-stage>
     <div class="pq-cine-paper" data-cine-paper aria-hidden="true"></div>
     <!-- U3s 白藍圖零件展示:章節標題(--k 由捲動驅動,第一個零件開始時淡出) -->

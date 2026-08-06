@@ -1129,13 +1129,18 @@ html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{text-wrap:balance}
   </div>
 </sc-if>
 <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;right:18px;left:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:150;display:flex;align-items:center;justify-content:flex-end;pointer-events:none">
-    <a href="{{ ctaHref }}" target="_blank" rel="noopener" onClick="{{ ctaClick }}" data-cta aria-label="{{ lineAria }}" style="pointer-events:auto;display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;max-width:100%;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none;border:1px solid rgba(242,239,232,.14)" style-hover="background:#06C755;color:#FFFFFF;border-color:#06C755">
-      <span style="width:8px;height:8px;border-radius:50%;background:#06C755;animation:pqPulse 1.8s ease-in-out infinite"></span>
-      {{ ctaLabel }}
-      <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;background:rgba(242,239,232,.16);border-radius:999px;padding:3px 9px;font:700 .75rem 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
-    </a>
-    <button onClick="{{ ctaDismiss }}" aria-label="{{ dismissAria }}" style="pointer-events:auto;margin-left:8px;width:44px;height:44px;border-radius:50%;background:rgba(9,11,14,.78);color:#F2EFE8;border:1px solid rgba(242,239,232,.25);cursor:pointer;font:500 .875rem 'Space Grotesk',sans-serif;flex-shrink:0" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
+  <!-- 浮動 LINE 列:整組只有「一顆膠囊」,關閉鍵併進膠囊右側(原本外掛一顆獨立圓鈕,
+       等於畫面右下同時有兩個浮層元件,壓在攝影機敘事、3D 品牌屋上特別搶戲)。
+       進到沉浸區塊([data-immersive])時整組淡出並停用點擊,離開再淡回來。 -->
+  <div data-sticky-cta style="{{ stickyWrapStyle }}">
+    <div style="pointer-events:auto;display:inline-flex;align-items:stretch;max-width:100%;background:#090B0E;border:1px solid rgba(242,239,232,.14);border-radius:999px;box-shadow:0 14px 36px rgba(9,11,14,.32);overflow:hidden">
+      <a href="{{ ctaHref }}" target="_blank" rel="noopener" onClick="{{ ctaClick }}" data-cta aria-label="{{ lineAria }}" style="display:flex;align-items:center;gap:9px;min-height:44px;box-sizing:border-box;min-width:0;background:transparent;color:#F2EFE8;padding:12px 16px 12px 18px;font:700 .9375rem 'Noto Sans TC',sans-serif;letter-spacing:.02em;text-decoration:none" style-hover="background:#06C755;color:#FFFFFF">
+        <span style="flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:#06C755;animation:pqPulse 1.8s ease-in-out infinite"></span>
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ ctaLabel }}</span>
+        <sc-if value="{{ ctaBadge }}" hint-placeholder-val="{{ true }}"><span class="pq-cta-badge" style="flex:0 0 auto;background:rgba(242,239,232,.16);border-radius:999px;padding:3px 9px;font:700 .75rem 'Space Grotesk',sans-serif;letter-spacing:.08em">{{ ctaBadgeText }}</span></sc-if>
+      </a>
+      <button onClick="{{ ctaDismiss }}" aria-label="{{ dismissAria }}" style="flex:0 0 auto;width:44px;min-height:44px;background:transparent;color:rgba(242,239,232,.62);border:0;border-left:1px solid rgba(242,239,232,.14);cursor:pointer;font:500 .875rem 'Space Grotesk',sans-serif" style-hover="background:#FF6B2C;color:#090B0E">✕</button>
+    </div>
   </div>
 </sc-if>
 </x-dc>
@@ -1144,7 +1149,7 @@ class Component extends DCLogic {
   // egg = 這次開選單要演的那一齣(1..15)。純 CSS 沒有亂數,所以在開啟的瞬間擲一次骰,
   // 把結果變成容器上的 class;動畫本身仍然 100% 由 CSS keyframes 驅動,沒有 rAF、沒有計時器。
   _acts = 15;   // 共 15 齣;新增齣別時同步改這裡與 CSS 的 .pqm-v1..v15
-  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null, egg: 1, lang: null };
+  state = { open: false, nav: null, ctaOk: false, dismissed: false, grp: null, egg: 1, lang: null, immersive: false };
   componentDidMount() {
     import('/content.js').then(m => this.setState({ nav: m.navigation }));
     // 語言切換鈕:只在「目前頁有另一語言版本」時現身(EN_READY 閘門,不會切去 404);絕對路徑,/en/ 下也解析得到
@@ -1160,6 +1165,7 @@ class Component extends DCLogic {
       window.__pqMicro.start();
     }).catch(() => {});
     import('/analytics.js').then(m => { this._tk = m.track; }).catch(() => {});
+    this._watchImmersive();
     let dismissed = false;
     try { dismissed = sessionStorage.getItem('pqCtaDismissed') === '1'; } catch (e) {}
     const thr = parseFloat(this.props.ctaThreshold ?? 0) || 0;
@@ -1182,8 +1188,51 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._onScroll, { passive: true });
   }
+  // 沉浸區塊偵測:攝影機敘事、3D 品牌屋、方案選擇器、觀點星空這類「作品感」段落,
+  // 浮動列壓在上面會直接削掉沉浸感。進入就淡出、離開就淡回來(不卸載,避免版面抖動)。
+  // 區塊由頁面標 [data-immersive];那些節點多半在 Nav 之後才渲染,所以要等它出現再觀察 ——
+  // 這正是 solutions-engine 搶跑踩過的坑,不要重蹈。
+  _watchImmersive() {
+    let tries = 0;
+    const boot = () => {
+      if (this._dead) return;
+      const els = Array.prototype.slice.call(document.querySelectorAll('[data-immersive]'));
+      if (!els.length) { if (tries++ < 240) requestAnimationFrame(boot); return; }
+      // 量的是「沉浸區塊蓋住視窗多少」,不是「區塊自己露出多少」。
+      // 攝影機敘事那種區塊比視窗高好幾倍,intersectionRatio 永遠到不了門檻 ——
+      // 這和先前捲動章節那次踩的是同一個坑。
+      let pending = false;
+      const measure = () => {
+        pending = false;
+        if (this._dead) return;
+        const vh = window.innerHeight || 1;
+        // 每次現查:setState 會讓 DC 重建節點,開機時抓的參照會變成孤兒,
+        // 量到的永遠是 0(或永遠是舊值)。頁面上這種區塊只有 1~2 個,成本可以忽略。
+        const now = document.querySelectorAll('[data-immersive]');
+        let cover = 0;
+        for (let i = 0; i < now.length; i++) {
+          const r = now[i].getBoundingClientRect();
+          const v = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+          if (v > cover) cover = v;
+        }
+        const hide = cover / vh >= 0.55;      // 超過半屏都是沉浸內容才收起來
+        if (hide !== !!this.state.immersive) this.setState({ immersive: hide });
+      };
+      this._immTick = () => { if (!pending) { pending = true; requestAnimationFrame(measure); } };
+      window.addEventListener('scroll', this._immTick, { passive: true });
+      window.addEventListener('resize', this._immTick, { passive: true });
+      measure();
+    };
+    boot();
+  }
   componentWillUnmount() {
+    this._dead = true;
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._immTick) {
+      window.removeEventListener('scroll', this._immTick);
+      window.removeEventListener('resize', this._immTick);
+      this._immTick = null;
+    }
   }
   _evt(type) {
     const page = this.props.active ?? '';
@@ -1390,6 +1439,17 @@ class Component extends DCLogic {
       lineAria: T('加入 PeakQi LINE 官方帳號好友(另開視窗)', 'Add PeakQi on LINE (opens new window)'),
       dismissAria: T('關閉浮動按鈕', 'Dismiss floating button'),
       showSticky: (this.props.sticky ?? true) && active !== 'demo' && !this.state.dismissed && this.state.ctaOk,
+      // 沉浸區塊內淡出:不卸載節點,單純 opacity + pointer-events,離開就淡回來
+      stickyWrapStyle: {
+        position: 'fixed', right: '18px', left: '18px',
+        bottom: 'calc(18px + env(safe-area-inset-bottom, 0px))',
+        zIndex: '150', display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+        pointerEvents: 'none',
+        opacity: this.state.immersive ? '0' : '1',
+        visibility: this.state.immersive ? 'hidden' : 'visible',
+        transform: this.state.immersive ? 'translateY(14px)' : 'none',
+        transition: 'opacity .34s cubic-bezier(.16,1,.3,1), transform .34s cubic-bezier(.16,1,.3,1), visibility .34s'
+      },
       // 浮動 pill 統一導向 LINE 官方帳號加好友(全站同一個出口,最低門檻的聯絡方式);
       // 各頁 hero 與段落內的主 CTA 維持原本的表單/Demo 動線,不受影響。
       ctaHref: 'https://lin.ee/saa67pr',
