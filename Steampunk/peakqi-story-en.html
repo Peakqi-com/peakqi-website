@@ -31,12 +31,12 @@
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   three-d-stage:not(:defined) { visibility: hidden; }
   * { box-sizing: border-box; }
   html { scroll-behavior: auto; }
-  body { margin: 0; background: #161412; font-family: 'Noto Sans TC', system-ui, sans-serif; color: #fff; }
+  body { margin: 0; background: #161412; font-family: 'Space Grotesk', 'Noto Sans TC', system-ui, sans-serif; color: #fff; }
   a { color: #fe6a2d; text-decoration: none; } a:hover { color: #ff8a55; }
   three-d-stage { position: fixed; inset: 0; height: 100vh; z-index: 0; }
   #spacer { position: relative; z-index: 1; pointer-events: none; }
@@ -234,7 +234,7 @@ stage._camera.updateProjectionMatrix();
 const V1 = new THREE.Vector3();
 const wedBadge = document.createElement('div');
 wedBadge.textContent = '24/7 BOOKING';
-wedBadge.style.cssText = 'position:fixed;z-index:5;pointer-events:none;opacity:0;white-space:nowrap;transform:translate(-50%,-100%);font:700 13px/1 "Noto Sans TC",sans-serif;letter-spacing:.14em;color:#ffd9c4;background:rgba(22,13,8,.88);border:1px solid #fe6a2d;border-radius:999px;padding:8px 13px;box-shadow:0 4px 18px rgba(254,106,45,.35)';
+wedBadge.style.cssText = 'position:fixed;z-index:5;pointer-events:none;opacity:0;white-space:nowrap;transform:translate(-50%,-100%);font:700 13px/1 "Space Grotesk","Noto Sans TC",sans-serif;letter-spacing:.14em;color:#ffd9c4;background:rgba(22,13,8,.88);border:1px solid #fe6a2d;border-radius:999px;padding:8px 13px;box-shadow:0 4px 18px rgba(254,106,45,.35)';
 document.body.appendChild(wedBadge);
 const wedFx = {
   l1: root.getObjectByName('wedding_light'),
