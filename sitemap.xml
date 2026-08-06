@@ -10,127 +10,19 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.peakqi.com/peakops</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/peakops"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/peakops"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/peakops"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/solutions</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/solutions"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/solutions"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/solutions"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/pricing</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/pricing"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/pricing"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/pricing"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/method</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/method"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/method"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/method"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/cases</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/demo</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/demo"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/demo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/demo"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/about</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/about"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/about"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/about"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/products</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/products"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/products"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/products"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/bubble</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/bubble"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/bubble"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/bubble"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/ai-wedding-pro</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-wedding-pro"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-wedding-pro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-wedding-pro"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/ai-interior-pro</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-interior-pro"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-interior-pro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-interior-pro"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/contact</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/contact"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/contact"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/contact"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/privacy</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/privacy"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/privacy"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/privacy"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
     <loc>https://www.peakqi.com/en/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/peakops</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/peakops"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/peakops"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/peakops"/>
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -145,6 +37,15 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/solutions</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/solutions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/solutions"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/solutions"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/solutions</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/solutions"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/solutions"/>
@@ -154,12 +55,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/pricing"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/pricing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/pricing"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/pricing</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/pricing"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/pricing"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/pricing"/>
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/method</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/method"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/method"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/method"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -172,6 +91,15 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/cases</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/cases</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases"/>
@@ -181,13 +109,31 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/demo</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/demo"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/demo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/demo"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/demo</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/demo"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/demo"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/demo"/>
     <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/about</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/about"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.peakqi.com/en/about</loc>
@@ -199,10 +145,28 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/products</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/products"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/products"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/products"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/products</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/products"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/products"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/products"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/bubble</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/bubble"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/bubble"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/bubble"/>
     <lastmod>2026-08-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -217,6 +181,15 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/ai-wedding-pro</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-wedding-pro"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-wedding-pro"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-wedding-pro"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/ai-wedding-pro</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-wedding-pro"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-wedding-pro"/>
@@ -224,6 +197,15 @@
     <lastmod>2026-08-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/ai-interior-pro</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-interior-pro"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-interior-pro"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-interior-pro"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.peakqi.com/en/ai-interior-pro</loc>
@@ -235,6 +217,15 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/contact</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/contact"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/contact</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/contact"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/contact"/>
@@ -244,6 +235,15 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://www.peakqi.com/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/privacy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/privacy"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://www.peakqi.com/en/privacy</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/privacy"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/privacy"/>
@@ -251,5 +251,47 @@
     <lastmod>2026-08-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/blog</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/blog/inquiry-handoff-gaps</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/inquiry-handoff-gaps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/blog/inquiry-handoff-gaps</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/inquiry-handoff-gaps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
+    <lastmod>2026-08-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/blog/five-questions-before-adopting-ai</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

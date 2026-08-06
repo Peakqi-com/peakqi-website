@@ -26,7 +26,8 @@ export const navigation = [
     { href: 'https://bubble.tw', label: t('冒泡', 'Bubble'), desc: t('房仲 AI', 'Real-estate AI'), ext: true },
     { href: '/pricing', label: t('方案說明', 'Pricing'), desc: t('Peak Ops 三種規劃與導入範圍', 'Three Peak Ops plans & scope') }
   ] },
-  { href: '/about', key: 'about', label: t('關於我們', 'About') }
+  { href: '/about', key: 'about', label: t('關於我們', 'About') },
+  { href: '/blog', key: 'blog', label: t('觀點', 'Insights') }
 ];
 
 export const stats = [

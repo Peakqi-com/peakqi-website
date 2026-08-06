@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>觀點｜奇鋒國際 PeakQi</title>
+    <link>https://www.peakqi.com/blog</link>
+    <description>PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點。</description>
+    <language>zh-Hant-TW</language>
+    <atom:link href="https://www.peakqi.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>詢問接不住,通常不是因為回覆太慢</title>
+      <link>https://www.peakqi.com/blog/inquiry-handoff-gaps</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/inquiry-handoff-gaps</guid>
+      <description>客戶流失的位置多半不在第一則回覆,而在回覆之後的交接。這篇拆解三個常見斷點,以及該先自動化哪一段。</description>
+      <pubDate>Thu, 06 Aug 2026 09:00:00 +0800</pubDate>
+    </item>
+    <item>
+      <title>導入 AI 之前,先問清楚的五件事</title>
+      <link>https://www.peakqi.com/blog/five-questions-before-adopting-ai</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/five-questions-before-adopting-ai</guid>
+      <description>導入卡住的原因,通常在簽約前就決定了。這五個問題如果談的時候沒有答案,上線之後會加倍還。</description>
+      <pubDate>Tue, 04 Aug 2026 09:00:00 +0800</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -11,7 +11,7 @@ export const t = (zh, en) => (LANG === 'en' ? en : zh);
 // 語言切換鈕只在「對應英文版存在」的頁面現身──不會把使用者切去 404。
 export const EN_READY = ['/', '/about', '/solutions', '/method', '/peakops', '/demo',
   '/pricing', '/cases', '/case', '/products', '/bubble', '/ai-wedding-pro',
-  '/ai-interior-pro', '/contact', '/privacy'];
+  '/ai-interior-pro', '/contact', '/privacy', '/blog'];
 
 // 路徑正規化:本機 /About.dc.html 與正式 /about 都收斂成 clean path
 // 別名:檔名與 clean path 不同形的頁(AIWeddingPro → /ai-wedding-pro)
@@ -34,7 +34,13 @@ export function altUrl() {
   const qs = location.search || '';
   return (LANG === 'en' ? zh : (zh === '/' ? '/en/' : '/en' + zh)) + qs;
 }
-export function hasEn() { return LANG === 'en' || EN_READY.indexOf(zhPath()) >= 0; }
+// 部落格文章逐篇決定有沒有英文版:tools/build-blog.mjs 只在兩版都存在時,把 hreflang 對
+// 靜態寫進該文章的 <head>。這裡直接讀那一行,就不必把整份文章索引載進每一頁。
+// (靜態頁的 hreflang 由 seo.js 於執行期注入,答案與 EN_READY 一致,不會造成誤判。)
+function headHasEnAlt() {
+  try { return !!document.head.querySelector('link[rel="alternate"][hreflang="en"]'); } catch (e) { return false; }
+}
+export function hasEn() { return LANG === 'en' || EN_READY.indexOf(zhPath()) >= 0 || headHasEnAlt(); }
 
 try { document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant-TW'; } catch (e) {}
 try { localStorage.setItem('pqLang', LANG); } catch (e) {}

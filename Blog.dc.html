@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="奇鋒國際 PeakQi">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="觀點｜奇鋒國際 PeakQi">
+<meta property="og:description" content="PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點,來自實際交付的專案現場。">
+<meta property="og:url" content="https://www.peakqi.com/blog">
+<link rel="canonical" href="https://www.peakqi.com/blog">
+<link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog">
+<link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog">
+<link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog">
+<meta property="og:image" content="https://www.peakqi.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="奇鋒國際 PeakQi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="觀點｜奇鋒國際 PeakQi">
+<meta name="twitter:description" content="PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點,來自實際交付的專案現場。">
+<meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<link rel="alternate" type="application/rss+xml" title="觀點" href="/feed.xml">
+
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>觀點｜奇鋒國際 PeakQi</title>
+<meta name="description" content="PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點,來自實際交付的專案現場。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+h1,h2{text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#FF6B2C;color:#F2EFE8}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
+.bl-head{max-width:1160px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,5vw,48px) clamp(24px,3vw,38px)}
+.bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
+.bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em}
+.bl-head p{margin:16px 0 0;max-width:58ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64)}
+.bl-filter{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:8px}
+.bl-chip{appearance:none;-webkit-appearance:none;border:1px solid rgba(9,11,14,.16);background:none;border-radius:999px;padding:9px 16px;min-height:40px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.bl-chip:hover{border-color:#090B0E;color:#090B0E}
+.bl-chip[aria-pressed="true"]{background:#090B0E;border-color:#090B0E;color:#F2EFE8}
+.bl-grid{max-width:1160px;margin:0 auto;padding:clamp(22px,3vw,32px) clamp(20px,5vw,48px) clamp(72px,10vw,120px);display:grid;gap:clamp(16px,2.2vw,26px)}
+@media(min-width:720px){.bl-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.bl-grid{grid-template-columns:repeat(3,1fr)}}
+.bl-card{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(9,11,14,.1);border-radius:4px;overflow:hidden;text-decoration:none;transition:border-color .2s,transform .2s,box-shadow .2s}
+.bl-card:hover{border-color:#FF6B2C;transform:translateY(-3px);box-shadow:0 14px 34px -22px rgba(9,11,14,.55)}
+.bl-card[hidden]{display:none}
+.bl-thumb{position:relative;aspect-ratio:16/10;overflow:hidden}
+.bl-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.bl-thumb .n{position:absolute;right:14px;bottom:6px;font:700 3.2rem/1 'Space Grotesk',sans-serif;color:rgba(255,255,255,.34)}
+.bl-cb{display:flex;flex-direction:column;flex:1;padding:17px 19px 20px}
+.bl-tag{font:600 10.5px 'Space Grotesk',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#FF6B2C}
+.bl-ct{margin:9px 0 0;font:800 clamp(1rem,1.45vw,1.1rem)/1.5 'Noto Sans TC',sans-serif;color:#090B0E}
+.bl-cs{margin:9px 0 0;flex:1;font:400 13.5px/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.6)}
+.bl-cm{margin:15px 0 0;font:500 12px 'Space Grotesk','Noto Sans TC',sans-serif;color:rgba(9,11,14,.42)}
+.bl-empty{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,48px) clamp(72px,10vw,120px);font:400 15px/1.9 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)}
+.bl-empty[hidden]{display:none}
+</style>
+</helmet>
+<a id="pq-skip" href="#pq-main">跳到主要內容</a>
+<dc-import name="Nav" active="blog" hint-size="100%,68px"></dc-import>
+
+<main id="pq-main" data-screen-label="觀點">
+  <header class="bl-head">
+    <span class="k">INSIGHTS</span>
+    <h1>觀點</h1>
+    <p>AI 導入、流程自動化與客戶經營的實作觀點。寫我們實際做過的事,以及做的時候踩到什麼。</p>
+  </header>
+<div class="bl-filter" role="group" aria-label="觀點">
+  <button type="button" class="bl-chip" data-tag="" aria-pressed="true">全部</button>
+  <button type="button" class="bl-chip" data-tag="ai-adoption" aria-pressed="false">AI 導入</button>
+  <button type="button" class="bl-chip" data-tag="customer-ops" aria-pressed="false">客戶經營</button>
+  <button type="button" class="bl-chip" data-tag="automation" aria-pressed="false">流程自動化</button>
+</div>
+  <div class="bl-grid" id="bl-grid">
+    <a class="bl-card" href="/blog/inquiry-handoff-gaps" data-tags="ai-adoption customer-ops">
+      <span class="bl-thumb" style="background:linear-gradient(118deg,#A8B5A2,#9FAEA6)"><span class="n" aria-hidden="true">01</span></span>
+      <span class="bl-cb">
+        <span class="bl-tag">AI 導入</span>
+        <span class="bl-ct">詢問接不住,通常不是因為回覆太慢</span>
+        <span class="bl-cs">客戶流失的位置多半不在第一則回覆,而在回覆之後的交接。這篇拆解三個常見斷點,以及該先自動化哪一段。</span>
+        <span class="bl-cm">2026 年 8 月 6 日 · 3 分鐘閱讀</span>
+      </span>
+    </a>
+    <a class="bl-card" href="/blog/five-questions-before-adopting-ai" data-tags="ai-adoption automation">
+      <span class="bl-thumb" style="background:linear-gradient(118deg,#A8B5A2,#B3A8B5)"><span class="n" aria-hidden="true">02</span></span>
+      <span class="bl-cb">
+        <span class="bl-tag">AI 導入</span>
+        <span class="bl-ct">導入 AI 之前,先問清楚的五件事</span>
+        <span class="bl-cs">導入卡住的原因,通常在簽約前就決定了。這五個問題如果談的時候沒有答案,上線之後會加倍還。</span>
+        <span class="bl-cm">2026 年 8 月 4 日 · 2 分鐘閱讀</span>
+      </span>
+    </a>
+  </div>
+  <p class="bl-empty" id="bl-empty" hidden>這個標籤下還沒有文章。</p>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() { return {}; }
+  componentDidMount() {
+    const chips = [].slice.call(document.querySelectorAll('.bl-chip'));
+    const cards = [].slice.call(document.querySelectorAll('.bl-card'));
+    const empty = document.getElementById('bl-empty');
+    if (!chips.length || !cards.length) return;
+    this._onChip = (e) => {
+      const btn = e.currentTarget, tag = btn.getAttribute('data-tag') || '';
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
+      let shown = 0;
+      cards.forEach((card) => {
+        const on = !tag || (' ' + (card.getAttribute('data-tags') || '') + ' ').indexOf(' ' + tag + ' ') >= 0;
+        card.hidden = !on;
+        if (on) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    };
+    chips.forEach((c) => c.addEventListener('click', this._onChip));
+    this._chips = chips;
+  }
+  componentWillUnmount() {
+    if (this._chips && this._onChip) this._chips.forEach((c) => c.removeEventListener('click', this._onChip));
+  }
+}
+</script>
+</body>
+</html>

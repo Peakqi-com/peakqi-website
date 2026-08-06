@@ -3,7 +3,9 @@
 // i18n(Phase 0):/en/ 頁自動吃 EN canonical/og:locale;hreflang 對只在
 // 「該頁英文版存在」(i18n.EN_READY)時輸出,英文版逐頁上線逐頁生效。
 import { LANG, EN_READY } from './i18n.js';
-const SITE = 'https://peakqi.com';
+// 主機必須與各頁 canonical、sitemap.xml 完全一致(都是 www)。
+// 三者不同源時 Google 會整組忽略 hreflang,雙語版本就配不起來。
+const SITE = 'https://www.peakqi.com';
 const ROUTES = {
   home: { path: '/', file: '/', name: '首頁', nameEn: 'Home' },
   solutions: { path: '/solutions', file: '/solutions', name: '解決方案', nameEn: 'Solutions' },

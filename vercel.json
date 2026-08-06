@@ -155,6 +155,26 @@
       "source": "/en/Contact.dc.html",
       "destination": "/en/contact",
       "permanent": true
+    },
+    {
+      "source": "/Blog.dc.html",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/en/Blog.dc.html",
+      "destination": "/en/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug.dc.html",
+      "destination": "/blog/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/:slug.dc.html",
+      "destination": "/en/blog/:slug",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -293,6 +313,22 @@
     {
       "source": "/en/tour",
       "destination": "/Steampunk/peakqi-story-en.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/Blog.dc.html"
+    },
+    {
+      "source": "/en/blog",
+      "destination": "/en/Blog.dc.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug.dc.html"
+    },
+    {
+      "source": "/en/blog/:slug",
+      "destination": "/en/blog/:slug.dc.html"
     }
   ]
 }

@@ -1,5 +1,7 @@
 # robots.txt — 奇鋒國際 PeakQi(部署時將網域換成正式網址)
 User-agent: *
 Allow: /
+# 文章原稿(Markdown)是產生網頁用的來源檔,內容與 /blog/ 相同 —— 別讓它被當成重複內容收錄
+Disallow: /content/
 
 Sitemap: https://www.peakqi.com/sitemap.xml

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Insights | PeakQi</title>
+    <link>https://www.peakqi.com/en/blog</link>
+    <description>PeakQi on AI adoption, workflow automation and customer operations — from the build side.</description>
+    <language>en</language>
+    <atom:link href="https://www.peakqi.com/en/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Losing inquiries is rarely a response-time problem</title>
+      <link>https://www.peakqi.com/en/blog/inquiry-handoff-gaps</link>
+      <guid isPermaLink="true">https://www.peakqi.com/en/blog/inquiry-handoff-gaps</guid>
+      <description>Customers usually slip away after the first reply, not before it. Here are the three handoff gaps we keep finding, and which one to automate first.</description>
+      <pubDate>Thu, 06 Aug 2026 09:00:00 +0800</pubDate>
+    </item>
+  </channel>
+</rss>
