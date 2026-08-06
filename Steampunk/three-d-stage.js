@@ -226,7 +226,10 @@
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.25 : 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = isTouchDevice ? THREE.BasicShadowMap : THREE.PCFShadowMap;
+      // 接觸陰影的柔和度:桌機用 PCFSoft(2048 陰影圖下多出來的取樣成本可忽略),
+      // 觸控從 Basic 升到 PCF —— Basic 是硬邊、會有明顯鋸齒。
+      // 抗鋸齒維持「觸控不開」:那一項有真實的效能風險,沒有可信的實機幀時間就不動。
+      renderer.shadowMap.type = isTouchDevice ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       this._renderer = renderer;
