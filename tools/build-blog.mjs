@@ -38,6 +38,8 @@ const UI = {
     idxTitle: '觀點', idxKicker: 'INSIGHTS',
     idxLede: 'AI 導入、流程自動化與客戶經營的實作觀點。寫我們實際做過的事,以及做的時候踩到什麼。',
     idxMeta: 'PeakQi 談 AI 導入、流程自動化與客戶經營的實作觀點,來自實際交付的專案現場。',
+    skyHint: '點畫面任一處,把星星連成星座', skyStars: '顆',
+    skyAria: '星空觀測互動:按 Enter 觀測一顆星星,連成星座',
     all: '全部', back: '回到觀點', mins: '分鐘閱讀', empty: '這個標籤下還沒有文章。',
     related: '延伸閱讀', skip: '跳到主要內容', updated: '更新於',
     ctaTitle: '想知道這些流程在你的公司長什麼樣?',
@@ -50,6 +52,8 @@ const UI = {
     idxTitle: 'Insights', idxKicker: 'INSIGHTS',
     idxLede: 'Notes on AI adoption, workflow automation and customer operations — what we actually built, and what we ran into while building it.',
     idxMeta: 'PeakQi on AI adoption, workflow automation and customer operations — written from the delivery floor.',
+    skyHint: 'Tap anywhere to connect the stars', skyStars: 'stars',
+    skyAria: 'Stargazing interaction: press Enter to observe a star and draw a constellation',
     all: 'All', back: 'Back to Insights', mins: 'min read', empty: 'No posts under this tag yet.',
     related: 'Read next', skip: 'Skip to main content', updated: 'Updated',
     ctaTitle: 'Want to see what this looks like inside your company?',
@@ -202,11 +206,30 @@ const ARTICLE_CSS = `
 @media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}`;
 
 const INDEX_CSS = `
-.bl-head{max-width:1160px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,5vw,48px) clamp(24px,3vw,38px)}
+/* 開場是一整片夜空 canvas,文字疊在上面。桌機文案靠下左、觀測者在右下;
+   手機改成文案在上、下半留給星空與觀測者,兩者不會疊在一起。 */
+.bl-head{position:relative;overflow:hidden;background:#070A10;color:#F2EFE8;display:flex;align-items:flex-end;min-height:clamp(340px,50vh,480px)}
+.bl-head canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:manipulation}
+.bl-head canvas:focus-visible{outline:2px solid #FF6B2C;outline-offset:-4px}
+/* 文案底下的遮罩:使用者可以在任何位置點亮星星,包含文字後方 —— 沒有這層,
+   星光和星座線會直接洗掉文案。桌機由左、手機由上淡出,星空仍然透得出來。 */
+.bl-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.78) 30%,rgba(7,10,16,.28) 52%,rgba(7,10,16,0) 68%)}
+@media(max-width:719px){.bl-scrim{background:linear-gradient(180deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.82) 34%,rgba(7,10,16,.3) 58%,rgba(7,10,16,0) 76%)}}
+/* 文案不吃指標事件:點畫面任何一處都要能傳到 canvas 觀測星星 */
+.bl-headin{position:relative;z-index:1;pointer-events:none;width:100%;max-width:1160px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,48px) clamp(28px,3.4vw,42px)}
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
-.bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em}
-.bl-head p{margin:16px 0 0;max-width:58ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64)}
-.bl-filter{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:8px}
+.bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
+.bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
+.bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
+.bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
+@keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.bl-hint::before{animation:none;opacity:.75}}
+@media(max-width:719px){
+  .bl-head{align-items:flex-start;min-height:clamp(440px,74vh,580px)}
+  .bl-headin{padding-bottom:clamp(130px,28vh,200px)}
+  .bl-head p{max-width:none}
+}
+.bl-filter{max-width:1160px;margin:0 auto;padding:clamp(22px,3vw,32px) clamp(20px,5vw,48px) 0;display:flex;flex-wrap:wrap;gap:8px}
 .bl-chip{appearance:none;-webkit-appearance:none;border:1px solid rgba(9,11,14,.16);background:none;border-radius:999px;padding:9px 16px;min-height:40px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .bl-chip:hover{border-color:#090B0E;color:#090B0E}
 .bl-chip[aria-pressed="true"]{background:#090B0E;border-color:#090B0E;color:#F2EFE8}
@@ -400,10 +423,15 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
 
   const body = `
 <main id="pq-main" data-screen-label="${esc(u.idxTitle)}">
-  <header class="bl-head">
-    <span class="k">${u.idxKicker}</span>
-    <h1>${esc(u.idxTitle)}</h1>
-    <p>${esc(u.idxLede)}</p>
+  <header class="bl-head" data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}">
+    <canvas tabindex="0" role="button" aria-label="${esc(u.skyAria)}"></canvas>
+    <div class="bl-scrim" aria-hidden="true"></div>
+    <div class="bl-headin">
+      <span class="k">${u.idxKicker}</span>
+      <h1>${esc(u.idxTitle)}</h1>
+      <p>${esc(u.idxLede)}</p>
+      <span class="bl-hint" data-sky-hint>${esc(u.skyHint)}</span>
+    </div>
   </header>${chips}
   <div class="bl-grid" id="bl-grid">
 ${cards}
@@ -414,6 +442,7 @@ ${cards}
   // 篩選:純 DOM 操作,不動 state ── 走 setState 會重繪整棵樹,監聽器就掉了
   const dcScript = `  renderVals() { return {}; }
   componentDidMount() {
+    import('/blog-hero.js').then((m) => { if (!this._dead) this._sky = m.mountBlogHero(); }).catch(() => {});
     const chips = [].slice.call(document.querySelectorAll('.bl-chip'));
     const cards = [].slice.call(document.querySelectorAll('.bl-card'));
     const empty = document.getElementById('bl-empty');
@@ -433,6 +462,8 @@ ${cards}
     this._chips = chips;
   }
   componentWillUnmount() {
+    this._dead = true;
+    if (this._sky) this._sky();
     if (this._chips && this._onChip) this._chips.forEach((c) => c.removeEventListener('click', this._onChip));
   }`;
 

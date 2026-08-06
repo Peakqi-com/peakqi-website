@@ -53,11 +53,30 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 @media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
 html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{text-wrap:balance}
 html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty}
-.bl-head{max-width:1160px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,5vw,48px) clamp(24px,3vw,38px)}
+/* 開場是一整片夜空 canvas,文字疊在上面。桌機文案靠下左、觀測者在右下;
+   手機改成文案在上、下半留給星空與觀測者,兩者不會疊在一起。 */
+.bl-head{position:relative;overflow:hidden;background:#070A10;color:#F2EFE8;display:flex;align-items:flex-end;min-height:clamp(340px,50vh,480px)}
+.bl-head canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:manipulation}
+.bl-head canvas:focus-visible{outline:2px solid #FF6B2C;outline-offset:-4px}
+/* 文案底下的遮罩:使用者可以在任何位置點亮星星,包含文字後方 —— 沒有這層,
+   星光和星座線會直接洗掉文案。桌機由左、手機由上淡出,星空仍然透得出來。 */
+.bl-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.78) 30%,rgba(7,10,16,.28) 52%,rgba(7,10,16,0) 68%)}
+@media(max-width:719px){.bl-scrim{background:linear-gradient(180deg,rgba(7,10,16,.94) 0%,rgba(7,10,16,.82) 34%,rgba(7,10,16,.3) 58%,rgba(7,10,16,0) 76%)}}
+/* 文案不吃指標事件:點畫面任何一處都要能傳到 canvas 觀測星星 */
+.bl-headin{position:relative;z-index:1;pointer-events:none;width:100%;max-width:1160px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,48px) clamp(28px,3.4vw,42px)}
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
-.bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em}
-.bl-head p{margin:16px 0 0;max-width:58ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64)}
-.bl-filter{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;gap:8px}
+.bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
+.bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
+.bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
+.bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
+@keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.bl-hint::before{animation:none;opacity:.75}}
+@media(max-width:719px){
+  .bl-head{align-items:flex-start;min-height:clamp(440px,74vh,580px)}
+  .bl-headin{padding-bottom:clamp(130px,28vh,200px)}
+  .bl-head p{max-width:none}
+}
+.bl-filter{max-width:1160px;margin:0 auto;padding:clamp(22px,3vw,32px) clamp(20px,5vw,48px) 0;display:flex;flex-wrap:wrap;gap:8px}
 .bl-chip{appearance:none;-webkit-appearance:none;border:1px solid rgba(9,11,14,.16);background:none;border-radius:999px;padding:9px 16px;min-height:40px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .bl-chip:hover{border-color:#090B0E;color:#090B0E}
 .bl-chip[aria-pressed="true"]{background:#090B0E;border-color:#090B0E;color:#F2EFE8}
@@ -83,10 +102,15 @@ html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap
 <dc-import name="Nav" active="blog" hint-size="100%,68px"></dc-import>
 
 <main id="pq-main" data-screen-label="Insights">
-  <header class="bl-head">
-    <span class="k">INSIGHTS</span>
-    <h1>Insights</h1>
-    <p>Notes on AI adoption, workflow automation and customer operations — what we actually built, and what we ran into while building it.</p>
+  <header class="bl-head" data-blog-sky data-hint="Tap anywhere to connect the stars" data-stars="stars">
+    <canvas tabindex="0" role="button" aria-label="Stargazing interaction: press Enter to observe a star and draw a constellation"></canvas>
+    <div class="bl-scrim" aria-hidden="true"></div>
+    <div class="bl-headin">
+      <span class="k">INSIGHTS</span>
+      <h1>Insights</h1>
+      <p>Notes on AI adoption, workflow automation and customer operations — what we actually built, and what we ran into while building it.</p>
+      <span class="bl-hint" data-sky-hint>Tap anywhere to connect the stars</span>
+    </div>
   </header>
 <div class="bl-filter" role="group" aria-label="Insights">
   <button type="button" class="bl-chip" data-tag="" aria-pressed="true">All</button>
@@ -112,6 +136,7 @@ html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap
 class Component extends DCLogic {
   renderVals() { return {}; }
   componentDidMount() {
+    import('/blog-hero.js').then((m) => { if (!this._dead) this._sky = m.mountBlogHero(); }).catch(() => {});
     const chips = [].slice.call(document.querySelectorAll('.bl-chip'));
     const cards = [].slice.call(document.querySelectorAll('.bl-card'));
     const empty = document.getElementById('bl-empty');
@@ -131,6 +156,8 @@ class Component extends DCLogic {
     this._chips = chips;
   }
   componentWillUnmount() {
+    this._dead = true;
+    if (this._sky) this._sky();
     if (this._chips && this._onChip) this._chips.forEach((c) => c.removeEventListener('click', this._onChip));
   }
 }
