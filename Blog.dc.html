@@ -68,6 +68,9 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
 .bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
 .bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
+.bl-sky{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font:600 11.5px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,239,232,.32)}
+.bl-sky b{font-weight:700;color:rgba(242,239,232,.6);letter-spacing:.1em}
+.bl-sky i{width:5px;height:5px;border-radius:50%;background:rgba(242,239,232,.28)}
 .bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
 .bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
 @keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
@@ -122,7 +125,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
 <dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
 
 <main id="pq-main" data-screen-label="觀點">
-  <header class="bl-head" data-immersive data-blog-sky data-hint="點畫面任一處,把星星連成星座" data-stars="顆" data-done="觀測完成" data-log="觀測紀錄" data-orion="獵戶座" data-peak="奇鋒">
+  <header class="bl-head" data-immersive data-blog-sky data-hint="點畫面任一處,把星星連成星座" data-stars="顆" data-conds="極光|波光粼粼|流動銀河|雲隙|月出|環形太空站|飛碟掠過|彗星" data-done="觀測完成" data-log="觀測紀錄" data-orion="獵戶座" data-peak="奇鋒">
     <canvas tabindex="0" role="button" aria-label="互動式星空:點畫面或按 Enter 觀測一顆星星,連滿六顆完成一次觀測"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">
@@ -130,6 +133,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
       <h1>觀點</h1>
       <p>AI 導入、流程自動化與客戶經營的實作觀點。寫我們實際做過的事,以及做的時候踩到什麼。</p>
       <span class="bl-hint" data-sky-hint>點畫面任一處,把星星連成星座</span>
+      <span class="bl-sky"><i aria-hidden="true"></i>今夜天象 · <b data-sky-cond></b></span>
     </div>
     <div class="bl-scroll" aria-hidden="true">
       <span class="t">往下讀 · 觀點列表</span>

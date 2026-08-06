@@ -103,7 +103,8 @@ export function mountBlogHero() {
     stars: root.getAttribute('data-stars') || '',
     log: root.getAttribute('data-log') || '',
     orion: root.getAttribute('data-orion') || '',
-    peak: root.getAttribute('data-peak') || ''
+    peak: root.getAttribute('data-peak') || '',
+    conds: (root.getAttribute('data-conds') || '').split('|')
   };
   const live = root.querySelector('[data-sky-live]');
   const hoverable = !!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches);
@@ -1251,6 +1252,284 @@ export function mountBlogHero() {
   }
 
   // ── 主繪製 ──────────────────────────────────────────────
+
+  // ── 天象 ────────────────────────────────────────────────
+  // 使用者回饋:「每次用互動都一樣,只是排列位置不同」。所以差異必須做到
+  // 「今晚的天空長什麼樣」這個等級,而且要讓人看得出來換了 —— 因此有名字標籤。
+  // 進站隨機抽一種;每完成一次觀測就換下一種(互動要有看得見的後果)。
+  // 大氣類是持續的;天體類是週期性掠過,切換後 2.5~5 秒內先來一次,不用等。
+  const CONDS = [
+    { id: 'aurora', front: true }, { id: 'shimmer', front: true },
+    { id: 'galaxy', front: false }, { id: 'clouds', front: true },
+    { id: 'moon', front: false }, { id: 'station', front: true },
+    { id: 'saucer', front: true }, { id: 'comet', front: true }
+  ];
+  let condI = (Math.random() * CONDS.length) | 0;
+  let condT0 = 0, condIn = 0, passT0 = -1, passGap = 0;
+  let shimCv = null, shimIm = null, condErr = null;
+
+  function setCond(i, now) {
+    condI = ((i | 0) % CONDS.length + CONDS.length) % CONDS.length;
+    condT0 = now; condIn = 0;
+    passT0 = now + rnd(2500, 5000);                  // 天體類:切換後很快先來一次
+    passGap = rnd(17000, 26000);
+    const el = root.querySelector('[data-sky-cond]');
+    if (el) el.textContent = (TXT.conds[condI] || '');
+    dirty = true;
+  }
+
+  // 天體掠過的進度:0 → 1 走完一趟,不在趟中就回傳 -1
+  function passK(now, dur) {
+    if (passT0 < 0) return -1;
+    const k = (now - passT0) / dur;
+    if (k < 0) return -1;
+    if (k > 1) { passT0 = now + passGap; return -1; }
+    return k;
+  }
+
+  // 極光:三道光簾,上下緣各自起伏。用 lighter 疊加,所以星星仍然透得出來。
+  function condAurora(now, a) {
+    const n = mobile ? 2 : 3;
+    g.globalCompositeOperation = 'lighter';
+    for (let c = 0; c < n; c++) {
+      const baseY = H * (0.13 + c * 0.09);
+      const hgt = H * (0.30 + c * 0.05);
+      const sp = 0.000105 + c * 0.000035;
+      const amp = H * (0.045 + c * 0.018);
+      const step = mobile ? 18 : 12;
+      g.beginPath();
+      g.moveTo(0, baseY);
+      for (let x = 0; x <= W; x += step) {
+        g.lineTo(x, baseY + Math.sin(x * 0.0042 + now * sp + c * 1.7) * amp
+          + Math.sin(x * 0.0113 - now * sp * 1.6) * amp * 0.38);
+      }
+      for (let x = W; x >= 0; x -= step) {
+        g.lineTo(x, baseY + hgt + Math.sin(x * 0.0036 + now * sp * 0.75 + c) * amp * 0.65);
+      }
+      g.closePath();
+      const hue = c === 0 ? '104,222,176' : c === 1 ? '84,192,214' : '146,126,232';
+      const lg = g.createLinearGradient(0, baseY - amp, 0, baseY + hgt);
+      lg.addColorStop(0, 'rgba(' + hue + ',0)');
+      lg.addColorStop(0.3, 'rgba(' + hue + ',' + (0.16 * a).toFixed(3) + ')');
+      lg.addColorStop(1, 'rgba(' + hue + ',0)');
+      g.fillStyle = lg;
+      g.fill();
+    }
+    // 直立光束:極光的辨識特徵,少量就夠
+    const rays = mobile ? 8 : 16;
+    for (let i = 0; i < rays; i++) {
+      const x = ((i + 0.5) / rays + Math.sin(now * 0.00007 + i) * 0.01) * W;
+      const y0 = H * 0.12, y1 = H * (0.4 + 0.14 * Math.sin(i * 2.1 + now * 0.00013));
+      const al = (0.05 + 0.05 * Math.sin(now * 0.00042 + i * 1.9)) * a;
+      if (al <= 0.004) continue;
+      const lg = g.createLinearGradient(0, y0, 0, y1);
+      lg.addColorStop(0, 'rgba(150,240,205,0)');
+      lg.addColorStop(0.4, 'rgba(150,240,205,' + al.toFixed(3) + ')');
+      lg.addColorStop(1, 'rgba(150,240,205,0)');
+      g.fillStyle = lg;
+      g.fillRect(x - 1.1, y0, 2.2, y1 - y0);
+    }
+    g.globalCompositeOperation = 'source-over';
+  }
+
+  // 波光粼粼:低解析焦散圖每幀重算再放大 blit(112x64 只要幾千次運算)
+  function condShimmer(now, a) {
+    const w = 112, h = 64;
+    if (!shimCv) { shimCv = document.createElement('canvas'); shimCv.width = w; shimCv.height = h; }
+    const sg = shimCv.getContext('2d');
+    if (!shimIm) shimIm = sg.createImageData(w, h);
+    const d = shimIm.data;
+    const tt = now * 0.00040;
+    for (let y = 0; y < h; y++) {
+      const v = y / h * 5.2;
+      for (let x = 0; x < w; x++) {
+        const u = x / w * 9.4;
+        let s = Math.sin(u + tt) + Math.sin(v * 1.31 - tt * 0.83) + Math.sin((u + v) * 0.79 + tt * 0.47);
+        s = Math.abs(s) / 3;
+        const k = (1 - s); const k7 = k * k * k * k * k * k * k;
+        const i = (y * w + x) * 4;
+        d[i] = 186; d[i + 1] = 212; d[i + 2] = 255;
+        d[i + 3] = (k7 * 190 * a) | 0;
+      }
+    }
+    sg.putImageData(shimIm, 0, 0);
+    g.globalCompositeOperation = 'lighter';
+    g.drawImage(shimCv, 0, 0, W, H * 0.82);
+    g.globalCompositeOperation = 'source-over';
+  }
+
+  // 流動銀河:星帶「內部」在流,星星本身不動 —— 和使用者不要的整塊平移是兩回事
+  function condGalaxy(now, a) {
+    if (!nebSrc || !nebSrc.length) return;
+    g.save();
+    g.globalCompositeOperation = 'lighter';
+    g.translate(W * 0.5, H * 0.38);
+    g.rotate(-0.42);
+    const bw = W * 1.7, bh = H * 0.34;
+    for (let i = 0; i < nebSrc.length; i++) {
+      const off = (now * (0.0075 + i * 0.0042)) % bw;
+      g.globalAlpha = (0.78 - i * 0.24) * a;
+      g.drawImage(nebSrc[i], -bw * 1.5 + off, -bh / 2, bw, bh);
+      g.drawImage(nebSrc[i], -bw * 0.5 + off, -bh / 2, bw, bh);
+    }
+    // 核心亮帶:沒有這條的話只是一片霧,看不出是銀河
+    const cg = g.createLinearGradient(0, -bh * 0.5, 0, bh * 0.5);
+    cg.addColorStop(0, 'rgba(150,170,214,0)');
+    cg.addColorStop(0.5, 'rgba(178,196,238,' + (0.2 * a).toFixed(3) + ')');
+    cg.addColorStop(1, 'rgba(150,170,214,0)');
+    g.globalAlpha = 1;
+    g.fillStyle = cg;
+    g.fillRect(-bw, -bh * 0.5, bw * 2, bh);
+    g.restore();
+    g.globalCompositeOperation = 'source-over';
+  }
+
+  // 雲隙:暗雲飄過遮住星星,縫隙裡星星特別亮。這一種是唯一會「遮」的天象。
+  function condClouds(now, a) {
+    if (!nebSrc || !nebSrc.length) return;
+    g.save();
+    g.globalAlpha = 0.5 * a;
+    const bw = W * 1.9, bh = H * 0.62;
+    for (let i = 0; i < 2; i++) {
+      const src = nebSrc[i % nebSrc.length];
+      const off = (now * (0.011 + i * 0.007)) % bw;
+      const y = H * (0.02 + i * 0.16);
+      g.globalAlpha = (0.46 - i * 0.14) * a;
+      // 用畫布本身的底色當雲:壓暗而不是加亮
+      g.globalCompositeOperation = 'source-over';
+      g.filter = 'none';
+      g.drawImage(src, -bw + off, y, bw, bh);
+      g.drawImage(src, off, y, bw, bh);
+    }
+    g.globalAlpha = 1;
+    g.restore();
+  }
+
+  // 月出:弦月從地平線升起,整片天空的光調跟著變
+  function condMoon(now, a) {
+    const k = clamp01((now - condT0) / 26000);
+    const ez2 = k * k * (3 - 2 * k);
+    const cx = W * 0.24, cy = H - groundY(cx) - ez2 * H * 0.52;
+    const r = Math.min(W, H) * (mobile ? 0.052 : 0.045);
+    g.globalCompositeOperation = 'lighter';
+    const halo = g.createRadialGradient(cx, cy, r * 0.4, cx, cy, r * 9);
+    halo.addColorStop(0, 'rgba(236,232,214,' + (0.3 * a * ez2).toFixed(3) + ')');
+    halo.addColorStop(1, 'rgba(236,232,214,0)');
+    g.fillStyle = halo;
+    g.fillRect(cx - r * 9, cy - r * 9, r * 18, r * 18);
+    g.globalCompositeOperation = 'source-over';
+    g.beginPath(); g.arc(cx, cy, r, 0, TAU);
+    g.fillStyle = 'rgba(238,234,218,' + (0.94 * a).toFixed(3) + ')'; g.fill();
+    // 用背景色的圓切出弦月
+    g.save();
+    g.globalCompositeOperation = 'destination-out';
+    g.beginPath(); g.arc(cx - r * 0.66, cy - r * 0.26, r * 0.92, 0, TAU); g.fill();
+    g.restore();
+  }
+
+  // 環形太空站:甜甜圈狀,緩慢自轉,帶航行燈
+  function condStation(now, a) {
+    const k = passK(now, 26000);
+    if (k < 0) return;
+    const x = -80 + (W + 160) * k;
+    const y = H * (0.2 + 0.06 * Math.sin(k * 3.1));
+    const s = mobile ? 1.0 : 1.55;
+    const spin = now * 0.00028;
+    const fade = Math.sin(Math.PI * clamp01(k * 1.05)) * a;
+    g.save(); g.translate(x, y); g.rotate(-0.34);
+    g.globalAlpha = fade;
+    // 環:用橢圓做出斜視角,自轉靠環上的節點位置表現
+    g.beginPath(); g.ellipse(0, 0, 26 * s, 9.5 * s, 0, 0, TAU);
+    g.strokeStyle = 'rgba(198,210,232,.85)'; g.lineWidth = 3.4 * s; g.stroke();
+    g.beginPath(); g.ellipse(0, 0, 26 * s, 9.5 * s, 0, 0, TAU);
+    g.strokeStyle = 'rgba(120,136,164,.9)'; g.lineWidth = 1.2 * s; g.stroke();
+    // 中央軸與輻條
+    g.beginPath(); g.moveTo(-26 * s, 0); g.lineTo(26 * s, 0);
+    g.strokeStyle = 'rgba(160,174,198,.6)'; g.lineWidth = 1.6 * s; g.stroke();
+    g.beginPath(); g.arc(0, 0, 5.4 * s, 0, TAU);
+    g.fillStyle = 'rgba(214,224,242,.95)'; g.fill();
+    // 航行燈:沿環跑,自轉感就是它給的
+    for (let i = 0; i < 6; i++) {
+      const th = spin + i * (TAU / 6);
+      const lx = Math.cos(th) * 26 * s, ly = Math.sin(th) * 9.5 * s;
+      const on = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.004 + i));
+      g.beginPath(); g.arc(lx, ly, 1.9 * s, 0, TAU);
+      g.fillStyle = i % 3 === 0 ? 'rgba(255,107,44,' + on.toFixed(2) + ')' : 'rgba(150,220,255,' + on.toFixed(2) + ')';
+      g.fill();
+    }
+    g.globalAlpha = 1; g.restore();
+  }
+
+  // 飛碟掠過:小碟身 + 底部探照燈掃一下
+  function condSaucer(now, a) {
+    const k = passK(now, 15000);
+    if (k < 0) return;
+    const ez2 = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    const x = W + 60 - (W + 120) * ez2;                        // 由右往左
+    const y = H * (0.24 + 0.05 * Math.sin(k * 6.1)) + Math.sin(now * 0.003) * 2;
+    const s = mobile ? 0.7 : 1;
+    const fade = Math.sin(Math.PI * clamp01(k * 1.06)) * a;
+    g.save(); g.translate(x, y); g.globalAlpha = fade;
+    // 探照燈:只在中段掃一下
+    const beam = Math.max(0, Math.sin((k - 0.3) / 0.4 * Math.PI));
+    if (beam > 0.01) {
+      const bl = g.createLinearGradient(0, 0, 0, 150 * s);
+      bl.addColorStop(0, 'rgba(150,235,255,' + (0.2 * beam).toFixed(3) + ')');
+      bl.addColorStop(1, 'rgba(150,235,255,0)');
+      g.beginPath(); g.moveTo(-4 * s, 4 * s); g.lineTo(-26 * s, 150 * s);
+      g.lineTo(26 * s, 150 * s); g.lineTo(4 * s, 4 * s); g.closePath();
+      g.fillStyle = bl; g.fill();
+    }
+    g.beginPath(); g.ellipse(0, 0, 19 * s, 5.4 * s, 0, 0, TAU);
+    g.fillStyle = 'rgba(206,218,238,.92)'; g.fill();
+    g.beginPath(); g.ellipse(0, -3.4 * s, 8.6 * s, 5.2 * s, 0, Math.PI, TAU);
+    g.fillStyle = 'rgba(150,235,255,.8)'; g.fill();
+    for (let i = -2; i <= 2; i++) {
+      const on = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(now * 0.006 + i));
+      g.beginPath(); g.arc(i * 7 * s, 2.4 * s, 1.5 * s, 0, TAU);
+      g.fillStyle = 'rgba(255,107,44,' + on.toFixed(2) + ')'; g.fill();
+    }
+    g.globalAlpha = 1; g.restore();
+  }
+
+  // 彗星:慢速劃過,長離子尾
+  function condComet(now, a) {
+    const k = passK(now, 21000);
+    if (k < 0) return;
+    const x = -60 + (W + 120) * k;
+    const y = H * 0.1 + (H * 0.3) * k * k;
+    const fade = Math.sin(Math.PI * clamp01(k * 1.04)) * a;
+    const ang = Math.atan2(H * 0.6 * k / (W + 120) * 2, 1);
+    const len = (mobile ? 130 : 220) * (0.6 + 0.4 * Math.sin(Math.PI * k));
+    g.save(); g.globalAlpha = fade;
+    const tg = g.createLinearGradient(x, y, x - Math.cos(ang) * len, y - Math.sin(ang) * len);
+    tg.addColorStop(0, 'rgba(180,225,255,.5)');
+    tg.addColorStop(0.5, 'rgba(150,190,255,.14)');
+    tg.addColorStop(1, 'rgba(150,190,255,0)');
+    g.strokeStyle = tg; g.lineWidth = 3.2; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(x, y);
+    g.lineTo(x - Math.cos(ang) * len, y - Math.sin(ang) * len); g.stroke();
+    const hg = g.createRadialGradient(x, y, 0, x, y, 16);
+    hg.addColorStop(0, 'rgba(232,244,255,.9)');
+    hg.addColorStop(1, 'rgba(232,244,255,0)');
+    g.fillStyle = hg; g.beginPath(); g.arc(x, y, 16, 0, TAU); g.fill();
+    g.globalAlpha = 1; g.restore();
+  }
+
+  const COND_FN = {
+    aurora: condAurora, shimmer: condShimmer, galaxy: condGalaxy, clouds: condClouds,
+    moon: condMoon, station: condStation, saucer: condSaucer, comet: condComet
+  };
+
+  function drawCond(now, front) {
+    if (reduced) return;
+    const c = CONDS[condI];
+    if (!c || !!c.front !== !!front) return;
+    condIn = Math.min(1, condIn + 0.012);            // 換天象時淡入,不要硬切
+    const fn = COND_FN[c.id];
+    if (fn) { try { fn(now, condIn); } catch (e) { condErr = c.id + ": " + (e && (e.message || e)); } }
+  }
+
   function frame(now) {
     if (!visible || !W || !bgSky) return;
     T = now;
@@ -1265,10 +1544,12 @@ export function mountBlogHero() {
     g.drawImage(bgSky, 0, 0, W, H);
     drawNebula();
     drawAirglow();
+    drawCond(now, false);
     drawFar(layers[0]);
     drawLayer(layers[1]);
     drawPlanet();
     drawLayer(layers[2]);
+    drawCond(now, true);
 
     if (!reduced) runShow(now);
 
@@ -1439,6 +1720,7 @@ export function mountBlogHero() {
       doneAt = 0;
       doneAtXY = null;
       scope.aim = -1.3;
+      setCond(condI + 1 + ((Math.random() * (CONDS.length - 1)) | 0), now);   // 換一種天象:互動要有看得見的後果
       dirty = true;
     }
   }
@@ -1581,6 +1863,7 @@ export function mountBlogHero() {
   }, { rootMargin: '80px' });
 
   layout();
+  setCond(condI, performance.now());        // 進站隨機抽一種天象
   showNext = performance.now() + SHOW_FIRST;
   ctx.onFrame(frame);
   frame(performance.now());
@@ -1599,7 +1882,11 @@ export function mountBlogHero() {
       nextIn: Math.round(showNext - T)
     }),
     play: (i) => { if (reduced) return false; startShow(((i | 0) % SHOWS.length + SHOWS.length) % SHOWS.length, performance.now()); return true; },
-    hush: () => { if (show) endShow(performance.now()); showNext = Infinity; return true; }
+    hush: () => { if (show) endShow(performance.now()); showNext = Infinity; return true; },
+    cond: () => CONDS[condI].id,
+    setCond: (i) => { setCond(i, performance.now()); return CONDS[condI].id; },
+    conds: () => CONDS.map((c) => c.id),
+    condErr: () => condErr
   };
 
   return () => {

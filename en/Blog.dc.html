@@ -70,6 +70,9 @@ html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
 .bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
 .bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
+.bl-sky{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font:600 11.5px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,239,232,.32)}
+.bl-sky b{font-weight:700;color:rgba(242,239,232,.6);letter-spacing:.1em}
+.bl-sky i{width:5px;height:5px;border-radius:50%;background:rgba(242,239,232,.28)}
 .bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
 .bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
 @keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
@@ -124,7 +127,7 @@ html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap
 <dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
 
 <main id="pq-main" data-screen-label="Insights">
-  <header class="bl-head" data-immersive data-blog-sky data-hint="Tap anywhere to connect the stars" data-stars="stars" data-done="Observation logged" data-log="Observation log" data-orion="Orion" data-peak="PEAKQI">
+  <header class="bl-head" data-immersive data-blog-sky data-hint="Tap anywhere to connect the stars" data-stars="stars" data-conds="Aurora|Shimmer|Milky Way drift|Cloud break|Moonrise|Ring station|Saucer pass|Comet" data-done="Observation logged" data-log="Observation log" data-orion="Orion" data-peak="PEAKQI">
     <canvas tabindex="0" role="button" aria-label="Interactive night sky: tap or press Enter to observe a star; six of them complete one observation"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">
@@ -132,6 +135,7 @@ html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap
       <h1>Insights</h1>
       <p>Notes on AI adoption, workflow automation and customer operations — what we actually built, and what we ran into while building it.</p>
       <span class="bl-hint" data-sky-hint>Tap anywhere to connect the stars</span>
+      <span class="bl-sky"><i aria-hidden="true"></i>Tonight · <b data-sky-cond></b></span>
     </div>
     <div class="bl-scroll" aria-hidden="true">
       <span class="t">Scroll · all insights</span>

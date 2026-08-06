@@ -41,6 +41,8 @@ const UI = {
     skyHint: '點畫面任一處,把星星連成星座', skyStars: '顆',
     skyAria: '互動式星空:點畫面或按 Enter 觀測一顆星星,連滿六顆完成一次觀測',
     skyDone: '觀測完成', skyLog: '觀測紀錄', skyScroll: '往下讀 · 觀點列表',
+    skyTonight: '今夜天象',
+    skyConds: ['極光', '波光粼粼', '流動銀河', '雲隙', '月出', '環形太空站', '飛碟掠過', '彗星'],
     // 星空自走演出的字卡:獵戶座連完之後才報出名字;彩蛋那段的署名
     skyOrion: '獵戶座', skyPeak: '奇鋒',
     all: '全部', back: '回到觀點', mins: '分鐘閱讀', empty: '這個標籤下還沒有文章。',
@@ -58,6 +60,8 @@ const UI = {
     skyHint: 'Tap anywhere to connect the stars', skyStars: 'stars',
     skyAria: 'Interactive night sky: tap or press Enter to observe a star; six of them complete one observation',
     skyDone: 'Observation logged', skyLog: 'Observation log', skyScroll: 'Scroll · all insights',
+    skyTonight: 'Tonight',
+    skyConds: ['Aurora', 'Shimmer', 'Milky Way drift', 'Cloud break', 'Moonrise', 'Ring station', 'Saucer pass', 'Comet'],
     skyOrion: 'Orion', skyPeak: 'PEAKQI',
     all: 'All', back: 'Back to Insights', mins: 'min read', empty: 'No posts under this tag yet.',
     related: 'Read next', skip: 'Skip to main content', updated: 'Updated',
@@ -228,6 +232,9 @@ const INDEX_CSS = `
 .bl-head .k{font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.26em;color:#FF6B2C}
 .bl-head h1{margin:12px 0 0;font:900 clamp(2.05rem,5.2vw,3.5rem)/1.18 'Noto Sans TC',sans-serif;letter-spacing:-.02em;color:#F2EFE8}
 .bl-head p{margin:16px 0 0;max-width:48ch;font:400 clamp(.95rem,1.5vw,1.06rem)/1.8 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.7)}
+.bl-sky{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font:600 11.5px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,239,232,.32)}
+.bl-sky b{font-weight:700;color:rgba(242,239,232,.6);letter-spacing:.1em}
+.bl-sky i{width:5px;height:5px;border-radius:50%;background:rgba(242,239,232,.28)}
 .bl-hint{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font:500 12.5px 'Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(242,239,232,.46)}
 .bl-hint::before{content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#FF6B2C;animation:pqBlink 2.4s ease-in-out infinite}
 @keyframes pqBlink{0%,100%{opacity:.22}50%{opacity:1}}
@@ -450,7 +457,7 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
 
   const body = `
 <main id="pq-main" data-screen-label="${esc(u.idxTitle)}">
-  <header class="bl-head" data-immersive data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}" data-orion="${esc(u.skyOrion)}" data-peak="${esc(u.skyPeak)}">
+  <header class="bl-head" data-immersive data-blog-sky data-hint="${esc(u.skyHint)}" data-stars="${esc(u.skyStars)}" data-conds="${esc(u.skyConds.join('|'))}" data-done="${esc(u.skyDone)}" data-log="${esc(u.skyLog)}" data-orion="${esc(u.skyOrion)}" data-peak="${esc(u.skyPeak)}">
     <canvas tabindex="0" role="button" aria-label="${esc(u.skyAria)}"></canvas>
     <div class="bl-scrim" aria-hidden="true"></div>
     <div class="bl-headin">
@@ -458,6 +465,7 @@ ${usedTags.map((t) => `  <button type="button" class="bl-chip" data-tag="${t}" a
       <h1>${esc(u.idxTitle)}</h1>
       <p>${esc(u.idxLede)}</p>
       <span class="bl-hint" data-sky-hint>${esc(u.skyHint)}</span>
+      <span class="bl-sky"><i aria-hidden="true"></i>${esc(u.skyTonight)} · <b data-sky-cond></b></span>
     </div>
     <div class="bl-scroll" aria-hidden="true">
       <span class="t">${esc(u.skyScroll)}</span>
