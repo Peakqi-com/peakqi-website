@@ -62,8 +62,8 @@ const MOTION = [
   { id: 'screwdriver_left', pivot: [1193, 500], sway: 2.0, per: 3.3, ph: 3.4 },
   { id: 'screwdriver_right', pivot: [1233, 499], sway: 2.1, per: 4.9, ph: 5.1 },
   // 盆栽:從土面搖。這是全場最該動的東西 —— 有風的時候人先看植物。
+  // 層架上那盆小的沒有單獨一層(美術把它和層架、箱子畫在同一層),所以它不動。
   { id: 'left_plant', pivot: [284, 757], sway: 3.2, per: 5.5, ph: 0.7 },
-  { id: 'shelf_plant', pivot: [970, 456], sway: 2.8, per: 4.6, ph: 2.6 },
   // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)
   { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2, lit: [938, 616, 76, 52] },
   // 馬克杯:繞杯底
@@ -94,6 +94,9 @@ const CLOUDS = [
   { id: 'cloud_1', sp: 7.4 },
   { id: 'cloud_2', sp: 3.6 },
 ];
+/** 唯一「畫在會動的層前面」的不動層:右上那排層架蓋到海報一角。海報會抖,所以它
+ *  不能烤進底板 —— 底板在會動的層後面,層架會被海報蓋掉。 */
+const FRONT = 'front_shelf';
 
 /** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
  *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上疊亮就好,
@@ -170,6 +173,7 @@ export function createRoom(root, {
     return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
   }).join('')}</g>
 ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}</g>`).join('\n')}
+${img(`${BASE}parts/${FRONT}.webp`, PART_BOX[FRONT])}
 
 <!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
      矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
