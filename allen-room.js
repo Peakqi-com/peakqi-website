@@ -21,7 +21,7 @@
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
-import { PART_BOX } from './allen-room-parts.js';
+import { PART_BOX, SKY_MASK } from './allen-room-parts.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const r1 = (n) => Math.round(n * 10) / 10;
@@ -64,6 +64,15 @@ const PARTS = MOTION.map((m) => {
 
 /** 可以戳的地方。多數就是元件本身;window 沒有對應的切片(窗景是畫死在底板上的),
  *  所以「起風」不是去動窗戶,而是讓場上所有植物與吊掛工具一起被吹 —— 用真的東西表達風。 */
+/** 窗外的雲。它們不是套件裡的元件 —— 是產生器自己從天空分出來的(平塗白雲配平滑
+ *  漸層的天空最好分,雲後面的天空用只從天空取樣的擴散補)。三朵各自漂,速度不同。
+ *  漂出畫面右邊就繞回左邊;圓窗被畫面左緣切掉,所以從左邊進場是自然的。 */
+const CLOUDS = [
+  { id: 'cloud_0', sp: 5.2, from: -190 },
+  { id: 'cloud_1', sp: 7.4, from: -150 },
+  { id: 'cloud_2', sp: 3.6, from: -130 },
+];
+
 /** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
  *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上用 screen 混合疊亮就好,
  *  零新增檔案、零額外請求,而且亮的一樣是原稿畫的那面螢幕。 */
@@ -114,6 +123,14 @@ export function createRoom(root, {
   // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
   back.innerHTML = `
 <image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
+<image data-r="stage-off" href="" x="0" y="0" width="${CANVAS}" height="${CANVAS}" opacity="0"/>
+<defs><mask id="sky${uid}" maskUnits="userSpaceOnUse"><image href="${BASE}sky-mask.webp" x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}"/></mask></defs>
+<g mask="url(#sky${uid})">${CLOUDS.map((c) => {
+    const b = PART_BOX[c.id];
+    if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
+    return `<g data-r="${c.id}"><image href="${BASE}parts/${c.id}.webp" x="${b[0]}" y="${b[1]}"`
+      + ` width="${b[2]}" height="${b[3]}"/></g>`;
+  }).join('')}</g>
 ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
     p.lit
       // 「亮」不是另外畫光,是把這個物件自己的像素再疊一次(screen 混合)。
@@ -159,6 +176,8 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   const dim = q('dim');
   const warm = q('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, q(w.id)]));
+  const cloudEl = CLOUDS.map((c) => ({ ...c, el: q(c.id), x: c.from + rand() * 300 }));
+  const offImg = q('stage-off');
 
   // ---- 命中範圍:只有這幾塊收指標事件 ----
   hits.style.pointerEvents = 'none';
@@ -202,13 +221,24 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
 
   const ACT = {
     window: () => gust(1),
-    lamp: () => { lampOn = !lampOn; kick.lamp = 0.8; },
+    lamp: () => { lampOn = !lampOn; kick.lamp = 0.8; loadOff(); },
     mug: () => { kick.mug = 1.6; },
     poster: () => { flapT = 0; },
     console: () => { screenT = 0; press.red_button = 0; },
     tools: () => { ['wrench_left', 'wrench_right', 'screwdriver_left', 'screwdriver_right']
       .forEach((id, i) => { kick[id] = 1.5 - i * 0.15; }); },
   };
+  // 關燈版底板只有真的關燈時才載,平常不佔重量
+  let offReady = false, offLoading = false;
+  function loadOff() {
+    if (offReady || offLoading) return;
+    offLoading = true;
+    const pre = new Image();
+    pre.onload = () => { offImg.setAttribute('href', BASE + 'stage-off.webp'); offReady = true; };
+    pre.onerror = () => { offLoading = false; };     // 載不到就退回疊漸層
+    pre.src = BASE + 'stage-off.webp';
+  }
+
   function poke(k) {
     const s = SPOTS.find((x) => x.k === k);
     if (!s) return;
@@ -251,6 +281,12 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
     for (const k in press) if (press[k] >= 0) { press[k] += dt; if (press[k] > 0.5) press[k] = -1; }
     for (const k in kick) kick[k] *= Math.exp(-dt * 1.15);      // 被吹過之後慢慢平靜下來
     lampT += ((lampOn ? 1 : 0) - lampT) * clamp(dt * 6, 0, 1);
+    // 陣風的時候雲也跑快一點 —— 風是同一陣風
+    const windMul = gustT >= 0 ? 1 + 2.0 * Math.sin((gustT / 3.2) * Math.PI) : 1;
+    for (const c of cloudEl) {
+      c.x += c.sp * windMul * dt;
+      if (c.x > 340) c.x = c.from - rand() * 90;
+    }
 
     // ═══ 只在 12 格/秒的格子邊界重畫 ═══
     if (!fs.step(dt)) return;
@@ -291,6 +327,11 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
       + (screenT >= 0 ? 0.42 * Math.exp(-screenT * 2.6) * (Math.floor(screenT * 9) % 2 ? 0.55 : 1) : 0);
     if (litEl.screen) litEl.screen.setAttribute('opacity', r2(clamp(boost, 0, 0.6)));
 
+    // 窗外的雲:各自漂,漂出右邊就繞回左邊
+    for (const c of cloudEl) {
+      c.el.setAttribute('transform', `translate(${r1(c.x)},0)`);
+    }
+
     // 底板自己會亮的三個地方:各自用不同的週期呼吸,機台燈條被點名時連閃
     for (const w of GLOW) {
       let o = w.amp * (0.55 + 0.45 * Math.sin(T * (6.283 / w.per) + w.ph));
@@ -307,7 +348,10 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
     const lampLit = lampT * breathe * flick;
     if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.42));
     warm.setAttribute('opacity', r2(lampLit * 0.5));
-    dim.setAttribute('opacity', r2((1 - lampT) * 0.26));
+    // 關燈:整張底板換成「減掉檯燈暖光」的那一張,而不是疊一層灰。
+    // 疊漸層只會讓畫面變髒;換底板是整個房間的光真的變了。
+    if (offReady) offImg.setAttribute('opacity', r2(1 - lampT));
+    else dim.setAttribute('opacity', r2((1 - lampT) * 0.26));
     g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
   });
 
