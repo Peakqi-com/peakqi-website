@@ -17,11 +17,17 @@ export const PART_BOX = {
   'cloud_0': [-125, 137, 290, 98],
   'cloud_1': [121, 229, 297, 120],
   'cloud_2': [222, 412, 124, 59],
+  'city_light_0': [17, 359, 243, 171],
+  'city_light_1': [14, 282, 97, 274],
+  'city_light_2': [24, 319, 31, 320],
   'front_shelf': [1070, 216, 184, 203],
 };
 
 // 雲的可見範圍 = 天空那一層減掉城市。窗框與每一棟建築都會確實擋住雲。
 export const SKY_MASK = [0, 63, 295, 592];
+
+// 夜裡會亮起來的城市窗格。分三組各閃各的 —— 整座一起明滅會像在呼吸。
+export const CITY_LIGHTS = ['city_light_0', 'city_light_1', 'city_light_2'];
 
 // 有分級圖的時段。白天就是原圖,所以它不會有 m/s 兩張。
 export const GRADE_TIMES = ['day', 'dusk', 'night'];

@@ -74,6 +74,10 @@ export function mountAllenAvatar() {
   let cur = -1, act = null, dead = false;
   const fallbackHtml = stage.innerHTML;   // 靜態機器人:載入失敗時還原
 
+  // 右下角的四顆切換點目前不出場 —— 卡片只演第一幕(Allen 在他的工作間)。
+  // 其他三幕的程式還在(?allenact=2..4 可以叫出來驗收),只是不給入口:
+  // 團隊卡上多一組控制項會把注意力從角色身上帶走。
+  const SHOW_DOTS = false;
   // 切換點(右下四顆):目前幕亮橘。第一幕的背景是亮的,所以整組點加一層深色底,
   // 不然白邊的空心點在白牆上會直接消失。
   const dots = document.createElement('div');
@@ -112,13 +116,18 @@ export function mountAllenAvatar() {
     cur = i;
     paintDots();
     stage.innerHTML = '';
-    stage.appendChild(dots);
+    if (SHOW_DOTS) stage.appendChild(dots);
     import(ACTS[i])
       .then((m) => {
         if (dead || cur !== i) return;
         act = m.createAct(stage, api);
       })
-      .catch(() => { if (!dead && cur === i) { stage.innerHTML = fallbackHtml; stage.appendChild(dots); } });
+      .catch(() => {
+        if (!dead && cur === i) {
+          stage.innerHTML = fallbackHtml;
+          if (SHOW_DOTS) stage.appendChild(dots);
+        }
+      });
   }
   // 開場固定第一幕(Allen 本人);?allenact=1..4 供驗收指定
   let first = 0;

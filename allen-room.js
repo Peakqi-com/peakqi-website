@@ -34,7 +34,7 @@
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
-import { PART_BOX, SKY_MASK, GRADE_TIMES, GRADE_OFF } from './allen-room-parts.js';
+import { PART_BOX, SKY_MASK, GRADE_TIMES, GRADE_OFF, CITY_LIGHTS } from './allen-room-parts.js';
 import { GRADE_BASE, TIMES, pickTime } from './allen-sky.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -97,6 +97,22 @@ const CLOUDS = [
 /** 唯一「畫在會動的層前面」的不動層:右上那排層架蓋到海報一角。海報會抖,所以它
  *  不能烤進底板 —— 底板在會動的層後面,層架會被海報蓋掉。 */
 const FRONT = 'front_shelf';
+
+/** 夜裡窗外城市的窗格會亮起來。**不是霓虹** —— 建築在分級圖裡已經被壓成剪影,
+ *  這一層才是「窗戶裡面有光」:貼的是原稿畫的那面藍窗自己的像素,screen 疊上去。
+ *  分三組各閃各的,整座城市一起明滅會像在呼吸,不像有人在裡面。
+ *  只有夜裡出場(乘上夜晚的權重)。 */
+const CITY = CITY_LIGHTS.map((id, i) => ({ id, per: 6.5 + i * 2.9, ph: i * 2.1 }));
+
+/** 夜空:星星與月亮。
+ *
+ *  這是全檔唯一「原稿裡沒有、我們自己畫」的東西 —— 因為原稿只畫了白天,夜空是空的。
+ *  兩個都畫在天空的遮罩裡,所以窗框與每一棟建築都會確實擋住它們;而且只有夜裡出場
+ *  (乘上夜晚的權重),白天與黃昏完全不存在。
+ *
+ *  星星的位置用固定的亂數種子生,每次重新整理都一樣 —— 星空不該每次都換一張。 */
+const STARS = 34;
+const MOON = { r: 26, x: 196, lo: 585, hi: 96, per: 260 };   // 從天際線後面慢慢升上來
 
 /** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
  *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上疊亮就好,
@@ -167,7 +183,8 @@ export function createRoom(root, {
   back.innerHTML = `
 <image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
 <defs><mask id="sky${uid}" maskUnits="userSpaceOnUse"><image href="${BASE}sky-mask.webp" x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}"/></mask></defs>
-<g mask="url(#sky${uid})">${CLOUDS.map((c) => {
+<g mask="url(#sky${uid})">
+${CLOUDS.map((c) => {
     const b = PART_BOX[c.id];
     if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
     return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
@@ -215,8 +232,47 @@ ${LITP.map((p) => `<g data-r="l_${p.id}">${
       ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" opacity="0"')
       : `<g mask="url(#sm${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
           ' data-lit="1" opacity="0"')}</g>`}</g>`).join('')}
+<!-- 夜空:星星與月亮。放在發光層不是幾何層 —— 幾何層在天色分級之下,
+     白色的月亮會被夜晚的 multiply 壓成夜空色(× 0.14),等於看不見。
+     這一層是 screen 而且在分級之上,月亮才會是月亮。
+     套的是同一個天空遮罩,所以窗框與每一棟建築都會確實擋住它們。 -->
+<g mask="url(#sky${uid})">
+<defs><radialGradient id="moon${uid}">
+  <stop offset="0" stop-color="#F4F7FF"/><stop offset="62%" stop-color="#DCE6FF"/>
+  <stop offset="100%" stop-color="#C3D2F5"/></radialGradient>
+<radialGradient id="halo${uid}">
+  <stop offset="0" stop-color="#CFE0FF" stop-opacity=".55"/>
+  <stop offset="45%" stop-color="#B9CEF5" stop-opacity=".18"/>
+  <stop offset="100%" stop-color="#A8C0EE" stop-opacity="0"/></radialGradient></defs>
+<g data-r="sky-night" opacity="0">
+  <g data-r="moon"><circle data-r="moon-halo" r="${MOON.r * 3.2}" fill="url(#halo${uid})"/>
+  <circle r="${MOON.r}" fill="url(#moon${uid})"/></g>
+  <g data-r="stars">${(() => {
+    // 固定種子的亂數:星空每次重新整理都要一樣
+    let sd = 20260808;
+    const rnd = () => (sd = (sd * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    let out = '';
+    for (let i = 0; i < STARS; i++) {
+      const x = r1(SKY_MASK[0] + rnd() * SKY_MASK[2]);
+      const y = r1(SKY_MASK[1] + rnd() * SKY_MASK[3] * 0.72);
+      out += `<circle data-s="${i}" cx="${x}" cy="${y}" r="${r1(3.4 + rnd() * 2.8)}" fill="#EAF2FF"/>`;
+    }
+    return out;
+  })()}</g>
+</g>
+</g>
+${CITY.map((c) => `<g data-r="${c.id}" opacity="0">${img(`${BASE}parts/${c.id}.webp`, PART_BOX[c.id])}</g>`).join('')}
 ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">`
   + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/></g>`).join('')}
+
+<!-- 月光從窗口灑進房間。和檯燈的暖光同一種做法(軟邊放射漸層),只是冷的,
+     而且只有夜裡出場;月亮升得越高,灑進來的越多。 -->
+<defs><radialGradient id="moonlit${uid}">
+  <stop offset="0" stop-color="#BBD2FF" stop-opacity=".5"/>
+  <stop offset="55%" stop-color="#9FBCF2" stop-opacity=".18"/>
+  <stop offset="100%" stop-color="#8FAEE8" stop-opacity="0"/>
+</radialGradient></defs>
+<ellipse data-r="moonlit" cx="150" cy="620" rx="430" ry="380" fill="url(#moonlit${uid})" opacity="0"/>
 
 <!-- 檯燈點亮的那一圈暖光。它是光不是物件,所以用軟邊放射漸層;矩形會留一條看得見的直邊。 -->
 <defs><radialGradient id="warm${uid}">
@@ -276,6 +332,13 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   const dim = q('dim');
   const warm = ql('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
+  const cityEl = CITY.map((c) => ({ ...c, el: ql(c.id), blink: -1 }));
+  const skyNight = ql('sky-night');
+  const moonG = ql('moon');
+  const starEls = [...lit.querySelectorAll('[data-s]')];
+  const moonlit = ql('moonlit');
+  // 每顆星的閃法都不一樣,不然會像整片一起眨眼
+  const starPh = starEls.map((_, i) => ({ per: 2.1 + (i % 7) * 0.83, ph: (i * 2.399) % 6.283 }));
   // 每朵雲的行程由它自己的貼圖框算:從「整朵在窗戶左外」飄到「整朵出了窗戶右緣」。
   // 寫死一個範圍的話,靠右邊的那朵大半輩子都在畫面外。
   const cloudEl = CLOUDS.map((c) => {
@@ -482,6 +545,38 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
         o = (Math.floor(ledT * 11) % 2 ? 0.06 : 0.62) * Math.exp(-ledT * 1.2);
       }
       glowEl[w.id].setAttribute('opacity', r2(clamp(o, 0, 0.7)));
+    }
+
+    // 夜空:星星閃、月亮慢慢升。月亮升得越高,灑進房間的月光越多。
+    skyNight.setAttribute('opacity', r2(tw.night));
+    if (tw.night > 0.01) {
+      const u = (T % MOON.per) / MOON.per;                 // 一輪 260 秒
+      const my = MOON.lo + (MOON.hi - MOON.lo) * u;
+      moonG.setAttribute('transform', `translate(${MOON.x},${r1(my)})`);
+      for (let i = 0; i < starEls.length; i++) {
+        const p = starPh[i];
+        starEls[i].setAttribute('opacity',
+          r2(0.35 + 0.45 * Math.sin(T * (6.283 / p.per) + p.ph)));
+      }
+      // 月亮還在天際線後面的時候幾乎沒有月光,升上來才慢慢灑進房間
+      const h = clamp((MOON.lo - my) / (MOON.lo - MOON.hi), 0, 1);
+      moonlit.setAttribute('opacity', r2(tw.night * (0.18 + 0.62 * h)));
+    } else {
+      moonlit.setAttribute('opacity', '0');
+    }
+
+    // 窗外城市的窗:各組各自慢慢明滅,偶爾有一格「熄一下又亮起來」——
+    // 那是裡面有人的感覺。白天與黃昏完全不出場。
+    for (const c of cityEl) {
+      let o = 0.52 + 0.26 * Math.sin(T * (6.283 / c.per) + c.ph);
+      if (c.blink >= 0) {
+        c.blink += dt;
+        if (c.blink > 1.1) c.blink = -1;
+        else o *= (Math.floor(c.blink * 7) % 2 ? 0.22 : 1);
+      } else if (rand() < dt * 0.09) {
+        c.blink = 0;
+      }
+      c.el.setAttribute('opacity', r2(clamp(o * tw.night, 0, 1)));
     }
 
     // 檯燈:亮著的時候燈罩自己發亮、桌面有一圈暖光,兩者一起呼吸。

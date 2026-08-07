@@ -5,7 +5,8 @@
 | `workshop.webp` | `assets/svg/robot_removed_web_background.svg` 裡內嵌的 PNG | 第一幕的背景 |
 | `turnaround.webp` | `assets/svg/robot_turnaround_8_views_exact.svg` 裡內嵌的 PNG | 轉身那一段的六格精靈圖 |
 | `room/stage.webp` | 原圖 + 重畫的空房間 | 房間底板(挖掉會動的元件與雲) |
-| `room/parts/*.webp` | 差異遮罩切出來 | 12 個會動的元件 + 3 朵完整的雲 |
+| `room/parts/*.webp` | 手工拆好的圖層 | 11 個會動的元件 + 3 朵完整的雲 + 前景層架 |
+| `room/parts/city_light_*.webp` | 窗格自己的像素 | 夜裡城市的窗會亮起來,分三組各閃各的 |
 | `room/sky-mask.webp` | 原圖看得到天空的地方 | 雲的可見範圍遮罩(窗緣是軟的、建築輪廓是硬的) |
 | `room/grade/<時段>-m.webp` | 打光運算 | 天色:multiply 那一層(壓暗) |
 | `room/grade/<時段>-s.webp` | 同上 | 天色:screen 那一層(提亮,霓虹在這裡) |

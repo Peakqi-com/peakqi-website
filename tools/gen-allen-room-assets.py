@@ -143,11 +143,14 @@ TIMES = {
     'night': {
         'sky': [(40, (11, 18, 46)), (240, (14, 24, 58)), (420, (20, 32, 72)),
                 (560, (30, 46, 92)), (680, (40, 58, 104))],
-        # 明度區間 26–104,天空底部是 47,所以塔身浮得起來,內部還有 40 階的明暗差
-        'city_lo': 26, 'city_hi': 104, 'city_gamma': 1.15,
-        'city_cast': (188, 206, 255), 'city_sat': 0.42,
-        'neon_blue': (96, 214, 238), 'neon_blue_amt': 0.72,
-        'neon_red': (255, 132, 74), 'neon_red_amt': 0.70, 'bloom': 0.22,
+        # 夜裡的城市是「暗的建築 + 窗內有光」,不是霓虹。整片點成螢光色很醜,
+        # 而且那是把顏色蓋上去,不是打光。所以 neon 全部關掉(amt 0、bloom 0),
+        # 建築壓成剪影(明度 14–72,天空是 14–47,塔身還浮得起來),
+        # 窗格的光改成獨立的一張貼圖在網頁端疊亮 + 閃動,見 city_light_*。
+        'city_lo': 14, 'city_hi': 72, 'city_gamma': 1.25,
+        'city_cast': (188, 206, 255), 'city_sat': 0.30,
+        'neon_blue': (96, 214, 238), 'neon_blue_amt': 0.0,
+        'neon_red': (255, 132, 74), 'neon_red_amt': 0.0, 'bloom': 0.0,
         'tint': (0.415, 0.41, 0.50), 'amb': 0.68,
         'spill': (12, 22, 48), 'lamp': 1.45, 'room_off': True,
         # 夜裡檯燈是主光,它打到牆面再散回來的那一份要算進去,不然房間又黑又冷
@@ -557,6 +560,52 @@ def main():
               % (cid, im.width, im.height, boxes[cid][0], boxes[cid][1], sz, m.sum(), full.sum()))
     print('  元件共 %d bytes' % total)
 
+    # ---- 城市窗格的光:夜裡在網頁端疊亮並閃動 ----
+    # 分三組是為了讓它們各閃各的 —— 整座城市一起明滅會像在呼吸,不像有人在裡面。
+    # 貼圖用的是窗格自己的像素(原稿畫的那面藍窗),screen 疊上去就是「窗內有光」。
+    comp0 = place(layers, list(range(N_LAYERS)))
+    src0 = np.asarray(comp0.convert('RGB')).astype(float)
+    city0 = np.zeros((CANVAS, CANVAS), bool)
+    for i in CITY_L:
+        city0 |= alpha_of(layers, [i])
+    r0, b0 = src0[:, :, 0], src0[:, :, 2]
+    win = solid_blobs(city0 & (b0 - r0 > 60) & (b0 > 118), max_px=520)
+    groups = [np.zeros((CANVAS, CANVAS), bool) for _ in range(3)]
+    lab = np.zeros((CANVAS, CANVAS), np.int32)
+    nid = 0
+    for y0, x0 in zip(*np.nonzero(win)):
+        if lab[y0, x0]:
+            continue
+        nid += 1
+        q = deque([(y0, x0)])
+        lab[y0, x0] = nid
+        cells = []
+        while q:
+            y, x = q.popleft()
+            cells.append((y, x))
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < CANVAS and 0 <= nx < CANVAS and win[ny, nx] and not lab[ny, nx]:
+                    lab[ny, nx] = nid
+                    q.append((ny, nx))
+        gi = nid % 3
+        for y, x in cells:
+            groups[gi][y, x] = True
+    light_ids = []
+    for gi, gm in enumerate(groups):
+        if not gm.any():
+            continue
+        rgba = np.zeros((CANVAS, CANVAS, 4), 'uint8')
+        rgba[:, :, :3] = src0.astype('uint8')
+        rgba[:, :, 3] = (dilate(gm, 1) * 255).astype('uint8')
+        cid = 'city_light_%d' % gi
+        b, sz = crop_save(Image.fromarray(rgba, 'RGBA'), os.path.join(OUT, 'parts', cid + '.webp'))
+        boxes[cid] = b
+        total += sz
+        light_ids.append(cid)
+        print('  %-16s %3dx%-3d @(%4d,%4d) %6d bytes  %d 個窗格'
+              % (cid, b[2], b[3], b[0], b[1], sz, int(gm.sum())))
+
     # ---- 雲的可見範圍 = 天空那一層減掉城市 ----
     # 硬邊:窗框與每一棟建築都要確實擋住雲。上一版的窗口是擬合出來的圓,差 1–3px,
     # 所以得靠柔邊去藏;現在開口就是天空那一層的 alpha,精確到像素,硬邊才是對的。
@@ -612,12 +661,14 @@ def main():
              '// 每個元件的貼圖框 [x, y, w, h](1254×1254 座標)。雲的 x 可能是負的:',
              '// 補全出來的部分落在畫布外,雲飄進來才看得到。',
              'export const PART_BOX = {']
-    for k in list(MOVERS) + cloud_ids + ['front_shelf']:
+    for k in list(MOVERS) + cloud_ids + light_ids + ['front_shelf']:
         lines.append("  '%s': [%d, %d, %d, %d]," % (k, *boxes[k]))
     lines += ['};', '',
               '// 雲的可見範圍 = 天空那一層減掉城市。窗框與每一棟建築都會確實擋住雲。',
               'export const SKY_MASK = [%d, %d, %d, %d];'
               % (mb[0], mb[1], mb[2] - mb[0], mb[3] - mb[1]), '',
+              '// 夜裡會亮起來的城市窗格。分三組各閃各的 —— 整座一起明滅會像在呼吸。',
+              "export const CITY_LIGHTS = [%s];" % ', '.join("'%s'" % t for t in light_ids), '',
               '// 有分級圖的時段。白天就是原圖,所以它不會有 m/s 兩張。',
               "export const GRADE_TIMES = [%s];" % ', '.join("'%s'" % t for t in GRADE_TIMES), '',
               '// 有「關燈分級圖」的時段 —— 只有這幾個時段關燈會影響整個房間。',
