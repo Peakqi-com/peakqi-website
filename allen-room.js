@@ -69,7 +69,7 @@ const MOTION = [
   // off 是「熄掉之後要變灰」的範圍,收得更緊 —— 只有開口那一小塊。原稿是把燈畫成
   // 亮著的,所以關燈不能只是不加光,還要把那塊奶油色抽掉、壓成沒通電的灰。
   { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2,
-    lit: [938, 616, 76, 52], off: [948, 622, 36, 24] },
+    lit: [938, 616, 76, 52], off: [947, 623, 40, 24] },
   // 馬克杯:繞杯底
   { id: 'mug', pivot: [1012, 768], sway: 1.1, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
@@ -180,8 +180,25 @@ export function createRoom(root, {
     `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
   // 形狀由遮罩決定,所以這裡放大一圈的矩形就好
   const rect = (b, fill, mode) =>
-    `<rect x="${b[0] - 40}" y="${b[1] - 40}" width="${b[2] + 80}" height="${b[3] + 80}"`
+    `<rect x="${b[0] - 60}" y="${b[1] - 60}" width="${b[2] + 120}" height="${b[3] + 120}"`
     + ` fill="${fill}" style="mix-blend-mode:${mode}"/>`;
+  // 「熄掉」的範圍 = 軟邊橢圓 × 檯燈貼圖自己的明度。
+  // 兩層都必要:橢圓決定大概在哪裡,貼圖的明度決定「亮的地方才吃得到」——
+  // 燈罩開口與燈泡吃滿、灰色的鐘罩吃一點、深色的金屬臂幾乎不動,而貼圖以外
+  // 是全透明(明度 0),所以無論橢圓放多大都碰不到牆。這是四周不會出現光暈的保證。
+  // color-interpolation 要指定 sRGB:遮罩的明度預設在 linearRGB 算,各家瀏覽器不一致。
+  const softLit = (id, b, p) => {
+    const cx = r1(b[0] + b[2] / 2), cy = r1(b[1] + b[3] / 2);
+    return `<radialGradient id="og${id}${uid}">`
+      + '<stop offset="0" stop-color="#fff"/>'
+      + '<stop offset="74%" stop-color="#fff" stop-opacity=".96"/>'
+      + '<stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+      + `<mask id="ol${id}${uid}" maskUnits="userSpaceOnUse" color-interpolation="sRGB">`
+      + img(`${BASE}parts/${p.id}.webp`, p.box) + '</mask>'
+      + `<mask id="sm${id}${uid}" maskUnits="userSpaceOnUse" color-interpolation="sRGB">`
+      + `<g mask="url(#ol${id}${uid})"><ellipse cx="${cx}" cy="${cy}"`
+      + ` rx="${r1(b[2] * 0.62)}" ry="${r1(b[3] * 0.68)}" fill="url(#og${id}${uid})"/></g></mask>`;
+  };
 
   // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
   // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
@@ -193,13 +210,13 @@ export function createRoom(root, {
     if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
     return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
   }).join('')}</g>
-<defs>${PARTS.filter((p) => p.off).map((p) => soft('off' + p.id, p.off)).join('')}</defs>
+<defs>${PARTS.filter((p) => p.off).map((p) => softLit('off' + p.id, p.off, p)).join('')}</defs>
 ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
     // 熄掉的燈罩:先把顏色抽掉(saturation 混合 —— 對本來就是灰的牆面是零作用,
     // 所以不會在四周留下光暈),再壓暗一點,那是沒通電的金屬該有的樣子。
     // 兩層都在檯燈自己的群組裡,燈晃的時候會跟著晃。
     p.off ? `<g data-r="dark_${p.id}" mask="url(#smoff${p.id}${uid})" opacity="0">`
-      + rect(p.off, '#8A8D93', 'saturation') + rect(p.off, '#C6CAD1', 'multiply')
+      + rect(p.off, '#8A8D93', 'saturation') + rect(p.off, '#E2E5EA', 'multiply')
       + '</g>' : ''}</g>`).join('\n')}
 
 <!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
@@ -505,7 +522,10 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     // 桌面那一圈暖光只在夜裡出場。它半徑 250(卡片上約 60px),白天跟著開關進出
     // 就是一團忽明忽暗的光暈 —— 白天房間本來就亮,桌上那圈光原稿早就畫好了。
     warm.setAttribute('opacity', r2(lampLit * 0.62 * tw.night));
-    g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
+    // 關燈的樣子只做在燈罩上(上面那兩層 saturation + multiply)。
+    // 這裡以前是 g.lamp.style.opacity = 0.72 + lampT*0.28 —— 那是錯的:整支燈變成
+    // 半透明,底板上被挖掉檯燈的那塊修補痕就從燈身透出來,燈看起來糊糊的、四周
+    // 還帶一圈暗邊。要暗的是「光」不是「不透明度」。
     if (darkEl.lamp) darkEl.lamp.setAttribute('opacity', r2(1 - lampT));
     paintGrade();
   });
