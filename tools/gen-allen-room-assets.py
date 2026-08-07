@@ -75,6 +75,10 @@ except ImportError:                                    # pragma: no cover
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SVG = os.path.join(ROOT, 'assets/svg/test.svg')
+# 原稿。拆解難免會掉東西(窗口的天空層沒接到窗框、海報上的 BUILD 整個不見),
+# 所以最後有一道「拿原稿補回來」——來源是美術自己的畫,補不出新東西。
+SRC_REF = os.path.join(ROOT, 'assets/svg/robot_workshop_strict_source_package',
+                       'source_original_embedded.png')
 OUT = os.path.join(ROOT, 'assets/allen/room')
 JS_OUT = os.path.join(ROOT, 'allen-room-parts.js')
 CANVAS = 1254
@@ -110,6 +114,15 @@ CLOUD_PAD = 200        # 補全要有空間:雲在 x=0 被切,補出來的部分
 # 唯一「畫在會動的層前面」的不動層:右上那排層架蓋到海報一角(量到 520 px)。
 FRONT = [11]
 SKY_L, CITY_L = 2, [3, 4, 5, 34]     # 天空;城市(遠塔 / 樹 / 圓頂 / 高塔)
+
+# 疊圖順序。**不是** 00→39:轉檔工具把窗景那一組排錯了,照編號疊的話
+#   · 雲會蓋掉左側高塔(量到 3577 px,佔塔身 22%)
+#   · 圓頂建築會蓋掉灌木叢(891/1523 px,58%)
+#   · 天空會蓋掉窗框的內圈
+# 正確的是「天空 → 雲 → 塔 → 灌木 → 窗框」,其餘維持編號順序。
+ORDER = [0, 2] + [36, 37, 38, 39] + [34, 3, 5, 4, 1] + [i for i in range(6, 36) if i != 34]
+
+REPAIR_T = 40        # 和原稿差這麼多以上就補回來(三通道相加)
 
 LAMP = {'x': 975, 'y': 648, 'r': 340, 'amount': 0.30, 'warm': (1.0, 0.80, 0.52)}
 WIN = {'x': 96, 'y': 372, 'rx': 760, 'ry': 700}     # 窗光灑進室內的範圍
@@ -292,9 +305,10 @@ def load_layers():
 
 
 def place(layers, ids):
-    """把幾層疊成一張整幅的 RGBA(依編號順序,也就是原本的疊圖順序)。"""
+    """把幾層疊成一張整幅的 RGBA,依 ORDER 的順序(不是編號順序,見上面的註解)。"""
     o = Image.new('RGBA', (CANVAS, CANVAS), (0, 0, 0, 0))
-    for i in sorted(ids):
+    ids = [i for i in ORDER if i in set(ids)]
+    for i in ids:
         im, x, y = layers[i]
         t = Image.new('RGBA', (CANVAS, CANVAS), (0, 0, 0, 0))
         t.paste(im, (x, y))
@@ -304,6 +318,27 @@ def place(layers, ids):
 
 def alpha_of(layers, ids):
     return np.asarray(place(layers, ids))[:, :, 3] > 10
+
+
+def repair(img, keep, src, label, force=None):
+    """拆解掉的東西,用原稿補回來。
+
+    只在 keep 之內動手,而且只補「和原稿差 REPAIR_T 以上」的像素 —— 來源是美術
+    自己的畫,所以補不出新東西。實際救回來的:窗口天空層沒接到窗框而露出的那一圈牆
+    (49k px),還有海報上整個不見的 BUILD 字(2.7k px)。"""
+    a = np.asarray(img).astype(float)
+    d = np.abs(a[:, :, :3] - src).sum(2)
+    # 外擴 2px 再夾回 keep:硬門檻的邊界會留一條鋸齒(窗框內圈那一圈看得到)
+    m = dilate(keep & (d > REPAIR_T), 2) & keep
+    if force is not None:
+        m |= force & keep
+    if m.any():
+        out = np.asarray(img).copy()
+        out[:, :, :3][m] = src[m].astype('uint8')
+        out[:, :, 3][m] = 255
+        print('    修補 %-12s %6d px' % (label, int(m.sum())))
+        return Image.fromarray(out, 'RGBA')
+    return img
 
 
 def crop_save(img, path, q=93):
@@ -460,12 +495,22 @@ def main():
         sys.exit('找不到拆好的圖層:' + SVG)
     layers = load_layers()
     print('讀到 %d 層' % len(layers))
+    src_ref = np.asarray(Image.open(SRC_REF).convert('RGB')).astype(float)
     used = {i for v in MOVERS.values() for i in v} | set(CLOUDS) | set(FRONT)
     os.makedirs(os.path.join(OUT, 'parts'), exist_ok=True)
     os.makedirs(os.path.join(OUT, 'grade'), exist_ok=True)
 
     # ---- 底板 = 空房間 + 所有不會動的層 ----
     plate_rgba = place(layers, [i for i in range(N_LAYERS) if i not in used])
+    # 會動的東西不能補進底板(會變兩份),其餘缺的都拿原稿補回來
+    moving = np.zeros((CANVAS, CANVAS), bool)
+    for ids in list(MOVERS.values()) + [[i] for i in CLOUDS] + [FRONT]:
+        moving |= alpha_of(layers, ids)
+    # 窗框與天空的交界整條直接用原稿:兩層的 alpha 在那裡對不齊,差幾階但看得到
+    # 一條鋸齒(門檻補不到,因為色差不夠大)。
+    sky0 = alpha_of(layers, [SKY_L])
+    rim = dilate(sky0, 7) & ~erode(sky0, 7)
+    plate_rgba = repair(plate_rgba, ~dilate(moving, 3), src_ref, '底板', force=rim)
     if (np.asarray(plate_rgba)[:, :, 3] < 250).mean() > 0.001:
         sys.exit('底板有透明的地方 —— 空房間那一層沒有蓋滿整張畫布')
     plate_rgba.convert('RGB').save(os.path.join(OUT, 'stage.webp'), quality=88, method=6)
@@ -476,11 +521,14 @@ def main():
     # ---- 會動的元件 ----
     boxes, total = {}, 0
     for name, ids in MOVERS.items():
-        b, sz = crop_save(place(layers, ids), os.path.join(OUT, 'parts', name + '.webp'))
+        g = place(layers, ids)
+        g = repair(g, alpha_of(layers, ids), src_ref, name)   # 海報的 BUILD 字在這裡救回來
+        b, sz = crop_save(g, os.path.join(OUT, 'parts', name + '.webp'))
         boxes[name] = b
         total += sz
         print('  %-16s %3dx%-3d @(%4d,%4d) %6d bytes' % (name, b[2], b[3], b[0], b[1], sz))
-    b, sz = crop_save(place(layers, FRONT), os.path.join(OUT, 'parts', 'front_shelf.webp'))
+    b, sz = crop_save(repair(place(layers, FRONT), alpha_of(layers, FRONT), src_ref, 'front_shelf'),
+                      os.path.join(OUT, 'parts', 'front_shelf.webp'))
     boxes['front_shelf'] = b
     total += sz
     print('  %-16s %3dx%-3d @(%4d,%4d) %6d bytes  ← 畫在會動的層前面'
@@ -581,15 +629,45 @@ def main():
     for name in list(MOVERS) + ['front_shelf']:
         got.alpha_composite(Image.open(os.path.join(OUT, 'parts', name + '.webp')).convert('RGBA'),
                             (boxes[name][0], boxes[name][1]))
-    want = place(layers, [i for i in range(N_LAYERS) if i not in set(CLOUDS)])
-    d = np.abs(np.asarray(got.convert('RGB')).astype(int)
-               - np.asarray(want.convert('RGB')).astype(int))
-    rmse = float(np.sqrt((d ** 2).mean()))
+    # 和「原稿」比,不是和逐層疊起來比 —— 補過之後原稿才是基準。
+    # 關卡不看 RMSE 看「有沒有整塊不見」:轉檔把整張放大成 1500 再換算回來,
+    # 每一條描邊都會差個 1px,那種差異 RMSE 看得到、眼睛看不到。真正要擋的是
+    # 「一整塊東西沒了」(BUILD 字、窗口的天空沒接到窗框)。
+    keep = np.ones((CANVAS, CANVAS), bool)
+    for i in CLOUDS:
+        keep &= ~dilate(alpha_of(layers, [i]), 3)          # 雲被補全過,不比
+    d = np.abs(np.asarray(got.convert('RGB')).astype(int) - src_ref.astype(int)).sum(2)
+    rmse = float(np.sqrt((np.abs(np.asarray(got.convert('RGB')).astype(float)
+                                 - src_ref)[keep] ** 2).mean()))
+    bad = (d > 60) & keep
+    lab = np.zeros(bad.shape, np.int32)
+    nid, worst = 0, []
+    for y0, x0 in zip(*np.nonzero(bad)):
+        if lab[y0, x0]:
+            continue
+        nid += 1
+        q = deque([(y0, x0)])
+        lab[y0, x0] = nid
+        n = 0
+        while q:
+            y, x = q.popleft()
+            n += 1
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < CANVAS and 0 <= nx < CANVAS and bad[ny, nx] and not lab[ny, nx]:
+                    lab[ny, nx] = nid
+                    q.append((ny, nx))
+        if n >= 400:
+            ys, xs = np.nonzero(lab == nid)
+            worst.append((n, int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())))
+    worst.sort(reverse=True)
     print('stage.webp %d bytes,元件共 %d bytes,分級圖共 %d bytes(全部延後載入)'
           % (n_plate, total, gtotal))
-    print('靜止合成(不含雲)vs 逐層疊起來 RMSE = %.2f' % rmse)
-    if rmse > 3.0:
-        sys.exit('RMSE 太高 —— 疊圖順序或貼圖框對不上,不要就這樣上線')
+    print('靜止合成(不含雲)vs 原稿 RMSE = %.2f;差 >60 的成塊區域 %d 處' % (rmse, len(worst)))
+    for n, x0, y0, x1, y1 in worst[:6]:
+        print('   %7d px  x%d-%d y%d-%d' % (n, x0, x1, y0, y1))
+    if worst:
+        sys.exit('有整塊東西和原稿對不上 —— 拆解掉了什麼,或疊圖順序錯了')
 
 
 if __name__ == '__main__':
