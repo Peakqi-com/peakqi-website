@@ -114,10 +114,12 @@ CLOUD_SOFT = 6          # 雲的柔邊最多往外收這麼多 px
 # 檯燈的光是個以燈頭為中心的衰減場,關燈就是把這份暖光減掉。
 # 這是打光運算不是重畫,像素全部來自原圖。
 LAMP = {'x': 975, 'y': 648, 'r': 340, 'amount': 0.30, 'warm': (1.0, 0.80, 0.52)}
-# 白天關燈也要看得出來。第一版白天只扣掉「直射」那一份,量出來檯燈那一區只暗 17.9 階
-# (夜裡是 72.2),等於戳了沒反應。物理上白天的檯燈確實不明顯,但這是互動 —— 戳了
-# 要有回應比絕對寫實重要。所以白天也用和夜晚同一套三份拆解,只是份量小得多。
-DAY_LAMP = {'lamp': 1.0, 'scatter': 0.19, 'warm': (16, 8, 0), 'warm_r': 1.9}
+# 白天的檯燈:只有燈下那一小圈。房間亮的時候關掉一盞桌燈,不會讓整個房間暗一階 ——
+# 整片放射狀地暗下去看起來不是「關燈」,是憑空多出一團黑色光暈。所以 off_r 把
+# 影響範圍收在燈下(0.42 × 340 ≈ 143 px,換算到卡片約 34 px),看得見的是燈滅了,
+# 不是房間變暗了。夜裡沒有這個上限 —— 那時候它真的是主光。
+DAY_LAMP = {'lamp': 1.0, 'scatter': 0.30, 'warm': (0, 0, 0), 'warm_r': 0.55,
+            'off_r': 0.42}
 # 窗光灑進室內的範圍(圓窗中心往房間裡放射)。夜裡是城市的冷光,黃昏是夕陽的金色。
 WIN = {'x': 96, 'y': 372, 'rx': 760, 'ry': 700}
 
@@ -140,7 +142,7 @@ TIMES = {
         'neon_red': (255, 150, 84), 'neon_red_amt': 0.42, 'bloom': 0.10,
         'tint': (0.86, 0.805, 0.795), 'amb': 0.70,
         'spill': (104, 46, -6), 'lamp': 1.24,
-        'scatter': 0.30, 'warm': (26, 13, 1), 'warm_r': 1.9,
+        'scatter': 0.32, 'warm': (10, 5, 0), 'warm_r': 0.58, 'off_r': 0.45,
     },
     'night': {
         'sky': [(40, (11, 18, 46)), (240, (14, 24, 58)), (420, (20, 32, 72)),
@@ -156,7 +158,7 @@ TIMES = {
         'spill': (12, 22, 48), 'lamp': 1.45, 'scatter': 0.72,
         # 檯燈的暖光在夜裡會整片散開(牆面、天花板都在幫忙反射),
         # 只給燈頭那一小圈的話房間會又黑又冷。這是加法,半徑比燈本身大得多。
-        'warm': (54, 30, 5), 'warm_r': 1.95,
+        'warm': (54, 30, 5), 'warm_r': 1.95, 'off_r': None,
     },
 }
 GRADE_TIMES = ['day'] + list(TIMES)
@@ -552,6 +554,23 @@ def lamp_light(img, G):
     return img * LAMP['amount'] * G['fall'][..., None] * warm
 
 
+def lamp_share(src, A, L, G, cfg, tint=1.0):
+    """檯燈開著時多出來的那一份:直射 + 打到牆面再散回來的散射 + 暖色偏移。
+    三份都跟著檯燈一起熄,所以它就是「開燈 − 關燈」。
+
+    off_r 是影響範圍的硬上限,白天與黃昏一定要有。房間亮的時候關掉一盞桌燈,
+    不會讓整個房間暗一階;沒有這個上限的話,關燈會在畫面上留下一團放射狀的
+    黑色光暈 —— 那不是關燈,那是憑空多出來的陰影。夜裡才拿掉上限,因為那時候
+    它真的是照亮整個房間的主光。"""
+    glow = np.clip(1.0 - G['ld'] / cfg['warm_r'], 0, 1) ** 1.4
+    lit = (L * cfg['lamp']
+           + A * tint * (glow * cfg['scatter'])[..., None]
+           + glow[..., None] * np.array(cfg['warm'], float)[None, None, :])
+    if cfg.get('off_r'):
+        lit = lit * (np.clip(1.0 - G['ld'] / cfg['off_r'], 0, 1) ** 1.2)[..., None]
+    return lit
+
+
 def time_target(src, G, key):
     """這個時段「靜止合成」該有的樣子。回傳 (檯燈亮著, 檯燈關著)。"""
     L = lamp_light(src, G)
@@ -559,10 +578,7 @@ def time_target(src, G, key):
     if key == 'day':
         # 白天 + 開燈就是原圖本身 —— 這條不變式不能破(白天的分級層完全不存在,
         # 所以「開燈」那一格必須逐像素等於原圖)。關燈就是把檯燈那三份減掉。
-        glow = np.clip(1.0 - G['ld'] / DAY_LAMP['warm_r'], 0, 1) ** 1.4
-        lit = (L * DAY_LAMP['lamp']
-               + A * (glow * DAY_LAMP['scatter'])[..., None]
-               + glow[..., None] * np.array(DAY_LAMP['warm'])[None, None, :])
+        lit = lamp_share(src, A, L, G, DAY_LAMP)
         return src, np.clip(src - (1 - G['w_out'][..., None]) * lit, 0, 255)
     cfg = TIMES[key]
     r, g, b = src[:, :, 0], src[:, :, 1], src[:, :, 2]
@@ -611,10 +627,7 @@ def time_target(src, G, key):
     #   scatter 打到牆面、天花板再散回來的(用表面自己的顏色算,所以是 A × tint × 係數)
     #   warm    暖色偏移。少了這一份,夜裡整間都是冷藍,檯燈只是一個孤立的亮點
     # 三份都跟著檯燈一起熄,所以只加在 in_on。
-    glow = np.clip(1.0 - G['ld'] / cfg['warm_r'], 0, 1) ** 1.4
-    lit = (L * cfg['lamp']
-           + A * tint * (glow * cfg['scatter'])[..., None]
-           + (glow[..., None] * np.array(cfg['warm'])[None, None, :]))
+    lit = lamp_share(src, A, L, G, cfg, tint)
     # 室內任何一點都不可以比白天的原圖亮 —— 夜裡不會比白天亮,這是物理;
     # 但更要緊的是數學:一旦某個像素在「開燈」時被推到滿格,那裡的 screen 值就是 1,
     # 而 screen(任何東西, 1) 恆等於 1,關燈那一層再怎麼乘都壓不下來(檯燈那一圈
