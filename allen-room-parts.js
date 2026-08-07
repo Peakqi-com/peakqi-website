@@ -24,5 +24,9 @@ export const PART_BOX = {
 // 也不會蓋住城市 —— 雲在城市後面。
 export const SKY_MASK = [0, 58, 290, 531];
 
-// 有分級圖的時段。白天就是原圖(不需要分級圖),所以它只出現在關燈版。
+// 有分級圖的時段。白天就是原圖,所以它不會有 m/s 兩張。
 export const GRADE_TIMES = ['day', 'dusk', 'night'];
+
+// 有「關燈分級圖」的時段 —— 只有這幾個時段關燈會影響整個房間。
+// 白天與黃昏不在裡面:那時候關燈只有檯燈自己會變,房間維持原樣。
+export const GRADE_OFF = ['night'];

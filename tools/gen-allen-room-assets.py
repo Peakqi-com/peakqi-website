@@ -114,12 +114,13 @@ CLOUD_SOFT = 6          # 雲的柔邊最多往外收這麼多 px
 # 檯燈的光是個以燈頭為中心的衰減場,關燈就是把這份暖光減掉。
 # 這是打光運算不是重畫,像素全部來自原圖。
 LAMP = {'x': 975, 'y': 648, 'r': 340, 'amount': 0.30, 'warm': (1.0, 0.80, 0.52)}
-# 白天的檯燈:只有燈下那一小圈。房間亮的時候關掉一盞桌燈,不會讓整個房間暗一階 ——
-# 整片放射狀地暗下去看起來不是「關燈」,是憑空多出一團黑色光暈。所以 off_r 把
-# 影響範圍收在燈下(0.42 × 340 ≈ 143 px,換算到卡片約 34 px),看得見的是燈滅了,
-# 不是房間變暗了。夜裡沒有這個上限 —— 那時候它真的是主光。
-DAY_LAMP = {'lamp': 1.0, 'scatter': 0.30, 'warm': (0, 0, 0), 'warm_r': 0.55,
-            'off_r': 0.42}
+# 白天與黃昏:檯燈「不影響房間」。房間亮的時候關掉一盞桌燈,房間不會變暗 ——
+# 任何放射狀的暗場都會被看成憑空多出來的黑色光暈,收得再小都一樣(試過 143px 還是
+# 看得出來)。所以這兩個時段乾脆不出關燈分級圖:切換時只有檯燈自己的像素會變
+# (燈罩不再發亮、燈身暗一階),房間一動也不動。夜裡才是主光,才有整室的變化。
+#   lamp   把原圖裡本來就畫著的那份檯燈光加回去(A = 原圖 − L 已經把它扣掉了,
+#          不加回去的話工作檯在黃昏會變成沒被照到)
+DAY_LAMP = {'lamp': 1.0, 'scatter': 0.0, 'warm': (0, 0, 0), 'warm_r': 1.0}
 # 窗光灑進室內的範圍(圓窗中心往房間裡放射)。夜裡是城市的冷光,黃昏是夕陽的金色。
 WIN = {'x': 96, 'y': 372, 'rx': 760, 'ry': 700}
 
@@ -141,8 +142,8 @@ TIMES = {
         'neon_blue': (255, 206, 120), 'neon_blue_amt': 0.42,
         'neon_red': (255, 150, 84), 'neon_red_amt': 0.42, 'bloom': 0.10,
         'tint': (0.86, 0.805, 0.795), 'amb': 0.70,
-        'spill': (104, 46, -6), 'lamp': 1.24,
-        'scatter': 0.32, 'warm': (10, 5, 0), 'warm_r': 0.58, 'off_r': 0.45,
+        'spill': (104, 46, -6), 'lamp': 1.24, 'room_off': False,
+        'scatter': 0.0, 'warm': (0, 0, 0), 'warm_r': 1.0,
     },
     'night': {
         'sky': [(40, (11, 18, 46)), (240, (14, 24, 58)), (420, (20, 32, 72)),
@@ -155,7 +156,7 @@ TIMES = {
         'neon_blue': (96, 214, 238), 'neon_blue_amt': 0.72,
         'neon_red': (255, 132, 74), 'neon_red_amt': 0.70, 'bloom': 0.22,
         'tint': (0.415, 0.41, 0.50), 'amb': 0.68,
-        'spill': (12, 22, 48), 'lamp': 1.45, 'scatter': 0.72,
+        'spill': (12, 22, 48), 'lamp': 1.45, 'scatter': 0.72, 'room_off': True,
         # 檯燈的暖光在夜裡會整片散開(牆面、天花板都在幫忙反射),
         # 只給燈頭那一小圈的話房間會又黑又冷。這是加法,半徑比燈本身大得多。
         'warm': (54, 30, 5), 'warm_r': 1.95, 'off_r': None,
@@ -558,16 +559,13 @@ def lamp_share(src, A, L, G, cfg, tint=1.0):
     """檯燈開著時多出來的那一份:直射 + 打到牆面再散回來的散射 + 暖色偏移。
     三份都跟著檯燈一起熄,所以它就是「開燈 − 關燈」。
 
-    off_r 是影響範圍的硬上限,白天與黃昏一定要有。房間亮的時候關掉一盞桌燈,
-    不會讓整個房間暗一階;沒有這個上限的話,關燈會在畫面上留下一團放射狀的
-    黑色光暈 —— 那不是關燈,那是憑空多出來的陰影。夜裡才拿掉上限,因為那時候
-    它真的是照亮整個房間的主光。"""
+    白天與黃昏的 scatter / warm 都是 0:那兩個時段檯燈不影響房間,只把原圖裡
+    本來就畫著的那一份加回去。散射一開,關燈就會在畫面上留下一團放射狀的黑色
+    光暈 —— 那不是關燈,那是憑空多出來的陰影。"""
     glow = np.clip(1.0 - G['ld'] / cfg['warm_r'], 0, 1) ** 1.4
     lit = (L * cfg['lamp']
            + A * tint * (glow * cfg['scatter'])[..., None]
            + glow[..., None] * np.array(cfg['warm'], float)[None, None, :])
-    if cfg.get('off_r'):
-        lit = lit * (np.clip(1.0 - G['ld'] / cfg['off_r'], 0, 1) ** 1.2)[..., None]
     return lit
 
 
@@ -578,8 +576,7 @@ def time_target(src, G, key):
     if key == 'day':
         # 白天 + 開燈就是原圖本身 —— 這條不變式不能破(白天的分級層完全不存在,
         # 所以「開燈」那一格必須逐像素等於原圖)。關燈就是把檯燈那三份減掉。
-        lit = lamp_share(src, A, L, G, DAY_LAMP)
-        return src, np.clip(src - (1 - G['w_out'][..., None]) * lit, 0, 255)
+        return src, src         # 白天:關燈不影響房間,所以沒有關燈分級圖
     cfg = TIMES[key]
     r, g, b = src[:, :, 0], src[:, :, 1], src[:, :, 2]
 
@@ -637,7 +634,10 @@ def time_target(src, G, key):
         u = v / np.maximum(src, 1.0)
         u = np.where(u < K, u, 0.98 - (0.98 - K) * np.exp(-(u - K) / (0.98 - K)))
         return u * src
-    in_on, in_off = softcap(in_off + lit), softcap(in_off)
+    in_on = softcap(in_off + lit)
+    # room_off 決定「關燈會不會影響房間」。白天與黃昏是 False —— 房間還是亮的,
+    # 切換時只有檯燈自己的像素會變(那一份在網頁端,不在分級圖裡)。
+    in_off = softcap(in_off) if cfg['room_off'] else in_on
     wo = G['w_out'][..., None]
     return (np.clip(wo * out_t + (1 - wo) * in_on, 0, 255),
             np.clip(wo * out_t + (1 - wo) * in_off, 0, 255))
@@ -827,6 +827,7 @@ def main():
     G = light_fields(sky_vis)
     ref = np.where(sky_vis[..., None], plate, src)
     gtotal = 0
+    grade_off = []
     for key in GRADE_TIMES:
         t_on, t_off = time_target(src, G, key)
         M, S, Off = split_maps(ref, t_on, t_off)
@@ -836,9 +837,20 @@ def main():
         e_off = float(np.abs((1 - (1 - ref / 255.0 * M * Off) * (1 - S)) * 255 - t_off).max())
         if max(e_on, e_off) > 1.0:
             sys.exit('%s 的分級圖拆不乾淨(誤差 %.1f / %.1f)' % (key, e_on, e_off))
-        n = save_map(Off, os.path.join(OUT, 'grade', '%s-off.webp' % key))
-        gtotal += n
-        line = '  %-5s 關燈 %6d' % (key, n)
+        # 關燈分級圖只有「關燈真的會影響房間」的時段才出(目前只有夜晚)。
+        # 白天與黃昏出了反而是害處:切換時房間會多一團黑色光暈。
+        has_off = float(np.abs(t_on - t_off).max()) > 0.5
+        line = '  %-5s' % key
+        if has_off:
+            n = save_map(Off, os.path.join(OUT, 'grade', '%s-off.webp' % key))
+            gtotal += n
+            grade_off.append(key)
+            line += ' 關燈 %6d' % n
+        else:
+            p_ = os.path.join(OUT, 'grade', '%s-off.webp' % key)
+            if os.path.exists(p_):
+                os.remove(p_)
+            line += ' 關燈 —— 不影響房間,不出圖'
         if key != 'day':                       # 白天就是原圖,不需要分級圖
             for nm, arr in (('m', M), ('s', S)):
                 k = save_map(arr, os.path.join(OUT, 'grade', '%s-%s.webp' % (key, nm)))
@@ -878,9 +890,14 @@ def main():
     lines.append('export const SKY_MASK = [%d, %d, %d, %d];'
                  % (mb[0], mb[1], mb[2] - mb[0], mb[3] - mb[1]))
     lines.append('')
-    lines.append('// 有分級圖的時段。白天就是原圖(不需要分級圖),所以它只出現在關燈版。')
+    lines.append('// 有分級圖的時段。白天就是原圖,所以它不會有 m/s 兩張。')
     lines.append('export const GRADE_TIMES = [%s];'
                  % ', '.join("'%s'" % t for t in GRADE_TIMES))
+    lines.append('')
+    lines.append('// 有「關燈分級圖」的時段 —— 只有這幾個時段關燈會影響整個房間。')
+    lines.append('// 白天與黃昏不在裡面:那時候關燈只有檯燈自己會變,房間維持原樣。')
+    lines.append('export const GRADE_OFF = [%s];'
+                 % ', '.join("'%s'" % t for t in grade_off))
     lines.append('')
     io.open(JS_OUT, 'w', encoding='utf-8').write('\n'.join(lines))
 

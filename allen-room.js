@@ -34,7 +34,7 @@
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
-import { PART_BOX, SKY_MASK, GRADE_TIMES } from './allen-room-parts.js';
+import { PART_BOX, SKY_MASK, GRADE_TIMES, GRADE_OFF } from './allen-room-parts.js';
 import { GRADE_BASE, TIMES, pickTime } from './allen-sky.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -227,9 +227,11 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   // ---- 分級層:天色 ----
   // 順序不能顛倒:multiply 全部先套完,screen 才提亮(產生器就是照這個順序解出來的)。
   // 三個關燈圖也是 multiply,而且各時段一張 —— 夜裡關檯燈的落差比白天大得多。
+  // 關燈的分級圖只有 GRADE_OFF 裡的時段有(目前只有夜晚)。白天與黃昏關燈時房間
+  // 一動也不動 —— 任何放射狀的暗場都會被看成憑空多出來的黑色光暈,收得再小都一樣。
   const LAYERS = [
     ...TIMES.filter((t) => t !== 'day').map((t) => ({ k: t + '-m', t, mode: 'multiply' })),
-    ...TIMES.map((t) => ({ k: t + '-off', t, mode: 'multiply', off: true })),
+    ...GRADE_OFF.map((t) => ({ k: t + '-off', t, mode: 'multiply', off: true })),
     ...TIMES.filter((t) => t !== 'day').map((t) => ({ k: t + '-s', t, mode: 'screen' })),
   ];
   const grades = LAYERS.map((L) => {
@@ -374,9 +376,10 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
         L.el.style.opacity = r2(o);
       }
     }
-    // 分級圖還沒到(或載不到)而且燈是關的,才用那圈漸層頂著
+    // 退路只在「這個時段本來就該有關燈分級圖、但它載不到」時才出場。
+    // 「還在載」不算 —— 那半秒的漸層看起來就是一團憑空出現的黑暈。
     const fb = grades.find((L) => L.off && L.t === now);
-    dim.setAttribute('opacity', r2(fb && fb.ready ? 0 : (1 - lampT) * 0.26));
+    dim.setAttribute('opacity', r2(fb && !fb.want ? (1 - lampT) * 0.26 : 0));
   }
 
   function teardown() {
@@ -483,7 +486,9 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     const flick = flickT >= 0 ? (Math.floor(flickT * 14) % 2 ? 0.25 : 1) : 1;
     const lampLit = lampT * breathe * flick;
     if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.42));
-    warm.setAttribute('opacity', r2(lampLit * 0.62));
+    // 桌面那一圈暖光只在夜裡出場。它半徑 250(卡片上約 60px),白天跟著開關進出
+    // 就是一團忽明忽暗的光暈 —— 白天房間本來就亮,桌上那圈光原稿早就畫好了。
+    warm.setAttribute('opacity', r2(lampLit * 0.62 * tw.night));
     g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
     paintGrade();
   });
