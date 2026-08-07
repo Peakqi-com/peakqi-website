@@ -7,6 +7,7 @@
 // t 為秒),零計時器。角色本身的呼吸 / 眨眼 / 追視線 / 表情都在 allen-bot.js 裡,
 // 這一幕只負責:背景、站位、以及每隔一陣子挑一段原稿姿勢來演。
 import { createAllenBot, POSE } from './allen-bot.js';
+import { createRoom } from './allen-room.js';
 import { t } from './i18n.js';
 
 const BG = '/assets/allen/workshop.webp';
@@ -20,12 +21,21 @@ export function createAct(stage, api) {
   root.innerHTML = `
 <style>
 .aw-root{position:absolute;inset:0;overflow:hidden;background:#DCE4EE}
-.aw-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+.aw-root>*{position:absolute;inset:0}
+.aw-bg{width:100%;height:100%;object-fit:cover;object-position:50% 62%;z-index:0}
+/* 疊圖順序用 z-index 不用 DOM 順序 —— 房間那兩層是 createRoom 自己 append 的,
+   用 z-index 就不必去搬節點。
+   背景 0 → 房間會動的部分 1 → 暗角 2 → Allen 3 → 命中層 4 → 提示 5。
+   Allen 站在房間裡,所以燈光雲霧在他後面;命中層在他前面,不然角色那個 div 會把
+   窗戶和控制台的點擊整片吃掉 —— 它只有中間一小塊有畫東西,其餘都是透明的空 box。
+   切換點是 stage 的子節點(z-index 9),不受這裡影響。 */
+.aw-room{pointer-events:none;z-index:1}
+.aw-hits{z-index:4}
 /* 背景是亮的,四角壓一點暗才不會和卡片邊界糊在一起,角色也才跳得出來 */
-.aw-vig{position:absolute;inset:0;pointer-events:none;
+.aw-vig{pointer-events:none;z-index:2;
   background:radial-gradient(120% 95% at 50% 42%,transparent 55%,rgba(9,11,14,.30) 100%)}
-.aw-figure{position:absolute;left:20%;bottom:2%;width:52%;height:66%}
-.aw-hint{position:absolute;left:10px;top:10px;padding:4px 9px;border-radius:999px;
+.aw-figure{left:20%;top:auto;bottom:2%;right:auto;width:52%;height:66%;z-index:3}
+.aw-hint{left:10px;top:10px;right:auto;bottom:auto;z-index:5;padding:4px 9px;border-radius:999px;
   background:rgba(9,11,14,.55);color:#F2EFE8;font:600 10px/1.4 'Space Grotesk','Noto Sans TC',sans-serif;
   letter-spacing:.04em;pointer-events:none;transition:opacity .5s ease}
 </style>
@@ -48,8 +58,7 @@ export function createAct(stage, api) {
   const bot = createAllenBot(mount, { raf: api.raf, idleBeats: true, interactive: false });
 
   // ---------- 演出排程 ----------
-  // 一段是 [姿勢, 長度秒, 表情]。march 不是固定姿勢,是逐幀驅動的走路循環,
-  // 所以另外標出來。
+  // 一段是「姿勢 + 長度 + 表情」。step 不是固定姿勢,是逐幀驅動的踮步,另外標出來。
   const BEATS = [
     { kind: 'wave', life: 2.0, expr: 'happy' },
     { kind: 'cheer', life: 1.7, expr: 'laugh' },
@@ -59,6 +68,26 @@ export function createAct(stage, api) {
   // 節奏:第一段 3–6 秒後上,之後每 5–11 秒一段。再稀一點角色就會像只是一張貼圖,
   // 再密一點在團隊卡上會變成一直在動的干擾。
   let lastT = null, beatIn = 3 + R() * 3, cur = null, curT = 0, tapped = false;
+  let exprBack = -1;                  // 反應完把表情交還給閒置演出的倒數
+
+  const noticed = () => { if (!tapped) { tapped = true; hint.style.opacity = '0'; } };
+
+  // 房間本身也活著:窗外的雲、控制台的螢幕、檯燈、馬克杯的蒸氣、機台的指示燈。
+  // 戳房間裡的東西 Allen 會轉頭看過去 —— 這一條是把「角色」和「場景」接起來的線,
+  // 少了它兩邊就只是各動各的。
+  const room = createRoom(root, {
+    raf: api.raf,
+    rand: R,
+    debug: /[?&]roomdebug=1/.test(location.search),
+    onPoke(key, look) {
+      bot.lookAt(look[0], look[1], 1.9);
+      bot.setExpr(key === 'poster' ? 'happy' : 'surprise');
+      cur = null;                     // 讓「看過去」蓋掉進行中的段落
+      exprBack = 1.5;
+      beatIn = 4 + R() * 5;
+      noticed();
+    },
+  });
 
   function start(b) {
     cur = b; curT = 0;
@@ -99,6 +128,11 @@ export function createAct(stage, api) {
       beatIn -= dt;
       if (beatIn <= 0) start(BEATS[(R() * BEATS.length) | 0]);
     }
+    // 反應完把表情交還出去 —— 不收的話「驚訝」會掛在臉上好幾秒
+    if (exprBack > 0) {
+      exprBack -= dt;
+      if (exprBack <= 0) bot.setExpr('idle');
+    }
   }
   const offRaf = api.raf(frame);
 
@@ -109,25 +143,28 @@ export function createAct(stage, api) {
     bot.setExpr('laugh');
     bot.wave();
     cur = null;                       // 取消進行中的段落,讓揮手是最上位的回應
+    exprBack = 2.1;
     beatIn = 5 + R() * 6;
-    // 提示只在使用者還沒互動過時出現,點過就不再打擾
-    if (!tapped) { tapped = true; hint.style.opacity = '0'; }
+    noticed();                        // 提示只在還沒互動過時出現,點過就不再打擾
   };
   root.addEventListener('pointerenter', enter);
   root.addEventListener('pointerleave', leave);
   root.addEventListener('click', tap);
 
   return {
-    /** 驗收用:直接點播一段,不必等隨機排程。殼層不會呼叫它。 */
+    /** 驗收用:直接點播一段或戳房間裡的東西,不必等隨機排程。殼層不會呼叫這兩個。 */
     play(kind) {
       const b = BEATS.find((x) => x.kind === kind);
       if (b) start(b);
     },
+    poke(key) { room.poke(key); },
+    get room() { return room; },
     destroy() {
       offRaf();
       root.removeEventListener('pointerenter', enter);
       root.removeEventListener('pointerleave', leave);
       root.removeEventListener('click', tap);
+      try { room.destroy(); } catch (e) { /* 已被清 */ }
       try { bot.destroy(); } catch (e) { /* 已被清 */ }
       try { root.remove(); } catch (e) { /* 殼層已清 */ }
     },

@@ -145,6 +145,7 @@ export function createAllenBot(mount, {
 
   const blink = Blinker();
   const ptr = Pointer(svg);
+  let gaze = null;                 // { x, y, left } 外部指定的注視點,倒數完就交還游標
   // 老動畫是一秒 12 格。物理照 rAF 全速跑,只有畫面被關進格子裡 —— 這一項對
   // 「像不像手繪」的影響大於任何美術細節。
   const fs = FrameStep(12);
@@ -225,10 +226,12 @@ export function createAllenBot(mount, {
     const arch = clamp(fArch.value, 0, 1);
     shut = Math.max(blink.step(dt), arch * 0.62, clamp(fLid.value, 0, 1));
 
-    // 表情鎖定視線時蓋掉游標追蹤 —— 思考就要看向別處,不能還盯著滑鼠
-    const lock = EXPR[expr].look;
-    const gx = lock ? lock[0] : ptr.x;
-    const gy = lock ? lock[1] : ptr.y;
+    // 視線的優先序:外部指定(例如使用者戳了房間裡某樣東西)> 表情鎖定 > 游標追蹤。
+    // 「思考」要看向別處,不能還盯著滑鼠;但你戳了燈,他要看燈,那件事最急。
+    if (gaze) { gaze.left -= dt; if (gaze.left <= 0) gaze = null; }
+    const lock = gaze || EXPR[expr].look;
+    const gx = gaze ? gaze.x : (lock ? lock[0] : ptr.x);
+    const gy = gaze ? gaze.y : (lock ? lock[1] : ptr.y);
 
     headX.to(gx * 32); headY.to(gy * 20 - br * 10); headR.to(gx * 4.5);
     headX.step(dt); headY.step(dt); headR.step(dt);
@@ -321,6 +324,11 @@ export function createAllenBot(mount, {
     el: svg,
     setExpr,
     setPose,
+    /** 看向某個方向一段時間(x,y 是相對舞台中心的 -1~1,與 Pointer 同一套座標)。
+     *  時間到就自動交還給游標追蹤,呼叫端不必收尾。 */
+    lookAt(x, y, secs = 1.6) {
+      gaze = { x: clamp(x, -1, 1), y: clamp(y, -1, 1), left: secs };
+    },
     /** 給驗收與外部事件用 */
     get expr() { return expr; },
     get pose() { return pose; },
