@@ -85,11 +85,14 @@ const PARTS = MOTION.map((m) => {
 
 /** 窗外的雲。它們不是套件裡的元件 —— 是產生器自己從天空分出來的(平塗白雲配平滑
  *  漸層的天空最好分,雲後面的天空用只從天空取樣的擴散補)。三朵各自漂,速度不同。
- *  漂出畫面右邊就繞回左邊;圓窗被畫面左緣切掉,所以從左邊進場是自然的。 */
+ *
+ *  只有「輪廓完整」的雲會動。原稿裡有幾朵是被畫布左緣或前面那座塔切掉一半的,
+ *  那些留在底板上不動 —— 靜止的話那條切線只是原稿的構圖,一動就變成一刀切口。
+ *  來回的範圍由貼圖框自己算(見下面的 cloudEl),進出視野靠遮罩的柔邊淡出。 */
 const CLOUDS = [
-  { id: 'cloud_0', sp: 5.2, from: -190 },
-  { id: 'cloud_1', sp: 7.4, from: -150 },
-  { id: 'cloud_2', sp: 3.6, from: -130 },
+  { id: 'cloud_0', sp: 5.2 },
+  { id: 'cloud_1', sp: 7.4 },
+  { id: 'cloud_2', sp: 3.6 },
 ];
 
 /** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
@@ -177,20 +180,39 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
 </radialGradient></defs>
 <ellipse data-r="dim" cx="1000" cy="700" rx="330" ry="300" fill="url(#dimg${uid})" opacity="0"/>`;
 
-  // 發光層:自己會發光的東西。「亮」不是另外畫光,是把這個物件自己的像素再疊一次,
-  // 沒有任何新形狀被發明出來,亮的就是原稿畫的那面螢幕、那盞燈。
+  // 發光的範圍要用「軟邊的光暈」不能用「硬邊的矩形」。
+  //
+  // 第一版是 clipPath 的圓角矩形。白天看不出來 —— 它疊在同樣亮的底板上,邊界剛好
+  // 消失;天色一暗,背景變深,那個矩形就整個現形,燈罩上出現一個發亮的方塊。
+  // 光本來就沒有邊界,所以改成中心實、外圍漸隱的放射遮罩。被照亮的仍然是原稿畫的
+  // 那盞燈自己的像素,只是「照到哪裡」變成連續的。
+  // 一個約束,改半徑之前先看:柔邊必須在「貼圖框內」而且在「元件自己的 alpha 內」
+  // 歸零,否則只是把矩形的硬邊換成貼圖框的硬邊(檯燈的貼圖框右緣 x=1038,而它的
+  // alpha 在右下角有一塊為了避開馬克杯挖掉的直角缺口,離燈頭只有 35px)。
+  // 目前的橢圓落在 917–1035 × 597–687,兩個界線都沒碰到。
+  const soft = (id, b) => {
+    const cx = r1(b[0] + b[2] / 2), cy = r1(b[1] + b[3] / 2);
+    return `<radialGradient id="sg${id}${uid}">`
+      + '<stop offset="0" stop-color="#fff"/>'
+      + '<stop offset="52%" stop-color="#fff" stop-opacity=".92"/>'
+      + '<stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+      // 不要補 x/y/width/height:預設的遮罩區是 -10%..120%(相對 viewport),
+      // 剛好蓋滿整張畫布;補上去就會把 GLOW 那三個「用全幅底板當內容」的群切掉。
+      + `<mask id="sm${id}${uid}" maskUnits="userSpaceOnUse">`
+      + `<ellipse cx="${cx}" cy="${cy}" rx="${r1(b[2] * 0.78)}" ry="${r1(b[3] * 0.86)}"`
+      + ` fill="url(#sg${id}${uid})"/></mask>`;
+  };
+  const LITP = PARTS.filter((p) => p.lit);
   lit.innerHTML = `
-${PARTS.filter((p) => p.lit).map((p) => `<g data-r="l_${p.id}">${
+<defs>${LITP.filter((p) => p.lit !== 'all').map((p) => soft(p.id, p.lit)).join('')}${
+    GLOW.map((w) => soft(w.id, w.box)).join('')}</defs>
+${LITP.map((p) => `<g data-r="l_${p.id}">${
     p.lit === 'all'
       ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" opacity="0"')
-      : `<g clip-path="url(#lc${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
-          ' data-lit="1" opacity="0"')}</g>`
-      + `<defs><clipPath id="lc${p.id}${uid}"><rect x="${p.lit[0]}" y="${p.lit[1]}"`
-      + ` width="${p.lit[2]}" height="${p.lit[3]}" rx="8"/></clipPath></defs>`}</g>`).join('')}
-${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity="0">`
+      : `<g mask="url(#sm${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
+          ' data-lit="1" opacity="0"')}</g>`}</g>`).join('')}
+${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">`
   + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/></g>`).join('')}
-<defs>${GLOW.map((w) => `<clipPath id="gc${w.id}${uid}"><rect x="${w.box[0]}" y="${w.box[1]}"`
-  + ` width="${w.box[2]}" height="${w.box[3]}" rx="6"/></clipPath>`).join('')}</defs>
 
 <!-- 檯燈點亮的那一圈暖光。它是光不是物件,所以用軟邊放射漸層;矩形會留一條看得見的直邊。 -->
 <defs><radialGradient id="warm${uid}">
@@ -248,7 +270,14 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   const dim = q('dim');
   const warm = ql('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
-  const cloudEl = CLOUDS.map((c) => ({ ...c, el: q(c.id), x: c.from + rand() * 300 }));
+  // 每朵雲的行程由它自己的貼圖框算:從「整朵在窗戶左外」飄到「整朵出了窗戶右緣」。
+  // 寫死一個範圍的話,靠右邊的那朵大半輩子都在畫面外。
+  const cloudEl = CLOUDS.map((c) => {
+    const b = PART_BOX[c.id];
+    const from = -(b[0] + b[2] + 15);
+    const to = 300 - b[0];
+    return { ...c, el: q(c.id), from, to, x: from + rand() * (to - from) };
+  });
 
   // ---- 命中範圍:只有這幾塊收指標事件 ----
   hits.style.pointerEvents = 'none';
@@ -390,7 +419,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
     const windMul = gustT >= 0 ? 1 + 2.0 * Math.sin((gustT / 3.2) * Math.PI) : 1;
     for (const c of cloudEl) {
       c.x += c.sp * windMul * dt;
-      if (c.x > 340) c.x = c.from - rand() * 90;
+      if (c.x > c.to) c.x = c.from - rand() * 60;
     }
 
     // ═══ 只在 12 格/秒的格子邊界重畫 ═══
