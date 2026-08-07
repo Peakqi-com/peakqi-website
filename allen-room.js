@@ -21,6 +21,7 @@
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
+import { PART_BOX } from './allen-room-parts.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const r1 = (n) => Math.round(n * 10) / 10;
@@ -30,30 +31,36 @@ const NS = 'http://www.w3.org/2000/svg';
 const BASE = '/assets/allen/room/';
 export const CANVAS = 1254;
 
-/** 會動的元件。bbox 來自套件的 manifest(原圖座標),pivot 是物理上真正的轉軸:
- *  吊掛的工具轉軸在掛孔、盆栽在土面、馬克杯在杯底、檯燈在底座、海報在圖釘。 */
-const PARTS = [
+/** 會動的元件:這裡只寫「怎麼動」,貼圖框由 allen-room-parts.js 提供(產生檔)。
+ *  pivot 是物理上真正的轉軸:吊掛的工具在掛孔、盆栽在土面、馬克杯在杯底、
+ *  檯燈在底座、海報在圖釘。座標都是原圖的 1254×1254。 */
+const MOTION = [
   // 洞洞板上吊掛的工具:從掛孔擺盪。四支相位錯開,不然會像整排一起晃。
-  { id: 'wrench_left', bbox: [1067, 493, 1122, 660], pivot: [1094, 503], sway: 1.5, per: 3.7, ph: 0.0 },
-  { id: 'wrench_right', bbox: [1122, 493, 1174, 659], pivot: [1148, 503], sway: 1.4, per: 4.3, ph: 1.9 },
-  { id: 'screwdriver_left', bbox: [1171, 490, 1215, 660], pivot: [1193, 500], sway: 1.2, per: 3.3, ph: 3.4 },
-  { id: 'screwdriver_right', bbox: [1212, 489, 1254, 660], pivot: [1233, 499], sway: 1.3, per: 4.9, ph: 5.1 },
+  { id: 'wrench_left', pivot: [1094, 503], sway: 1.5, per: 3.7, ph: 0.0 },
+  { id: 'wrench_right', pivot: [1148, 503], sway: 1.4, per: 4.3, ph: 1.9 },
+  { id: 'screwdriver_left', pivot: [1193, 500], sway: 1.2, per: 3.3, ph: 3.4 },
+  { id: 'screwdriver_right', pivot: [1233, 499], sway: 1.3, per: 4.9, ph: 5.1 },
   // 盆栽:從土面搖。這是全場最該動的東西 —— 有風的時候人先看植物。
-  { id: 'left_plant', bbox: [199, 560, 369, 761], pivot: [284, 757], sway: 1.9, per: 5.5, ph: 0.7 },
-  { id: 'shelf_plant', bbox: [929, 371, 1011, 458], pivot: [970, 456], sway: 1.7, per: 4.6, ph: 2.6 },
+  { id: 'left_plant', pivot: [284, 757], sway: 1.9, per: 5.5, ph: 0.7 },
+  { id: 'shelf_plant', pivot: [970, 456], sway: 1.7, per: 4.6, ph: 2.6 },
   // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)
-  { id: 'lamp', bbox: [878, 540, 1020, 760], pivot: [905, 754], sway: 0.5, per: 7.0, ph: 1.2 },
+  { id: 'lamp', pivot: [905, 754], sway: 0.5, per: 7.0, ph: 1.2 },
   // 馬克杯:繞杯底
-  { id: 'mug', bbox: [958, 672, 1074, 770], pivot: [1012, 768], sway: 0.7, per: 6.2, ph: 4.0 },
+  { id: 'mug', pivot: [1012, 768], sway: 0.7, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
-  { id: 'poster', bbox: [897, 59, 1102, 361], pivot: [912, 74], sway: 0, per: 1, ph: 0 },
+  { id: 'poster', pivot: [912, 74], sway: 0, per: 1, ph: 0 },
   // 按鈕:按下去是位移,不是旋轉
-  { id: 'red_button', bbox: [184, 730, 220, 767], pivot: [202, 748], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
-  { id: 'green_button', bbox: [198, 760, 236, 801], pivot: [217, 780], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
+  { id: 'red_button', pivot: [202, 748], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
+  { id: 'green_button', pivot: [217, 780], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
   // 控制台螢幕:不做幾何,只把它自己的像素加亮(見下面的 screen blend)
-  { id: 'screen', bbox: [0, 690, 193, 808], pivot: [96, 749], sway: 0, per: 1, ph: 0, lit: true },
+  { id: 'screen', pivot: [96, 749], sway: 0, per: 1, ph: 0, lit: true },
 ];
-const BY = Object.fromEntries(PARTS.map((p) => [p.id, p]));
+// 把動作和產生出來的貼圖框合起來。少一邊就是資產和程式對不上,直接擋下來。
+const PARTS = MOTION.map((m) => {
+  const box = PART_BOX[m.id];
+  if (!box) throw new Error('allen-room-parts.js 少了 ' + m.id + ' —— 重跑 tools/gen-allen-room-assets.py');
+  return { ...m, box };
+});
 
 /** 可以戳的地方。多數就是元件本身;window 沒有對應的切片(窗景是畫死在底板上的),
  *  所以「起風」不是去動窗戶,而是讓場上所有植物與吊掛工具一起被吹 —— 用真的東西表達風。 */
@@ -92,17 +99,17 @@ export function createRoom(root, {
   }
 
   const img = (href, b, extra = '') =>
-    `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2] - b[0]}" height="${b[3] - b[1]}"${extra}/>`;
+    `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
 
   // 疊圖順序照原圖:底板 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
   // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
   back.innerHTML = `
 <image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
-${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.bbox)}${
+${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
     p.lit
       // 「亮」不是另外畫光,是把這個物件自己的像素再疊一次(screen 混合)。
       // 沒有任何新形狀被發明出來,亮的就是原稿畫的那面螢幕。
-      ? img(`${BASE}parts/${p.id}.webp`, p.bbox, ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')
+      ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')
       : ''}</g>`).join('\n')}
 <!-- 檯燈關掉時,燈照得到的那一圈涼下來。用軟邊的放射漸層,不用矩形 ——
      矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->

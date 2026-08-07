@@ -13,7 +13,7 @@
 - `micro-engine.js` — CTA 微互動/tilt/cursor/spotlight
 - `seo.js` — canonical/OG/Twitter/schema 注入;`analytics.js` — 事件 adapter
 - `sequence/manifest.js` — Hero 影格序列設定;`robots.txt`、`sitemap.xml`
-- `allen-art.js`(產生檔)/ `allen-bot.js` / `allen-workshop.js` — About 團隊卡的 Allen 角色
+- `allen-art.js`、`allen-room-parts.js`(產生檔)/ `allen-bot.js` / `allen-workshop.js` / `allen-room.js` — About 團隊卡的 Allen 與他的工作間
 
 ## 如何替換 Hero sequence(影格版分鏡)
 1. 把影格放進 `sequence/desktop|tablet|mobile/`,命名 `frame-0001.webp` 起連號。
@@ -44,8 +44,11 @@
 
   幅度為什麼都壓得很小:底板的填補只有「輪廓往外一圈」是準的,再深就是猜的,所以每個
   元件的位移上限都控制在露出量不超過約 10 個原圖像素(換算到卡片尺寸是 2–3px)。
-  素材產生器:`python tools/gen-allen-room-assets.py`,它會自己驗「底板+元件貼回去 vs 原圖」
-  的 RMSE,超過 4.5 就中止。
+  素材產生器:`python tools/gen-allen-room-assets.py`,同時產生 `allen-room-parts.js`
+  (每個元件的貼圖框,產生檔不要手改),並自己驗「底板+元件貼回去 vs 原圖」的 RMSE,
+  超過 3.0 就中止。底板來自美術重畫的空房間 `robot_workshop_background_filled.svg`;
+  元件遮罩是用「原圖 vs 空房間」的差異算的,連描邊與投影一起帶走 —— 不這樣做的話,
+  那圈深色會留在底板上不動,物件一擺動就變成雙重輪廓。
 
   **不要再用自己畫的圖形去代替房間裡的東西** —— 第一版畫了假的準星、假的葉子、假的眼皮
   疊在畫死的同一個物件上,筆觸與色階對不上,而且變成兩份。
