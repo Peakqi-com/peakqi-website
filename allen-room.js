@@ -65,7 +65,11 @@ const MOTION = [
   { id: 'left_plant', pivot: [284, 757], sway: 3.2, per: 5.5, ph: 0.7 },
   { id: 'shelf_plant', pivot: [970, 456], sway: 2.8, per: 4.6, ph: 2.6 },
   // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)
-  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2, lit: [938, 616, 76, 52] },
+  // lit 是「亮起來」的範圍(燈罩開口與它打在燈罩內緣的光);
+  // off 是「熄掉之後要變灰」的範圍,收得更緊 —— 只有開口那一小塊。原稿是把燈畫成
+  // 亮著的,所以關燈不能只是不加光,還要把那塊奶油色抽掉、壓成沒通電的灰。
+  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2,
+    lit: [938, 616, 76, 52], off: [948, 622, 36, 24] },
   // 馬克杯:繞杯底
   { id: 'mug', pivot: [1012, 768], sway: 1.1, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
@@ -156,36 +160,6 @@ export function createRoom(root, {
     + 'mix-blend-mode:screen';
   hits.style.cssText = 'position:absolute;inset:0;z-index:6';
 
-  const img = (href, b, extra = '') =>
-    `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
-
-  // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
-  // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
-  back.innerHTML = `
-<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
-<defs><mask id="sky${uid}" maskUnits="userSpaceOnUse"><image href="${BASE}sky-mask.webp" x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}"/></mask></defs>
-<g mask="url(#sky${uid})">${CLOUDS.map((c) => {
-    const b = PART_BOX[c.id];
-    if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
-    return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
-  }).join('')}</g>
-${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}</g>`).join('\n')}
-
-<!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
-     矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
-<defs><radialGradient id="dimg${uid}">
-  <stop offset="0" stop-color="#12233F" stop-opacity=".85"/>
-  <stop offset="62%" stop-color="#12233F" stop-opacity=".55"/>
-  <stop offset="100%" stop-color="#12233F" stop-opacity="0"/>
-</radialGradient></defs>
-<ellipse data-r="dim" cx="1000" cy="700" rx="330" ry="300" fill="url(#dimg${uid})" opacity="0"/>`;
-
-  // 發光的範圍要用「軟邊的光暈」不能用「硬邊的矩形」。
-  //
-  // 第一版是 clipPath 的圓角矩形。白天看不出來 —— 它疊在同樣亮的底板上,邊界剛好
-  // 消失;天色一暗,背景變深,那個矩形就整個現形,燈罩上出現一個發亮的方塊。
-  // 光本來就沒有邊界,所以改成中心實、外圍漸隱的放射遮罩。被照亮的仍然是原稿畫的
-  // 那盞燈自己的像素,只是「照到哪裡」變成連續的。
   // 一個約束,改半徑之前先看:柔邊必須在「貼圖框內」而且在「元件自己的 alpha 內」
   // 歸零,否則只是把矩形的硬邊換成貼圖框的硬邊(檯燈的貼圖框右緣 x=1038,而它的
   // alpha 在右下角有一塊為了避開馬克杯挖掉的直角缺口,離燈頭只有 35px)。
@@ -202,6 +176,47 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
       + `<ellipse cx="${cx}" cy="${cy}" rx="${r1(b[2] * 0.78)}" ry="${r1(b[3] * 0.86)}"`
       + ` fill="url(#sg${id}${uid})"/></mask>`;
   };
+  const img = (href, b, extra = '') =>
+    `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
+  // 形狀由遮罩決定,所以這裡放大一圈的矩形就好
+  const rect = (b, fill, mode) =>
+    `<rect x="${b[0] - 40}" y="${b[1] - 40}" width="${b[2] + 80}" height="${b[3] + 80}"`
+    + ` fill="${fill}" style="mix-blend-mode:${mode}"/>`;
+
+  // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
+  // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
+  back.innerHTML = `
+<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
+<defs><mask id="sky${uid}" maskUnits="userSpaceOnUse"><image href="${BASE}sky-mask.webp" x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}"/></mask></defs>
+<g mask="url(#sky${uid})">${CLOUDS.map((c) => {
+    const b = PART_BOX[c.id];
+    if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
+    return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
+  }).join('')}</g>
+<defs>${PARTS.filter((p) => p.off).map((p) => soft('off' + p.id, p.off)).join('')}</defs>
+${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
+    // 熄掉的燈罩:先把顏色抽掉(saturation 混合 —— 對本來就是灰的牆面是零作用,
+    // 所以不會在四周留下光暈),再壓暗一點,那是沒通電的金屬該有的樣子。
+    // 兩層都在檯燈自己的群組裡,燈晃的時候會跟著晃。
+    p.off ? `<g data-r="dark_${p.id}" mask="url(#smoff${p.id}${uid})" opacity="0">`
+      + rect(p.off, '#8A8D93', 'saturation') + rect(p.off, '#C6CAD1', 'multiply')
+      + '</g>' : ''}</g>`).join('\n')}
+
+<!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
+     矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
+<defs><radialGradient id="dimg${uid}">
+  <stop offset="0" stop-color="#12233F" stop-opacity=".85"/>
+  <stop offset="62%" stop-color="#12233F" stop-opacity=".55"/>
+  <stop offset="100%" stop-color="#12233F" stop-opacity="0"/>
+</radialGradient></defs>
+<ellipse data-r="dim" cx="1000" cy="700" rx="330" ry="300" fill="url(#dimg${uid})" opacity="0"/>`;
+
+  // 發光的範圍要用「軟邊的光暈」不能用「硬邊的矩形」。
+  //
+  // 第一版是 clipPath 的圓角矩形。白天看不出來 —— 它疊在同樣亮的底板上,邊界剛好
+  // 消失;天色一暗,背景變深,那個矩形就整個現形,燈罩上出現一個發亮的方塊。
+  // 光本來就沒有邊界,所以改成中心實、外圍漸隱的放射遮罩。被照亮的仍然是原稿畫的
+  // 那盞燈自己的像素,只是「照到哪裡」變成連續的。
   const LITP = PARTS.filter((p) => p.lit);
   lit.innerHTML = `
 <defs>${LITP.filter((p) => p.lit !== 'all').map((p) => soft(p.id, p.lit)).join('')}${
@@ -269,6 +284,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   const litG = Object.fromEntries(PARTS.filter((p) => p.lit).map((p) => [p.id, ql('l_' + p.id)]));
   const litEl = Object.fromEntries(PARTS.filter((p) => p.lit)
     .map((p) => [p.id, litG[p.id].querySelector('[data-lit]')]));
+  const darkEl = Object.fromEntries(PARTS.filter((p) => p.off).map((p) => [p.id, q('dark_' + p.id)]));
   const dim = q('dim');
   const warm = ql('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
@@ -490,6 +506,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     // 就是一團忽明忽暗的光暈 —— 白天房間本來就亮,桌上那圈光原稿早就畫好了。
     warm.setAttribute('opacity', r2(lampLit * 0.62 * tw.night));
     g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
+    if (darkEl.lamp) darkEl.lamp.setAttribute('opacity', r2(1 - lampT));
     paintGrade();
   });
 
