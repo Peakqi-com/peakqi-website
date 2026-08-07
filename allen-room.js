@@ -65,9 +65,9 @@ const MOTION = [
   { id: 'left_plant', pivot: [284, 757], sway: 3.2, per: 5.5, ph: 0.7 },
   { id: 'shelf_plant', pivot: [970, 456], sway: 2.8, per: 4.6, ph: 2.6 },
   // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)。
-  // 關燈就是 lit 那一層退掉 —— 不另外蓋任何東西上去。試過在燈罩口疊一層灰,
-  // 不管遮罩多軟,那一塊都會被看成「貼上去的東西」。
-  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2, lit: [938, 616, 76, 52] },
+  // dull:關燈時要「把黃色變成灰色」的那一份 —— 見下面的 dullFilter。
+  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2,
+    lit: [938, 616, 76, 52], dull: true },
   // 馬克杯:繞杯底
   { id: 'mug', pivot: [1012, 768], sway: 1.1, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
@@ -174,6 +174,35 @@ export function createRoom(root, {
       + `<ellipse cx="${cx}" cy="${cy}" rx="${r1(b[2] * 0.78)}" ry="${r1(b[3] * 0.86)}"`
       + ` fill="url(#sg${id}${uid})"/></mask>`;
   };
+  // 「熄掉」不是蓋一塊灰上去,是把這個物件自己的黃色像素直接變成灰色。
+  //
+  // 蓋東西一定會被看出來 —— 不管遮罩多軟,那一塊都是憑空多出來的形狀,而且會在
+  // 四周留下光暈。這裡改成同一張貼圖再畫一次,套一個濾鏡,然後淡入:
+  // 形狀完全一樣(同一個 alpha),變的只有顏色。
+  //
+  // 濾鏡只挑「又暖又亮」的像素下手 —— 那正好就是燈泡與燈罩開口那片奶油色:
+  //   暖 = (R − B) × 8      燈泡 0.69、紅色燈臂也高,所以還要乘上
+  //   亮 = 明度 × 5 − 3.75   燈泡 0.95、紅色燈臂 0(它暗)、灰色鐘罩 0.2
+  // 兩個相乘當權重,所以紅色的燈臂與灰色的鐘罩幾乎不動,中性的像素完全不動 ——
+  // 這就是「不會有光暈」的保證:權重來自像素自己的顏色,不是位置。
+  // color-interpolation-filters 要指定 sRGB,預設的 linearRGB 會讓門檻整個跑掉。
+  const dullFilter = (id) =>
+    `<filter id="dl${id}${uid}" color-interpolation-filters="sRGB">`
+    + '<feColorMatrix in="SourceGraphic" type="saturate" values="0" result="g0"/>'
+    + '<feComponentTransfer in="g0" result="g1"><feFuncR type="linear" slope=".80"/>'
+    + '<feFuncG type="linear" slope=".81"/><feFuncB type="linear" slope=".86"/>'
+    + '</feComponentTransfer>'
+    + '<feColorMatrix in="SourceGraphic" type="matrix" result="wa" values="'
+    + '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  8 0 -8 0 0"/>'
+    + '<feColorMatrix in="SourceGraphic" type="matrix" result="lb" values="'
+    + '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  .299 .587 .114 0 0"/>'
+    + '<feComponentTransfer in="lb" result="lc">'
+    + '<feFuncA type="linear" slope="5" intercept="-3.75"/></feComponentTransfer>'
+    + '<feComposite in="wa" in2="lc" operator="arithmetic" k1="1" k2="0" k3="0" k4="0"'
+    + ' result="w"/>'
+    + '<feComposite in="g1" in2="w" operator="in" result="gm"/>'
+    + '<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="gm"/></feMerge></filter>';
+
   const img = (href, b, extra = '') =>
     `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
   // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
@@ -186,7 +215,10 @@ export function createRoom(root, {
     if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
     return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
   }).join('')}</g>
-${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}</g>`).join('\n')}
+<defs>${PARTS.filter((p) => p.dull).map((p) => dullFilter(p.id)).join('')}</defs>
+${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
+    p.dull ? img(`${BASE}parts/${p.id}.webp`, p.box,
+      ` data-dull="1" filter="url(#dl${p.id}${uid})" opacity="0"`) : ''}</g>`).join('\n')}
 
 <!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
      矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
@@ -270,6 +302,8 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   const litG = Object.fromEntries(PARTS.filter((p) => p.lit).map((p) => [p.id, ql('l_' + p.id)]));
   const litEl = Object.fromEntries(PARTS.filter((p) => p.lit)
     .map((p) => [p.id, litG[p.id].querySelector('[data-lit]')]));
+  const dullEl = Object.fromEntries(PARTS.filter((p) => p.dull)
+    .map((p) => [p.id, q(p.id).querySelector('[data-dull]')]));
   const dim = q('dim');
   const warm = ql('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
@@ -493,9 +527,11 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     // 桌面那一圈暖光只在夜裡出場。它半徑 250(卡片上約 60px),白天跟著開關進出
     // 就是一團忽明忽暗的光暈 —— 白天房間本來就亮,桌上那圈光原稿早就畫好了。
     warm.setAttribute('opacity', r2(lampLit * 0.62 * tw.night));
+    // 關燈:燈泡那片黃色換成灰色的版本(同一張貼圖,只是顏色不同)。
     // 這裡以前是 g.lamp.style.opacity = 0.72 + lampT * 0.28 —— 那是錯的:整支燈變成
     // 半透明,底板上被挖掉檯燈的那塊修補痕就從燈身透出來,燈看起來糊糊的、四周還帶
-    // 一圈暗邊。要暗的是「光」不是「不透明度」,所以關燈只做在 lit 那一層上。
+    // 一圈暗邊。要換掉的是「顏色」不是「不透明度」。
+    if (dullEl.lamp) dullEl.lamp.setAttribute('opacity', r2(1 - lampT));
     paintGrade();
   });
 
