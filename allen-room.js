@@ -64,12 +64,10 @@ const MOTION = [
   // 盆栽:從土面搖。這是全場最該動的東西 —— 有風的時候人先看植物。
   { id: 'left_plant', pivot: [284, 757], sway: 3.2, per: 5.5, ph: 0.7 },
   { id: 'shelf_plant', pivot: [970, 456], sway: 2.8, per: 4.6, ph: 2.6 },
-  // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)
-  // lit 是「亮起來」的範圍(燈罩開口與它打在燈罩內緣的光);
-  // off 是「熄掉之後要變灰」的範圍,收得更緊 —— 只有開口那一小塊。原稿是把燈畫成
-  // 亮著的,所以關燈不能只是不加光,還要把那塊奶油色抽掉、壓成沒通電的灰。
-  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2,
-    lit: [938, 616, 76, 52], off: [948, 622, 36, 24] },
+  // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)。
+  // 關燈就是 lit 那一層退掉 —— 不另外蓋任何東西上去。試過在燈罩口疊一層灰,
+  // 不管遮罩多軟,那一塊都會被看成「貼上去的東西」。
+  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2, lit: [938, 616, 76, 52] },
   // 馬克杯:繞杯底
   { id: 'mug', pivot: [1012, 768], sway: 1.1, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
@@ -178,10 +176,6 @@ export function createRoom(root, {
   };
   const img = (href, b, extra = '') =>
     `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
-  // 形狀由遮罩決定,所以這裡放大一圈的矩形就好
-  const rect = (b, fill, mode) =>
-    `<rect x="${b[0] - 40}" y="${b[1] - 40}" width="${b[2] + 80}" height="${b[3] + 80}"`
-    + ` fill="${fill}" style="mix-blend-mode:${mode}"/>`;
   // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
   // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
   back.innerHTML = `
@@ -192,14 +186,7 @@ export function createRoom(root, {
     if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
     return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
   }).join('')}</g>
-<defs>${PARTS.filter((p) => p.off).map((p) => soft('off' + p.id, p.off)).join('')}</defs>
-${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
-    // 熄掉的燈罩:先把顏色抽掉(saturation 混合 —— 對本來就是灰的牆面是零作用,
-    // 所以不會在四周留下光暈),再壓暗一點,那是沒通電的金屬該有的樣子。
-    // 兩層都在檯燈自己的群組裡,燈晃的時候會跟著晃。
-    p.off ? `<g data-r="dark_${p.id}" mask="url(#smoff${p.id}${uid})" opacity="0">`
-      + rect(p.off, '#8A8D93', 'saturation') + rect(p.off, '#C6CAD1', 'multiply')
-      + '</g>' : ''}</g>`).join('\n')}
+${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}</g>`).join('\n')}
 
 <!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
      矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
@@ -283,7 +270,6 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   const litG = Object.fromEntries(PARTS.filter((p) => p.lit).map((p) => [p.id, ql('l_' + p.id)]));
   const litEl = Object.fromEntries(PARTS.filter((p) => p.lit)
     .map((p) => [p.id, litG[p.id].querySelector('[data-lit]')]));
-  const darkEl = Object.fromEntries(PARTS.filter((p) => p.off).map((p) => [p.id, q('dark_' + p.id)]));
   const dim = q('dim');
   const warm = ql('warm');
   const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
@@ -500,15 +486,16 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     const breathe = 0.78 + 0.22 * Math.sin(T * 1.35);
     const flick = flickT >= 0 ? (Math.floor(flickT * 14) % 2 ? 0.25 : 1) : 1;
     const lampLit = lampT * breathe * flick;
-    if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.42));
+    // 開燈時燈罩自己疊亮的量。白天房間本來就亮,疊得太少的話開關的落差讀不出來
+    // (0.42 時只差 9 階);疊到 0.62 是「亮著的燈泡」和「沒通電的燈泡」都還在
+    // 原稿的色階裡,沒有爆掉。
+    if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.62));
     // 桌面那一圈暖光只在夜裡出場。它半徑 250(卡片上約 60px),白天跟著開關進出
     // 就是一團忽明忽暗的光暈 —— 白天房間本來就亮,桌上那圈光原稿早就畫好了。
     warm.setAttribute('opacity', r2(lampLit * 0.62 * tw.night));
-    // 關燈的樣子只做在燈罩上(上面那兩層 saturation + multiply)。
-    // 這裡以前是 g.lamp.style.opacity = 0.72 + lampT*0.28 —— 那是錯的:整支燈變成
-    // 半透明,底板上被挖掉檯燈的那塊修補痕就從燈身透出來,燈看起來糊糊的、四周
-    // 還帶一圈暗邊。要暗的是「光」不是「不透明度」。
-    if (darkEl.lamp) darkEl.lamp.setAttribute('opacity', r2(1 - lampT));
+    // 這裡以前是 g.lamp.style.opacity = 0.72 + lampT * 0.28 —— 那是錯的:整支燈變成
+    // 半透明,底板上被挖掉檯燈的那塊修補痕就從燈身透出來,燈看起來糊糊的、四周還帶
+    // 一圈暗邊。要暗的是「光」不是「不透明度」,所以關燈只做在 lit 那一層上。
     paintGrade();
   });
 
