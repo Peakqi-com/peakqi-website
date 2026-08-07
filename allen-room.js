@@ -9,6 +9,7 @@
 //   room/stage.webp        底板 = 原圖挖掉「會動的那 12 個」,挖掉的地方用四周真實像素
 //                          擴散填補。不會動的十個保留原始像素,不挖 —— 挖了只是自找麻煩。
 //   room/parts/<id>.webp   會動的元件,含 alpha,各自貼回自己的 bbox。
+//   room/grade/*.webp      天色分級圖(見下面的三層結構)。
 //
 // 幅度為什麼都很小:底板的填補只在「輪廓往外一圈」是準的,再深就是猜的;而且套件的
 // 切片刻意沒收進物件右側的暗面與投影(那部分留在底板上,靜止時剛好補齊)。所以每個
@@ -17,11 +18,24 @@
 //
 // 節奏和角色一樣 12 格/秒:房間跑滿 60fps 會和 12 格的 Allen 看起來像兩種媒材。
 //
+// ── 為什麼分三層 ────────────────────────────────────────────────
+//   ①  幾何層 aw-room   底板 + 雲 + 會動的元件(白天的顏色)
+//   ②  分級層 aw-gr     天色。multiply 壓暗 + screen 提亮,疊在①和 Allen 上面
+//   ③  發光層 aw-lit    螢幕、燈條、檯燈的暖光。screen 混合,疊在分級層上面
+//
+// 分級層要蓋過 Allen,所以它跟房間、角色是同一層的兄弟節點(z-index 4),而且
+// .aw-root 必須是 isolate —— mix-blend-mode 只會和「最近一個堆疊脈絡」裡已經畫好的
+// 東西混合。少了這一條,天色不是漏出去染到卡片,就是根本混不到角色身上。
+//
+// 光源(③)在分級之上是刻意的:天色壓暗的是「環境光」,檯燈和螢幕是自己會發光的東西,
+// 夜裡它們不該跟著一起暗,反而該變成主角。
+//
 // 這一層對輔助技術是裝飾性的(aria-hidden);主要互動(點畫面任何地方 Allen 都會揮手)
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
-import { PART_BOX, SKY_MASK } from './allen-room-parts.js';
+import { PART_BOX, SKY_MASK, GRADE_TIMES } from './allen-room-parts.js';
+import { GRADE_BASE, TIMES, pickTime } from './allen-sky.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const r1 = (n) => Math.round(n * 10) / 10;
@@ -30,6 +44,13 @@ const NS = 'http://www.w3.org/2000/svg';
 
 const BASE = '/assets/allen/room/';
 export const CANVAS = 1254;
+
+// 程式想要的時段和產生器實際做出來的對不上,就是資產沒重跑 —— 當場擋下來
+for (const t of TIMES) {
+  if (!GRADE_TIMES.includes(t)) {
+    throw new Error('缺少 ' + t + ' 的分級圖 —— 重跑 tools/gen-allen-room-assets.py');
+  }
+}
 
 /** 會動的元件:這裡只寫「怎麼動」,貼圖框由 allen-room-parts.js 提供(產生檔)。
  *  pivot 是物理上真正的轉軸:吊掛的工具在掛孔、盆栽在土面、馬克杯在杯底、
@@ -62,8 +83,6 @@ const PARTS = MOTION.map((m) => {
   return { ...m, box };
 });
 
-/** 可以戳的地方。多數就是元件本身;window 沒有對應的切片(窗景是畫死在底板上的),
- *  所以「起風」不是去動窗戶,而是讓場上所有植物與吊掛工具一起被吹 —— 用真的東西表達風。 */
 /** 窗外的雲。它們不是套件裡的元件 —— 是產生器自己從天空分出來的(平塗白雲配平滑
  *  漸層的天空最好分,雲後面的天空用只從天空取樣的擴散補)。三朵各自漂,速度不同。
  *  漂出畫面右邊就繞回左邊;圓窗被畫面左緣切掉,所以從左邊進場是自然的。 */
@@ -74,7 +93,7 @@ const CLOUDS = [
 ];
 
 /** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
- *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上用 screen 混合疊亮就好,
+ *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上疊亮就好,
  *  零新增檔案、零額外請求,而且亮的一樣是原稿畫的那面螢幕。 */
 const GLOW = [
   { id: 'wall_screen', box: [504, 282, 70, 48], amp: 0.20, per: 5.2, ph: 0.0 },
@@ -82,6 +101,9 @@ const GLOW = [
   { id: 'bin_led', box: [1010, 1132, 107, 39], amp: 0.34, per: 3.1, ph: 4.2 },
 ];
 
+/** 可以戳的地方。多數就是元件本身;window 沒有對應的切片(窗景是畫死在底板上的),
+ *  所以戳窗戶做兩件事:讓場上所有植物與吊掛工具一起被吹(用真的東西表達風),
+ *  以及把天色推到下一個時段 —— 看窗外本來就是「現在幾點」這件事發生的地方。 */
 const SPOTS = [
   { k: 'window', box: [0, 60, 300, 560], look: [-0.85, -0.3] },
   { k: 'console', box: [0, 640, 274, 270], look: [-0.8, 0.2] },
@@ -97,53 +119,76 @@ const SPOTS = [
  * opts.raf     共享 rAF 註冊器,(cb)=>off,cb 收秒
  * opts.rand    亂數來源
  * opts.onPoke  (key, look) => void
+ * opts.time    開場時段;預設看訪客的時鐘
  * opts.debug   true 會把命中範圍畫出來
- * opts.static  true 只擺出靜止畫面,不註冊每幀回呼(給 reduced-motion 用)
+ * opts.still   true 只擺出靜止畫面,不註冊每幀回呼(給 reduced-motion 用)
  *
- * 回傳 { gust, poke, lampOn, spots, ready, destroy }。
+ * 回傳 { gust, poke, setTime, time, lampOn, spots, destroy }。
  */
 export function createRoom(root, {
-  raf = null, rand = Math.random, onPoke = null, debug = false, still = false,
+  raf = null, rand = Math.random, onPoke = null, debug = false, still = false, time = null,
 } = {}) {
   const uid = 'r' + Math.random().toString(36).slice(2, 7);
+  // mix-blend-mode 只和「最近一個堆疊脈絡」裡已經畫好的東西混合。分級層要吃到房間
+  // 和 Allen,所以 root 必須自己就是那個脈絡 —— 順便擋住天色漏出去染到卡片背景。
+  root.style.isolation = 'isolate';
+
   const back = document.createElementNS(NS, 'svg');
   back.setAttribute('class', 'aw-room');
+  const lit = document.createElementNS(NS, 'svg');
+  lit.setAttribute('class', 'aw-lit');
   const hits = document.createElementNS(NS, 'svg');
   hits.setAttribute('class', 'aw-hits');
-  for (const s of [back, hits]) {
+  for (const s of [back, lit, hits]) {
     s.setAttribute('viewBox', `0 0 ${CANVAS} ${CANVAS}`);
     s.setAttribute('preserveAspectRatio', 'xMidYMid slice');
     s.setAttribute('aria-hidden', 'true');
   }
+  // 疊圖順序寫在這裡而不是外面的 CSS:這四層是本檔自己 append 的,順序也只有本檔知道。
+  // 幾何 1 → (卡片的暗角 2、Allen 3 在外面) → 分級 4 → 發光 5 → 命中 6。
+  back.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:1';
+  // 發光層整層 screen:裡面的東西就不必各自寫混合模式,而且它疊在天色之上,
+  // 夜裡螢幕與檯燈才會是「還亮著的光源」而不是跟著變暗的物件。
+  lit.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:5;'
+    + 'mix-blend-mode:screen';
+  hits.style.cssText = 'position:absolute;inset:0;z-index:6';
 
   const img = (href, b, extra = '') =>
     `<image href="${href}" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"${extra}/>`;
 
-  // 疊圖順序照原圖:底板 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
+  // 疊圖順序照原圖:底板 → 雲 → 各零件。零件彼此幾乎不重疊,唯一要注意的是檯燈的臂
   // 橫過洞洞板、馬克杯在檯燈前面,所以 PARTS 的順序就是畫的順序。
   back.innerHTML = `
 <image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/>
-<image data-r="stage-off" href="" x="0" y="0" width="${CANVAS}" height="${CANVAS}" opacity="0"/>
 <defs><mask id="sky${uid}" maskUnits="userSpaceOnUse"><image href="${BASE}sky-mask.webp" x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}"/></mask></defs>
 <g mask="url(#sky${uid})">${CLOUDS.map((c) => {
     const b = PART_BOX[c.id];
     if (!b) throw new Error('allen-room-parts.js 少了 ' + c.id);
-    return `<g data-r="${c.id}"><image href="${BASE}parts/${c.id}.webp" x="${b[0]}" y="${b[1]}"`
-      + ` width="${b[2]}" height="${b[3]}"/></g>`;
+    return `<g data-r="${c.id}">${img(`${BASE}parts/${c.id}.webp`, b)}</g>`;
   }).join('')}</g>
-${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}${
-    p.lit
-      // 「亮」不是另外畫光,是把這個物件自己的像素再疊一次(screen 混合)。
-      // 沒有任何新形狀被發明出來,亮的就是原稿畫的那面螢幕。
-      ? (p.lit === 'all'
-        ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')
-        : `<g clip-path="url(#lc${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
-            ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')}</g>`
-        + `<defs><clipPath id="lc${p.id}${uid}"><rect x="${p.lit[0]}" y="${p.lit[1]}"`
-        + ` width="${p.lit[2]}" height="${p.lit[3]}" rx="8"/></clipPath></defs>`)
-      : ''}</g>`).join('\n')}
+${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box)}</g>`).join('\n')}
+
+<!-- 分級圖載不到時的退路:只把檯燈照得到的那一圈壓暗。用軟邊放射漸層不用矩形 ——
+     矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
+<defs><radialGradient id="dimg${uid}">
+  <stop offset="0" stop-color="#12233F" stop-opacity=".85"/>
+  <stop offset="62%" stop-color="#12233F" stop-opacity=".55"/>
+  <stop offset="100%" stop-color="#12233F" stop-opacity="0"/>
+</radialGradient></defs>
+<ellipse data-r="dim" cx="1000" cy="700" rx="330" ry="300" fill="url(#dimg${uid})" opacity="0"/>`;
+
+  // 發光層:自己會發光的東西。「亮」不是另外畫光,是把這個物件自己的像素再疊一次,
+  // 沒有任何新形狀被發明出來,亮的就是原稿畫的那面螢幕、那盞燈。
+  lit.innerHTML = `
+${PARTS.filter((p) => p.lit).map((p) => `<g data-r="l_${p.id}">${
+    p.lit === 'all'
+      ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" opacity="0"')
+      : `<g clip-path="url(#lc${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
+          ' data-lit="1" opacity="0"')}</g>`
+      + `<defs><clipPath id="lc${p.id}${uid}"><rect x="${p.lit[0]}" y="${p.lit[1]}"`
+      + ` width="${p.lit[2]}" height="${p.lit[3]}" rx="8"/></clipPath></defs>`}</g>`).join('')}
 ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity="0">`
-  + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}" style="mix-blend-mode:screen"/></g>`).join('')}
+  + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/></g>`).join('')}
 <defs>${GLOW.map((w) => `<clipPath id="gc${w.id}${uid}"><rect x="${w.box[0]}" y="${w.box[1]}"`
   + ` width="${w.box[2]}" height="${w.box[3]}" rx="6"/></clipPath>`).join('')}</defs>
 
@@ -153,31 +198,57 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   <stop offset="58%" stop-color="#FFC46B" stop-opacity=".24"/>
   <stop offset="100%" stop-color="#FFB347" stop-opacity="0"/>
 </radialGradient></defs>
-<ellipse data-r="warm" cx="975" cy="706" rx="250" ry="215" fill="url(#warm${uid})" opacity="0"/>
-
-<!-- 檯燈關掉時,燈照得到的那一圈涼下來。用軟邊的放射漸層,不用矩形 ——
-     矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
-<defs><radialGradient id="dimg${uid}">
-  <stop offset="0" stop-color="#12233F" stop-offset="0" stop-opacity=".85"/>
-  <stop offset="62%" stop-color="#12233F" stop-opacity=".55"/>
-  <stop offset="100%" stop-color="#12233F" stop-opacity="0"/>
-</radialGradient></defs>
-<ellipse data-r="dim" cx="1000" cy="700" rx="330" ry="300" fill="url(#dimg${uid})" opacity="0"/>`;
+<ellipse data-r="warm" cx="975" cy="706" rx="250" ry="215" fill="url(#warm${uid})" opacity="0"/>`;
 
   hits.innerHTML = `<g data-r="spots"></g>`;
 
+  // ---- 分級層:天色 ----
+  // 順序不能顛倒:multiply 全部先套完,screen 才提亮(產生器就是照這個順序解出來的)。
+  // 三個關燈圖也是 multiply,而且各時段一張 —— 夜裡關檯燈的落差比白天大得多。
+  const LAYERS = [
+    ...TIMES.filter((t) => t !== 'day').map((t) => ({ k: t + '-m', t, mode: 'multiply' })),
+    ...TIMES.map((t) => ({ k: t + '-off', t, mode: 'multiply', off: true })),
+    ...TIMES.filter((t) => t !== 'day').map((t) => ({ k: t + '-s', t, mode: 'screen' })),
+  ];
+  const grades = LAYERS.map((L) => {
+    const el = document.createElement('img');
+    el.alt = '';
+    el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('data-g', L.k);
+    // object-fit:cover + center 等同房間那幾張 SVG 的 xMidYMid slice,對位自動成立
+    el.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;'
+      + `object-position:center;pointer-events:none;z-index:4;display:none;mix-blend-mode:${L.mode}`;
+    root.appendChild(el);
+    return { ...L, el, ready: false, want: false };
+  });
+  // 沒用到的時段完全不載;用得到的那幾張各自只載一次。
+  function need(pred) {
+    for (const L of grades) {
+      if (!pred(L) || L.want) continue;
+      L.want = true;
+      const pre = new Image();
+      // 先預載再掛上去,才不會有「半張分級圖」閃一下
+      pre.onload = () => { L.el.src = pre.src; L.ready = true; paintGrade(); };
+      pre.onerror = () => { L.want = false; };      // 載不到就退回沒有分級(白天)
+      pre.src = `${GRADE_BASE}${L.k}.webp`;
+    }
+  }
+
   root.appendChild(back);
+  root.appendChild(lit);
   root.appendChild(hits);
 
   const q = (n) => back.querySelector(`[data-r="${n}"]`);
+  const ql = (n) => lit.querySelector(`[data-r="${n}"]`);
   const g = Object.fromEntries(PARTS.map((p) => [p.id, q(p.id)]));
+  // 發光的那一份要跟著本體一起轉,不然檯燈晃的時候燈罩的光會留在原地
+  const litG = Object.fromEntries(PARTS.filter((p) => p.lit).map((p) => [p.id, ql('l_' + p.id)]));
   const litEl = Object.fromEntries(PARTS.filter((p) => p.lit)
-    .map((p) => [p.id, q(p.id).querySelector('[data-lit]')]));
+    .map((p) => [p.id, litG[p.id].querySelector('[data-lit]')]));
   const dim = q('dim');
-  const warm = q('warm');
-  const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, q(w.id)]));
+  const warm = ql('warm');
+  const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, ql(w.id)]));
   const cloudEl = CLOUDS.map((c) => ({ ...c, el: q(c.id), x: c.from + rand() * 300 }));
-  const offImg = q('stage-off');
 
   // ---- 命中範圍:只有這幾塊收指標事件 ----
   hits.style.pointerEvents = 'none';
@@ -203,6 +274,20 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   const kick = {};                       // 每個元件被戳一下的額外擺動
   PARTS.forEach((p) => { kick[p.id] = 0; });
 
+  // 天色:每個時段一個權重,慢慢往目標推。溶接比硬切好看,而且 multiply 疊 multiply
+  // 在兩端是精確的(權重 0 就是不套),中間只是過場。
+  const okTime = (t) => (TIMES.includes(t) ? t : 'day');
+  let now = pickTime(time);
+  const tw = Object.fromEntries(TIMES.map((t) => [t, t === now ? 1 : 0]));
+  need((L) => L.t === now && !L.off);
+
+  function setTime(t) {
+    t = okTime(t);
+    if (t === now) return;
+    now = t;
+    need((L) => L.t === now && (!L.off || !lampOn));
+  }
+
   function gust(power = 1) {
     gustT = 0;
     // 風先吹到窗邊的大盆栽,再傳到房間另一側的東西 —— 給每個元件一點延遲,
@@ -220,24 +305,19 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   ];
 
   const ACT = {
-    window: () => gust(1),
-    lamp: () => { lampOn = !lampOn; kick.lamp = 0.8; loadOff(); },
+    // 戳窗戶:起風,順便把天色推到下一段。看窗外本來就是「現在幾點」發生的地方。
+    window: () => { gust(1); setTime(TIMES[(TIMES.indexOf(now) + 1) % TIMES.length]); },
+    lamp: () => {
+      lampOn = !lampOn; kick.lamp = 0.8;
+      // 三張關燈圖加起來才 16KB,第一次關燈就一起抓 —— 之後換天色就不會卡一下
+      if (!lampOn) need((L) => L.off);
+    },
     mug: () => { kick.mug = 1.6; },
     poster: () => { flapT = 0; },
     console: () => { screenT = 0; press.red_button = 0; },
     tools: () => { ['wrench_left', 'wrench_right', 'screwdriver_left', 'screwdriver_right']
       .forEach((id, i) => { kick[id] = 1.5 - i * 0.15; }); },
   };
-  // 關燈版底板只有真的關燈時才載,平常不佔重量
-  let offReady = false, offLoading = false;
-  function loadOff() {
-    if (offReady || offLoading) return;
-    offLoading = true;
-    const pre = new Image();
-    pre.onload = () => { offImg.setAttribute('href', BASE + 'stage-off.webp'); offReady = true; };
-    pre.onerror = () => { offLoading = false; };     // 載不到就退回疊漸層
-    pre.src = BASE + 'stage-off.webp';
-  }
 
   function poke(k) {
     const s = SPOTS.find((x) => x.k === k);
@@ -253,23 +333,47 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
   }
   hits.addEventListener('click', onClick);
 
-  // 靜止畫面:什麼 transform 都不寫,合成結果與原圖逐像素相同
+  // 把每一層分級圖的濃度寫上去。opacity 0 的層直接 display:none —— 手機上一張全幅
+  // 混合圖就是一次合成,不用的層不該還留在圖層樹裡。
+  function paintGrade() {
+    for (const L of grades) {
+      const o = L.ready ? tw[L.t] * (L.off ? 1 - lampT : 1) : 0;
+      if (o < 0.004) {
+        if (L.el.style.display !== 'none') L.el.style.display = 'none';
+      } else {
+        if (L.el.style.display === 'none') L.el.style.display = '';
+        L.el.style.opacity = r2(o);
+      }
+    }
+    // 分級圖還沒到(或載不到)而且燈是關的,才用那圈漸層頂著
+    const fb = grades.find((L) => L.off && L.t === now);
+    dim.setAttribute('opacity', r2(fb && fb.ready ? 0 : (1 - lampT) * 0.26));
+  }
+
+  function teardown() {
+    hits.removeEventListener('click', onClick);
+    for (const el of [back, lit, hits, ...grades.map((L) => L.el)]) {
+      try { el.remove(); } catch (e) { /* 殼層已清 */ }
+    }
+  }
+
+  // 靜止畫面:什麼 transform 都不寫,合成結果與原圖逐像素相同(白天的話)。
+  // 但天色還是要給 —— reduced-motion 的訪客在晚上一樣該看到晚上的房間。
   if (still || !raf) {
+    paintGrade();                    // 之後由分級圖的 onload 自己再補一次,不用計時器
     return {
-      gust() {}, poke() {}, get lampOn() { return true; },
+      gust() {}, poke() {}, setTime(t) { setTime(t); paintGrade(); },
+      get time() { return now; },
+      get lampOn() { return true; },
       get spots() { return SPOTS.map((s) => s.k); },
-      destroy() {
-        hits.removeEventListener('click', onClick);
-        try { back.remove(); } catch (e) { /* 殼層已清 */ }
-        try { hits.remove(); } catch (e) { /* 殼層已清 */ }
-      },
+      destroy: teardown,
     };
   }
 
-  const off = raf((now) => {
-    if (t0 === null) t0 = now;
-    const dt = clamp(now - t0, 0, 0.05);
-    t0 = now; T += dt;
+  const off = raf((sec) => {
+    if (t0 === null) t0 = sec;
+    const dt = clamp(sec - t0, 0, 0.05);
+    t0 = sec; T += dt;
 
     if (gustT >= 0) { gustT += dt; if (gustT > 3.2) gustT = -1; }
     if (flapT >= 0) { flapT += dt; if (flapT > 1.1) flapT = -1; }
@@ -281,6 +385,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
     for (const k in press) if (press[k] >= 0) { press[k] += dt; if (press[k] > 0.5) press[k] = -1; }
     for (const k in kick) kick[k] *= Math.exp(-dt * 1.15);      // 被吹過之後慢慢平靜下來
     lampT += ((lampOn ? 1 : 0) - lampT) * clamp(dt * 6, 0, 1);
+    for (const t of TIMES) tw[t] += ((t === now ? 1 : 0) - tw[t]) * clamp(dt * 1.7, 0, 1);
     // 陣風的時候雲也跑快一點 —— 風是同一陣風
     const windMul = gustT >= 0 ? 1 + 2.0 * Math.sin((gustT / 3.2) * Math.PI) : 1;
     for (const c of cloudEl) {
@@ -316,12 +421,14 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
         const c = kick.lamp > 0.004 ? Math.sin(T * 26) * kick.lamp * 0.5 : 0;
         if (c) tr = `rotate(${r2(p.sway * Math.sin(T * (6.283 / p.per) + p.ph) + c)},${p.pivot[0]},${p.pivot[1]})`;
       }
-      const el = g[p.id];
-      if (tr) el.setAttribute('transform', tr);
-      else el.removeAttribute('transform');
+      for (const el of [g[p.id], litG[p.id]]) {
+        if (!el) continue;
+        if (tr) el.setAttribute('transform', tr);
+        else el.removeAttribute('transform');
+      }
     }
 
-    // 螢幕:把它自己的像素再疊一層(screen 混合)當作「亮起來」。
+    // 螢幕:把它自己的像素再疊一層當作「亮起來」。
     // 平常是很慢的呼吸,戳控制台會亮一下再退回去。
     const boost = 0.16 + 0.09 * Math.sin(T * 1.7)
       + (screenT >= 0 ? 0.42 * Math.exp(-screenT * 2.6) * (Math.floor(screenT * 9) % 2 ? 0.55 : 1) : 0);
@@ -347,17 +454,16 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
     const flick = flickT >= 0 ? (Math.floor(flickT * 14) % 2 ? 0.25 : 1) : 1;
     const lampLit = lampT * breathe * flick;
     if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.42));
-    warm.setAttribute('opacity', r2(lampLit * 0.5));
-    // 關燈:整張底板換成「減掉檯燈暖光」的那一張,而不是疊一層灰。
-    // 疊漸層只會讓畫面變髒;換底板是整個房間的光真的變了。
-    if (offReady) offImg.setAttribute('opacity', r2(1 - lampT));
-    else dim.setAttribute('opacity', r2((1 - lampT) * 0.26));
+    warm.setAttribute('opacity', r2(lampLit * 0.62));
     g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
+    paintGrade();
   });
 
   return {
     gust,
     poke,
+    setTime,
+    get time() { return now; },
     get lampOn() { return lampOn; },
     get spots() { return SPOTS.map((s) => s.k); },
     /** 給驗收用:目前每個元件的角度 */
@@ -367,11 +473,6 @@ ${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity
         return [p.id, m ? +m[1] : 0];
       }));
     },
-    destroy() {
-      off && off();
-      hits.removeEventListener('click', onClick);
-      try { back.remove(); } catch (e) { /* 殼層已清 */ }
-      try { hits.remove(); } catch (e) { /* 殼層已清 */ }
-    },
+    destroy() { off && off(); teardown(); },
   };
 }

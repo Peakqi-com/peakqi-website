@@ -12,9 +12,10 @@
       (副檔名是 .svg,裡面其實是一張內嵌的 PNG,本檔自己解出來)
 
 輸出
-  assets/allen/room/stage.webp       底板
-  assets/allen/room/parts/<id>.webp  會動的元件
-  allen-room-parts.js                每個元件的貼圖框(產生檔,不要手改)
+  assets/allen/room/stage.webp        底板
+  assets/allen/room/parts/<id>.webp   會動的元件
+  assets/allen/room/grade/*.webp      天色分級圖(黃昏 / 夜晚 / 各時段的關燈版)
+  allen-room-parts.js                 每個元件的貼圖框(產生檔,不要手改)
 
 這支不是網站建置流程的一部分,是換素材時手動跑一次。留在 repo 裡是因為做法有幾個
 非直覺的決定,忘記了就會做壞:
@@ -36,6 +37,22 @@
 
 因為遮罩是二值的(不做羽化),底板 + 元件貼回原位在數學上等於原圖,只差 webp 量化。
 本檔最後會自己驗一次 RMSE,超標就中止。
+
+4) 天色不做成「另外三張底板」,做成兩張分級圖(multiply + screen)。
+   理由不是省流量(雖然也省很多),是正確性:另外三張底板只會換掉底板,會動的
+   12 個元件、飄的雲、還有站在房間裡的 Allen 全都還是白天的顏色,人會浮在夜景上。
+   分級圖疊在「房間 + Allen」整疊的最上面,一次把所有東西一起調到同一個時段。
+
+   任何一組「原圖 → 目標」都可以拆成這兩層,而且是精確的(不是近似):
+       B = 原圖 × M                 M = clamp(目標 / 原圖, 0, 1)   ← multiply 只能壓暗
+       輸出 = 1 − (1 − B)(1 − S)     S = 1 − (1 − 目標) / (1 − B)   ← screen 負責提亮
+   選 screen 不選 plus-lighter 是因為 screen 各家瀏覽器都有,而且上面這組解是閉式的。
+
+   分級要「位置的函數」不能是「像素值的函數」,凡是會動的地方都一樣:
+   雲飄過去、元件擺動的時候,底下露出來的像素才不會被套上前一個物件的分級而留下鬼影。
+   所以室內是位置場(檯燈衰減 + 窗光灑落),天空是垂直漸層,只有畫死不動的城市
+   才按像素值分(那排霓虹窗格要發光)。天空區的參考影格取「底板」不取原圖 ——
+   底板的雲已經拿掉了,分級才會是平滑的天空,雲飄到哪都對。
 """
 import io
 import json
@@ -72,9 +89,40 @@ CLOUD_MIN_PX = 1800                                   # 比這小的白塊當遠
 CLOUD_SKY_FRAC = 0.60                                 # 四周至少這麼多比例是天空才算雲
 CLOUD_SOFT = 6                                        # 雲的柔邊最多往外收這麼多 px
 
-# 關燈版:檯燈的光是個以燈頭為中心的衰減場,關燈就是把這份暖光減掉。
+# 檯燈的光是個以燈頭為中心的衰減場,關燈就是把這份暖光減掉。
 # 這是打光運算不是重畫,像素全部來自原圖。
 LAMP = {'x': 975, 'y': 648, 'r': 340, 'amount': 0.30, 'warm': (1.0, 0.80, 0.52)}
+# 窗光灑進室內的範圍(圓窗中心往房間裡放射)。夜裡是城市的冷光,黃昏是夕陽的金色。
+WIN = {'x': 96, 'y': 372, 'rx': 760, 'ry': 700}
+
+# 三個時段。白天就是原圖,不需要分級圖 —— 所以預設狀態零額外請求。
+#   sky        窗外天空的垂直漸層(位置的函數,雲飄過去不會有鬼影)
+#   city_*     城市:先整體調,再把「成片的藍色窗格」和「紅色帶」點成霓虹
+#   crush      夜裡把城市壓成剪影的力道(0 = 不壓)
+#   tint/amb   室內環境光的顏色與「離窗越遠越暗」的程度
+#   spill      窗口灑進來的光(加法)
+#   lamp       檯燈相對環境光的強度 —— 夜裡它是主光,所以要比白天更有存在感
+TIMES = {
+    'dusk': {
+        'sky': [(40, (108, 116, 196)), (200, (206, 146, 168)), (360, (248, 168, 128)),
+                (520, (255, 206, 128)), (680, (255, 224, 150))],
+        'city_mul': (1.00, 0.80, 0.63), 'city_lift': (16, 4, 0), 'crush': 0.0,
+        'neon_blue': (255, 196, 104), 'neon_blue_amt': 0.34,
+        'neon_red': (255, 132, 72), 'neon_red_amt': 0.45, 'bloom': 0.16,
+        'tint': (0.86, 0.805, 0.795), 'amb': 0.70,
+        'spill': (104, 46, -6), 'lamp': 1.18,
+    },
+    'night': {
+        'sky': [(40, (11, 18, 46)), (240, (14, 24, 58)), (420, (20, 32, 72)),
+                (560, (30, 46, 92)), (680, (40, 58, 104))],
+        'city_mul': (0.10, 0.12, 0.21), 'city_lift': (4, 6, 16), 'crush': 1.4,
+        'neon_blue': (74, 226, 246), 'neon_blue_amt': 0.92,
+        'neon_red': (255, 108, 52), 'neon_red_amt': 0.88, 'bloom': 0.40,
+        'tint': (0.315, 0.35, 0.485), 'amb': 0.66,
+        'spill': (12, 26, 58), 'lamp': 1.46,
+    },
+}
+GRADE_TIMES = ['day'] + list(TIMES)
 
 
 def shift(a, dy, dx):
@@ -233,15 +281,129 @@ def bleed(rgb, mask, rounds=6):
     return np.clip(out, 0, 255)
 
 
-def lights_off(img):
-    """把檯燈的暖光從畫面裡減掉 —— 打光運算,像素全部來自原圖。"""
-    h, w, _ = img.shape
-    yy, xx = np.mgrid[0:h, 0:w]
-    d = np.sqrt((xx - LAMP['x']) ** 2 + (yy - LAMP['y']) ** 2) / LAMP['r']
-    fall = np.clip(1.0 - d, 0, 1) ** 1.6                     # 以燈頭為中心的衰減
-    warm = np.array(LAMP['warm'], dtype=float)
-    out = img * (1.0 - LAMP['amount'] * fall[..., None] * warm[None, None, :])
-    return np.clip(out, 0, 255)
+def erode(mask, r):
+    out = mask.copy()
+    for _ in range(r):
+        e = out.copy()
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            e &= shift(out, dy, dx)
+        out = e
+    return out
+
+
+def opening(m, r=1):
+    """先侵蝕再膨脹。霓虹只認成片的色塊 —— 不開運算的話連抗鋸齒的邊也會發光,
+    城市會變成一團閃爍的雜訊。"""
+    return dilate(erode(m, r), r)
+
+
+def boxblur(a, r):
+    """cumsum 的方框模糊,跑兩次當高斯用(不引入 scipy)。"""
+    if r < 1:
+        return a.astype(float)
+    out = a.astype(float)
+    rest = ((0, 0),) * (out.ndim - 2)
+    for _ in range(2):
+        c = np.cumsum(np.pad(out, ((r + 1, r), (0, 0)) + rest, mode='edge'), axis=0)
+        out = (c[2 * r + 1:] - c[:-(2 * r + 1)]) / (2 * r + 1)
+        c = np.cumsum(np.pad(out, ((0, 0), (r + 1, r)) + rest, mode='edge'), axis=1)
+        out = (c[:, 2 * r + 1:] - c[:, :-(2 * r + 1)]) / (2 * r + 1)
+    return out
+
+
+def light_fields(sky_vis):
+    """分級要用到的幾何:窗口內外、城市、檯燈衰減、窗光灑落。"""
+    h, w = sky_vis.shape
+    yy, xx = np.mgrid[0:h, 0:w].astype(float)
+    d = np.sqrt(((xx - SKY['cx']) / SKY['rx']) ** 2 + ((yy - SKY['cy']) / SKY['ry']) ** 2)
+    # 窗口開口 = 橢圓 ∪ 看得到的天空。橢圓只是近似(圓心被畫面左緣切掉,差幾 px),
+    # 天空遮罩是精確的,兩個聯集再柔化約 8px,接縫就藏在窗框的圓角裡。
+    ap = ((d < 1.0) | sky_vis).astype(float)
+    w_out = np.clip((np.clip(boxblur(ap, 4), 0, 1) - 0.22) / 0.56, 0, 1)
+    city = (ap > 0.5) & ~sky_vis
+    ld = np.sqrt((xx - LAMP['x']) ** 2 + (yy - LAMP['y']) ** 2) / LAMP['r']
+    fall = np.clip(1.0 - ld, 0, 1) ** 1.6
+    wd = np.sqrt(((xx - WIN['x']) / WIN['rx']) ** 2 + ((yy - WIN['y']) / WIN['ry']) ** 2)
+    spill = np.clip(1.0 - wd, 0, 1) ** 1.5
+    return {'w_out': w_out, 'city': city, 'sky': sky_vis, 'fall': fall, 'spill': spill, 'yy': yy}
+
+
+def lamp_light(img, G):
+    """原圖裡屬於檯燈的那一份光。關燈就是把它減掉,換時段就是把它單獨加回去。"""
+    warm = np.array(LAMP['warm'], dtype=float)[None, None, :]
+    return img * LAMP['amount'] * G['fall'][..., None] * warm
+
+
+def time_target(src, G, key):
+    """這個時段「靜止合成」該有的樣子。回傳 (檯燈亮著, 檯燈關著)。"""
+    L = lamp_light(src, G)
+    A = src - L                                            # 白天的環境光
+    if key == 'day':
+        return src, np.clip(A, 0, 255)
+    cfg = TIMES[key]
+    r, g, b = src[:, :, 0], src[:, :, 1], src[:, :, 2]
+
+    # ---- 室外:天空是位置漸層,城市按像素值分級(它畫死不動,可以這樣做) ----
+    ys = np.array([s[0] for s in cfg['sky']], float)
+    cs = np.array([s[1] for s in cfg['sky']], float)
+    sky_t = np.stack([np.interp(G['yy'], ys, cs[:, i]) for i in range(3)], axis=2)
+    city_t = src * np.array(cfg['city_mul'])[None, None, :] \
+        + np.array(cfg['city_lift'])[None, None, :]
+    if cfg['crush']:
+        lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0
+        city_t = city_t * (0.42 + 0.58 * (lum ** cfg['crush'])[..., None])
+    neon_b = opening(G['city'] & (b - r > 35) & (b > 118))
+    neon_r = opening(G['city'] & (r - b > 45) & (r > 120))
+    for m, col, amt in ((neon_b, cfg['neon_blue'], cfg['neon_blue_amt']),
+                        (neon_r, cfg['neon_red'], cfg['neon_red_amt'])):
+        c = np.array(col, float)[None, None, :]
+        city_t = np.where(m[..., None], city_t * (1 - amt) + c * amt, city_t)
+    if cfg['bloom']:
+        halo = boxblur((neon_b | neon_r).astype(float), 7)[..., None]
+        hue = np.array(cfg['neon_blue'], float) * 0.6 + np.array(cfg['neon_red'], float) * 0.4
+        city_t = city_t + halo * hue[None, None, :] * cfg['bloom']
+    out_t = np.where(G['sky'][..., None], sky_t, city_t)
+
+    # ---- 室內:環境光離窗越遠越暗,檯燈最後單獨加回去 ----
+    # 不這樣拆的話整個房間會被同一個係數壓下去,看起來像「白天的圖調了色」;
+    # 拆開之後才有「一邊靠窗光、一邊靠檯燈、中間暗下去」的層次。
+    amb = cfg['amb'] + (1 - cfg['amb']) * G['spill'][..., None]
+    in_off = A * np.array(cfg['tint'])[None, None, :] * amb \
+        + G['spill'][..., None] * np.array(cfg['spill'])[None, None, :]
+    wo = G['w_out'][..., None]
+    return (np.clip(wo * out_t + (1 - wo) * (in_off + L * cfg['lamp']), 0, 255),
+            np.clip(wo * out_t + (1 - wo) * in_off, 0, 255))
+
+
+def split_maps(ref, t_on, t_off):
+    """把 ref → t_on 拆成 multiply + screen,再把「關燈」拆成另一張 multiply。
+    三張都是精確解,不是近似(驗算見 main 的還原誤差)。"""
+    s = ref / 255.0
+    on = np.clip(t_on / 255.0, 0, 1)
+    off = np.clip(t_off / 255.0, 0, 1)
+    M = np.clip(on / np.maximum(s, 1e-4), 0, 1)
+    B = s * M
+    # 只有「multiply 之後還不夠亮」的地方才需要 screen。少了這個判斷,純白像素會算出
+    # S=1(0/0),那一層就把輸出釘死在白色,關燈那一層再怎麼乘都壓不下來。
+    S = np.where(on > B + 1e-6,
+                 np.clip(1 - (1 - on) / np.maximum(1 - B, 1e-4), 0, 1), 0.0)
+    # 關燈那一層疊在 multiply 這一段(screen 之後才提亮),所以要解 screen 之前的值
+    want = 1 - (1 - off) / np.maximum(1 - S, 1e-4)
+    Off = np.where(B > 1e-4, np.clip(want, 0, 1) / np.maximum(B, 1e-4), 1.0)
+    return M, S, np.clip(Off, 0, 1)
+
+
+def save_map(arr, path):
+    """有損與無損各壓一次,留小的那個。夜晚的 screen 圖幾乎全黑只有霓虹,
+    無損反而又小又準;黃昏的 screen 圖整片天空都有值,有損才划算。"""
+    im = Image.fromarray(np.clip(arr * 255, 0, 255).astype('uint8'))
+    a, b = path + '.a.webp', path + '.b.webp'
+    im.save(a, quality=84, method=6)
+    im.save(b, lossless=True, quality=90, method=6)
+    keep, drop = (a, b) if os.path.getsize(a) <= os.path.getsize(b) else (b, a)
+    os.replace(keep, path)
+    os.remove(drop)
+    return os.path.getsize(path)
 
 
 def main():
@@ -371,9 +533,37 @@ def main():
     os.makedirs(os.path.join(OUT, 'parts'), exist_ok=True)
     Image.fromarray(plate.astype('uint8')).save(os.path.join(OUT, 'stage.webp'),
                                                 quality=88, method=6)
-    # ---- 關燈版:同一張底板減掉檯燈的暖光 ----
-    Image.fromarray(lights_off(plate).astype('uint8')).save(os.path.join(OUT, 'stage-off.webp'),
-                                                            quality=88, method=6)
+
+    # ---- 天色分級:黃昏 / 夜晚,外加每個時段的關燈版 ----
+    # 參考影格 = 靜止合成(底板 + 元件貼回去 = 原圖),但天空區改用底板 ——
+    # 底板的雲已經拿掉,天空是平滑的,雲飄到哪裡分級都對得上。
+    os.makedirs(os.path.join(OUT, 'grade'), exist_ok=True)
+    G = light_fields(sky_vis)
+    ref = np.where(sky_vis[..., None], plate, src)
+    gtotal = 0
+    for key in GRADE_TIMES:
+        t_on, t_off = time_target(src, G, key)
+        M, S, Off = split_maps(ref, t_on, t_off)
+        # 先驗算:multiply + screen 這條路要能精確還原,不然後面全都是猜的
+        back = (1 - (1 - ref / 255.0 * M) * (1 - S)) * 255
+        e_on = float(np.abs(back - t_on).max())
+        e_off = float(np.abs((1 - (1 - ref / 255.0 * M * Off) * (1 - S)) * 255 - t_off).max())
+        if max(e_on, e_off) > 1.0:
+            sys.exit('%s 的分級圖拆不乾淨(誤差 %.1f / %.1f)' % (key, e_on, e_off))
+        n = save_map(Off, os.path.join(OUT, 'grade', '%s-off.webp' % key))
+        gtotal += n
+        line = '  %-5s 關燈 %6d' % (key, n)
+        if key != 'day':                       # 白天就是原圖,不需要分級圖
+            for nm, arr in (('m', M), ('s', S)):
+                k = save_map(arr, os.path.join(OUT, 'grade', '%s-%s.webp' % (key, nm)))
+                gtotal += k
+                line += '  %s %6d' % (nm, k)
+        print(line + ' bytes')
+    for stale in ('stage-off.webp',):          # 舊做法:整張底板換掉,已被分級圖取代
+        p = os.path.join(OUT, stale)
+        if os.path.exists(p):
+            os.remove(p)
+            print('  移除舊資產 %s' % stale)
 
     # ---- 元件:原圖的像素 + 二值遮罩。遮罩不羽化,靜止合成才會等於原圖 ----
     total = 0
@@ -402,6 +592,10 @@ def main():
     lines.append('export const SKY_MASK = [%d, %d, %d, %d];'
                  % (mb[0], mb[1], mb[2] - mb[0], mb[3] - mb[1]))
     lines.append('')
+    lines.append('// 有分級圖的時段。白天就是原圖(不需要分級圖),所以它只出現在關燈版。')
+    lines.append('export const GRADE_TIMES = [%s];'
+                 % ', '.join("'%s'" % t for t in GRADE_TIMES))
+    lines.append('')
     io.open(JS_OUT, 'w', encoding='utf-8').write('\n'.join(lines))
 
     # ---- 驗收:貼回去要等於原圖 ----
@@ -411,8 +605,8 @@ def main():
         comp.alpha_composite(part, (boxes[cid][0], boxes[cid][1]))
     d = np.abs(np.asarray(comp.convert('RGB')).astype(int) - src.astype(int))
     rmse = float(np.sqrt((d ** 2).mean()))
-    print('stage.webp %d bytes,%d 個元件共 %d bytes'
-          % (os.path.getsize(os.path.join(OUT, 'stage.webp')), len(part_ids), total))
+    print('stage.webp %d bytes,%d 個元件共 %d bytes,分級圖共 %d bytes(全部延後載入)'
+          % (os.path.getsize(os.path.join(OUT, 'stage.webp')), len(part_ids), total, gtotal))
     print('靜止合成 vs 原圖 RMSE = %.2f' % rmse)
     if rmse > 3.0:
         sys.exit('RMSE 太高 —— 遮罩或底板對不上,不要就這樣上線')

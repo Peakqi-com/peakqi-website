@@ -34,15 +34,14 @@ export function createAct(stage, api) {
 <style>
 .aw-root{position:absolute;inset:0;overflow:hidden;background:#DCE4EE}
 .aw-root>*{position:absolute;inset:0}
-/* 疊圖順序用 z-index 不用 DOM 順序 —— 房間那兩層是 createRoom 自己 append 的,
+/* 疊圖順序用 z-index 不用 DOM 順序 —— 房間那幾層是 createRoom 自己 append 的,
    用 z-index 就不必去搬節點。
-   背景 0 → 房間會動的部分 1 → 暗角 2 → Allen 3 → 命中層 4 → 提示 5。
-   Allen 站在房間裡,所以燈光雲霧在他後面;命中層在他前面,不然角色那個 div 會把
-   窗戶和控制台的點擊整片吃掉 —— 它只有中間一小塊有畫東西,其餘都是透明的空 box。
+   背景 0 → 房間幾何 1 → 暗角 2 → Allen 3 → 天色分級 4 → 發光 5 → 命中 6 → 提示 7。
+   1 / 4 / 5 / 6 由 allen-room.js 自己寫成行內樣式(順序只有它知道)。
+   Allen 站在房間裡,所以天色壓在他身上、光源疊在他前面;命中層又更前面,不然
+   角色那個 div 會把窗戶和控制台的點擊整片吃掉 —— 它只有中間一小塊有畫東西。
    切換點是 stage 的子節點(z-index 9),不受這裡影響。
    背景不再是一張 <img>:房間那一層自己畫底板(挖掉會動的元件),再把元件貼回去。 */
-.aw-room{pointer-events:none;z-index:1}
-.aw-hits{z-index:4}
 /* 背景是亮的,四角壓一點暗才不會和卡片邊界糊在一起,角色也才跳得出來 */
 .aw-vig{pointer-events:none;z-index:2;
   background:radial-gradient(120% 95% at 50% 42%,transparent 55%,rgba(9,11,14,.30) 100%)}
@@ -50,7 +49,7 @@ export function createAct(stage, api) {
 /* 轉身的精靈圖疊在角色上,兩張 SVG 同一個 viewBox、同一個框,對位自動成立 */
 .aw-figure>svg{position:absolute;inset:0;width:100%;height:100%}
 .aw-turn{opacity:0}
-.aw-hint{left:10px;top:10px;right:auto;bottom:auto;z-index:5;padding:4px 9px;border-radius:999px;
+.aw-hint{left:10px;top:10px;right:auto;bottom:auto;z-index:7;padding:4px 9px;border-radius:999px;
   background:rgba(9,11,14,.55);color:#F2EFE8;font:600 10px/1.4 'Space Grotesk','Noto Sans TC',sans-serif;
   letter-spacing:.04em;pointer-events:none;transition:opacity .5s ease}
 </style>
@@ -61,8 +60,9 @@ export function createAct(stage, api) {
   stage.insertBefore(root, stage.firstChild);
   root.setAttribute('role', 'img');
   root.setAttribute('aria-label',
-    t('第一幕:Allen 站在他的工作間裡,滑鼠移過去會看你,點一下會揮手',
-      "Act 1: Allen in his workshop — he follows the cursor, tap and he waves"));
+    t('第一幕:Allen 站在他的工作間裡,滑鼠移過去會看你,點一下會揮手;戳窗戶可以換天色',
+      'Act 1: Allen in his workshop — he follows the cursor, tap and he waves; '
+      + 'poke the window to change the time of day'));
 
   const mount = root.querySelector('.aw-figure');
   const hint = root.querySelector('.aw-hint');
@@ -127,8 +127,17 @@ export function createAct(stage, api) {
   // 再密一點在團隊卡上會變成一直在動的干擾。
   let lastT = null, beatIn = 3 + R() * 3, cur = null, curT = 0, tapped = false;
   let exprBack = -1;                  // 反應完把表情交還給閒置演出的倒數
+  let hintT = -1;                     // 第二段提示的倒數
 
-  const noticed = () => { if (!tapped) { tapped = true; hint.style.opacity = '0'; } };
+  // 提示分兩段:先教「這張圖可以點」,真的點過之後才透露「窗戶會換天色」——
+  // 一次講兩件事沒人看,而且天色是要自己發現才有意思的那種東西。
+  const noticed = (key) => {
+    if (tapped) return;
+    tapped = true;
+    if (key === 'window') { hint.style.opacity = '0'; return; }
+    hint.textContent = t('戳窗戶,天色會變', 'Poke the window, the sky turns');
+    hintT = 5;
+  };
 
   // 房間本身也活著,而且動的都是原圖裡那個物件本身(切片重貼,不是另外畫的):
   // 盆栽從土面搖、洞洞板上的板手與起子從掛孔擺、馬克杯與檯燈微晃、螢幕自己發亮。
@@ -144,7 +153,7 @@ export function createAct(stage, api) {
       cur = null;                     // 讓「看過去」蓋掉進行中的段落
       exprBack = 1.5;
       beatIn = 4 + R() * 5;
-      noticed();
+      noticed(key);
     },
   });
 
@@ -206,6 +215,10 @@ export function createAct(stage, api) {
     if (exprBack > 0) {
       exprBack -= dt;
       if (exprBack <= 0) bot.setExpr('idle');
+    }
+    if (hintT > 0) {
+      hintT -= dt;
+      if (hintT <= 0) hint.style.opacity = '0';
     }
   }
   const offRaf = api.raf(frame);

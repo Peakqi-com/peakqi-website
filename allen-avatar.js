@@ -25,6 +25,22 @@ export function mountAllenAvatar() {
       + '<div data-allen-still style="position:absolute;left:20%;bottom:2%;width:52%;height:66%"></div>';
     stage.setAttribute('role', 'img');
     stage.setAttribute('aria-label', t('Allen 的機器人站在他的工作間裡', "Allen's robot in his workshop"));
+    // 天色照樣跟著訪客的時鐘走 —— 關掉動畫的意思是「不要動」,不是「永遠是白天」。
+    // 分級圖疊在整疊最上面(工作間 + Allen 一起調),所以 stage 要自己是堆疊脈絡。
+    stage.style.isolation = 'isolate';
+    import('./allen-sky.js').then((sky) => {
+      for (const [name, mode] of sky.gradeLayers(sky.pickTime())) {
+        if (dead) return;
+        const im = new Image();
+        im.alt = '';
+        im.setAttribute('aria-hidden', 'true');
+        im.onload = () => { if (!dead) stage.appendChild(im); };
+        // 和上面那張工作間同一個裁切方式,對位才會成立
+        im.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;'
+          + `object-position:50% 62%;pointer-events:none;mix-blend-mode:${mode}`;
+        im.src = sky.GRADE_BASE + name + '.webp';
+      }
+    }).catch(() => {});
     import('./allen-bot.js')
       .then((m) => { if (!dead) m.createAllenBot(stage.querySelector('[data-allen-still]'), { reduced: true }); })
       .catch(() => {});

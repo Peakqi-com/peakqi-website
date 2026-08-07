@@ -23,3 +23,6 @@ export const PART_BOX = {
 // 雲的可見範圍(= 原圖看得到天空的地方)。用它當遮罩,雲就不會飄到窗框上,
 // 也不會蓋住城市 —— 雲在城市後面。
 export const SKY_MASK = [0, 70, 279, 581];
+
+// 有分級圖的時段。白天就是原圖(不需要分級圖),所以它只出現在關燈版。
+export const GRADE_TIMES = ['day', 'dusk', 'night'];

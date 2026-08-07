@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>Allen 天色 — 分級圖驗算</title>
+<style>html,body{margin:0;background:#000}
+/* 1254 原尺寸,不縮放 —— 要和 Python 算出來的目標逐像素比對 */
+#s{position:relative;width:1254px;height:1254px;isolation:isolate}
+#s>*{position:absolute;inset:0;width:1254px;height:1254px}
+</style>
+</head>
+<body>
+<!-- 只放底板和分級圖(不放元件、不放發光層):純粹驗「multiply + screen 這條路
+     在真的瀏覽器裡算出來的東西,和產生器解出來的目標一不一樣」。
+     ?t=dusk|night&off=1 -->
+<div id="s"><img id="base" src="/assets/allen/room/stage.webp" alt=""></div>
+<script>
+const Q = new URLSearchParams(location.search);
+const t = Q.get('t') || 'night';
+const s = document.getElementById('s');
+const add = (src, mode) => new Promise((ok, no) => {
+  const im = new Image();
+  im.onload = () => { im.style.mixBlendMode = mode; s.appendChild(im); ok(); };
+  im.onerror = no;
+  im.src = '/assets/allen/room/grade/' + src + '.webp';
+});
+(async () => {
+  if (t !== 'day') await add(t + '-m', 'multiply');
+  if (Q.get('off')) await add(t + '-off', 'multiply');
+  if (t !== 'day') await add(t + '-s', 'screen');
+  await document.getElementById('base').decode();
+  document.title = 'ready';
+})();
+</script>
+</body>
+</html>
