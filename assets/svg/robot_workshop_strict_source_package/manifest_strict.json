@@ -1,0 +1,306 @@
+{
+  "source_svg": "source_original.svg",
+  "source_embedded_png": "source_original_embedded.png",
+  "source_embedded_png_md5": "412436aa25bbe166bcb61410aa2f340b",
+  "note": "The uploaded SVG is a flattened SVG containing a single embedded PNG. Therefore the split assets are image-based SVG wrappers, not true path-level vectors. All object assets come from that exact source image.",
+  "canvas": {
+    "width": 1254,
+    "height": 1254,
+    "viewBox": [
+      0,
+      0,
+      1254,
+      1254
+    ]
+  },
+  "background_plate": "background_plate_strict.svg",
+  "scene_svg": "robot_workshop_strict_split.svg",
+  "components": [
+    {
+      "id": "mug",
+      "label": "杯子",
+      "bbox": [
+        958,
+        672,
+        1074,
+        770
+      ],
+      "file": "mug.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "wrench_left",
+      "label": "左板手",
+      "bbox": [
+        1067,
+        493,
+        1122,
+        660
+      ],
+      "file": "wrench_left.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "wrench_right",
+      "label": "右板手",
+      "bbox": [
+        1122,
+        493,
+        1174,
+        659
+      ],
+      "file": "wrench_right.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "screwdriver_left",
+      "label": "左螺絲起子",
+      "bbox": [
+        1171,
+        490,
+        1215,
+        660
+      ],
+      "file": "screwdriver_left.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "screwdriver_right",
+      "label": "右螺絲起子",
+      "bbox": [
+        1212,
+        489,
+        1254,
+        660
+      ],
+      "file": "screwdriver_right.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "lamp",
+      "label": "工作燈",
+      "bbox": [
+        878,
+        540,
+        1020,
+        760
+      ],
+      "file": "lamp.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "shelf_plant",
+      "label": "架上盆栽",
+      "bbox": [
+        929,
+        371,
+        1011,
+        458
+      ],
+      "file": "shelf_plant.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "blue_case",
+      "label": "藍色工具盒",
+      "bbox": [
+        1003,
+        392,
+        1092,
+        460
+      ],
+      "file": "blue_case.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "poster",
+      "label": "BUILD 海報",
+      "bbox": [
+        897,
+        59,
+        1102,
+        361
+      ],
+      "file": "poster.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "control_panel",
+      "label": "控制台",
+      "bbox": [
+        0,
+        670,
+        274,
+        850
+      ],
+      "file": "control_panel.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "left_plant",
+      "label": "窗邊盆栽",
+      "bbox": [
+        199,
+        560,
+        369,
+        761
+      ],
+      "file": "left_plant.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "wall_panel",
+      "label": "牆面控制器",
+      "bbox": [
+        470,
+        252,
+        593,
+        416
+      ],
+      "file": "wall_panel.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "dumbbells",
+      "label": "啞鈴組",
+      "bbox": [
+        1044,
+        915,
+        1254,
+        1050
+      ],
+      "file": "dumbbells.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "drawers",
+      "label": "藍色抽屜櫃",
+      "bbox": [
+        885,
+        797,
+        1194,
+        1031
+      ],
+      "file": "drawers.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "top_toolbox",
+      "label": "上層工具箱",
+      "bbox": [
+        1110,
+        238,
+        1254,
+        337
+      ],
+      "file": "top_toolbox.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "red_button",
+      "label": "紅色按鈕",
+      "bbox": [
+        184,
+        730,
+        220,
+        767
+      ],
+      "file": "red_button.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "green_button",
+      "label": "綠色按鈕",
+      "bbox": [
+        198,
+        760,
+        236,
+        801
+      ],
+      "file": "green_button.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "screen",
+      "label": "控制螢幕",
+      "bbox": [
+        0,
+        690,
+        193,
+        808
+      ],
+      "file": "screen.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "reused clean extraction from exact source image"
+    },
+    {
+      "id": "top_blue_monitor",
+      "label": "上方藍色螢幕",
+      "bbox": [
+        461,
+        31,
+        570,
+        91
+      ],
+      "file": "top_blue_monitor.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "difference against strict background_plate_strict.png"
+    },
+    {
+      "id": "top_box_blue",
+      "label": "上層藍色收納盒",
+      "bbox": [
+        1118,
+        247,
+        1198,
+        325
+      ],
+      "file": "top_box_blue.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "difference against strict background_plate_strict.png"
+    },
+    {
+      "id": "top_box_red",
+      "label": "上層紅色收納盒",
+      "bbox": [
+        1212,
+        241,
+        1254,
+        325
+      ],
+      "file": "top_box_red.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "difference against strict background_plate_strict.png"
+    },
+    {
+      "id": "floor_bin",
+      "label": "前景灰色收納箱",
+      "bbox": [
+        957,
+        986,
+        1254,
+        1254
+      ],
+      "file": "floor_bin.png",
+      "source": "exact crop from source_original_embedded.png",
+      "method": "difference against strict background_plate_strict.png"
+    }
+  ]
+}

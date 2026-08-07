@@ -4,6 +4,11 @@
 |---|---|---|
 | `workshop.webp` | `assets/svg/robot_removed_web_background.svg` 裡內嵌的 PNG | 第一幕的背景 |
 | `turnaround.webp` | `assets/svg/robot_turnaround_8_views_exact.svg` 裡內嵌的 PNG | 轉身那一段的六格精靈圖 |
+| `room/stage.webp` | `robot_workshop_strict_source_package` | 房間底板(挖掉會動的 12 個元件) |
+| `room/parts/*.webp` | 同上的 `components_png` | 會動的 12 個元件,貼回各自的 bbox |
+
+`workshop.webp` 現在只給 reduced-motion 的靜態畫面與開發預覽頁用(它是完整的原圖,
+一個請求就好);正式的動態場景走 `room/stage.webp` + 12 個零件。
 
 ## workshop.webp 怎麼來的
 原稿是一張 3.8 MB 的 SVG,裡面包著一張 1254×1254 的 base64 PNG(機器人已被去掉的工作間)。
@@ -30,3 +35,19 @@ magick <原始 PNG> -strip -resize 1254x1254 -define webp:method=6 -quality 86 w
 3. **裁格**:只留 45°–270° 六格。理由見根目錄 README。
 
 換圖的話這三步要重跑,腳本沒有留在 repo 裡(一次性的資料清理,留著反而會誤導成建置流程)。
+
+## room/ 怎麼來的
+`python tools/gen-allen-room-assets.py`(不是網站建置流程,換素材時手動跑一次)。
+
+那支腳本的三個關鍵決定寫在它自己的檔頭,重點:
+- **不用套件附的 `background_plate_strict.png`** —— 它把 22 個元件全部挖掉再修補,
+  洞洞板那塊變成一片咖啡色楔形,板手擺動幾度就露餡。
+- 只挖會動的、而且要一次挖完再擴散(不然元件會互相把顏色餵給對方)。
+- 擴散用的洞外擴 5px 取乾淨種子,但最後只把「元件蓋得到」的像素換掉,
+  外面那一圈還原成原圖。
+
+## 套件本身的兩個已知限制
+- 切片刻意沒收進物件右側的暗面與投影,那部分留在底板上 —— 靜止時剛好補齊,
+  所以動作幅度必須小(見根目錄 README)。
+- `top_blue_monitor` 的切片邊緣是破的,`top_box_blue` / `top_box_red` 有白邊,
+  所以這三個沒有列入會動的元件。

@@ -11,7 +11,6 @@ import { createRoom } from './allen-room.js';
 import { J, VIEWBOX } from './allen-art.js';
 import { t } from './i18n.js';
 
-const BG = '/assets/allen/workshop.webp';
 
 // 轉身用的八視角圖(只取 45°–270° 六格)。
 //
@@ -35,13 +34,13 @@ export function createAct(stage, api) {
 <style>
 .aw-root{position:absolute;inset:0;overflow:hidden;background:#DCE4EE}
 .aw-root>*{position:absolute;inset:0}
-.aw-bg{width:100%;height:100%;object-fit:cover;object-position:50% 62%;z-index:0}
 /* 疊圖順序用 z-index 不用 DOM 順序 —— 房間那兩層是 createRoom 自己 append 的,
    用 z-index 就不必去搬節點。
    背景 0 → 房間會動的部分 1 → 暗角 2 → Allen 3 → 命中層 4 → 提示 5。
    Allen 站在房間裡,所以燈光雲霧在他後面;命中層在他前面,不然角色那個 div 會把
    窗戶和控制台的點擊整片吃掉 —— 它只有中間一小塊有畫東西,其餘都是透明的空 box。
-   切換點是 stage 的子節點(z-index 9),不受這裡影響。 */
+   切換點是 stage 的子節點(z-index 9),不受這裡影響。
+   背景不再是一張 <img>:房間那一層自己畫底板(挖掉會動的元件),再把元件貼回去。 */
 .aw-room{pointer-events:none;z-index:1}
 .aw-hits{z-index:4}
 /* 背景是亮的,四角壓一點暗才不會和卡片邊界糊在一起,角色也才跳得出來 */
@@ -55,7 +54,6 @@ export function createAct(stage, api) {
   background:rgba(9,11,14,.55);color:#F2EFE8;font:600 10px/1.4 'Space Grotesk','Noto Sans TC',sans-serif;
   letter-spacing:.04em;pointer-events:none;transition:opacity .5s ease}
 </style>
-<img class="aw-bg" src="${BG}" alt="" aria-hidden="true">
 <div class="aw-vig"></div>
 <div class="aw-figure"></div>
 <div class="aw-hint">${t('點一下打招呼', 'Tap to say hi')}</div>`;
@@ -132,7 +130,8 @@ export function createAct(stage, api) {
 
   const noticed = () => { if (!tapped) { tapped = true; hint.style.opacity = '0'; } };
 
-  // 房間本身也活著:窗外的雲、控制台的螢幕、檯燈、馬克杯的蒸氣、機台的指示燈。
+  // 房間本身也活著,而且動的都是原圖裡那個物件本身(切片重貼,不是另外畫的):
+  // 盆栽從土面搖、洞洞板上的板手與起子從掛孔擺、馬克杯與檯燈微晃、螢幕自己發亮。
   // 戳房間裡的東西 Allen 會轉頭看過去 —— 這一條是把「角色」和「場景」接起來的線,
   // 少了它兩邊就只是各動各的。
   const room = createRoom(root, {
