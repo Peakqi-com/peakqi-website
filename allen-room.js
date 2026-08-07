@@ -36,24 +36,24 @@ export const CANVAS = 1254;
  *  檯燈在底座、海報在圖釘。座標都是原圖的 1254×1254。 */
 const MOTION = [
   // 洞洞板上吊掛的工具:從掛孔擺盪。四支相位錯開,不然會像整排一起晃。
-  { id: 'wrench_left', pivot: [1094, 503], sway: 1.5, per: 3.7, ph: 0.0 },
-  { id: 'wrench_right', pivot: [1148, 503], sway: 1.4, per: 4.3, ph: 1.9 },
-  { id: 'screwdriver_left', pivot: [1193, 500], sway: 1.2, per: 3.3, ph: 3.4 },
-  { id: 'screwdriver_right', pivot: [1233, 499], sway: 1.3, per: 4.9, ph: 5.1 },
+  { id: 'wrench_left', pivot: [1094, 503], sway: 2.4, per: 3.7, ph: 0.0 },
+  { id: 'wrench_right', pivot: [1148, 503], sway: 2.2, per: 4.3, ph: 1.9 },
+  { id: 'screwdriver_left', pivot: [1193, 500], sway: 2.0, per: 3.3, ph: 3.4 },
+  { id: 'screwdriver_right', pivot: [1233, 499], sway: 2.1, per: 4.9, ph: 5.1 },
   // 盆栽:從土面搖。這是全場最該動的東西 —— 有風的時候人先看植物。
-  { id: 'left_plant', pivot: [284, 757], sway: 1.9, per: 5.5, ph: 0.7 },
-  { id: 'shelf_plant', pivot: [970, 456], sway: 1.7, per: 4.6, ph: 2.6 },
+  { id: 'left_plant', pivot: [284, 757], sway: 3.2, per: 5.5, ph: 0.7 },
+  { id: 'shelf_plant', pivot: [970, 456], sway: 2.8, per: 4.6, ph: 2.6 },
   // 檯燈:整支是一片剪影,只能繞底座微微晃(它是有重量的金屬,本來就不該亂動)
-  { id: 'lamp', pivot: [905, 754], sway: 0.5, per: 7.0, ph: 1.2 },
+  { id: 'lamp', pivot: [905, 754], sway: 0.8, per: 7.0, ph: 1.2, lit: [938, 616, 76, 52] },
   // 馬克杯:繞杯底
-  { id: 'mug', pivot: [1012, 768], sway: 0.7, per: 6.2, ph: 4.0 },
+  { id: 'mug', pivot: [1012, 768], sway: 1.1, per: 6.2, ph: 4.0 },
   // 海報:四角有圖釘,本來就不會晃,只有被戳到才抖一下
   { id: 'poster', pivot: [912, 74], sway: 0, per: 1, ph: 0 },
   // 按鈕:按下去是位移,不是旋轉
   { id: 'red_button', pivot: [202, 748], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
   { id: 'green_button', pivot: [217, 780], sway: 0, per: 1, ph: 0, push: [2.4, 2.0] },
   // 控制台螢幕:不做幾何,只把它自己的像素加亮(見下面的 screen blend)
-  { id: 'screen', pivot: [96, 749], sway: 0, per: 1, ph: 0, lit: true },
+  { id: 'screen', pivot: [96, 749], sway: 0, per: 1, ph: 0, lit: 'all' },
 ];
 // 把動作和產生出來的貼圖框合起來。少一邊就是資產和程式對不上,直接擋下來。
 const PARTS = MOTION.map((m) => {
@@ -64,6 +64,15 @@ const PARTS = MOTION.map((m) => {
 
 /** 可以戳的地方。多數就是元件本身;window 沒有對應的切片(窗景是畫死在底板上的),
  *  所以「起風」不是去動窗戶,而是讓場上所有植物與吊掛工具一起被吹 —— 用真的東西表達風。 */
+/** 房間裡「只會亮、不會動」的地方:牆上小螢幕、頂上藍螢幕、地上機台的燈條。
+ *  它們不用另外切成零件 —— 直接把底板自己的像素在這幾塊矩形上用 screen 混合疊亮就好,
+ *  零新增檔案、零額外請求,而且亮的一樣是原稿畫的那面螢幕。 */
+const GLOW = [
+  { id: 'wall_screen', box: [504, 282, 70, 48], amp: 0.20, per: 5.2, ph: 0.0 },
+  { id: 'top_screen', box: [474, 31, 84, 40], amp: 0.17, per: 6.9, ph: 2.1 },
+  { id: 'bin_led', box: [1010, 1132, 107, 39], amp: 0.34, per: 3.1, ph: 4.2 },
+];
+
 const SPOTS = [
   { k: 'window', box: [0, 60, 300, 560], look: [-0.85, -0.3] },
   { k: 'console', box: [0, 640, 274, 270], look: [-0.8, 0.2] },
@@ -109,8 +118,26 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
     p.lit
       // 「亮」不是另外畫光,是把這個物件自己的像素再疊一次(screen 混合)。
       // 沒有任何新形狀被發明出來,亮的就是原稿畫的那面螢幕。
-      ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')
+      ? (p.lit === 'all'
+        ? img(`${BASE}parts/${p.id}.webp`, p.box, ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')
+        : `<g clip-path="url(#lc${p.id}${uid})">${img(`${BASE}parts/${p.id}.webp`, p.box,
+            ' data-lit="1" style="mix-blend-mode:screen" opacity="0"')}</g>`
+        + `<defs><clipPath id="lc${p.id}${uid}"><rect x="${p.lit[0]}" y="${p.lit[1]}"`
+        + ` width="${p.lit[2]}" height="${p.lit[3]}" rx="8"/></clipPath></defs>`)
       : ''}</g>`).join('\n')}
+${GLOW.map((w) => `<g data-r="${w.id}" clip-path="url(#gc${w.id}${uid})" opacity="0">`
+  + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}" style="mix-blend-mode:screen"/></g>`).join('')}
+<defs>${GLOW.map((w) => `<clipPath id="gc${w.id}${uid}"><rect x="${w.box[0]}" y="${w.box[1]}"`
+  + ` width="${w.box[2]}" height="${w.box[3]}" rx="6"/></clipPath>`).join('')}</defs>
+
+<!-- 檯燈點亮的那一圈暖光。它是光不是物件,所以用軟邊放射漸層;矩形會留一條看得見的直邊。 -->
+<defs><radialGradient id="warm${uid}">
+  <stop offset="0" stop-color="#FFD9A0" stop-opacity=".8"/>
+  <stop offset="58%" stop-color="#FFC46B" stop-opacity=".24"/>
+  <stop offset="100%" stop-color="#FFB347" stop-opacity="0"/>
+</radialGradient></defs>
+<ellipse data-r="warm" cx="975" cy="706" rx="250" ry="215" fill="url(#warm${uid})" opacity="0"/>
+
 <!-- 檯燈關掉時,燈照得到的那一圈涼下來。用軟邊的放射漸層,不用矩形 ——
      矩形會在畫面上留一條看得見的直邊,那就變成憑空多出來的東西了。 -->
 <defs><radialGradient id="dimg${uid}">
@@ -130,6 +157,8 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
   const litEl = Object.fromEntries(PARTS.filter((p) => p.lit)
     .map((p) => [p.id, q(p.id).querySelector('[data-lit]')]));
   const dim = q('dim');
+  const warm = q('warm');
+  const glowEl = Object.fromEntries(GLOW.map((w) => [w.id, q(w.id)]));
 
   // ---- 命中範圍:只有這幾塊收指標事件 ----
   hits.style.pointerEvents = 'none';
@@ -149,6 +178,8 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
   const fs = FrameStep(12);
   let t0 = null, T = 0;
   let gustT = -1, lampOn = true, lampT = 1, flapT = -1, screenT = -1;
+  // 房間不該只是「全部一起慢慢晃」—— 每隔一陣子挑一件事做大一點,畫面才有起伏。
+  let evIn = 3 + rand() * 4, ledT = -1, flickT = -1;
   const press = { red_button: -1, green_button: -1 };
   const kick = {};                       // 每個元件被戳一下的額外擺動
   PARTS.forEach((p) => { kick[p.id] = 0; });
@@ -159,6 +190,16 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
     // 一起晃會像整張圖在抖,依序晃才像空氣流過去。
     PARTS.forEach((p) => { if (p.sway) kick[p.id] = Math.max(kick[p.id], power); });
   }
+  // 一次只發生一件,幅度比閒置大,結束就回到閒置。
+  const EVENTS = [
+    () => gust(0.75),                                   // 一陣風掃過:植物與工具一起被吹
+    () => { screenT = 0; },                             // 控制台跑一段資料
+    () => { ledT = 0; },                                // 機台的燈條連閃
+    () => { flickT = 0; },                              // 檯燈閃一下
+    () => { ['wrench_left', 'wrench_right', 'screwdriver_left', 'screwdriver_right']
+      .forEach((id, i) => { kick[id] = 0.9 - i * 0.12; }); },   // 只有工具排晃
+  ];
+
   const ACT = {
     window: () => gust(1),
     lamp: () => { lampOn = !lampOn; kick.lamp = 0.8; },
@@ -203,6 +244,10 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
     if (gustT >= 0) { gustT += dt; if (gustT > 3.2) gustT = -1; }
     if (flapT >= 0) { flapT += dt; if (flapT > 1.1) flapT = -1; }
     if (screenT >= 0) { screenT += dt; if (screenT > 1.4) screenT = -1; }
+    if (ledT >= 0) { ledT += dt; if (ledT > 1.6) ledT = -1; }
+    if (flickT >= 0) { flickT += dt; if (flickT > 0.9) flickT = -1; }
+    evIn -= dt;
+    if (evIn <= 0) { EVENTS[(rand() * EVENTS.length) | 0](); evIn = 5 + rand() * 7; }
     for (const k in press) if (press[k] >= 0) { press[k] += dt; if (press[k] > 0.5) press[k] = -1; }
     for (const k in kick) kick[k] *= Math.exp(-dt * 1.15);      // 被吹過之後慢慢平靜下來
     lampT += ((lampOn ? 1 : 0) - lampT) * clamp(dt * 6, 0, 1);
@@ -216,7 +261,7 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
         // 平常是很慢的自然擺動;被風吹過會多一段衰減中的擺動,頻率比平常快。
         const idle = Math.sin(T * (6.283 / p.per) + p.ph);
         const k = kick[p.id];
-        const hit = k > 0.004 ? Math.sin(T * (6.283 / (p.per * 0.42)) + p.ph) * k * 2.6 : 0;
+        const hit = k > 0.004 ? Math.sin(T * (6.283 / (p.per * 0.42)) + p.ph) * k * 1.5 : 0;
         const a = p.sway * (idle + hit);
         if (Math.abs(a) > 0.01) tr = `rotate(${r2(a)},${p.pivot[0]},${p.pivot[1]})`;
       }
@@ -246,7 +291,22 @@ ${PARTS.map((p) => `<g data-r="${p.id}">${img(`${BASE}parts/${p.id}.webp`, p.box
       + (screenT >= 0 ? 0.42 * Math.exp(-screenT * 2.6) * (Math.floor(screenT * 9) % 2 ? 0.55 : 1) : 0);
     if (litEl.screen) litEl.screen.setAttribute('opacity', r2(clamp(boost, 0, 0.6)));
 
-    // 檯燈:關掉時工作檯那側涼一階
+    // 底板自己會亮的三個地方:各自用不同的週期呼吸,機台燈條被點名時連閃
+    for (const w of GLOW) {
+      let o = w.amp * (0.55 + 0.45 * Math.sin(T * (6.283 / w.per) + w.ph));
+      if (w.id === 'bin_led' && ledT >= 0) {
+        o = (Math.floor(ledT * 11) % 2 ? 0.06 : 0.62) * Math.exp(-ledT * 1.2);
+      }
+      glowEl[w.id].setAttribute('opacity', r2(clamp(o, 0, 0.7)));
+    }
+
+    // 檯燈:亮著的時候燈罩自己發亮、桌面有一圈暖光,兩者一起呼吸。
+    // 被點名時閃兩下 —— 燈管接觸不良的那種閃,是這種老工作間會有的事。
+    const breathe = 0.78 + 0.22 * Math.sin(T * 1.35);
+    const flick = flickT >= 0 ? (Math.floor(flickT * 14) % 2 ? 0.25 : 1) : 1;
+    const lampLit = lampT * breathe * flick;
+    if (litEl.lamp) litEl.lamp.setAttribute('opacity', r2(lampLit * 0.42));
+    warm.setAttribute('opacity', r2(lampLit * 0.5));
     dim.setAttribute('opacity', r2((1 - lampT) * 0.26));
     g.lamp.style.opacity = r2(0.72 + lampT * 0.28);
   });
