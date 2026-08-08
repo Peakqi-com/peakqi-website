@@ -150,12 +150,10 @@ export function createSolutions() {
     const wrap = pin('nurture', 190);
     const planes = qa('#nurture [data-nplane]');
     if (!wrap || !planes.length) return;
+    // 三張卡直接就位。使用者要求不要視差淡入 —— 捲到才逐張浮出來,讀起來像還沒載完。
+    // 底下那條進度線仍隨捲動畫出來(那是敘事,不是進場效果)。
+    planes.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
     ScrollChapter(ctx, wrap, (p) => {
-      planes.forEach((el, i) => {
-        const k = ez(sub(p, 0.06 + i * 0.12, 0.3 + i * 0.12));
-        el.style.opacity = String(0.12 + 0.88 * k);
-        el.style.transform = 'translateY(' + ((1 - k) * 34).toFixed(1) + 'px) scale(' + (0.96 + 0.04 * k).toFixed(3) + ')';
-      });
       const line = q('#nurture [data-nline]');
       if (line) line.style.transform = 'scaleX(' + ez(sub(p, 0.42, 0.8)).toFixed(3) + ')';
     }, { pinned: true });
@@ -239,6 +237,9 @@ export function createSolutions() {
     const box = q('#integration [data-ibox]');
     const cta = q('#integration [data-cta]');
     const wrap = pin('integration', 140);
+    // 底下三塊(營運儀表板/線上報價單/報表)直接就位:使用者要求不要彈出來,畫面有出來就好。
+    // chips 的逐一亮起保留 —— 那是「三層資料收進同一個後台」的敘事本體。
+    if (box) { box.style.opacity = '1'; box.style.transform = 'none'; }
     if (wrap) {
       ScrollChapter(ctx, wrap, (p) => {
         chips.forEach((c, i) => {
@@ -247,11 +248,6 @@ export function createSolutions() {
           c.style.transform = 'translateY(' + ((1 - kk) * 18).toFixed(1) + 'px)';
           c.style.background = p > 0.6 ? 'rgba(255,107,44,.1)' : 'transparent';
         });
-        if (box) {
-          const kk = ez(sub(p, 0.3, 0.6));
-          box.style.opacity = String(0.08 + 0.92 * kk);
-          box.style.transform = 'translateY(' + ((1 - kk) * 34).toFixed(1) + 'px) scale(' + (0.965 + 0.035 * kk).toFixed(3) + ')';
-        }
         if (cta) {
           const kk = ez(sub(p, 0.68, 0.9));
           cta.style.boxShadow = '0 12px 32px rgba(255,107,44,' + (kk * 0.32).toFixed(2) + ')';
@@ -262,7 +258,6 @@ export function createSolutions() {
     }
     if (ctx.reduced) return; // 靜態即完成態
     chips.forEach(c => { c.style.opacity = '0'; c.style.transform = 'translateY(12px)'; });
-    if (box) { box.style.opacity = '0'; box.style.transform = 'translateY(20px) scale(.97)'; }
     let done = false;
     ctx.io(sec, es => {
       if (done || !(es[0] && es[0].isIntersecting)) return;
@@ -271,10 +266,6 @@ export function createSolutions() {
         c.style.transition = 'all 320ms cubic-bezier(0.16,1,0.3,1) ' + (i * 60) + 'ms';
         c.style.opacity = '1'; c.style.transform = 'none';
       });
-      if (box) {
-        box.style.transition = 'all 620ms cubic-bezier(0.16,1,0.3,1) 420ms';
-        box.style.opacity = '1'; box.style.transform = 'none';
-      }
     }, { threshold: 0.35 });
   }
 
