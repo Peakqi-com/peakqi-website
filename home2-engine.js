@@ -240,7 +240,9 @@ export function createHome2() {
     ScrollChapter(ctx, wrap, (p) => {
       const k = ez(sub(p, 0.05, 0.92));
       if (fill) fill.style.transform = 'scaleX(' + k.toFixed(3) + ')';
-      if (pack) pack.style.left = (2 + k * 96).toFixed(2) + '%';
+      // 走滿 0→100%:元素本身帶 translateX(-50%),所以 k=1 時圓心正好落在線尾。
+      // 原本是 2%→98%(而且 left 定位左緣),終點看起來差了半顆點加 2% 的距離。
+      if (pack) pack.style.left = (k * 100).toFixed(2) + '%';
       const n = sts.length;
       sts.forEach((st, i) => {
         const on = k >= (i + 0.5) / n - 0.5 / n;
