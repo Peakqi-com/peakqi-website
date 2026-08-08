@@ -26,6 +26,10 @@ export const PART_BOX = {
 // 雲的可見範圍 = 天空那一層減掉城市。窗框與每一棟建築都會確實擋住雲。
 export const SKY_MASK = [0, 63, 295, 592];
 
+// 建築的形狀(四個城市圖層的 alpha 聯集)。月光打在建築上時當遮罩用,
+// 不參與疊圖 —— 建築本體仍然烘在底板裡。
+export const CITY_MASK = [0, 263, 272, 391];
+
 // 夜裡會亮起來的城市窗格。分三組各閃各的 —— 整座一起明滅會像在呼吸。
 export const CITY_LIGHTS = ['city_light_0', 'city_light_1', 'city_light_2'];
 

@@ -621,6 +621,17 @@ def main():
         .save(os.path.join(OUT, 'sky-mask.webp'), lossless=True, quality=100, method=6)
     print('  可見天空遮罩 %d×%d px @(%d,%d)' % (mb[2] - mb[0], mb[3] - mb[1], mb[0], mb[1]))
 
+    # ---- 建築的形狀 ----
+    # 月亮升起時,月光要打在建築上並隨月亮移動,所以得知道建築在哪。
+    # city 就是四個城市圖層的 alpha 聯集(遠塔 / 樹 / 圓頂 / 高塔)= 天際線本身。
+    # 只當遮罩用,不參與疊圖 —— 建築本體仍然烘在底板裡,這裡不會多畫任何東西出來。
+    cys_, cxs_ = np.nonzero(city)
+    cb = (max(0, cxs_.min() - 2), max(0, cys_.min() - 2),
+          min(CANVAS, cxs_.max() + 3), min(CANVAS, cys_.max() + 3))
+    Image.fromarray((city[cb[1]:cb[3], cb[0]:cb[2]] * 255).astype('uint8'), 'L') \
+        .save(os.path.join(OUT, 'city-mask.webp'), lossless=True, quality=100, method=6)
+    print('  建築遮罩 %d×%d px @(%d,%d)' % (cb[2] - cb[0], cb[3] - cb[1], cb[0], cb[1]))
+
     # ---- 天色分級 ----
     # 參考影格 = 靜止合成。天空區改用底板(雲是獨立的層,底板那裡是乾淨的天空),
     # 這樣雲飄到哪裡分級都對得上。
@@ -667,6 +678,10 @@ def main():
               '// 雲的可見範圍 = 天空那一層減掉城市。窗框與每一棟建築都會確實擋住雲。',
               'export const SKY_MASK = [%d, %d, %d, %d];'
               % (mb[0], mb[1], mb[2] - mb[0], mb[3] - mb[1]), '',
+              '// 建築的形狀(四個城市圖層的 alpha 聯集)。月光打在建築上時當遮罩用,',
+              '// 不參與疊圖 —— 建築本體仍然烘在底板裡。',
+              'export const CITY_MASK = [%d, %d, %d, %d];'
+              % (cb[0], cb[1], cb[2] - cb[0], cb[3] - cb[1]), '',
               '// 夜裡會亮起來的城市窗格。分三組各閃各的 —— 整座一起明滅會像在呼吸。',
               "export const CITY_LIGHTS = [%s];" % ', '.join("'%s'" % t for t in light_ids), '',
               '// 有分級圖的時段。白天就是原圖,所以它不會有 m/s 兩張。',

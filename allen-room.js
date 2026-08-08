@@ -34,7 +34,7 @@
 // 不依賴它。
 
 import { FrameStep } from './puppet-kit.js';
-import { PART_BOX, SKY_MASK, GRADE_TIMES, GRADE_OFF, CITY_LIGHTS } from './allen-room-parts.js';
+import { PART_BOX, SKY_MASK, CITY_MASK, GRADE_TIMES, GRADE_OFF, CITY_LIGHTS } from './allen-room-parts.js';
 import { GRADE_BASE, TIMES, pickTime } from './allen-sky.js';
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -286,6 +286,18 @@ ${CLOUDS.map((c) => `<mask id="cm${c.id}${uid}" maskUnits="userSpaceOnUse">`
 <g data-r="cloudlit">${CLOUDS.map((c) => `<g mask="url(#cm${c.id}${uid})">`
   + `<circle data-r="bleed_${c.id}" r="${r1(MOON.r * 2.8)}" fill="url(#bleed${uid})" opacity="0"/></g>`).join('')}</g>
 </g>
+<!-- 月光打在建築上。刻意放在天空遮罩「之外」—— 天空遮罩是「天空減掉城市」,
+     擺進去會被整個挖掉。這裡用的是建築自己的形狀(四個城市圖層的 alpha 聯集),
+     所以亮的只有建築,窗框與天空都不受影響。跟著月亮走,月亮升得越高越亮。 -->
+<defs><mask id="cty${uid}" maskUnits="userSpaceOnUse">
+  <image href="${BASE}city-mask.webp" x="${CITY_MASK[0]}" y="${CITY_MASK[1]}"
+    width="${CITY_MASK[2]}" height="${CITY_MASK[3]}"/></mask>
+<radialGradient id="mface${uid}">
+  <stop offset="0" stop-color="#CFE0FF" stop-opacity=".6"/>
+  <stop offset="48%" stop-color="#A9C4EE" stop-opacity=".2"/>
+  <stop offset="100%" stop-color="#8FADE0" stop-opacity="0"/></radialGradient></defs>
+<g mask="url(#cty${uid})"><ellipse data-r="cityface" rx="235" ry="300"
+  fill="url(#mface${uid})" opacity="0"/></g>
 ${CITY.map((c) => `<g data-r="${c.id}" opacity="0">${img(`${BASE}parts/${c.id}.webp`, PART_BOX[c.id])}</g>`).join('')}
 ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">`
   + `<image href="${BASE}stage.webp" x="0" y="0" width="${CANVAS}" height="${CANVAS}"/></g>`).join('')}
@@ -362,6 +374,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
   const moonG = ql('moon');
   const starEls = [...lit.querySelectorAll('[data-s]')];
   const moonlit = ql('moonlit');
+  const cityFace = ql('cityface');
   // 每顆星的閃法都不一樣,不然會像整片一起眨眼
   const starPh = starEls.map((_, i) => ({ per: 2.1 + (i % 7) * 0.83, ph: (i * 2.399) % 6.283 }));
   // 每朵雲的行程由它自己的貼圖框算:從「整朵在窗戶左外」飄到「整朵出了窗戶右緣」。
@@ -596,6 +609,12 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
       // 月亮還在天際線後面的時候幾乎沒有月光,升上來才慢慢灑進房間
       const h = clamp((MOON.lo - my) / (MOON.lo - MOON.hi), 0, 1);
       moonlit.setAttribute('opacity', r2(tw.night * (0.18 + 0.62 * h)));
+      // 建築上的月光:光斑跟著月亮走,月亮越高照得越亮。
+      // 月亮還埋在天際線後面時只留一點點,不然天一黑建築就整片發光。
+      if (cityFace) {
+        cityFace.setAttribute('transform', `translate(${MOON.x},${r1(my)})`);
+        cityFace.setAttribute('opacity', r2(tw.night * (0.08 + 0.66 * h)));
+      }
       // 月亮走到哪朵雲後面,那朵雲就透光。強度取「月心到雲框的距離」——
       // 完全進到雲裡最亮,離開一個月亮半徑就收乾淨,不會突然開關。
       for (const c of cloudEl) {
@@ -612,6 +631,7 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     } else {
       moonlit.setAttribute('opacity', '0');
       for (const c of cloudEl) if (c.lit) c.lit.setAttribute('opacity', '0');
+      if (cityFace) cityFace.setAttribute('opacity', '0');
     }
 
     // 窗外城市的窗:各組各自慢慢明滅,偶爾有一格「熄一下又亮起來」——
