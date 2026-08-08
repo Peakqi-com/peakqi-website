@@ -92,6 +92,21 @@ export function createInteractions({ refs }) {
     gal.key = key;
     if (reduced || mobile) return; // 原生橫向 snap(模板預設)
     galMeasure();
+    // 只量這一次是不夠的:卡片由 DC 的 sc-for 非同步產生,第一次量到的 track 幾乎是空的
+    // (scrollWidth ≈ clientWidth)→ extra < 60 → galReset() 退回簡易模式,而且之後只有
+    // window resize 才會再量,所以那條卷軸就一直留著。改成盯著 track 的尺寸,內容一長出來
+    // 就重量。圖片載入、字體換手造成的寬度變化也一併涵蓋。
+    try {
+      let last = 0, tmr = 0;
+      gal.ro = new ResizeObserver(() => {
+        const w = gal.track.scrollWidth;
+        if (Math.abs(w - last) < 2) return;   // 自己造成的細微抖動不重入
+        last = w;
+        clearTimeout(tmr);
+        tmr = setTimeout(() => { if (!destroyed && gal && !reduced && !mobile) galMeasure(); }, 120);
+      });
+      gal.ro.observe(gal.track);
+    } catch (e) {}
   }
   function loadImgs() {
     if (!gal || gal.loaded) return;
@@ -261,6 +276,7 @@ export function createInteractions({ refs }) {
     window.removeEventListener('resize', onResize);
     window.removeEventListener('scroll', onScroll);
     if (gal && gal.key) gal.scroller.removeEventListener('keydown', gal.key);
+    if (gal && gal.ro) { try { gal.ro.disconnect(); } catch (e) {} gal.ro = null; }
     ios.forEach(io => io.disconnect());
     if (window.__pqInteractions) delete window.__pqInteractions;
   }
