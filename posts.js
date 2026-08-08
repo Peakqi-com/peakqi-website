@@ -9,7 +9,7 @@ export const TAGS = {
 };
 
 export const POSTS = [
-  {"slug":"built-a-website-with-claude-code","date":"2026-08-08","tags":["build-notes","ai-adoption"],"cover":"/assets/blog/tower.webp","hasEn":true,"zh":{"title":"我不會寫程式,我用 Claude Code 蓋了一個網站","summary":"2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。","mins":9},"en":{"title":"I can't code. I built a website with Claude Code.","summary":"414 commits across 16 working days, July 16 to August 8, 2026. One person, a 32-page bilingual company site, built from nothing. This is the working record — including the day I got stuck, what I threw away, and one solution I didn't see coming.","mins":9}}
+  {"slug":"built-a-website-with-claude-code","date":"2026-08-08","tags":["build-notes","ai-adoption"],"cover":"/assets/blog/tower.webp","hasEn":true,"zh":{"title":"十年沒寫程式,我用 Claude Code 蓋了一個網站","summary":"我會寫程式,但十年沒動過;我做動畫,但不會製作素材。16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。","mins":11},"en":{"title":"I hadn't written code in ten years. I built a website with Claude Code.","summary":"I can write code, but I hadn't in ten years. I work in animation, but I can't produce assets. 414 commits across 16 working days, one person, a 32-page bilingual company site. This is the working record — including the day I got stuck, what I threw away, and one solution I didn't see coming.","mins":11}}
 ];
 
 // 給頁面用的小工具:取最新 n 篇(英文站自動只取有英文版的)

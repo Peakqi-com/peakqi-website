@@ -7,10 +7,10 @@
     <language>zh-Hant-TW</language>
     <atom:link href="https://www.peakqi.com/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>我不會寫程式,我用 Claude Code 蓋了一個網站</title>
+      <title>十年沒寫程式,我用 Claude Code 蓋了一個網站</title>
       <link>https://www.peakqi.com/blog/built-a-website-with-claude-code</link>
       <guid isPermaLink="true">https://www.peakqi.com/blog/built-a-website-with-claude-code</guid>
-      <description>2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。</description>
+      <description>我會寫程式,但十年沒動過;我做動畫,但不會製作素材。16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。</description>
       <pubDate>Sat, 08 Aug 2026 09:00:00 +0800</pubDate>
     </item>
   </channel>

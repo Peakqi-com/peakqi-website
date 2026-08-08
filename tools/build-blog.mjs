@@ -127,16 +127,25 @@ function toIndex(entries) {
     const m = e.zh.meta;
     const tags = String(m.tags || '').split(',').map((s) => s.trim()).filter(Boolean);
     for (const t of tags) if (!TAGS[t]) W(`未知標籤「${t}」(${e.slug}) — 請先加進 tools/build-blog.mjs 的 TAGS`);
-    let cover = (m.cover || '').trim();
-    if (cover && !cover.startsWith('/')) { W(`cover 必須是絕對路徑(/assets/...):${e.slug}`); cover = ''; }
-    if (cover && !fs.existsSync(path.join(ROOT, cover.replace(/^\//, '')))) { W(`找不到封面檔,改用色塊:${cover}`); cover = ''; }
+    // 封面可以各語言各一張:截圖裡有介面文字,中文頁掛英文截圖會很怪。
+    // 英文版沒寫 cover 就沿用中文版那張(多數文章的封面是插畫,不必分)。
+    const pickCover = (fm, tag) => {
+      let c = ((fm && fm.cover) || '').trim();
+      if (c && !c.startsWith('/')) { W(`cover 必須是絕對路徑(/assets/...):${e.slug}${tag}`); c = ''; }
+      if (c && !fs.existsSync(path.join(ROOT, c.replace(/^\//, '')))) { W(`找不到封面檔,改用色塊:${c}`); c = ''; }
+      return c;
+    };
+    const cover = pickCover(m, '');
+    const coverEn = e.en ? (pickCover(e.en.meta, '(en)') || cover) : cover;
     posts.push({
       slug: e.slug,
       date: m.date,
       updated: (m.updated || '').trim(),
       tags: tags.filter((t) => TAGS[t]),
       cover,
+      coverEn,
       coverAlt: (m.coverAlt || '').trim(),
+      coverAltEn: ((e.en && e.en.meta.coverAlt) || '').trim() || (m.coverAlt || '').trim(),
       hasEn: !!e.en,
       zh: { title: e.zh.title, summary: e.zh.summary, mins: e.zh.mins },
       en: e.en ? { title: e.en.title, summary: e.en.summary, mins: e.en.mins } : null,
@@ -358,7 +367,9 @@ function buildArticle(post, lang, all) {
   const c = lang === 'en' ? post._src.en : post._src.zh;
   const url = SITE + u.dir + post.slug;
   const tagLabel = post.tags.length ? TAGS[post.tags[0]][lang] : u.idxTitle;
-  const ogImage = post.cover ? SITE + post.cover : SITE + '/og.png';
+  const cov = (lang === 'en' ? post.coverEn : post.cover) || '';
+  const covAlt = lang === 'en' ? post.coverAltEn : post.coverAlt;
+  const ogImage = cov ? SITE + cov : SITE + '/og.png';
   const [c1, c2] = swatch(post.slug);
 
   const metaBits = [fmtDate(post.date, lang), `${c.mins} ${u.mins}`];
@@ -383,8 +394,8 @@ function buildArticle(post, lang, all) {
     publisher: { '@type': 'Organization', name: u.brand, logo: { '@type': 'ImageObject', url: SITE + '/assets/logo.png' } }
   });
 
-  const cover = post.cover
-    ? `<figure class="pb-cover"><img src="${post.cover}" alt="${esc(post.coverAlt || c.title)}" width="1200" height="630" fetchpriority="high" decoding="async"></figure>`
+  const cover = cov
+    ? `<figure class="pb-cover"><img src="${cov}" alt="${esc(covAlt || c.title)}" width="1200" height="630" fetchpriority="high" decoding="async"></figure>`
     : `<div class="pb-swatch" style="background:linear-gradient(118deg,${c1},${c2})" aria-hidden="true"></div>`;
 
   const body = `
@@ -434,12 +445,13 @@ function buildIndex(posts, lang) {
   const cards = list.map((p, i) => {
     const c = lang === 'en' ? p.en : p.zh;
     const [c1, c2] = swatch(p.slug);
-    const thumb = p.cover
-      ? `<img src="${p.cover}" alt="${esc(p.coverAlt || c.title)}" loading="lazy" decoding="async">`
+    const pc = (lang === 'en' ? p.coverEn : p.cover) || '';
+    const thumb = pc
+      ? `<img src="${pc}" alt="${esc((lang === 'en' ? p.coverAltEn : p.coverAlt) || c.title)}" loading="lazy" decoding="async">`
       : `<span class="n" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>`;
     const tag = p.tags.length ? TAGS[p.tags[0]][lang] : u.idxTitle;
     return `    <a class="bl-card" href="${u.dir}${p.slug}" data-tags="${esc(p.tags.join(' '))}">
-      <span class="bl-thumb"${p.cover ? '' : ` style="background:linear-gradient(118deg,${c1},${c2})"`}>${thumb}</span>
+      <span class="bl-thumb"${pc ? '' : ` style="background:linear-gradient(118deg,${c1},${c2})"`}>${thumb}</span>
       <span class="bl-cb">
         <span class="bl-tag">${esc(tag)}</span>
         <span class="bl-ct">${esc(c.title)}</span>
