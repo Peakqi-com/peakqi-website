@@ -75,6 +75,10 @@ summary::-webkit-details-marker{display:none}
    淡出延到 96% 之後 —— 原本 90%→100% 就淡完,看起來像跑到一半就消失。 */
 @keyframes pqPktA{0%{left:0%;opacity:0}8%{opacity:1}96%{opacity:1}100%{left:100%;opacity:0}}
 @keyframes pqStationLit{0%,12%{opacity:0}22%{opacity:1}34%{opacity:1}46%,100%{opacity:0}}
+/* 精選作品展廊:卷軸隱藏,改自動漂移(見 componentDidMount 的 _galT)。
+   scroll-snap 一併移除 —— 每 40ms 推 0.6px 的漂移會被 snap 一直吸回去。
+   左右鍵與 ← → 鈕改推 314px(卡寬 300 + gap 14),本來就落在卡界上,不靠 snap。 */
+#pq-galsc::-webkit-scrollbar{display:none}
 #relay [data-rstation]{position:relative}
 #relay [data-rstation]::after{content:'';position:absolute;left:12px;right:12px;top:-1px;height:2px;background:#FF6B2C;border-radius:2px;opacity:0;animation:pqStationLit 3.6s ease-in-out infinite}
 #relay [data-rstation]:nth-child(2)::after{animation-delay:.6s}
@@ -1046,7 +1050,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
   </div>
   <div ref="{{ galWrap }}">
    <div ref="{{ galStage }}" style="padding-top:clamp(28px,4vw,44px)">
-    <div ref="{{ galScroller }}" tabindex="0" role="region" aria-label="精選作品展廊,可用左右方向鍵瀏覽" style="max-width:1360px;margin:0 auto;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:10px">
+    <div ref="{{ galScroller }}" tabindex="0" role="region" aria-label="精選作品展廊,可用左右方向鍵瀏覽" id="pq-galsc" style="max-width:1360px;margin:0 auto;overflow-x:auto;padding-bottom:10px;scrollbar-width:none">
      <div ref="{{ galTrack }}" style="display:flex;gap:14px;min-width:min-content">
       <sc-for list="{{ works }}" as="w" hint-placeholder-count="0">
         <a href="{{ w.href }}" target="{{ w.target }}" rel="noopener" data-tilt style="scroll-snap-align:start;min-width:300px;max-width:300px;background:#090B0E;color:#F2EFE8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;border:1px solid rgba(242,239,232,.1)" style-hover="border-color:#FF6B2C">
@@ -1410,6 +1414,48 @@ class Component extends DCLogic {
   }
   componentDidUpdate() { this._applyOrb(); }
   componentDidMount() {
+    // 精選作品展廊:卷軸隱藏後改自動漂移(hover / 按下 / 滾輪 / 鍵盤 / 按方向鈕都暫停 3 秒;
+    // 到頭折返並停 1.4 秒;手機與 reduced-motion 不跑)。做法與 About 產業色卡牆同一套。
+    const galBoot = () => {
+      if (this._dead) return;
+      const sc = document.getElementById('pq-galsc');
+      // DC 非同步渲染:卡片由 sc-for 產生,1.2 秒時可能還沒進 DOM,也可能還沒撐出可捲距離。
+      // 兩種都要重試,否則漂移永遠不會啟動(而且會誤判成「沒東西可捲」)。
+      if (!sc || sc.scrollWidth - sc.clientWidth < 60) {
+        if ((this._galTry = (this._galTry || 0) + 1) < 40) this._galT = setTimeout(galBoot, 250);
+        return;
+      }
+      if ((window.innerWidth || 0) < 900) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (getComputedStyle(sc).overflowX !== 'auto') return;   // 引擎已接管成 sticky 模式,不插手
+      sc.style.scrollSnapType = 'none';                        // snap 會把每 40ms 的 0.6px 一直吸回去
+      let dir = 1, hold = 1000;
+      const iv = setInterval(() => {
+        if (this._dead) return;
+        if (hold > 0) { hold -= 40; return; }
+        const max = sc.scrollWidth - sc.clientWidth;
+        if (max <= 0) return;
+        sc.scrollLeft += dir * 0.6;
+        if (sc.scrollLeft >= max - 1) { dir = -1; hold = 1400; }
+        else if (sc.scrollLeft <= 1) { dir = 1; hold = 1400; }
+      }, 40);
+      const pause = () => { hold = 3000; };
+      this._galPause = pause;                       // ← → 鈕也要能叫停
+      sc.addEventListener('pointerenter', pause);
+      sc.addEventListener('pointerdown', pause);
+      sc.addEventListener('wheel', pause, { passive: true });
+      sc.addEventListener('keydown', pause);
+      sc.addEventListener('focusin', pause);
+      this._galDrift = () => {
+        clearInterval(iv);
+        sc.removeEventListener('pointerenter', pause);
+        sc.removeEventListener('pointerdown', pause);
+        sc.removeEventListener('wheel', pause);
+        sc.removeEventListener('keydown', pause);
+        sc.removeEventListener('focusin', pause);
+      };
+    };
+    this._galT = setTimeout(galBoot, 900);
     this._applyOrb();
     import('./content.js').then(m => {
       this.setState({ d: m });
@@ -1484,6 +1530,8 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     this._dead = true;
+    clearTimeout(this._galT);
+    if (this._galDrift) this._galDrift();
     if (this._hero) this._hero.destroy();
     if (this._sections) this._sections.destroy();
     if (this._inter) this._inter.destroy();
@@ -1557,6 +1605,7 @@ class Component extends DCLogic {
       linkLabel: w.url ? '造訪網站 ↗' : '查看案例 →'
     }));
     const galNav = (dir) => {
+      if (this._galPause) this._galPause();   // 使用者自己按了方向鈕,漂移讓開
       if (window.__pqInteractions) { window.__pqInteractions.galNav(dir); return; }
       const sc = (this._refs || {}).galScroller;
       if (sc) sc.scrollBy({ left: dir * 314, behavior: 'smooth' });
