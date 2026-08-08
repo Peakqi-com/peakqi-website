@@ -209,6 +209,7 @@ const angryBub = root.getObjectByName('referral_person_bubble');
 const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+stage.invalidateShadows();   // 上面改過 castShadow,凍住的陰影圖要重畫一次
 // 室內道具的貼地暗部:主光在塔外(4,7,5),六層房間全被外牆擋住,室內只剩半球光與
 // 環境光——兩者都不投射陰影,所以桌椅像貼紙貼在地板上。這裡替每個「真的踩在某個
 // 面上」的道具補一片柔和暗部(向下射線判定,放在桌上的東西就落在桌上)。

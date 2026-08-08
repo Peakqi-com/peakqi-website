@@ -216,6 +216,7 @@ const angryBub = root.getObjectByName('referral_person_bubble');
 const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+stage.invalidateShadows();   // 上面改過 castShadow,凍住的陰影圖要重畫一次
 // Contact shadows for interior props — the key light sits outside the tower,
 // so every closed room is lit by hemisphere + environment only, neither of
 // which casts. Without this the furniture reads as pasted onto the floor.

@@ -185,6 +185,11 @@
       });
     }
 
+    /** 重畫一次陰影圖。主光或場景幾何真的動過才需要 —— 見 _boot 裡凍結的說明。 */
+    invalidateShadows() {
+      if (this._renderer) this._renderer.shadowMap.needsUpdate = true;
+    }
+
     connectedCallback() {
       if (this._booted) {
         // Re-attached after a removal — resume what disconnected stopped.
@@ -231,6 +236,13 @@
       // 室內道具的貼地暗部不靠這張陰影圖,走 addContactShadows()。
       // 抗鋸齒維持「觸控不開」:實機檢視無階梯感,沒有理由付那個效能代價。
       renderer.shadowMap.type = THREE.PCFShadowMap;
+      // 陰影圖不每幀重畫。這座舞台的主光位置固定、物件是「放上來給人繞著看」的,
+      // 光空間裡的投影其實幀幀相同 —— 相機怎麼轉都不影響。
+      // 實測(中階 Android 等級的節流):單幀 37.3ms → 16.7ms,陰影 pass 一個人
+      // 吃掉 55%(這棵樹有 907 個 mesh、798 個投影物件,每幀重掃一次 2048² 圖)。
+      // 場景幾何真的動過(換模型、改 castShadow、移動光源)就叫 invalidateShadows()。
+      renderer.shadowMap.autoUpdate = false;
+      renderer.shadowMap.needsUpdate = true;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       this._renderer = renderer;
@@ -324,6 +336,7 @@
           o.receiveShadow = true;
         }
       });
+      this.invalidateShadows();   // 換了物件,凍住的那張陰影圖要重畫一次
       const box = new THREE.Box3().setFromObject(object);
       if (!box.isEmpty()) {
         // Rest the object on the ground without moving its origin.
