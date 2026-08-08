@@ -257,7 +257,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-08-06</lastmod>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -266,32 +266,26 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-08-06</lastmod>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.peakqi.com/blog/inquiry-handoff-gaps</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/inquiry-handoff-gaps"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
-    <lastmod>2026-08-06</lastmod>
+    <loc>https://www.peakqi.com/blog/built-a-website-with-claude-code</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/built-a-website-with-claude-code"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/built-a-website-with-claude-code"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/built-a-website-with-claude-code"/>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.peakqi.com/en/blog/inquiry-handoff-gaps</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/inquiry-handoff-gaps"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/inquiry-handoff-gaps"/>
-    <lastmod>2026-08-06</lastmod>
+    <loc>https://www.peakqi.com/en/blog/built-a-website-with-claude-code</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/built-a-website-with-claude-code"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/built-a-website-with-claude-code"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/built-a-website-with-claude-code"/>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/blog/five-questions-before-adopting-ai</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

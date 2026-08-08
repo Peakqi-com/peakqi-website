@@ -7,18 +7,11 @@
     <language>zh-Hant-TW</language>
     <atom:link href="https://www.peakqi.com/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>詢問接不住,通常不是因為回覆太慢</title>
-      <link>https://www.peakqi.com/blog/inquiry-handoff-gaps</link>
-      <guid isPermaLink="true">https://www.peakqi.com/blog/inquiry-handoff-gaps</guid>
-      <description>客戶流失的位置多半不在第一則回覆,而在回覆之後的交接。這篇拆解三個常見斷點,以及該先自動化哪一段。</description>
-      <pubDate>Thu, 06 Aug 2026 09:00:00 +0800</pubDate>
-    </item>
-    <item>
-      <title>導入 AI 之前,先問清楚的五件事</title>
-      <link>https://www.peakqi.com/blog/five-questions-before-adopting-ai</link>
-      <guid isPermaLink="true">https://www.peakqi.com/blog/five-questions-before-adopting-ai</guid>
-      <description>導入卡住的原因,通常在簽約前就決定了。這五個問題如果談的時候沒有答案,上線之後會加倍還。</description>
-      <pubDate>Tue, 04 Aug 2026 09:00:00 +0800</pubDate>
+      <title>我不會寫程式,我用 Claude Code 蓋了一個網站</title>
+      <link>https://www.peakqi.com/blog/built-a-website-with-claude-code</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/built-a-website-with-claude-code</guid>
+      <description>2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。</description>
+      <pubDate>Sat, 08 Aug 2026 09:00:00 +0800</pubDate>
     </item>
   </channel>
 </rss>

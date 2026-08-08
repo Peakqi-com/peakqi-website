@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="奇鋒國際 PeakQi">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="我不會寫程式,我用 Claude Code 蓋了一個網站｜奇鋒國際 PeakQi">
+<meta property="og:description" content="2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。">
+<meta property="og:url" content="https://www.peakqi.com/blog/built-a-website-with-claude-code">
+<link rel="canonical" href="https://www.peakqi.com/blog/built-a-website-with-claude-code">
+<link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/built-a-website-with-claude-code">
+<link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/built-a-website-with-claude-code">
+<link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/built-a-website-with-claude-code">
+<meta property="og:image" content="https://www.peakqi.com/assets/blog/tower.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="奇鋒國際 PeakQi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="我不會寫程式,我用 Claude Code 蓋了一個網站｜奇鋒國際 PeakQi">
+<meta name="twitter:description" content="2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。">
+<meta name="twitter:image" content="https://www.peakqi.com/assets/blog/tower.webp">
+<link rel="alternate" type="application/rss+xml" title="觀點" href="/feed.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"我不會寫程式,我用 Claude Code 蓋了一個網站","description":"2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。","inLanguage":"zh-Hant-TW","datePublished":"2026-08-08","dateModified":"2026-08-08","image":"https://www.peakqi.com/assets/blog/tower.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/blog/built-a-website-with-claude-code"},"author":{"@type":"Organization","name":"奇鋒國際 PeakQi","url":"https://www.peakqi.com/"},"publisher":{"@type":"Organization","name":"奇鋒國際 PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>我不會寫程式,我用 Claude Code 蓋了一個網站｜奇鋒國際 PeakQi</title>
+<meta name="description" content="2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+h1,h2{text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#FF6B2C;color:#F2EFE8}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
+.pb-wrap{max-width:760px;margin:0 auto;padding:clamp(26px,4vw,44px) clamp(20px,5vw,48px) clamp(64px,9vw,110px)}
+/* 返回連結要獨佔一行:inline-flex 會和後面的標籤黏成同一行,讀起來像「回到觀點 AI 導入」 */
+.pb-back{display:flex;width:max-content;align-items:center;gap:7px;min-height:44px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);text-decoration:none}
+.pb-back:hover{color:#D14E12}
+.pb-kicker{display:block;margin-top:10px;font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#FF6B2C}
+.pb-title{margin:12px 0 0;font:900 clamp(1.72rem,4.2vw,2.85rem)/1.28 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pb-lede{margin:16px 0 0;font:400 clamp(1rem,1.55vw,1.14rem)/1.78 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-meta{margin:18px 0 0;font:500 13px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(9,11,14,.46)}
+.pb-cover{margin:clamp(26px,4vw,42px) 0 0}
+.pb-cover img{display:block;width:100%;height:auto;border-radius:3px}
+/* 沒有封面圖時的色帶。刻意做矮:16/7 在桌機是 330px 的空白色塊,看起來像圖沒載到 */
+.pb-swatch{margin:clamp(26px,4vw,42px) 0 0;aspect-ratio:16/5;border-radius:3px}
+@media(max-width:600px){.pb-swatch{aspect-ratio:16/6}}
+.pb-body{margin-top:clamp(26px,4vw,42px)}
+.pb-body>*:first-child{margin-top:0}
+.pb-body p{margin:20px 0 0;font:400 16.5px/2 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-body h2{margin:clamp(38px,5vw,58px) 0 0;font:800 clamp(1.22rem,2.1vw,1.55rem)/1.5 'Noto Sans TC',sans-serif}
+.pb-body h3{margin:30px 0 0;font:700 1.0625rem/1.6 'Noto Sans TC',sans-serif}
+.pb-body h4{margin:24px 0 0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-body a{color:#D14E12;text-decoration:underline;text-underline-offset:3px}
+.pb-body img{max-width:100%;height:auto}
+.pb-list{margin:16px 0 0;padding-left:22px}
+.pb-list li{margin-top:8px;font:400 16.5px/1.95 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-quote{margin:26px 0 0;padding:2px 0 2px 18px;border-left:3px solid #FF6B2C;font:500 16.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.76)}
+.pb-body code{background:rgba(9,11,14,.06);padding:2px 6px;border-radius:3px;font:400 .9em ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code{margin:22px 0 0;padding:16px 18px;background:#090B0E;color:#E8E4DA;border-radius:3px;overflow-x:auto;font:400 13.5px/1.72 ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code code{background:none;padding:0;white-space:pre}
+.pb-fig{margin:clamp(26px,4vw,40px) 0}
+.pb-fig img{display:block;width:100%;height:auto;border-radius:3px}
+.pb-fig figcaption{margin-top:10px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)}
+.pb-tablewrap{margin:24px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pb-table{border-collapse:collapse;min-width:100%;font:400 14.5px/1.7 'Noto Sans TC',sans-serif}
+.pb-table th,.pb-table td{padding:11px 14px;border-bottom:1px solid rgba(9,11,14,.12);text-align:left;white-space:nowrap}
+.pb-table th{font-weight:700;background:rgba(9,11,14,.04)}
+.pb-hr{margin:clamp(34px,5vw,50px) 0 0;border:0;border-top:1px solid rgba(9,11,14,.14)}
+.pb-cta{margin:clamp(42px,6vw,66px) 0 0;padding:clamp(22px,4vw,34px);background:#090B0E;color:#F2EFE8;border-radius:3px}
+.pb-cta h2{margin:0;font:800 clamp(1.06rem,1.9vw,1.32rem)/1.5 'Noto Sans TC',sans-serif;color:#F2EFE8}
+.pb-cta p{margin:10px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pb-cta a{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:13px 22px;min-height:44px;box-sizing:border-box;background:#FF6B2C;color:#090B0E;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;border-radius:2px}
+.pb-cta a:hover{background:#FF8149;color:#090B0E}
+.pb-rel{margin:clamp(42px,6vw,64px) 0 0}
+.pb-rel h2{margin:0 0 16px;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(9,11,14,.45)}
+.pb-relgrid{display:grid;gap:12px}
+.pb-relcard{display:block;padding:17px 19px;background:#fff;border:1px solid rgba(9,11,14,.1);border-radius:3px;text-decoration:none;transition:border-color .18s,transform .18s}
+.pb-relcard:hover{border-color:#FF6B2C;transform:translateY(-2px)}
+.pb-relcard .t{font:700 15px/1.55 'Noto Sans TC',sans-serif;color:#090B0E}
+.pb-relcard .d{margin-top:6px;font:500 12px 'Space Grotesk','Noto Sans TC',sans-serif;color:rgba(9,11,14,.46)}
+@media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</helmet>
+<a id="pq-skip" href="#pq-main">跳到主要內容</a>
+<dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
+
+<main id="pq-main" class="pb-wrap" data-screen-label="我不會寫程式,我用 Claude Code 蓋了">
+  <a class="pb-back" href="/blog">← 回到觀點</a>
+  <span class="pb-kicker">製作筆記</span>
+  <h1 class="pb-title">我不會寫程式,我用 Claude Code 蓋了一個網站</h1>
+  <p class="pb-lede">2026 年 7 月 16 日到 8 月 8 日,16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。</p>
+  <p class="pb-meta">2026 年 8 月 8 日 · 9 分鐘閱讀</p>
+  <figure class="pb-cover"><img src="/assets/blog/tower.webp" alt="品牌屋 3D 塔樓——六個房間對應六門生意,隨頁面捲動一層一層走上去" width="1200" height="630" fetchpriority="high" decoding="async"></figure>
+  <article class="pb-body">
+<p>我是 Allen,奇鋒國際的成員。在開始這個專案之前,我不會寫程式。</p>
+<p>2026 年 7 月 16 日到 8 月 8 日之間,我用 <a href="https://claude.com/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a> 從零蓋出公司官網 <a href="https://peakqi.com" target="_blank" rel="noopener noreferrer">peakqi.com</a>——中英雙語共 32 個頁面、一段 three.js 的捲動分鏡、一層可以整個關掉的 WebGL 增強層,還有兩支自己寫的素材產生管線。</p>
+<p>全部的程式碼都公開在 <a href="https://github.com/Peakqi-com/peakqi-website" target="_blank" rel="noopener noreferrer">GitHub</a>,提交歷史沒有整理過。</p>
+<p>這篇不是成功心得,是工作記錄。</p>
+<hr class="pb-hr">
+<h2>這個網站到底是什麼</h2>
+<p>不是模板。技術規格如下:</p>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th>項目</th><th>內容</th></tr></thead><tbody><tr><td>架構</td><td>原生 JavaScript,沒有前端框架。全站文案、價格、案例集中在單一 <code>content.js</code></td></tr><tr><td>首頁</td><td>three.js 載入一顆 42 網格的相機 GLB 模型,隨捲動經歷組裝、拆解、零件說明、攤開藍圖、組回原型、翻面六個階段</td></tr><tr><td>渲染層</td><td><code>hero-engine.js</code>(Canvas 2D 分鏡)、<code>gl-engine.js</code>(WebGL 增強層,可整層關掉)、<code>micro-engine.js</code>(微互動)</td></tr><tr><td>降級策略</td><td>reduced-motion、save-data、deviceMemory &lt; 4、寬度 &lt; 900、context lost、shader 失敗——任一條件成立就自動降級,敘事完整保留</td></tr><tr><td>素材產生器</td><td><code>tools/gen-allen-art.mjs</code>(194 條 SVG 路徑歸位成九塊剛體)、<code>tools/gen-allen-room-assets.py</code>(40 層拆解,內建自我驗算)</td></tr><tr><td>部署</td><td>Vercel + GitHub Actions;表單走 serverless function 分流到 Google 試算表 / Email / Notion</td></tr><tr><td>語言</td><td>繁體中文與英文,各 16 頁</td></tr></tbody></table></div>
+<figure class="pb-fig"><img src="/assets/blog/camera.webp" alt="首頁分鏡第 02 階段「拆解」:相機本體與對應的字卡同時在場,右側是階段索引" loading="lazy" decoding="async"><figcaption>首頁分鏡第 02 階段「拆解」:相機本體與對應的字卡同時在場,右側是階段索引</figcaption></figure>
+<p>想直接看成品的話,<a href="/">首頁</a>、<a href="/cases">案例</a>、<a href="/pricing">方案說明</a> 是三個最能看出差異的地方。</p>
+<hr class="pb-hr">
+<h2>16 天的節奏</h2>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th>日期</th><th>提交數</th><th>主要進展</th></tr></thead><tbody><tr><td>7/16–7/18</td><td>28</td><td>骨架、部署管線、解決方案頁動畫</td></tr><tr><td>7/19</td><td>60</td><td>首頁相機分鏡;LCD 影片定位(見下一節)</td></tr><tr><td>7/20–7/21</td><td>52</td><td>場景架構重構、手機全面修正</td></tr><tr><td>7/22</td><td>61</td><td>六隻怪獸、品牌卡動畫、全站文案重寫</td></tr><tr><td>7/23</td><td>2</td><td>RWD 修正</td></tr><tr><td><em>7/24–7/31</em></td><td><em>0</em></td><td><em>停工</em></td></tr><tr><td>8/01–8/02</td><td>12</td><td>乾淨網址、表單收件端點上線</td></tr><tr><td>8/03–8/04</td><td>51</td><td>手機版總審查、技術 SEO、設計衝刺</td></tr><tr><td>8/05</td><td>57</td><td>三輪實機回饋、Allen 小劇場、選單彩蛋</td></tr><tr><td>8/06</td><td>45</td><td>英文版 16 頁全站上線</td></tr><tr><td>8/07–8/08</td><td>41</td><td>收尾與潤飾</td></tr></tbody></table></div>
+<p>多數日子投入 3–4 小時,衝刺日更長。</p>
+<p>截至 2026 年 8 月 8 日,整個 repo 共 <strong>414 個提交</strong>,其中 409 個落在上面這 16 個工作天裡(另外 5 個是五月設定網域與 repo 時留下的)。你可以用 <code>git rev-list --count HEAD</code> 自己數。</p>
+<hr class="pb-hr">
+<h2>卡住的那一天:7 月 19 日</h2>
+<p>我要把五支業務短片貼到 3D 相機背面的 LCD 螢幕上。聽起來是小事。那天的 60 個提交裡,超過一半在處理這一件事。</p>
+<p>嘗試順序,照 commit 記錄:</p>
+<ol class="pb-list"><li>three.js <code>VideoTexture</code> 貼在平面上 → 影片溢出螢幕</li><li>無盡調整定位參數(<code>vpx0.88/vpy-0.06</code>、<code>vpx0.667/vpy-0.251</code>、<code>vpx0.851/vpy-0.268</code>⋯)</li><li>用 shader 寫 rounded-box SDF 遮罩做圓角</li><li>手切自訂 8 控制點 BufferGeometry,斜角要貼合螢幕開口</li><li><strong>卡頓、銳角、飄移,整個方案放棄</strong></li><li>改成 DOM 影片疊層:每幀把 3D 螢幕的控制點投影成畫面像素,動態設定 <code>clip-path</code></li><li>錨點還是用猜的 → 改成錨到 GLB 裡真正的螢幕面 mesh(<code>Object_12</code>)</li><li>開始窮舉角度:+3 度 → 削到角落 → 0 度 → +1.5 度 → −2 度</li><li>圓角改成 24 個控制點,但 <code>clip-path</code> 迴圈還寫死 8 → <strong>影片被裁成頂端一條細線</strong></li><li>修好,改成四角定位,二次貝茲做圓角</li><li>右下角單獨再調</li></ol>
+<p>十一次。到這裡我已經沒有更好的想法了。</p>
+<p>然後 Claude Code 做了一件我沒想到的事:<strong>它做了一個工具,讓我自己用滑鼠把四個角拖到定位。</strong></p>
+<p>畫面出現四個藍色把手,我拖,它即時把座標反投影回 3D mesh 上重建裁切,左上角同步顯示一組可以直接複製回程式碼的座標陣列。我拖了幾下,複製,貼上。</p>
+<p>下一個提交是:</p>
+<blockquote class="pb-quote">影片四角採用使用者用 <code>__cornerTool</code> 拖曳對位後的精確值,精準貼合螢幕</blockquote>
+<figure class="pb-fig"><img src="/assets/blog/blueprint.webp" alt="首頁分鏡第 03 階段「發光線稿」:相機拆成零件,以線框呈現" loading="lazy" decoding="async"><figcaption>首頁分鏡第 03 階段「發光線稿」:相機拆成零件,以線框呈現</figcaption></figure>
+<p>那一整天算不出來的東西,最後的解法是不算了——做一個介面,讓看得見畫面的人來判斷。</p>
+<p>我原本以為 AI 寫程式的價值在於它算得比我準。那天我發現不是。它的價值在於它知道什麼時候該停止計算、把判斷權交回給我,並且順手把交接的工具也做好。</p>
+<hr class="pb-hr">
+<h2>失敗與回滾</h2>
+<p>7 月 22 日,我試著讓它自動重新設計「六大功能」區塊。結果不能用。</p>
+<p>提交記錄:</p>
+<blockquote class="pb-quote">還原六大功能區:移除失敗的編輯設計自動實驗(583c6f7)</blockquote>
+<p>回滾之後改成手工做:先鋪一層瑞士編輯格線,再讓六隻角色一隻一隻破格——01 坐在格線上把 hairline 壓彎、02 雙手吊在格頂引體向上、03 趴在橫線上、04 單手吊線盪鞦韆、05 走鋼索、06 倒掛在線下。六個獨立提交,一隻一隻來。</p>
+<figure class="pb-fig"><img src="/assets/blog/creatures.webp" alt="六隻零件怪獸各自用不同姿態破格,腳下那條 2px 全黑的線是瑞士編輯格線" loading="lazy" decoding="async"><figcaption>六隻零件怪獸各自用不同姿態破格,腳下那條 2px 全黑的線是瑞士編輯格線</figcaption></figure>
+<p>比自動重設計花了更多時間,但成果好很多。這件事教我的分工是:<strong>結構可以交給它,品味不行。</strong></p>
+<hr class="pb-hr">
+<h2>誠實性也是工程問題</h2>
+<p>有幾個提交我特別想提:</p>
+<blockquote class="pb-quote"><code>PeakOps P4:誠實性修正(移除不實與自相矛盾的陳述)</code>  <code>Pricing 重做:⋯ 移除不實承諾</code>  <code>案例頁 Phase B 下半:作品卡狀態、案例編號、Lightbox 說明(誠實不捏造)</code></blockquote>
+<p>寫行銷文案的時候,很容易滑向那種聽起來很厲害但其實沒有內容、甚至和前段互相矛盾的句子。Claude 有指出這些地方。這不是我要求的功能,是它在改稿過程中主動提的。</p>
+<p>到今天為止,網站上還有一批「需要事實才能寫」的項目是空著的——合約條件、保證條款的性質、資安的具體宣稱、案例的成效數字。那些我還沒有可以拿出來的憑據,所以寧可不寫。這也是為什麼 <a href="/pricing">方案說明</a> 上寫的是「依需求報價」而不是一個數字。</p>
+<p>一個新公司的官網最容易犯的錯,就是把自己講得比實際大。一個會抓到這件事的協作者,比多一個會寫 CSS 的協作者有價值。</p>
+<hr class="pb-hr">
+<h2>我們發展出的工作方式</h2>
+<h3>驗收探針</h3>
+<p>專案裡有一個 <code>.peakops-audit/</code> 目錄,放的是不在網站路由上的驗收頁。無頭瀏覽器幾乎不跑 <code>requestAnimationFrame</code>,所以這些頁面支援 <code>?step=N</code> 參數:把 rAF 換成固定 dt 的手動時鐘,推 N 幀,截圖因此可重現。</p>
+<p>這是為了讓「動畫對不對」這種主觀問題,變成可以逐像素比對的問題。</p>
+<h3>代理併行審查</h3>
+<p>8 月 3 日的手機版總審查,提交寫著:</p>
+<blockquote class="pb-quote">32 筆定罪逐一修復 + 複驗(55+8 代理兩輪)</blockquote>
+<p>派出多個代理去跑不同視口與情境,回報問題清單,逐項修復後再複驗一輪。</p>
+<h3>共用詞彙</h3>
+<p>「母動畫」是捲動驅動的主軸,「子動畫」是每一幕內部自己跑的時間軸。這組詞是做到一半自然長出來的,之後我只要說「這一幕的子動畫凍結了」,它就知道要去看哪裡。</p>
+<h3>追根因,不修表象</h3>
+<p>8 月 5 日有一個提交:</p>
+<blockquote class="pb-quote">機器人「沒站在線上」的真因:它們腳下那條線幾乎看不見</blockquote>
+<p>我回報的是「機器人沒站好」,實際問題是線的對比度不夠。</p>
+<hr class="pb-hr">
+<h2>一個私心</h2>
+<p><a href="/about">關於我們</a> 頁上有一個機器人,站在自己的工作間裡。它叫 Allen。</p>
+<p>它的工作間有 40 個手工拆出來的圖層,會隨訪客當地的時間變成白天、黃昏或夜晚。窗外的雲會飄,夜裡有星星和一顆慢慢升起的月亮;雲會擋住星星,月亮從雲後面浮起來的時候雲會微微透光,月光也會打在窗外的建築上。有六個地方可以點——窗戶、檯燈的開關、馬克杯、海報、控制台、工具排——點下去它會轉頭看過去。</p>
+<figure class="pb-fig"><img src="/assets/blog/allen-day.webp" alt="Allen 的工作間,白天" loading="lazy" decoding="async"><figcaption>Allen 的工作間,白天</figcaption></figure>
+<figure class="pb-fig"><img src="/assets/blog/allen-night.webp" alt="同一個工作間,夜晚:星星、月亮與從窗口灑進來的月光" loading="lazy" decoding="async"><figcaption>同一個工作間,夜晚:星星、月亮與從窗口灑進來的月光</figcaption></figure>
+<p>技術上這是全站最麻煩的一塊。整套天色不是準備三張圖片,而是用 multiply 壓暗加 screen 提亮兩層分級圖,在 sRGB 空間精確推導出來(實測平均差 0.3 階)。</p>
+<p>素材產生器會自我驗算:把底板加元件貼回去,和原稿逐像素比對。這裡有一個細節值得說——<strong>關卡看的不是 RMSE</strong>。轉檔把整張放大再換算回來,每一條描邊都會差個 1px,那種差異 RMSE 看得到、眼睛看不到。真正要擋的是「一整塊東西不見了」,所以關卡是「差異超過 60 的連通區域必須是 0 塊」。目前 RMSE 是 3.74,不合格區域 0 塊。</p>
+<p>這一段沒有任何商業理由。我只是想在自己蓋的網站裡放一個自己。</p>
+<hr class="pb-hr">
+<h2>8 月 6 日:一天做完整個英文站</h2>
+<p>45 個提交,16 個英文頁面上線。</p>
+<p>包含 i18n 底座、<code>hero-scenes.js</code> 裡上百處 canvas 畫的字包 <code>t()</code>、153 條素材路徑絕對化、雙語 sitemap(33 個 URL 帶 hreflang 三件組)、雙語 JSON-LD、<code>/en</code> 路由。中文站零像素迴歸。</p>
+<p>這是整個專案裡我到現在還覺得最不真實的一天。</p>
+<hr class="pb-hr">
+<h2>數字</h2>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th>項目</th><th>數值</th></tr></thead><tbody><tr><td>提交總數</td><td>414(截至 2026-08-08)</td></tr><tr><td>工作天</td><td>16 天,橫跨 24 個日曆天</td></tr><tr><td>開發人數</td><td>1 人(公司團隊 3 人)</td></tr><tr><td>多數日子投入</td><td>3–4 小時</td></tr><tr><td>頁面數</td><td>中英雙語各 16 頁,共 32 頁</td></tr><tr><td>工具</td><td>Claude Code(Claude Max 訂閱方案)</td></tr><tr><td>全程使用其他 AI 工具</td><td>沒有</td></tr><tr><td>我的程式背景</td><td>沒有</td></tr></tbody></table></div>
+<hr class="pb-hr">
+<h2>給正在猶豫的人</h2>
+<p>如果你和一年前的我一樣——判斷得出什麼東西好,但寫不出來——我的經驗是:「寫不出來」那半邊,現在可以外包了。</p>
+<p>但不要外包判斷。7 月 22 日那次自動重設計失敗,就是因為我把品味也一起交出去了。整個專案裡所有好的部分,都是我知道自己要什麼、然後花時間把它講清楚的那些。</p>
+<p>程式碼全部公開在 <a href="https://github.com/Peakqi-com/peakqi-website" target="_blank" rel="noopener noreferrer">github.com/Peakqi-com/peakqi-website</a>,提交歷史沒有整理。上面每一句話都可以自己去驗證。</p>
+<p>如果你想聊聊怎麼把 AI 接進自己的流程,<a href="/demo">預約 15 分鐘的導入評估</a> 就可以。</p>
+  </article>
+  <hr class="pb-hr">
+  <aside class="pb-cta">
+    <h2>想知道這些流程在你的公司長什麼樣?</h2>
+    <p>預約一次場景 Demo,我們用你實際的流程走一遍,再一起評估哪一段值得先自動化。</p>
+    <a href="/demo">預約場景 Demo →</a>
+  </aside>
+
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
