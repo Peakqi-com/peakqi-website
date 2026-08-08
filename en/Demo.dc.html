@@ -431,7 +431,10 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <span style="font:400 .84375rem/1.65 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55)">An early rollout draft — not a formal quote or a confirmed scope; existing systems, APIs, permissions, data and timelines still need assessment.</span>
         </div>
         <button onClick="{{ submit }}" disabled="{{ submitting }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
-        <p style="margin:10px 0 0;font:400 .78125rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.5)">By sending, you agree we may use the information you provide for contact and assessment under our <a href="/en/privacy" target="_blank" style="color:rgba(242,239,232,.7);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">Privacy Policy</a>.</p>
+        <!-- 個資告知。這一段的底色是 #F2EFE8(亮底),但字色原本沿用了深底那套
+             rgba(242,239,232,.5) —— 和背景同色,對比 1.0,整句在畫面上是隱形的。
+             改成深字(對比 5.3,12.5px 小字要 4.5 以上),字級對齊上面那條免責說明。 -->
+        <p style="margin:10px 0 0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">By sending, you agree we may use the information you provide for contact and assessment under our <a href="/en/privacy" target="_blank" rel="noopener" style="color:rgba(9,11,14,.86);text-decoration:underline;text-underline-offset:3px" style-hover="color:#D14E12">Privacy Policy</a>.</p>
       </sc-if>
       <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
@@ -447,6 +450,8 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
           <h2 style="margin:0;font:900 clamp(1.3125rem,1.8vw,1.5625rem)/1.45 'Noto Sans TC',sans-serif">Your rollout draft is on its way</h2>
           <p style="margin:0;font:400 clamp(.9375rem,1.15vw,1rem)/1.75 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)">We read your draft first, then set up the conversation the way you prefer; modules, timeline and cost are confirmed after assessment.</p>
           <p style="margin:0;font:400 .875rem/1.8 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.65)">{{ doneNote }}</p>
+          <!-- 送出後才是最想知道「我的資料去哪了」的時候。這裡只指路,不重述政策內容 -->
+          <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.62)">How we store what you sent, and how to access or delete it, is set out in our <a href="/en/privacy" target="_blank" rel="noopener" style="color:rgba(9,11,14,.86);text-decoration:underline;text-underline-offset:3px" style-hover="color:#D14E12">Privacy Policy</a>.</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
             <button onClick="{{ copyDraft }}" style="{{ copyDraftStyle }}">{{ copyDraftLabel }}</button>
             <a href="https://lin.ee/saa67pr" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;padding:13px 20px;border-radius:2px;font:700 .90625rem 'Noto Sans TC',sans-serif;text-decoration:none;min-height:44px;box-sizing:border-box" style-hover="background:#05a648">Send it via LINE</a>
