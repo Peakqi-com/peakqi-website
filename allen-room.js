@@ -243,7 +243,28 @@ ${LITP.map((p) => `<g data-r="l_${p.id}">${
 <radialGradient id="halo${uid}">
   <stop offset="0" stop-color="#CFE0FF" stop-opacity=".55"/>
   <stop offset="45%" stop-color="#B9CEF5" stop-opacity=".18"/>
-  <stop offset="100%" stop-color="#A8C0EE" stop-opacity="0"/></radialGradient></defs>
+  <stop offset="100%" stop-color="#A8C0EE" stop-opacity="0"/></radialGradient>
+<!-- 雲要擋住星星和月亮。但雲在幾何層、夜空在發光層,而發光層永遠疊在上面 ——
+     靠疊圖順序辦不到。改用遮罩:把雲的 alpha 轉成黑色塗進亮度遮罩裡,
+     黑的地方夜空就不見了。雲自己仍然畫在幾何層(它是原圖裡那朵雲),
+     這裡只是拿同一張圖再畫一次當「擋板」,每幀跟著本尊一起位移。 -->
+<filter id="cink${uid}" x="-6%" y="-6%" width="112%" height="112%">
+  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter>
+<mask id="occ${uid}" maskUnits="userSpaceOnUse">
+  <rect x="${SKY_MASK[0]}" y="${SKY_MASK[1]}" width="${SKY_MASK[2]}" height="${SKY_MASK[3]}" fill="#fff"/>
+  ${CLOUDS.map((c) => `<g data-r="occ_${c.id}" filter="url(#cink${uid})">${
+    img(`${BASE}parts/${c.id}.webp`, PART_BOX[c.id])}</g>`).join('')}
+</mask>
+<!-- 月亮從雲後面浮起來的時候,雲要微微透光。做法是在發光層畫一團柔光,
+     再用雲自己的形狀裁出來 —— 亮的只有雲那一塊,等於光是從雲裡透出來的。 -->
+<radialGradient id="bleed${uid}">
+  <stop offset="0" stop-color="#E2ECFF" stop-opacity=".9"/>
+  <stop offset="42%" stop-color="#C6D8F8" stop-opacity=".38"/>
+  <stop offset="100%" stop-color="#AFC8F0" stop-opacity="0"/></radialGradient>
+${CLOUDS.map((c) => `<mask id="cm${c.id}${uid}" maskUnits="userSpaceOnUse">`
+  + `<g data-r="cmg_${c.id}">${img(`${BASE}parts/${c.id}.webp`, PART_BOX[c.id])}</g></mask>`).join('')}
+</defs>
+<g mask="url(#occ${uid})">
 <g data-r="sky-night" opacity="0">
   <g data-r="moon"><circle data-r="moon-halo" r="${MOON.r * 3.2}" fill="url(#halo${uid})"/>
   <circle r="${MOON.r}" fill="url(#moon${uid})"/></g>
@@ -260,6 +281,10 @@ ${LITP.map((p) => `<g data-r="l_${p.id}">${
     return out;
   })()}</g>
 </g>
+</g>
+<!-- 透光層在遮擋遮罩之外:月亮被雲擋住時,亮的是雲本身 -->
+<g data-r="cloudlit">${CLOUDS.map((c) => `<g mask="url(#cm${c.id}${uid})">`
+  + `<circle data-r="bleed_${c.id}" r="${r1(MOON.r * 2.8)}" fill="url(#bleed${uid})" opacity="0"/></g>`).join('')}</g>
 </g>
 ${CITY.map((c) => `<g data-r="${c.id}" opacity="0">${img(`${BASE}parts/${c.id}.webp`, PART_BOX[c.id])}</g>`).join('')}
 ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">`
@@ -345,7 +370,12 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
     const b = PART_BOX[c.id];
     const from = -(b[0] + b[2] + 15);
     const to = 300 - b[0];
-    return { ...c, el: q(c.id), from, to, x: from + rand() * (to - from) };
+    return {
+      ...c, el: q(c.id), from, to, x: from + rand() * (to - from), box: b,
+      occ: ql('occ_' + c.id),          // 夜空的擋板(同一張圖,塗黑當遮罩用)
+      cmg: ql('cmg_' + c.id),          // 透光用的雲形遮罩
+      lit: ql('bleed_' + c.id)         // 透出來的那團光
+    };
   });
 
   // ---- 命中範圍:只有這幾塊收指標事件 ----
@@ -533,9 +563,14 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
       + (screenT >= 0 ? 0.42 * Math.exp(-screenT * 2.6) * (Math.floor(screenT * 9) % 2 ? 0.55 : 1) : 0);
     if (litEl.screen) litEl.screen.setAttribute('opacity', r2(clamp(boost, 0, 0.6)));
 
-    // 窗外的雲:各自漂,漂出右邊就繞回左邊
+    // 窗外的雲:各自漂,漂出右邊就繞回左邊。
+    // 同一個位移要套三份:本尊(幾何層)、夜空的擋板、透光用的雲形遮罩 ——
+    // 三者只要差一格就會露出「星星從雲邊緣穿出來」的破綻。
     for (const c of cloudEl) {
-      c.el.setAttribute('transform', `translate(${r1(c.x)},0)`);
+      const tr = `translate(${r1(c.x)},0)`;
+      c.el.setAttribute('transform', tr);
+      if (c.occ) c.occ.setAttribute('transform', tr);
+      if (c.cmg) c.cmg.setAttribute('transform', tr);
     }
 
     // 底板自己會亮的三個地方:各自用不同的週期呼吸,機台燈條被點名時連閃
@@ -561,8 +596,22 @@ ${GLOW.map((w) => `<g data-r="${w.id}" mask="url(#sm${w.id}${uid})" opacity="0">
       // 月亮還在天際線後面的時候幾乎沒有月光,升上來才慢慢灑進房間
       const h = clamp((MOON.lo - my) / (MOON.lo - MOON.hi), 0, 1);
       moonlit.setAttribute('opacity', r2(tw.night * (0.18 + 0.62 * h)));
+      // 月亮走到哪朵雲後面,那朵雲就透光。強度取「月心到雲框的距離」——
+      // 完全進到雲裡最亮,離開一個月亮半徑就收乾淨,不會突然開關。
+      for (const c of cloudEl) {
+        if (!c.lit) continue;
+        const bx = c.box[0] + c.x, by = c.box[1];
+        // 月心到雲框的最短距離(在框內為 0)
+        const dx = Math.max(bx - MOON.x, 0, MOON.x - (bx + c.box[2]));
+        const dy = Math.max(by - my, 0, my - (by + c.box[3]));
+        const d = Math.hypot(dx, dy);
+        const k = clamp(1 - d / (MOON.r * 2.2), 0, 1);
+        c.lit.setAttribute('opacity', r2(tw.night * k));
+        if (k > 0) c.lit.setAttribute('transform', `translate(${MOON.x},${r1(my)})`);
+      }
     } else {
       moonlit.setAttribute('opacity', '0');
+      for (const c of cloudEl) if (c.lit) c.lit.setAttribute('opacity', '0');
     }
 
     // 窗外城市的窗:各組各自慢慢明滅,偶爾有一格「熄一下又亮起來」——
