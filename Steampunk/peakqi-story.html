@@ -186,7 +186,27 @@
 import { buildTower } from './tower.js';
 
 const stage = document.querySelector('three-d-stage');
+
+// ── 看不見就停 ────────────────────────────────────────────────────────
+// 這一頁會被案例頁用 iframe 嵌進「品牌屋」那一段。同源 iframe 和父頁共用同一條
+// 主執行緒,瀏覽器不會替「已經捲出畫面的同源 iframe」節流 —— 不自己停的話,案例頁
+// 在品牌屋底下還有 15 屏內容,全程被這頁的 3D 迴圈拖著跑。
+// 實測(412×915、CPU 4× 節流,約中階 Android):房子捲出畫面後仍是 13.5 fps,
+// 停掉迴圈後 234 fps。
+// 父頁用 IntersectionObserver 呼叫 window.__pqSetRunning(false/true)。
+// 定義在 await stage.ready 之前 —— 父頁很可能在 three.js 都還沒載完就先喊停了。
+let running = true;
+let resumeTick = null;          // tick 迴圈備妥後掛上
+window.__pqSetRunning = (on) => {
+  on = !!on;
+  if (on === running) return;
+  running = on;
+  try { stage.setRunning(on); } catch (e) {}
+  if (on && resumeTick) resumeTick();
+};
+
 const { THREE } = await stage.ready;
+if (!running) stage.setRunning(false);   // ready 之前就被喊停過,補上
 {
   const pm = new THREE.PMREMGenerator(stage._renderer);
   const es = new THREE.Scene();
@@ -209,6 +229,7 @@ const angryBub = root.getObjectByName('referral_person_bubble');
 const coinG = root.getObjectByName('anim_topup_coin');
 stage.setObject(root);
 root.traverse(o => { if (o.userData.noShadow) { o.castShadow = false; o.receiveShadow = false; } });
+stage.invalidateShadows();   // 上面改過 castShadow,凍住的陰影圖要重畫一次
 // 室內道具的貼地暗部:主光在塔外(4,7,5),六層房間全被外牆擋住,室內只剩半球光與
 // 環境光——兩者都不投射陰影,所以桌椅像貼紙貼在地板上。這裡替每個「真的踩在某個
 // 面上」的道具補一片柔和暗部(向下射線判定,放在桌上的東西就落在桌上)。
@@ -995,14 +1016,18 @@ function update(t, dt) {
   if (nodes.groomHead) nodes.groomHead.position.y = baseY['groom_head'] + (id === 'wedding' ? Math.abs(Math.sin(t * 4 + 0.9)) * 0.012 * F : 0);
 }
 
+let rafId = 0;
 function tick() {
-  requestAnimationFrame(tick);
+  rafId = running ? requestAnimationFrame(tick) : 0;
+  if (!running) return;                  // 暫停:讓已排程的這一幀自然收掉
   const t = performance.now() / 1000;
   const dt = Math.min(t - last, 0.05);
   last = t;
   update(t, dt);
 }
-tick();
+// 恢復時 last 要重設,否則 dt 會是整段暫停的長度(update 有夾 0.05,但別靠那個)
+resumeTick = () => { if (!rafId) { last = performance.now() / 1000; tick(); } };
+if (running) tick();
 // 供離線快照用:一步收斂
 window.__step = (yPx) => {
   window.__scrollOverride = yPx;

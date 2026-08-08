@@ -447,8 +447,11 @@ class Component extends DCLogic {
       // DC 為非同步渲染:掛載當下元素可能還沒進 DOM → 重試直到出現
       if (!run || !fr) { if ((this._bhTry = (this._bhTry || 0) + 1) < 60) setTimeout(this._bhInit, 100); return null; }
       let ticking = false;
+      // 看不見就別算(而且下面會把 iframe 裡的 3D 一起停掉)
+      let vis = true;
       const apply = () => {
         ticking = false;
+        if (!vis) return;
         const r = run.getBoundingClientRect();
         const total = run.offsetHeight - window.innerHeight;
         if (total <= 0) return;
@@ -537,12 +540,42 @@ class Component extends DCLogic {
         boot();
         fr.addEventListener('load', () => { tries = 0; boot(); });
       }
+      // 品牌屋捲出畫面就把 iframe 裡的 3D 停掉。同源 iframe 和父頁共用同一條主執行緒,
+      // 瀏覽器不會替「看不見的同源 iframe」節流 —— 這一段底下還有 15 屏內容(精選案例、
+      // 能力、客製、作品列表),3D 不停的話那 15 屏全程被拖著跑。
+      // 實測(412×915、CPU 4× 節流,約中階 Android):房子捲出畫面後仍是 13.5 fps,
+      // 停掉迴圈後 234 fps。
+      let io = null;
+      const pushVis = () => {
+        try {
+          const w = fr.contentWindow;
+          // __pqSetRunning 由塔樓文件同步定義(module script,早於 iframe 的 load)
+          if (w && typeof w.__pqSetRunning === 'function') w.__pqSetRunning(vis);
+        } catch (e) {}
+      };
+      const setVis = (on) => {
+        if (on === vis) return;
+        vis = on;
+        pushVis();
+        if (on) apply();   // 暫停期間漏掉的捲動進度,恢復時補算一次
+      };
+      try {
+        // 200px 提前量:進場前先跑起來,捲到定位時場景已經是對的
+        io = new IntersectionObserver((es) => setVis(es.some((e) => e.isIntersecting)), { rootMargin: '200px 0px' });
+        io.observe(run);
+      } catch (e) {}
+
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
-      fr.addEventListener('load', apply);
+      // 懶載入的 iframe 載完才有 __pqSetRunning,補推一次目前的可見狀態
+      fr.addEventListener('load', () => { pushVis(); apply(); });
       apply();
-      return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+      return () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        if (io) { try { io.disconnect(); } catch (e) {} io = null; }
+      };
     };
     this._bh = this._bhInit();
     Promise.all([import('/motion-kit.js'), import('/motion/cases.motion.js')])
