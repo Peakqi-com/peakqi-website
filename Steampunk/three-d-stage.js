@@ -177,8 +177,6 @@
       this._toolbar.appendChild(this._glbBtn);
       root.appendChild(this._toolbar);
       this._setButtonsEnabled(false);
-      // 想不想跑。setRunning(false) 之後不論重新掛載或 boot 完成都維持停住。
-      this._wantRun = true;
       /** Resolves with { THREE } once the scene is live — build the model
        *  in `await stage.ready` so nothing races the library load. */
       this.ready = new Promise((resolve, reject) => {
@@ -187,29 +185,11 @@
       });
     }
 
-    /** 暫停/恢復每幀重畫。停的只是渲染迴圈,場景與 renderer 都留著,
-     *  隨時可以恢復,也還能單次 render()(截圖工具照舊)。
-     *
-     *  為什麼需要:同源 iframe 和父頁共用同一條主執行緒,瀏覽器不會替
-     *  「捲出畫面的同源 iframe」節流。案例頁把這座舞台嵌在品牌屋那一段,
-     *  底下還有 15 屏內容 —— 舞台不自己停,那 15 屏全程被拖著跑
-     *  (實測 13.5 fps;停掉迴圈後 234 fps)。 */
-    setRunning(on) {
-      this._wantRun = !!on;
-      if (!this._renderer) return;   // 還沒 boot 完:_wantRun 會在 _boot 尾端生效
-      this._renderer.setAnimationLoop(this._wantRun ? this._loop : null);
-    }
-
-    /** 重畫一次陰影圖。主光或場景幾何真的動過才需要 —— 見 _boot 裡凍結的說明。 */
-    invalidateShadows() {
-      if (this._renderer) this._renderer.shadowMap.needsUpdate = true;
-    }
-
     connectedCallback() {
       if (this._booted) {
         // Re-attached after a removal — resume what disconnected stopped.
         if (this._renderer) {
-          if (this._wantRun) this._renderer.setAnimationLoop(this._loop);
+          this._renderer.setAnimationLoop(this._loop);
           this._ro && this._ro.observe(this);
         }
         return;
@@ -251,13 +231,6 @@
       // 室內道具的貼地暗部不靠這張陰影圖,走 addContactShadows()。
       // 抗鋸齒維持「觸控不開」:實機檢視無階梯感,沒有理由付那個效能代價。
       renderer.shadowMap.type = THREE.PCFShadowMap;
-      // 陰影圖不每幀重畫。這座舞台的主光位置固定、物件是「放上來給人繞著看」的,
-      // 光空間裡的投影其實幀幀相同 —— 相機怎麼轉都不影響。
-      // 實測(中階 Android 等級的節流):單幀 37.3ms → 16.7ms,陰影 pass 一個人
-      // 吃掉 55%(這棵樹有 907 個 mesh、798 個投影物件,每幀重掃一次 2048² 圖)。
-      // 場景幾何真的動過(換模型、移動光源)就叫 invalidateShadows()。
-      renderer.shadowMap.autoUpdate = false;
-      renderer.shadowMap.needsUpdate = true;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       this._renderer = renderer;
@@ -322,8 +295,8 @@
       // connectedCallback resume starts the loop and observer on
       // reattach.
       if (this.isConnected) {
-        this._ro.observe(this);   // 尺寸照追,停的只是每幀重畫
-        if (this._wantRun) renderer.setAnimationLoop(this._loop);
+        this._ro.observe(this);
+        renderer.setAnimationLoop(this._loop);
       }
 
       this._readyResolve({ THREE });
@@ -351,7 +324,6 @@
           o.receiveShadow = true;
         }
       });
-      this.invalidateShadows();   // 換了物件,凍住的那張陰影圖要重畫一次
       const box = new THREE.Box3().setFromObject(object);
       if (!box.isEmpty()) {
         // Rest the object on the ground without moving its origin.
