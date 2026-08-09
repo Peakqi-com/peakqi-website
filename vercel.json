@@ -2,6 +2,21 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/blog/inquiry-handoff-gaps",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/five-questions-before-adopting-ai",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/inquiry-handoff-gaps",
+      "destination": "/en/blog",
+      "permanent": true
+    },
+    {
       "source": "/Home.dc.html",
       "destination": "/",
       "permanent": true
