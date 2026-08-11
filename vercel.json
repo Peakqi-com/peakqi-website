@@ -168,13 +168,23 @@
       "permanent": true
     },
     {
+      "source": "/contact",
+      "destination": "/demo",
+      "permanent": true
+    },
+    {
+      "source": "/en/contact",
+      "destination": "/en/demo",
+      "permanent": true
+    },
+    {
       "source": "/Contact.dc.html",
-      "destination": "/contact",
+      "destination": "/demo",
       "permanent": true
     },
     {
       "source": "/en/Contact.dc.html",
-      "destination": "/en/contact",
+      "destination": "/en/demo",
       "permanent": true
     },
     {
@@ -314,14 +324,6 @@
     {
       "source": "/en/ai-interior-pro",
       "destination": "/en/AIInteriorPro.dc.html"
-    },
-    {
-      "source": "/contact",
-      "destination": "/Contact.dc.html"
-    },
-    {
-      "source": "/en/contact",
-      "destination": "/en/Contact.dc.html"
     },
     {
       "source": "/en/404",

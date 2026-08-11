@@ -217,24 +217,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.peakqi.com/contact</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/contact"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/contact"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/contact"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.peakqi.com/en/contact</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/contact"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/contact"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/contact"/>
-    <lastmod>2026-08-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.peakqi.com/privacy</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/privacy"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/privacy"/>

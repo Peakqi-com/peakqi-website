@@ -18,7 +18,7 @@ const STATIC_PAGES = [
   ['/pricing', 'weekly', 0.9], ['/method', 'monthly', 0.8], ['/cases', 'weekly', 0.8],
   ['/demo', 'weekly', 0.9], ['/about', 'monthly', 0.7], ['/products', 'monthly', 0.7],
   ['/bubble', 'monthly', 0.6], ['/ai-wedding-pro', 'monthly', 0.6],
-  ['/ai-interior-pro', 'monthly', 0.6], ['/contact', 'monthly', 0.6], ['/privacy', 'yearly', 0.3]
+  ['/ai-interior-pro', 'monthly', 0.6], ['/privacy', 'yearly', 0.3]
 ];
 
 const X = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
