@@ -753,10 +753,16 @@ html.pq-cine-pre #hero .pq-cine-intro{opacity:1;filter:blur(0);transform:transla
      於是第二列的角色看起來像浮在空中(第一列站的是格線頂邊 1.6px/.9,所以看起來有站好)。
      兩條線改為同一規格,六隻角色才會落在同一條可見的線上。 */
   border-bottom:2px solid #090B0E;
+  /* 每張卡都帶一條左邊框,只有顏色不同 —— 邊框佔的是卡片盒內的空間,
+     若只有 2、3 欄畫線,它們的內容會比第 1 欄多縮 2px(32 → 34),
+     三欄文字的間距實測變成 434 / 432,肉眼看得出來沒對齊。
+     第 1 欄補一條同寬的透明邊把位置留著,外緣照樣是開放的。 */
+  border-left:2px solid transparent;
   padding:26px 32px 24px;min-height:0;display:flex;flex-direction:column;gap:12px;
   transition:background .4s cubic-bezier(.16,1,.3,1)}
-/* 欄間細線(桌機三欄:第 2、3 欄左緣) */
-.pq-mod:not(:nth-child(3n+1)){border-left:2px solid #090B0E}
+/* 欄間細線(桌機三欄:第 2、3 欄左緣)。只改顏色,寬度一律由上面的基礎規則給,
+   否則會蓋掉窄版 media query 裡的寬度(特異度較低,改不動)。 */
+.pq-mod:not(:nth-child(3n+1)){border-left-color:#090B0E}
 .pq-mod::before{display:none}
 .pq-mod:hover{transform:none;box-shadow:none;background:rgba(9,11,14,.028)}
 /* 巨大實心編號:編輯設計的主角,靠左齊版心 */
@@ -781,11 +787,14 @@ html.pq-cine-pre #hero .pq-cine-intro{opacity:1;filter:blur(0);transform:transla
   font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:rgba(9,11,14,.42)}
 .pq-mod .spec b{font:700 .65625rem 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--ac,#FF6B2C)}
 @media (max-width:980px){
-  .pq-mod:not(:nth-child(3n+1)){border-left:0}
-  .pq-mod:not(:nth-child(2n+1)){border-left:1px solid rgba(9,11,14,.16)}
+  /* 兩欄:線改畫在偶數卡左緣。三個 :not() 特異度相同,靠出現順序決勝 */
+  .pq-mod{border-left-width:1px}
+  .pq-mod:not(:nth-child(3n+1)){border-left-color:transparent}
+  .pq-mod:not(:nth-child(2n+1)){border-left-color:rgba(9,11,14,.16)}
 }
 @media (max-width:640px){
-  .pq-mod:not(:nth-child(2n+1)){border-left:0}
+  /* 單欄:不畫直線。寬度維持 1px 透明,六張卡的內縮才會一致 */
+  .pq-mod:not(:nth-child(2n+1)){border-left-color:transparent}
   .pq-mod{padding:24px 4px 22px}
 }
 @media (prefers-reduced-motion:reduce){.pq-mod,.pq-mod .ico,.pq-mod .num{transition:none!important}}
