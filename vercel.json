@@ -68,13 +68,8 @@
       "permanent": true
     },
     {
-      "source": "/en",
-      "destination": "/en/",
-      "permanent": true
-    },
-    {
       "source": "/en/Home.dc.html",
-      "destination": "/en/",
+      "destination": "/en",
       "permanent": true
     },
     {
@@ -239,7 +234,7 @@
       "destination": "/favicon-32.png"
     },
     {
-      "source": "/en/",
+      "source": "/en",
       "destination": "/en/Home.dc.html"
     },
     {
