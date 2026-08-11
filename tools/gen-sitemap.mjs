@@ -4,22 +4,58 @@
 // 主機一律用 www.peakqi.com:canonical、hreflang、sitemap 三者若不同源,Google 會整組忽略 hreflang。
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 export const SITE = 'https://www.peakqi.com';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// 靜態頁最後更新日:改版時手動更新這一行即可(文章日期各自獨立,不受影響)
-const STATIC_LASTMOD = '2026-08-06';
+// 只在 git 查不到時當保底(未追蹤的檔、或在 repo 外執行)
+const FALLBACK_LASTMOD = '2026-08-06';
 
-// [中文 clean path, changefreq, 中文 priority] ── 英文版一律 priority - 0.1
+// [中文 clean path, changefreq, 中文 priority, 頁面原始檔] ── 英文版一律 priority - 0.1
+// 第四欄用來查 lastmod,英文版取 en/<同檔名>。
 const STATIC_PAGES = [
-  ['/', 'weekly', 1.0], ['/peakops', 'weekly', 0.9], ['/solutions', 'weekly', 0.9],
-  ['/pricing', 'weekly', 0.9], ['/method', 'monthly', 0.8], ['/cases', 'weekly', 0.8],
-  ['/demo', 'weekly', 0.9], ['/about', 'monthly', 0.7], ['/products', 'monthly', 0.7],
-  ['/bubble', 'monthly', 0.6], ['/ai-wedding-pro', 'monthly', 0.6],
-  ['/ai-interior-pro', 'monthly', 0.6], ['/privacy', 'yearly', 0.3]
+  ['/', 'weekly', 1.0, 'Home.dc.html'],
+  ['/peakops', 'weekly', 0.9, 'PeakOps.dc.html'],
+  ['/solutions', 'weekly', 0.9, 'Solutions.dc.html'],
+  ['/pricing', 'weekly', 0.9, 'Pricing.dc.html'],
+  ['/method', 'monthly', 0.8, 'Method.dc.html'],
+  ['/cases', 'weekly', 0.8, 'Cases.dc.html'],
+  ['/demo', 'weekly', 0.9, 'Demo.dc.html'],
+  ['/about', 'monthly', 0.7, 'About.dc.html'],
+  ['/products', 'monthly', 0.7, 'Products.dc.html'],
+  ['/bubble', 'monthly', 0.6, 'Bubble.dc.html'],
+  ['/ai-wedding-pro', 'monthly', 0.6, 'AIWeddingPro.dc.html'],
+  ['/ai-interior-pro', 'monthly', 0.6, 'AIInteriorPro.dc.html'],
+  ['/privacy', 'yearly', 0.3, 'Privacy.dc.html']
 ];
+
+// lastmod 逐頁從 git 取,不再共用一個手動維護的常數。
+// Google 拿 lastmod 決定要不要回來重爬:常數化的日期等於告訴它「這頁沒動過」——
+// 實測 2026-08-11 時 Home 與 Solutions 都已改到 08-11,而常數還停在 08-06,
+// 剛好在我們最需要它重爬(修完 canonical 與網址收斂)的時候壓住了訊號。
+// 反過來也不能全站都蓋今天:Google 明說 lastmod 不實就整份忽略。
+const TODAY = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+// 只砍尾端空白。不能用 trim():porcelain 的「已修改未暫存」每行開頭就是一個空格
+// (" M path"),整份 trim 會吃掉第一行的前導空格,底下的欄位切分就整體位移一格。
+function git(args) {
+  try {
+    return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+      .replace(/\s+$/, '');
+  } catch { return ''; }
+}
+// 已修改未提交的檔案算今天 —— 它就是正要被提交的那一版,取 git 會慢一個 commit。
+// 用正規式吃掉狀態欄而不是固定 slice(3),前導空格在不在都切得對。
+const DIRTY = new Set(
+  git(['status', '--porcelain']).split('\n')
+    .map((l) => l.replace(/^\s*\S{1,2}\s+/, '').split(' -> ').pop().trim())
+    .filter(Boolean)
+);
+function lastmodOf(file) {
+  if (DIRTY.has(file)) return TODAY;
+  return git(['log', '-1', '--format=%cs', '--', file]) || FALLBACK_LASTMOD;
+}
 
 const X = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
 const xml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => X[c]);
@@ -57,15 +93,15 @@ export function writeSitemapAndFeed(posts) {
   const entries = [];
 
   // 1) 靜態頁(中文 + 英文,成對輸出 hreflang)
-  for (const [p, freq, pri] of STATIC_PAGES) {
+  for (const [p, freq, pri, file] of STATIC_PAGES) {
     const alt = { zh: SITE + p, en: SITE + enPath(p) };
-    entries.push(urlEntry({ loc: SITE + p, lastmod: STATIC_LASTMOD, changefreq: freq, priority: pri, alt }));
-    entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: STATIC_LASTMOD, changefreq: freq, priority: Math.max(0.1, pri - 0.1), alt }));
+    entries.push(urlEntry({ loc: SITE + p, lastmod: lastmodOf(file), changefreq: freq, priority: pri, alt }));
+    entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: lastmodOf('en/' + file), changefreq: freq, priority: Math.max(0.1, pri - 0.1), alt }));
   }
 
   // 2) 觀點列表頁 ── 有文章才輸出,空欄目進 sitemap 只是給 Google 一個空殼
   if (list.length) {
-    const newest = list[0].date || STATIC_LASTMOD;
+    const newest = list[0].date || FALLBACK_LASTMOD;
     const alt = { zh: SITE + '/blog', en: SITE + '/en/blog' };
     const hasAnyEn = list.some((p) => p.hasEn);
     entries.push(urlEntry({ loc: SITE + '/blog', lastmod: newest, changefreq: 'weekly', priority: 0.8, alt: hasAnyEn ? alt : null }));
