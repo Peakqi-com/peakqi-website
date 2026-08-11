@@ -16,7 +16,7 @@ const ROUTES = {
   peakops: { path: '/peakops', file: '/peakops', name: 'Peak Ops', nameEn: 'Peak Ops' },
   demo: { path: '/demo', file: '/demo', name: '預約 Demo', nameEn: 'Book a Demo' }
 };
-const enPath = (p) => (p === '/' ? '/en/' : '/en' + p);
+const enPath = (p) => (p === '/' ? '/en' : '/en' + p);
 function el(tag, attrs) {
   const n = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
@@ -83,7 +83,7 @@ export function applySEO(key) {
     const crumbs = {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: LANG === 'en' ? 'Home' : '首頁', item: SITE + (LANG === 'en' ? '/en/' : '/') },
+        { '@type': 'ListItem', position: 1, name: LANG === 'en' ? 'Home' : '首頁', item: SITE + (LANG === 'en' ? '/en' : '/') },
         ...(key !== 'home' ? [{ '@type': 'ListItem', position: 2, name: LANG === 'en' ? (r.nameEn || r.name) : r.name, item: url }] : [])
       ]
     };

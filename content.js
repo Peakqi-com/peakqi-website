@@ -24,6 +24,7 @@ export const navigation = [
     { href: 'https://www.aiweddingpro360.com/', label: 'AI Wedding Pro', desc: t('婚禮 AI', 'Wedding AI'), ext: true },
     { href: 'https://www.aiinteriorpro360.com/', label: 'AI Interior Pro', desc: t('室內設計 AI', 'Interior design AI'), ext: true },
     { href: 'https://bubble.tw', label: t('冒泡', 'Bubble'), desc: t('房仲 AI', 'Real-estate AI'), ext: true },
+    { href: 'https://memora-ai-coral.vercel.app/', label: t('念映 AI', 'Memora AI'), desc: t('生命禮儀 AI 影片', 'Memorial video AI · site in Chinese'), ext: true },
     { href: '/pricing', label: t('方案說明', 'Pricing'), desc: t('Peak Ops 三種規劃與導入範圍', 'Three Peak Ops plans & scope') }
   ] },
   { href: '/about', key: 'about', label: t('關於我們', 'About') },

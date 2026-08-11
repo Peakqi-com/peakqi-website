@@ -44,7 +44,7 @@ Not a template. The specs:
 
 ![Homepage sequence, stage 02 "disassemble": the camera body and its caption card on screen together, stage index on the right](/assets/blog/camera-en.webp)
 
-If you'd rather just look at the result, the [homepage](/en/), [case studies](/en/cases) and [pricing](/en/pricing) show the differences most clearly.
+If you'd rather just look at the result, the [homepage](/en), [case studies](/en/cases) and [pricing](/en/pricing) show the differences most clearly.
 
 ---
 

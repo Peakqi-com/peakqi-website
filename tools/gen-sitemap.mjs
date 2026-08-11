@@ -23,7 +23,7 @@ const STATIC_PAGES = [
 
 const X = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
 const xml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => X[c]);
-const enPath = (p) => (p === '/' ? '/en/' : '/en' + p);
+const enPath = (p) => (p === '/' ? '/en' : '/en' + p);
 
 // YYYY-MM-DD → RFC-822(RSS 規格要求)。固定 09:00 +0800,避免時區推斷造成日期跳一天。
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

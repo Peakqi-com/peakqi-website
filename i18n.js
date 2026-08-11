@@ -32,7 +32,7 @@ export function zhPath() {
 export function altUrl() {
   const zh = zhPath();
   const qs = location.search || '';
-  return (LANG === 'en' ? zh : (zh === '/' ? '/en/' : '/en' + zh)) + qs;
+  return (LANG === 'en' ? zh : (zh === '/' ? '/en' : '/en' + zh)) + qs;
 }
 // 部落格文章逐篇決定有沒有英文版:tools/build-blog.mjs 只在兩版都存在時,把 hreflang 對
 // 靜態寫進該文章的 <head>。這裡直接讀那一行,就不必把整份文章索引載進每一頁。
