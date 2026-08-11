@@ -1620,9 +1620,13 @@ function paintDemo(g, e) {
   }
   if (availH < 96) return;
   // 手機是方形舞台(data-hero-zone="square"):以寬為主放大,內容吃滿正方形;各景高度護欄自縮
+  // 桌機比例尺放大一級。原本 560/380 的分母配 1.25 上限,在 1440 寬只吃到 s≈1.13,
+  // 四景面板全落在 225–243px,而右欄保留給 canvas 的高度是 456px —— 面板浮在正中間,
+  // 上下各空約 100px,整組東西看起來比左欄標題小一號。改成 470/330 + 1.5 上限後
+  // s≈1.34,字級 14.7→17.5px、面板 231→263px,底下四處尺寸上限一併放寬才不會卡住。
   const s = mobile
     ? clamp(Math.min(z.w / 430, availH / 360), .8, 1.25)
-    : clamp(Math.min(z.w / 560, availH / 380), .62, 1.25);
+    : clamp(Math.min(z.w / 470, availH / 330), .62, 1.5);
   let fs = Math.max(12.5, 13 * s), fsS = Math.max(10.5, 10.5 * s);
   if (mobile && !isStatic) { fs = Math.max(15.5, fs); fsS = Math.max(12, fsS); } // 手機可讀鐵律
   const pw = Math.min(z.w - (mobile ? 4 : 12), 640);
@@ -1637,7 +1641,7 @@ function paintDemo(g, e) {
     if (a > .04) {
       const gap = 10 * s;
       const prevH = Math.max(30, 36 * s);
-      let chh = clamp(52 * s, 34, 64);
+      let chh = clamp(52 * s, 34, 78);
       let ph = 32 + chh * 2 + gap + 14 + prevH + 16;
       if (ph > availH - 4) { chh = Math.max(24, (availH - 4 - 32 - gap - 14 - prevH - 16) / 2); ph = Math.min(availH - 4, 32 + chh * 2 + gap + 14 + prevH + 16); }
       const py = place(ph);
@@ -1689,7 +1693,7 @@ function paintDemo(g, e) {
   if (kF > .01) {
     const a = ez(kF) * fadeOut(kB);
     if (a > .04) {
-      const ph = Math.min(availH - 4, clamp(200 * s, 150, 240));
+      const ph = Math.min(availH - 4, clamp(200 * s, 150, 290));
       const py = place(ph);
       const dy = (1 - ez(kF)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
@@ -1753,7 +1757,7 @@ function paintDemo(g, e) {
   if (kB > .01) {
     const a = ez(kB) * fadeOut(kG);
     if (a > .04) {
-      const ph = Math.min(availH - 4, clamp(216 * s, 168, 262));
+      const ph = Math.min(availH - 4, clamp(216 * s, 168, 315));
       const py = place(ph);
       const dy = (1 - ez(kB)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
@@ -1815,13 +1819,13 @@ function paintDemo(g, e) {
   if (kG > .01) {
     const a = ez(kG);
     if (a > .04) {
-      const ph = Math.min(availH - 4, clamp(206 * s, 160, 252));
+      const ph = Math.min(availH - 4, clamp(206 * s, 160, 302));
       const py = place(ph);
       const dy = (1 - ez(kG)) * 26;
       g.save(); g.translate(0, dy); g.globalAlpha = a;
       d.panel(px, py, pw, ph, .96, false);
       d.head(px, py, pw, tt('TASK 04 — 確認並送出', 'TASK 04 — Confirm & send'), 1, C.green);
-      const cw2 = Math.min(pw * .55, 300), cx2 = px + 14, cy0 = py + 36, chh2 = ph - 36 - 16;
+      const cw2 = Math.min(pw * .55, 350), cx2 = px + 14, cy0 = py + 36, chh2 = ph - 36 - 16;
       d.rr(cx2, cy0, cw2, chh2, 6); g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
       g.strokeStyle = 'rgba(242,239,232,.22)'; g.lineWidth = 1; g.stroke();
       const FLD = [tt('產業', 'Industry'), tt('最卡的流程', 'Bottleneck'), tt('聯絡方式', 'Contact')];

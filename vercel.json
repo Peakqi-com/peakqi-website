@@ -3,6 +3,16 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/services",
+      "destination": "/solutions",
+      "permanent": true
+    },
+    {
+      "source": "/en/services",
+      "destination": "/en/solutions",
+      "permanent": true
+    },
+    {
       "source": "/blog/inquiry-handoff-gaps",
       "destination": "/blog",
       "permanent": true
