@@ -120,6 +120,25 @@ export const heroConfig = {
     ],
     flags: {}
   },
+  studio: {
+    key: 'studio', paint: 'studio',
+    story: 'BRIEF TO BUILD:一句需求 → 拆成模組 → 範圍與報價 → 每週可操作的版本 → 上線與交接',
+    totalVh: { desktop: 340, tablet: 260, mobile: 255 },
+    scenes: [
+      { id: 'brief', label: t('需求進來', 'The brief'),      kicker: t('工序 01 / 05', 'Step 01 / 05'), line: t('一句話的需求先寫下來,先問清楚要解決什麼。', 'It starts as one sentence — we ask what it has to solve.'), d: [0, .2],   m: [0, .21] },
+      { id: 'scope', label: t('拆成模組', 'Break it down'),  kicker: t('工序 02 / 05', 'Step 02 / 05'), line: t('拆成標準模組與需要客製的那幾塊。', 'It splits into standard modules and the custom pieces.'), d: [.2, .4],  m: [.21, .42] },
+      { id: 'quote', label: t('範圍與報價', 'Scope & quote'), kicker: t('工序 03 / 05', 'Step 03 / 05'), line: t('每塊各自報價,範圍先寫清楚再開工。', 'Each piece is priced; the scope is written before work starts.'), d: [.4, .6],  m: [.42, .63] },
+      { id: 'build', label: t('每週可操作', 'Weekly build'),  kicker: t('工序 04 / 05', 'Step 04 / 05'), line: t('每週交一個能點的版本,不是簡報。', 'Every week you get a build you can click, not a deck.'), d: [.6, .8],  m: [.63, .84] },
+      { id: 'ship',  label: t('上線與交接', 'Launch & hand over'), kicker: t('工序 05 / 05', 'Step 05 / 05'), line: t('上線之後,原始碼、文件與帳號一起交給你。', 'At launch, the source, the docs and the accounts are yours.'), d: [.8, 1],   m: [.84, 1] }
+    ],
+    reduced: ['brief', 'scope', 'quote', 'ship'],
+    ctas: [
+      // ?need= 直接把需求欄填好(Demo 頁支援);比 ?case= 通順,對方一進表單就已經有一句話可以改
+      { kind: 'primary', label: t('聊聊你的專案', 'Start a project'), href: ep('/demo?need=' + t('我們有一個專案想討論,想先了解可行方向、範圍與報價。', 'We have a project to discuss — looking for direction, scope and a quote.')), track: 'hero_demo_click' },
+      { kind: 'ghost', label: t('看模組價格', 'See module prices'), href: '#s-rack', track: 'studio_rack_click' }
+    ],
+    flags: {}
+  },
   demo: {
     key: 'demo', paint: 'demo',
     story: 'BUILD YOUR FIRST AI FLOW:選擇情境 → 找出卡點 → 組合第一階段 → 確認並送出',

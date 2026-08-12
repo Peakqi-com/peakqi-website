@@ -520,6 +520,9 @@ class Component extends DCLogic {
       const qInd = IND_ZH[qs.get('ind')] || qs.get('ind'), qFlow = FLOW_ZH[qs.get('flow')] || qs.get('flow');
       if (qInd && (m.demoIndustries || []).includes(qInd)) { patch.heroInd = qInd; patch.indPick = qInd; patch.vIndustry = qInd; }
       if (qFlow && fm0[qFlow]) { patch.heroFlow = qFlow; patch.scenes = [fm0[qFlow]]; }
+      // ?need= fills the need field directly — the Studio page's module basket links here
+      const qNeed = qs.get('need');
+      if (qNeed) { patch.vNeed = String(qNeed).slice(0, 400); patch.needTouched = true; }
       this.setState(patch);
     });
     import('/seo.js').then(m => m.applySEO('demo')).catch(() => {});

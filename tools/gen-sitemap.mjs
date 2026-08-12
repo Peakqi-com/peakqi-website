@@ -23,6 +23,7 @@ const STATIC_PAGES = [
   ['/method', 'monthly', 0.8, 'Method.dc.html'],
   ['/cases', 'weekly', 0.8, 'Cases.dc.html'],
   ['/demo', 'weekly', 0.9, 'Demo.dc.html'],
+  ['/studio', 'weekly', 0.9, 'Studio.dc.html'],
   ['/about', 'monthly', 0.7, 'About.dc.html'],
   ['/products', 'monthly', 0.7, 'Products.dc.html'],
   ['/bubble', 'monthly', 0.6, 'Bubble.dc.html'],

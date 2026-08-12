@@ -2300,11 +2300,474 @@ function paintMethodMobile(g, e, sb, ks) {
   if (card > .02) drawScene(cur, kv, eIn, (1 - card) * 42, (1 - card) * -3.2, card);
 }
 
+// ---------- Studio(接案):BRIEF TO BUILD(5 scenes) ----------
+// 敘事角度是「一個案子怎麼從一句話變成上線的東西」,不是產品功能表。
+// 價格欄一律畫「—・報價待定」:站上沒有公開價格,畫布不得自己生一個數字出來。
+const STU_BRIEF = tt('想把詢問接住,還要能自己排班', 'Catch every inquiry — and self-schedule');
+const STU_ASK = [tt('產業與規模', 'Industry & size'), tt('目前卡在哪', 'Where it stalls'), tt('想要的結果', 'Target outcome')];
+const STU_BRICKS = [
+  [tt('AI 接客', 'AI intake'), 0], [tt('知識庫', 'Knowledge'), 0], ['CRM', 0], [tt('報價', 'Quotes'), 0],
+  [tt('LINE 串接', 'LINE wiring'), 0], [tt('後台', 'Back office'), 0], [tt('儀表板', 'Dashboard'), 0], [tt('排班・客製', 'Shifts · custom'), 1]
+];
+const STU_LINES = [
+  [tt('AI 接客助理', 'AI intake assistant'), 0], [tt('知識庫問答', 'Knowledge Q&A'), 0],
+  [tt('CRM 客戶與案件', 'CRM records & deals'), 0], [tt('LINE 官方帳號串接', 'LINE OA integration'), 0],
+  [tt('排班規則', 'Shift rules'), 1]
+];
+const STU_STD = tt('標準模組', 'Standard');
+const STU_CUS = tt('客製', 'Custom');
+const STU_LANES = [[tt('介面', 'Interface'), '#FF6B2C'], [tt('流程', 'Flow'), '#3E9BFF'], [tt('串接', 'Integration'), '#65E0BC']];
+const STU_HAND = [tt('原始碼', 'Source code'), tt('操作文件', 'Operating docs'), tt('帳號與權限', 'Accounts & roles'), tt('教學', 'Training')];
+const T_TBD = tt('報價待定', 'Quote TBD');
+const T_SCOPE_WRITTEN = tt('範圍寫清楚才開工', 'Scope in writing before we start');
+const T_CLICKABLE = tt('可以點的版本,不是簡報', 'A build you can click, not a deck');
+const T_ALL_YOURS = tt('上線,東西全部交給你', 'Live — and all of it is yours');
+
+function paintStudio(g, e) {
+  const { zone: z, k, C, d, mobile, t } = e;
+  const sb = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
+  const kB = k('brief'), kS = k('scope'), kQ = k('quote'), kD = k('build'), kL = k('ship');
+  if (mobile) { paintStudioMobile(g, e, sb, [kB, kS, kQ, kD, kL]); return; }
+  const s = clamp(Math.min(z.w / 520, z.h / 420), .55, 1.5);
+  const cx = z.x + z.w * .5;
+  const pw = Math.min(z.w * .96, 660);
+  const px0 = cx - pw / 2;
+  const rh = Math.max(30, Math.min(52, z.h * .092));
+  const pyOf = (ph) => z.y + Math.max(12, (z.h - ph) / 2);
+  const fs = Math.max(11.5, 13 * s);
+  const fsS = Math.max(9.5, 10.5 * s);
+
+  // S1 需求進來:一張便條,需求逐字打上去(子動畫=游標閃爍),三張補問晶片隨後浮出
+  if (kB > 0) {
+    const a = ez(kB) * (1 - ez(sb(kS, .05, .35)) * .97);
+    if (a > .02) {
+      g.save();
+      const ph = 26 + rh * 1.5 + rh * 1.15;
+      const py0 = pyOf(ph);
+      d.panel(px0, py0, pw, ph, a * .96, false);
+      d.head(px0, py0, pw, tt('BRIEF — 需求進來', 'BRIEF — The ask'), a, C.orange);
+      const ty = py0 + 26 + rh * .85;
+      const kt = ez(sb(kB, .1, .62));
+      const chars = Array.from(STU_BRIEF);
+      const shown = chars.slice(0, Math.round(chars.length * kt)).join('');
+      g.globalAlpha = a;
+      d.han('「' + shown, px0 + 16, ty, fs * 1.28, 'rgba(242,239,232,.95)', 700);
+      g.font = '700 ' + (fs * 1.28) + 'px "Noto Sans TC",sans-serif';
+      const cw = g.measureText('「' + shown).width;
+      if (kt < 1) { // 游標:打字中閃爍
+        g.globalAlpha = a * (.35 + .5 * (Math.sin(t * 6) > 0 ? 1 : 0));
+        g.fillStyle = C.orange;
+        g.fillRect(px0 + 18 + cw, ty - fs * 1.05, 2, fs * 1.25);
+      } else { g.globalAlpha = a; d.han('」', px0 + 16 + cw, ty, fs * 1.28, 'rgba(242,239,232,.95)', 700); }
+      let chx = px0 + 16;
+      const chy = py0 + 26 + rh * 1.5;
+      STU_ASK.forEach((tx, i) => {
+        const kc = ez(sb(kB, .58 + i * .11, .82 + i * .11));
+        if (kc <= .02) return;
+        g.globalAlpha = a * kc;
+        chx += d.chip(chx, chy + (1 - kc) * 10, tx, true, fsS) + 8;
+      });
+      g.restore(); g.globalAlpha = 1;
+    }
+  }
+
+  // S2 拆成模組:需求收成一行小字,底下磚塊逐一亮起;最後一塊是虛線的「客製」
+  if (kS > 0) {
+    const a = ez(kS) * (1 - ez(sb(kQ, .05, .35)) * .97);
+    if (a > .02) {
+      g.save();
+      const cols = 4, rows2 = 2;
+      const gapB = 8;
+      const bw = (pw - 32 - gapB * (cols - 1)) / cols;
+      const bh = Math.max(38, rh * 1.05);
+      const ph = 26 + rh * .82 + rows2 * bh + (rows2 - 1) * gapB + 18;
+      const py0 = pyOf(ph);
+      d.panel(px0, py0, pw, ph, a * .96, true);
+      d.head(px0, py0, pw, tt('SCOPE — 拆成模組', 'SCOPE — Break it down'), a, C.orange);
+      g.globalAlpha = a * .55;
+      d.han('「' + STU_BRIEF + '」', px0 + 16, py0 + 26 + rh * .5, fsS + 1.5, 'rgba(242,239,232,.62)', 500);
+      const by0 = py0 + 26 + rh * .82;
+      STU_BRICKS.forEach((b, i) => {
+        const kr = ez(sb(kS, .1 + i * .075, .38 + i * .075));
+        if (kr <= .01) return;
+        const bx = px0 + 16 + (i % cols) * (bw + gapB);
+        const by = by0 + Math.floor(i / cols) * (bh + gapB);
+        const custom = b[1] === 1;
+        const pulse = kr >= 1 ? 1 : (.6 + .4 * Math.sin(t * 3.4));
+        g.globalAlpha = a * kr;
+        d.rr(bx, by + (1 - kr) * 12, bw, bh, 6);
+        g.fillStyle = custom ? 'rgba(62,155,255,.1)' : 'rgba(255,107,44,.12)';
+        g.fill();
+        g.strokeStyle = custom ? 'rgba(62,155,255,.7)' : 'rgba(255,107,44,.55)';
+        g.lineWidth = 1.2;
+        if (custom) g.setLineDash([5, 5]);
+        g.stroke(); g.setLineDash([]);
+        g.globalAlpha = a * kr * pulse;
+        g.font = '700 ' + fsS + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = custom ? '#8FC4FF' : 'rgba(242,239,232,.92)';
+        const tw = g.measureText(b[0]).width;
+        g.fillText(b[0], bx + Math.max(6, (bw - tw) / 2), by + (1 - kr) * 12 + bh * .62);
+      });
+      const kn = ez(sb(kS, .74, .95));
+      if (kn > .02) {
+        g.globalAlpha = a * kn;
+        d.han(tt('七塊是標準模組,一塊要客製', 'Seven standard, one custom'), px0 + 16, py0 + ph - 9, fsS + 1, 'rgba(101,224,188,.85)', 600);
+      }
+      g.restore(); g.globalAlpha = 1;
+    }
+  }
+
+  // S3 範圍與報價:模組變成報價單列;價格欄畫「—」+ 掃描光(價格尚未公開,畫布不生數字)
+  if (kQ > 0) {
+    const a = ez(kQ) * (1 - ez(sb(kD, .05, .35)) * .97);
+    if (a > .02) {
+      g.save();
+      const lrh = Math.max(24, Math.min(40, rh * .78));
+      const ph = 26 + STU_LINES.length * lrh + rh * .95;
+      const py0 = pyOf(ph);
+      const pcW = Math.max(74, pw * .17);
+      const pcX = px0 + pw - 16 - pcW;
+      d.panel(px0, py0, pw, ph, a * .96, false);
+      d.head(px0, py0, pw, tt('QUOTE — 範圍與報價', 'QUOTE — Scope & quote'), a, C.blue);
+      STU_LINES.forEach((r, i) => {
+        const kr = ez(sb(kQ, .08 + i * .1, .36 + i * .1));
+        if (kr <= .01) return;
+        const ry = py0 + 26 + i * lrh;
+        const custom = r[1] === 1;
+        g.globalAlpha = a * kr;
+        d.han(r[0], px0 + 16, ry + lrh * .66, fs, 'rgba(242,239,232,.92)', 600);
+        g.globalAlpha = a * kr * .7;
+        d.label(custom ? STU_CUS : STU_STD, px0 + Math.max(180, pw * .48), ry + lrh * .62, fsS, custom ? '#8FC4FF' : 'rgba(242,239,232,.5)', .6);
+        // 價格欄:框先到位,裡面只有一條破折號;掃描光沿框內走(還在估算的意思)
+        g.globalAlpha = a * kr;
+        d.rr(pcX, ry + lrh * .18, pcW, lrh * .58, 4);
+        g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
+        g.strokeStyle = 'rgba(242,239,232,.22)'; g.lineWidth = 1; g.stroke();
+        const scan = (t * .34 + i * .17) % 1;
+        g.save(); d.rr(pcX, ry + lrh * .18, pcW, lrh * .58, 4); g.clip();
+        g.globalAlpha = a * kr * .3;
+        g.fillStyle = C.orange;
+        g.fillRect(pcX + pcW * scan - pcW * .22, ry + lrh * .18, pcW * .22, lrh * .58);
+        g.restore();
+        g.globalAlpha = a * kr * .8;
+        g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+        g.fillStyle = 'rgba(242,239,232,.6)';
+        g.textAlign = 'center';
+        g.fillText('—', pcX + pcW / 2, ry + lrh * .62);
+        g.textAlign = 'left';
+        if (i < STU_LINES.length - 1) {
+          g.globalAlpha = a * .4;
+          g.strokeStyle = 'rgba(242,239,232,.1)'; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(px0 + 14, ry + lrh); g.lineTo(px0 + pw - 14, ry + lrh); g.stroke();
+        }
+      });
+      const kt = ez(sb(kQ, .6, .88));
+      if (kt > .02) {
+        const ty = py0 + 26 + STU_LINES.length * lrh + rh * .38;
+        d.tick(px0 + 20, ty, Math.max(6, 7 * s), C.green, a * kt);
+        g.globalAlpha = a * kt;
+        d.han(T_SCOPE_WRITTEN, px0 + 34, ty + 4, fsS + 1.5, 'rgba(101,224,188,.9)', 600);
+        g.globalAlpha = a * kt * .85;
+        g.font = '600 ' + fsS + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.5)';
+        g.textAlign = 'right';
+        g.fillText(T_TBD, px0 + pw - 16, ty + 4);
+        g.textAlign = 'left';
+      }
+      g.restore(); g.globalAlpha = 1;
+    }
+  }
+
+  // S4 每週可操作:四個週標記 + 三條進度軌(子動畫=當前軌上的高光往前跑)
+  if (kD > 0) {
+    const a = ez(kD) * (1 - ez(sb(kL, .05, .35)) * .97);
+    if (a > .02) {
+      g.save();
+      const lh = Math.max(26, rh * .82);
+      const ph = 26 + rh * .9 + STU_LANES.length * lh + rh * .75;
+      const py0 = pyOf(ph);
+      d.panel(px0, py0, pw, ph, a * .96, true);
+      d.head(px0, py0, pw, tt('BUILD — 每週可操作', 'BUILD — Weekly build'), a, C.orange);
+      const m0 = px0 + Math.max(76, pw * .2), m1 = px0 + pw - 20;
+      const wy = py0 + 26 + rh * .5;
+      const wk = ez(sb(kD, .06, .9)) * 3;
+      for (let i = 0; i < 4; i++) {
+        const nx = m0 + (m1 - m0) * i / 3;
+        const on = wk >= i - .04;
+        d.node(nx, wy, on ? 3.4 : 2.4, on ? C.orange : 'rgba(242,239,232,.3)', a, !on);
+        g.globalAlpha = a * (on ? 1 : .5);
+        g.font = '700 ' + fsS + 'px "Space Grotesk",monospace';
+        g.fillStyle = on ? C.orange : 'rgba(242,239,232,.45)';
+        g.textAlign = 'center';
+        g.fillText('W' + (i + 1), nx, wy - 9);
+        g.textAlign = 'left';
+        if (i < 3) d.line(nx + 6, wy, m0 + (m1 - m0) * (i + 1) / 3 - 6, wy, clamp(wk - i, 0, 1), 'rgba(255,107,44,.5)', 1.4);
+      }
+      STU_LANES.forEach((ln, i) => {
+        const kr = ez(sb(kD, .12 + i * .12, .8 + i * .07));
+        const ly = py0 + 26 + rh * .9 + i * lh;
+        g.globalAlpha = a;
+        d.han(ln[0], px0 + 16, ly + lh * .64, fs, 'rgba(242,239,232,.85)', 600);
+        const bx = m0, bw2 = m1 - m0;
+        d.meter(bx, ly + lh * .3, bw2, Math.max(7, lh * .34), kr, ln[1]);
+        if (kr > .02 && kr < 1) { // 高光:正在做的那一段
+          g.save();
+          d.rr(bx, ly + lh * .3, bw2, Math.max(7, lh * .34), 2); g.clip();
+          g.globalAlpha = a * .5;
+          g.fillStyle = 'rgba(242,239,232,.6)';
+          g.fillRect(bx + bw2 * kr - 16, ly + lh * .3, 14, Math.max(7, lh * .34));
+          g.restore();
+        }
+      });
+      const kc = ez(sb(kD, .5, .8));
+      if (kc > .02) {
+        g.globalAlpha = a * kc;
+        d.node(px0 + 20, py0 + ph - rh * .34, 3, C.green, a * kc * (.5 + .5 * Math.sin(t * 2.6)), false);
+        d.han(T_CLICKABLE, px0 + 34, py0 + ph - rh * .26, fsS + 1.5, 'rgba(242,239,232,.8)', 600);
+      }
+      g.restore(); g.globalAlpha = 1;
+    }
+  }
+
+  // S5 上線與交接:LIVE 列(脈動)+ 四項交接逐一打勾
+  if (kL > 0) {
+    const a = ez(kL);
+    if (a > .02) {
+      g.save();
+      const hrh = Math.max(28, rh * .86);
+      const ph = 26 + rh * .95 + 2 * hrh + 14;
+      const py0 = pyOf(ph);
+      d.panel(px0, py0, pw, ph, a * .96, true);
+      d.head(px0, py0, pw, tt('LIVE — 上線與交接', 'LIVE — Launch & hand over'), a, C.green);
+      const ly = py0 + 26 + rh * .48;
+      d.node(px0 + 20, ly, 4, C.green, a * (.55 + .45 * Math.sin(t * 2.2)), false);
+      g.globalAlpha = a;
+      d.han(T_ALL_YOURS, px0 + 34, ly + 5, fs * 1.08, 'rgba(242,239,232,.94)', 700);
+      const colW = (pw - 32) / 2;
+      STU_HAND.forEach((tx, i) => {
+        const kr = ez(sb(kL, .18 + i * .13, .46 + i * .13));
+        if (kr <= .02) return;
+        const hx = px0 + 16 + (i % 2) * colW;
+        const hy = py0 + 26 + rh * .95 + Math.floor(i / 2) * hrh;
+        d.tick(hx + 8, hy + hrh * .5, Math.max(6, 6.5 * s), C.green, a * kr);
+        g.globalAlpha = a * kr;
+        d.han(tx, hx + 24, hy + hrh * .58, fs, 'rgba(242,239,232,.88)', 600);
+      });
+      g.restore(); g.globalAlpha = 1;
+    }
+  }
+}
+
+// ---------- Studio 手機:單景大舞台(母動畫=交叉換場;子動畫=打字/脈動/掃描/高光) ----------
+function paintStudioMobile(g, e, sb, ks) {
+  const { zone: z, C, d, t } = e;
+  let cur = ['brief', 'scope', 'quote', 'build', 'ship'].indexOf(e.aid);
+  if (cur < 0) { cur = 0; ks.forEach((v, i) => { if (v > .02) cur = i; }); }
+  const kv = ks[cur];
+  const fsT = 19.5, fsM = 16.5, fsN = 13;
+  const BD = ['rgba(255,107,44,.5)', 'rgba(255,107,44,.5)', 'rgba(62,155,255,.5)', 'rgba(255,107,44,.5)', 'rgba(101,224,188,.5)'];
+  const TITLE = [tt('需求進來', 'The ask'), tt('拆成模組', 'Break it down'), tt('範圍與報價', 'Scope & quote'), tt('每週可操作', 'Weekly build'), tt('上線與交接', 'Launch & hand over')];
+  const SUB = [
+    tt('先問清楚要解決什麼', 'First: what must it solve'),
+    tt('標準模組 ＋ 需要客製的那幾塊', 'Standard modules plus custom pieces'),
+    tt('每一塊各自報價', 'Every piece priced on its own'),
+    tt('每週交一個能點的版本', 'A clickable build every week'),
+    tt('原始碼與文件一起給', 'Source and docs come with it')
+  ];
+  const x = z.x + 2, w = z.w - 4, pad = 16;
+  const railH = fsN + 36;
+  const avail = z.h - railH - 6;
+  const headH = pad + fsT + fsN + 21 + 16;
+  const bodyOf = [fsM * 3.4 + fsN * 2.4, 4 * 44 + 30, 5 * 40 + 30, 3 * 46 + 34, 4 * 40 + 26];
+  const needOf = (i) => headH + bodyOf[i] + pad;
+  const sc = Math.max(.72, Math.min(1, avail / needOf(cur)));
+  const drawnH = needOf(cur) * sc;
+  const cy0 = mRail(g, d, C, t, x, w, z.y + 2 + Math.min(56, Math.max(0, (avail - drawnH) / 2)), 5, cur, fsN);
+  if (avail < 120) return;
+
+  const drawScene = (ci, kvi, a, dy, rot, aP) => {
+    const h = needOf(ci);
+    g.save();
+    if (sc < 1) { g.translate(x + w / 2, cy0); g.scale(sc, sc); g.translate(-(x + w / 2), -cy0); }
+    const cxp = x + w / 2, cyp = cy0 + h / 2;
+    g.translate(cxp, cyp + dy);
+    g.rotate(rot * Math.PI / 180);
+    g.translate(-cxp, -cyp);
+    g.globalAlpha = aP;
+    d.rr(x, cy0, w, h, 14);
+    g.fillStyle = 'rgba(15,18,22,.97)'; g.fill();
+    g.strokeStyle = BD[ci]; g.lineWidth = 1.3; g.stroke();
+
+    g.globalAlpha = a;
+    g.font = '800 ' + fsT + 'px "Noto Sans TC",sans-serif'; g.fillStyle = C.ivory;
+    g.fillText(TITLE[ci], x + pad, cy0 + pad + fsT);
+    g.globalAlpha = a * .58;
+    g.font = '500 ' + fsN + 'px "Noto Sans TC",sans-serif'; g.fillStyle = 'rgba(242,239,232,.92)';
+    g.fillText(SUB[ci], x + pad, cy0 + pad + fsT + fsN + 9);
+    const hy = cy0 + pad + fsT + fsN + 21;
+    g.globalAlpha = a * .5;
+    g.strokeStyle = 'rgba(242,239,232,.14)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(x + pad, hy); g.lineTo(x + w - pad, hy); g.stroke();
+    g.globalAlpha = a;
+
+    const bx = x + pad, bw = w - pad * 2, by = hy + 16;
+
+    if (ci === 0) { // 便條:逐字打上去 + 游標;底下三張補問晶片
+      const kt = ez(sb(kvi, .1, .6));
+      const chars = Array.from(STU_BRIEF);
+      const shown = chars.slice(0, Math.round(chars.length * kt)).join('');
+      g.font = '700 ' + fsM + 'px "Noto Sans TC",sans-serif';
+      // 手機寬度有限:逐字量寬換行,絕不畫出面板
+      const lines = [];
+      let line = '';
+      Array.from('「' + shown).forEach(ch => {
+        if (g.measureText(line + ch).width > bw - 12) { lines.push(line); line = ch; }
+        else line += ch;
+      });
+      lines.push(line);
+      g.globalAlpha = a; g.fillStyle = 'rgba(242,239,232,.95)';
+      lines.forEach((ln, i) => g.fillText(ln, bx, by + fsM + i * (fsM * 1.45)));
+      const lastW = g.measureText(lines[lines.length - 1]).width;
+      const cyy = by + (lines.length - 1) * (fsM * 1.45);
+      if (kt < 1) {
+        g.globalAlpha = a * (Math.sin(t * 6) > 0 ? .85 : .25);
+        g.fillStyle = C.orange;
+        g.fillRect(bx + lastW + 2, cyy + 3, 2, fsM);
+      } else { g.globalAlpha = a; g.fillText('」', bx + lastW, cyy + fsM); }
+      let chx = bx;
+      const chy = by + lines.length * (fsM * 1.45) + 8;
+      STU_ASK.forEach((tx, i) => {
+        const kc = ez(sb(kvi, .55 + i * .11, .8 + i * .11));
+        if (kc <= .02) return;
+        g.font = '600 ' + fsN + 'px "Space Grotesk","Noto Sans TC",sans-serif';
+        const cw2 = g.measureText(tx).width + 18;
+        if (chx + cw2 > bx + bw) { chx = bx; }
+        g.globalAlpha = a * kc;
+        chx += d.chip(chx, chy + Math.sin(t * 1.7 + i * 1.2) * 2.4, tx, true, fsN) + 8;
+      });
+    } else if (ci === 1) { // 磚塊 2 欄 × 4 列逐一亮起,最後一塊虛線客製
+      const cols = 2, bwB = (bw - 8) / cols, bhB = 38;
+      STU_BRICKS.forEach((b, i) => {
+        const kr = ez(sb(kvi, .08 + i * .075, .34 + i * .075));
+        if (kr <= .01) return;
+        const bxx = bx + (i % cols) * (bwB + 8);
+        const byy = by + Math.floor(i / cols) * (bhB + 6) + (1 - kr) * 12;
+        const custom = b[1] === 1;
+        g.globalAlpha = a * kr;
+        d.rr(bxx, byy, bwB, bhB, 7);
+        g.fillStyle = custom ? 'rgba(62,155,255,.1)' : 'rgba(255,107,44,.12)'; g.fill();
+        g.strokeStyle = custom ? 'rgba(62,155,255,.7)' : 'rgba(255,107,44,.55)'; g.lineWidth = 1.2;
+        if (custom) g.setLineDash([5, 5]);
+        g.stroke(); g.setLineDash([]);
+        g.globalAlpha = a * kr * (kr >= 1 ? 1 : .6 + .4 * Math.sin(t * 3.4));
+        g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = custom ? '#8FC4FF' : 'rgba(242,239,232,.92)';
+        const tw = g.measureText(b[0]).width;
+        g.fillText(b[0], bxx + Math.max(8, (bwB - tw) / 2), byy + bhB * .62);
+      });
+    } else if (ci === 2) { // 報價單列:價格欄「—」+ 掃描光
+      const lrh = 40, pcW = Math.max(64, bw * .3);
+      STU_LINES.forEach((r, i) => {
+        const kr = ez(sb(kvi, .08 + i * .1, .36 + i * .1));
+        if (kr <= .01) return;
+        const ry = by + i * lrh;
+        const custom = r[1] === 1;
+        g.globalAlpha = a * kr;
+        g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.92)';
+        g.fillText(r[0], bx, ry + 15);
+        g.globalAlpha = a * kr * .62;
+        g.font = '600 ' + (fsN - 1) + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = custom ? '#8FC4FF' : 'rgba(242,239,232,.5)';
+        g.fillText(custom ? STU_CUS : STU_STD, bx, ry + 31);
+        const pcX = bx + bw - pcW;
+        g.globalAlpha = a * kr;
+        d.rr(pcX, ry + 4, pcW, 24, 4);
+        g.fillStyle = 'rgba(242,239,232,.05)'; g.fill();
+        g.strokeStyle = 'rgba(242,239,232,.22)'; g.lineWidth = 1; g.stroke();
+        const scan = (t * .34 + i * .17) % 1;
+        g.save(); d.rr(pcX, ry + 4, pcW, 24, 4); g.clip();
+        g.globalAlpha = a * kr * .3; g.fillStyle = C.orange;
+        g.fillRect(pcX + pcW * scan - pcW * .22, ry + 4, pcW * .22, 24);
+        g.restore();
+        g.globalAlpha = a * kr * .8;
+        g.font = '700 ' + fsN + 'px "Space Grotesk",monospace';
+        g.fillStyle = 'rgba(242,239,232,.6)';
+        g.textAlign = 'center'; g.fillText('—', pcX + pcW / 2, ry + 21); g.textAlign = 'left';
+      });
+      const kt = ez(sb(kvi, .6, .88));
+      if (kt > .02) {
+        const ty = by + STU_LINES.length * lrh + 12;
+        d.tick(bx + 8, ty, 8, C.green, a * kt);
+        g.globalAlpha = a * kt;
+        g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(101,224,188,.92)';
+        g.fillText(T_SCOPE_WRITTEN, bx + 24, ty + 5);
+      }
+    } else if (ci === 3) { // 三條進度軌 + 週標記
+      const lh = 46;
+      const wk = ez(sb(kvi, .06, .9)) * 3;
+      for (let i = 0; i < 4; i++) {
+        const nx = bx + 12 + (bw - 24) * i / 3;
+        const on = wk >= i - .04;
+        d.node(nx, by + 6, on ? 3.6 : 2.6, on ? C.orange : 'rgba(242,239,232,.3)', a, !on);
+        g.globalAlpha = a * (on ? 1 : .5);
+        g.font = '700 ' + (fsN - 1) + 'px "Space Grotesk",monospace';
+        g.fillStyle = on ? C.orange : 'rgba(242,239,232,.45)';
+        g.textAlign = 'center'; g.fillText('W' + (i + 1), nx, by - 4); g.textAlign = 'left';
+        if (i < 3) d.line(nx + 6, by + 6, bx + 12 + (bw - 24) * (i + 1) / 3 - 6, by + 6, clamp(wk - i, 0, 1), 'rgba(255,107,44,.5)', 1.5);
+      }
+      STU_LANES.forEach((ln, i) => {
+        const kr = ez(sb(kvi, .12 + i * .12, .8 + i * .07));
+        const ly = by + 24 + i * lh;
+        g.globalAlpha = a;
+        g.font = '700 ' + fsN + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.85)';
+        g.fillText(ln[0], bx, ly + 12);
+        d.meter(bx, ly + 20, bw, 10, kr, ln[1]);
+        if (kr > .02 && kr < 1) {
+          g.save(); d.rr(bx, ly + 20, bw, 10, 2); g.clip();
+          g.globalAlpha = a * .5; g.fillStyle = 'rgba(242,239,232,.6)';
+          g.fillRect(bx + bw * kr - 16, ly + 20, 14, 10);
+          g.restore();
+        }
+      });
+    } else { // 上線與交接
+      const hrh = 40;
+      d.node(bx + 6, by + 6, 4.4, C.green, a * (.55 + .45 * Math.sin(t * 2.2)), false);
+      g.globalAlpha = a;
+      g.font = '700 ' + fsM + 'px "Noto Sans TC",sans-serif';
+      g.fillStyle = 'rgba(242,239,232,.94)';
+      g.fillText(T_ALL_YOURS, bx + 20, by + 12);
+      STU_HAND.forEach((tx, i) => {
+        const kr = ez(sb(kvi, .18 + i * .13, .46 + i * .13));
+        if (kr <= .02) return;
+        const hy2 = by + 34 + i * hrh * .78;
+        d.tick(bx + 8, hy2, 8, C.green, a * kr);
+        g.globalAlpha = a * kr;
+        g.font = '600 ' + fsN + 'px "Noto Sans TC",sans-serif';
+        g.fillStyle = 'rgba(242,239,232,.88)';
+        g.fillText(tx, bx + 26, hy2 + 5);
+      });
+    }
+    g.restore(); g.globalAlpha = 1;
+  };
+
+  const eIn = ez(sb(kv, .02, .28));
+  const card = ez(sb(kv, .005, .1));
+  if (cur > 0) {
+    const go = ez(sb(kv, 0, .18));
+    if (1 - go > .02) drawScene(cur - 1, 1, (1 - go) * .8, -go * 80, go * 3, (1 - go) * .85);
+  }
+  if (card > .02) drawScene(cur, kv, eIn, (1 - card) * 42, (1 - card) * -3.2, card);
+}
+
 export const painters = {
   solutions: paintSolutions,
   cases: paintCases,
   pricing: paintPricing,
   about: paintAbout,
   demo: paintDemo,
-  method: paintMethod
+  method: paintMethod,
+  studio: paintStudio
 };

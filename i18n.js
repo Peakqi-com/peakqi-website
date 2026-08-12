@@ -11,7 +11,7 @@ export const t = (zh, en) => (LANG === 'en' ? en : zh);
 // 語言切換鈕只在「對應英文版存在」的頁面現身──不會把使用者切去 404。
 export const EN_READY = ['/', '/about', '/solutions', '/method', '/peakops', '/demo',
   '/pricing', '/cases', '/case', '/products', '/bubble', '/ai-wedding-pro',
-  '/ai-interior-pro', '/privacy', '/blog'];
+  '/ai-interior-pro', '/privacy', '/blog', '/studio'];
 
 // 路徑正規化:本機 /About.dc.html 與正式 /about 都收斂成 clean path
 // 別名:檔名與 clean path 不同形的頁(AIWeddingPro → /ai-wedding-pro)

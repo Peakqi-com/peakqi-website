@@ -19,6 +19,7 @@ export const navigation = [
   { href: '/solutions', key: 'solutions', label: t('解決方案', 'Solutions') },
   { href: '/method', key: 'method', label: t('導入方法', 'How we deliver') },
   { href: '/cases', key: 'cases', label: t('案例', 'Cases') },
+  { href: '/studio', key: 'studio', label: t('接案', 'Studio') },
   { key: 'product', label: t('產品', 'Products'), children: [
     { href: '/peakops', label: 'Peak Ops', desc: t('通用 AI 業務工具', 'AI business toolkit') },
     { href: 'https://www.aiweddingpro360.com/', label: 'AI Wedding Pro', desc: t('婚禮 AI', 'Wedding AI'), ext: true },

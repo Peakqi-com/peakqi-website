@@ -514,6 +514,9 @@ class Component extends DCLogic {
       const qInd = qs.get('ind'), qFlow = qs.get('flow');
       if (qInd && (m.demoIndustries || []).includes(qInd)) { patch.heroInd = qInd; patch.indPick = qInd; patch.vIndustry = qInd; }
       if (qFlow && fm0[qFlow]) { patch.heroFlow = qFlow; patch.scenes = [fm0[qFlow]]; }
+      // ?need= 直接帶入需求欄:接案頁的模組組合按「送出」時就是走這條,對方不必再打一次
+      const qNeed = qs.get('need');
+      if (qNeed) { patch.vNeed = String(qNeed).slice(0, 400); patch.needTouched = true; }
       this.setState(patch);
     });
     import('./seo.js').then(m => m.applySEO('demo')).catch(() => {});

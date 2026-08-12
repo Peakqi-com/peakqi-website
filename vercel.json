@@ -188,6 +188,16 @@
       "permanent": true
     },
     {
+      "source": "/Studio.dc.html",
+      "destination": "/studio",
+      "permanent": true
+    },
+    {
+      "source": "/en/Studio.dc.html",
+      "destination": "/en/studio",
+      "permanent": true
+    },
+    {
       "source": "/Blog.dc.html",
       "destination": "/blog",
       "permanent": true
@@ -336,6 +346,14 @@
     {
       "source": "/en/tour",
       "destination": "/Steampunk/peakqi-story-en.html"
+    },
+    {
+      "source": "/studio",
+      "destination": "/Studio.dc.html"
+    },
+    {
+      "source": "/en/studio",
+      "destination": "/en/Studio.dc.html"
     },
     {
       "source": "/blog",

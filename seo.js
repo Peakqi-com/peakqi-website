@@ -14,7 +14,8 @@ const ROUTES = {
   about: { path: '/about', file: '/about', name: '關於 PeakQi', nameEn: 'About PeakQi' },
   method: { path: '/method', file: '/method', name: '導入方法', nameEn: 'How We Deliver' },
   peakops: { path: '/peakops', file: '/peakops', name: 'Peak Ops', nameEn: 'Peak Ops' },
-  demo: { path: '/demo', file: '/demo', name: '預約 Demo', nameEn: 'Book a Demo' }
+  demo: { path: '/demo', file: '/demo', name: '預約 Demo', nameEn: 'Book a Demo' },
+  studio: { path: '/studio', file: '/studio', name: '接案', nameEn: 'Studio' }
 };
 const enPath = (p) => (p === '/' ? '/en' : '/en' + p);
 function el(tag, attrs) {

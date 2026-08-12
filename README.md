@@ -5,6 +5,8 @@
 
 ## 檔案地圖
 - `content.js` — 全站文案/價格/案例/FAQ/表單設定(改內容改這裡)
+- `studio-offers.js` — 接案頁(`/studio`、`/en/studio`)的唯一資料來源:三種接案方式、
+  16 個模組的價格表、可承接方向、核心能力、合作流程。**要公開價格就只改這一個檔**(見下方)
 - `Nav.dc.html` / `Footer.dc.html` — 共用元件(Nav 含手機選單、Sticky CTA、事件)
 - `hero-engine.js` — 首頁 Hero 捲動分鏡(Canvas 2D,7 幕)
 - `sections-engine.js` — 痛點/損失/三層敘事/功能軌道
@@ -118,6 +120,17 @@
 ## 如何設定表單 API
 `content.js` → `export const submitConfig = { endpoint: null }`。
 填入正式 URL 後,表單以 `POST JSON`(欄位見 `Demo.dc.html` `_payload()`)送出;`null` 時為預覽 demo submission(畫面會明示,並提供 Email/電話備援)。失敗文案已符合品牌語氣。
+
+## 如何填接案頁的價格(`/studio`)
+版面已經替價格留好位置,填價前後版面完全一樣,不必動任何 HTML / CSS:
+1. 接案方式(專案制 / 模組加購 / 長期夥伴)的大價格列 —— `studio-offers.js` → `engagements[].price`
+   (`unit` 是價格底下那行計價單位小字)。
+2. 模組價格表的價格欄 —— `studio-offers.js` → `moduleGroups[].items[].price`。
+3. 把值從 `TBD` 換成 `t('NT$ 60,000 起', 'From NT$60,000')` 這樣一行即可,中英兩版同時生效。
+未填價時一律顯示「報價待定 / Quote TBD」(而不是留白:留白會塌版,也容易被讀成免費)。
+
+頁面右側的「你的組合」是可點選的:訪客勾模組 → 組成範圍清單 → 按送出會帶 `?need=` 到
+`/demo`,需求欄自動填好(Demo 頁的 `?need=` 支援中英兩版都有)。
 
 ## 如何修改方案資料
 `content.js` → `plans`(價格/項目/featured)、`planModules`(方案↔模組範圍)、`customRanges`、`usage`、`timeline`、`risk`、`faq`。改完全站(首頁+價格頁)同步。
