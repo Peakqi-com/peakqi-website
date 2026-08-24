@@ -218,6 +218,16 @@
       "permanent": true
     }
   ],
+  "headers": [
+    {
+      "source": "/feed.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    },
+    {
+      "source": "/en/feed.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ],
   "rewrites": [
     {
       "source": "/",
