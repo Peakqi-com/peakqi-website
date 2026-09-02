@@ -9,8 +9,9 @@ export const t = (zh, en) => (LANG === 'en' ? en : zh);
 
 // 已上線英文版的頁面(中文 clean path)。Phase 2 每完成一頁加一筆,
 // 語言切換鈕只在「對應英文版存在」的頁面現身──不會把使用者切去 404。
+// (/case 已退役:案例改為 /cases/<slug> 永久網址,靜態頁自帶 hreflang,切換鈕靠 headHasEnAlt 判定)
 export const EN_READY = ['/', '/about', '/solutions', '/method', '/peakops', '/demo',
-  '/pricing', '/cases', '/case', '/products', '/bubble', '/ai-wedding-pro',
+  '/pricing', '/cases', '/products', '/bubble', '/ai-wedding-pro',
   '/ai-interior-pro', '/privacy', '/blog', '/studio'];
 
 // 路徑正規化:本機 /About.dc.html 與正式 /about 都收斂成 clean path

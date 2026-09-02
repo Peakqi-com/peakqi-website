@@ -120,6 +120,17 @@ export const caseStudies = [
 export const caseNote = t('實際成果依企業流程、資料品質與導入範圍而異。', 'Actual results vary with your process, data quality and rollout scope.');
 export const caseCta = t('討論相似導入情境', 'Discuss a similar rollout');
 
+// 案例永久網址(獨立可索引頁,由 tools/gen-cases.mjs 產生;鍵=case-media.js 的 slug)。
+// 舊的 /case?slug=… 已在 vercel.json 設 301 轉到這些網址。
+export const casePermalinks = {
+  wedding: '/cases/wedding-industry-ai-suite',
+  interior: '/cases/interior-design-ai-platform',
+  realestate: '/cases/real-estate-line-ai-assistant',
+  beauty: '/cases/beauty-ai-experience'
+};
+// 依目前語言回傳正確前綴(en 頁自動 /en/...);未知 slug 退回案例列表
+export const casePermalink = (slug) => t('', '/en') + (casePermalinks[slug] || '/cases');
+
 export const worksFeatured = [
   { t: t('婚禮產業 AI 大禮包', 'Wedding Industry AI Suite'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-wedding.png', alt: t('婚禮產業 AI 大禮包系統畫面:婚紗試穿模擬、社群影片生成、發文中心與客戶續談 CRM', 'Wedding AI Suite: dress try-on, social video generation, publishing hub and follow-up CRM'), problem: t('新人問不停,試妝試髮只能靠形容。', 'Couples ask nonstop; try-ons lived in words only.'), solution: t('婚紗試穿、試妝模擬、場景生成+AI 接客。', 'Dress try-on, makeup previews, scene generation + AI intake.'), results: [t('客服人力 ↓約 70%', 'Support workload ↓ ~70%'), t('成交率 5 倍', 'Close rate 5×'), t('8+ AI 模組', '8+ AI modules')] },
   { t: t('室內設計 AI 整合平台', 'Interior Design AI Platform'), cat: t('AI 系統', 'AI system'), img: '/assets/works/work-interior.png', alt: t('室內設計 AI 整合平台畫面:空間渲染、風格模擬與自動提案簡報', 'Interior Design AI Platform: renders, style previews and auto proposal decks'), problem: t('提案、畫圖、渲染、簡報,三天起跳。', 'Proposal, drawings, renders, deck — three days minimum.'), solution: t('渲染、風格模擬、自動提案,一個平台完成。', 'Renders, style previews and auto proposals in one platform.'), results: [t('提案效率 ↑約 90%', 'Proposals ~90% faster'), t('3 天工作 3 小時完成', '3 days of work in 3 hours'), t('10+ 風格一鍵切換', '10+ styles, one click')] },

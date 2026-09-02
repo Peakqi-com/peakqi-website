@@ -1,11 +1,11 @@
-// SEO/head 注入(六頁共用):canonical、OG/Twitter、favicon、schema(Org/Service/WebSite/Breadcrumb)
-// 部署時把 SITE 換成正式網域;各 .dc.html 對應正式路由。
-// i18n(Phase 0):/en/ 頁自動吃 EN canonical/og:locale;hreflang 對只在
-// 「該頁英文版存在」(i18n.EN_READY)時輸出,英文版逐頁上線逐頁生效。
+// SEO/head 注入(執行期補位):canonical、OG/Twitter、favicon、hreflang、JSON-LD。
+// JSON-LD 一律來自 seo-schema.js(唯一品牌 Entity 來源;Node 建置工具用同一份)。
+// 建置後的頁面(tools/prerender.mjs)已把同一組標記靜態寫進 head ── 這裡每一步都先檢查
+// 「已存在就不再注入」,所以預渲染頁上等於 no-op,未預渲染頁仍有完整補位。
 import { LANG, EN_READY } from './i18n.js';
+import { SITE, orgJsonLd, webSiteJsonLd, serviceJsonLd, breadcrumbJsonLd } from './seo-schema.js';
 // 主機必須與各頁 canonical、sitemap.xml 完全一致(都是 www)。
 // 三者不同源時 Google 會整組忽略 hreflang,雙語版本就配不起來。
-const SITE = 'https://www.peakqi.com';
 const ROUTES = {
   home: { path: '/', file: '/', name: '首頁', nameEn: 'Home' },
   solutions: { path: '/solutions', file: '/solutions', name: '解決方案', nameEn: 'Solutions' },
@@ -56,41 +56,13 @@ export function applySEO(key) {
   upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: desc });
   upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: SITE + '/assets/og-image.png' });
   if (!document.getElementById('pq-ld-core')) {
-    const org = {
-      '@context': 'https://schema.org', '@type': 'Organization',
-      name: LANG === 'en' ? 'PeakQi International Ltd.' : '奇鋒國際有限公司',
-      alternateName: LANG === 'en' ? '奇鋒國際有限公司' : 'PeakQi', url: SITE,
-      logo: SITE + '/assets/favicon.png', email: 'jacky@peakqi.com', telephone: '+886-2-6609-3699',
-      areaServed: 'TW'
-    };
-    const site = {
-      '@context': 'https://schema.org', '@type': 'WebSite',
-      name: 'PeakQi 奇鋒國際', url: SITE, inLanguage: LANG === 'en' ? 'en' : 'zh-TW'
-    };
-    const service = {
-      '@context': 'https://schema.org', '@type': 'Service',
-      name: LANG === 'en' ? 'AI operations platform' : 'AI 整合營運系統',
-      provider: { '@type': 'Organization', name: LANG === 'en' ? 'PeakQi International' : '奇鋒國際 PeakQi' },
-      areaServed: 'TW',
-      description: LANG === 'en'
-        ? 'An operations platform for Taiwan SMBs that unifies AI intake, LINE AI support, CRM, marketing content, quotes and project management — live in as little as 10 working days.'
-        : '為台灣中小企業整合 AI 接客、LINE AI 客服、CRM、行銷內容、報價與專案管理的營運系統,最快 10 個工作天上線。',
-      offers: [
-        { '@type': 'Offer', name: 'AI 接客方案', priceCurrency: 'TWD', price: '39000' },
-        { '@type': 'Offer', name: 'AI 業務助理', priceCurrency: 'TWD', price: '78000' },
-        { '@type': 'Offer', name: 'AI 營運平台', priceCurrency: 'TWD', price: '128000' }
-      ]
-    };
-    const crumbs = {
-      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: LANG === 'en' ? 'Home' : '首頁', item: SITE + (LANG === 'en' ? '/en' : '/') },
-        ...(key !== 'home' ? [{ '@type': 'ListItem', position: 2, name: LANG === 'en' ? (r.nameEn || r.name) : r.name, item: url }] : [])
-      ]
-    };
+    const crumbs = breadcrumbJsonLd([
+      { name: LANG === 'en' ? 'Home' : '首頁', url: SITE + (LANG === 'en' ? '/en' : '/') },
+      ...(key !== 'home' ? [{ name: LANG === 'en' ? (r.nameEn || r.name) : r.name, url }] : [])
+    ]);
     const s = document.createElement('script');
     s.type = 'application/ld+json'; s.id = 'pq-ld-core';
-    s.textContent = JSON.stringify([org, site, service, crumbs]);
+    s.textContent = JSON.stringify([orgJsonLd(LANG), webSiteJsonLd(LANG), serviceJsonLd(LANG), crumbs]);
     document.head.appendChild(s);
   }
 }
