@@ -155,58 +155,70 @@
     runtime.markFetched(rootName);
     runtime.setRootName(rootName);
     runtime.adoptParsed(rootName, parsed);
-    if (!window.__resources) {
-      // PQ PATCH(prerender):預渲染頁的 <x-dc> 裝的是建置好的靜態內容(給不跑 JS 的
-      // 爬蟲讀),真正的模板由 data-tpl 指向 /tpl/ 下的原始檔;沒有 data-tpl 的頁面
-      // 維持原行為(重抓自身網址)。詳見 tools/prerender.mjs。
-      const dcForTpl = doc.querySelector("x-dc");
-      const tplAttr = dcForTpl && dcForTpl.getAttribute("data-tpl") || "";
-      const applyTpl = (t) => {
+    // PQ PATCH(prerender):預渲染頁的 <x-dc> 裝的是建置好的靜態內容(給不跑 JS 的
+    // 爬蟲讀),真正的模板由 data-tpl 指向 /tpl/ 下的原始檔。
+    // 關鍵順序:**先取得模板、updateHtml 之後才掛載 React**。
+    // 不能先掛載再換模板 —— 引擎(hero-kit/motion-kit…)在 componentDidMount 對著
+    // 當下的 DOM 初始化,之後換模板會把整棵 DOM 重建,引擎抓著的全是死節點,
+    // 釘選 hero 的捲動跑道就會變成整段空白(2026-09-02 線上事故的根因)。
+    // 等待模板的期間(同源 fetch,約幾十 ms)畫面顯示的是靜態快照,不會白屏;
+    // 模板取不到時退回快照模板 —— 頁面維持靜態但連結可用。
+    const dcForTpl = doc.querySelector("x-dc");
+    const tplAttr = dcForTpl && dcForTpl.getAttribute("data-tpl") || "";
+    const doMount = () => {
+      const dc = doc.querySelector("x-dc");
+      if (!dc) return;
+      const hostEl = doc.createElement("div");
+      hostEl.id = "dc-root";
+      dc.replaceWith(hostEl);
+      if (!parsed.preview) {
+        const s = doc.createElement("style");
+        s.textContent = FULL_PAGE_CSS;
+        doc.head.appendChild(s);
+      }
+      const Root = runtime.getDC(rootName);
+      const entry = runtime.registry.get(rootName);
+      function StandaloneRoot() {
+        const [, setTick] = React.useState(0);
+        React.useEffect(() => {
+          const sub = () => setTick((n) => n + 1);
+          entry.subs.add(sub);
+          return () => {
+            entry.subs.delete(sub);
+          };
+        }, []);
+        const defaults = React.useMemo(() => {
+          const d = {};
+          for (const k in entry.propsMeta || {}) {
+            const v = entry.propsMeta?.[k]?.default;
+            if (v !== void 0) d[k] = v;
+          }
+          return d;
+        }, [entry.propsMeta]);
+        return h(Root, { ...defaults, ...entry.propOverrides || {} });
+      }
+      const ReactDOM = getReactDOM();
+      if (ReactDOM.createRoot)
+        ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
+      else ReactDOM.render(h(StandaloneRoot), hostEl);
+    };
+    if (!window.__resources && tplAttr) {
+      fetch(tplAttr).then((res) => res.ok ? res.text() : "").then((t) => {
         const raw = t ? parseDcText(t) : null;
         if (raw?.template) runtime.updateHtml(rootName, raw.template);
-      };
-      fetch(tplAttr || location.href).then((res) => res.ok ? res.text() : "").then((t) => {
-        // 預渲染頁:靜態內容已在畫面上,模板晚 400ms 套用,讓資料層 import 先完成,
-        // 換上模板時直接是完整渲染(不會閃一下佔位骨架)。
-        if (tplAttr) setTimeout(() => applyTpl(t), 400);
-        else applyTpl(t);
-      }).catch(() => {
-      });
+        if (raw?.js) runtime.updateJs(rootName, raw.js);
+        doMount();
+      }).catch(doMount);
+    } else {
+      if (!window.__resources) {
+        fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+          const raw = t ? parseDcText(t) : null;
+          if (raw?.template) runtime.updateHtml(rootName, raw.template);
+        }).catch(() => {
+        });
+      }
+      doMount();
     }
-    const dc = doc.querySelector("x-dc");
-    const hostEl = doc.createElement("div");
-    hostEl.id = "dc-root";
-    dc.replaceWith(hostEl);
-    if (!parsed.preview) {
-      const s = doc.createElement("style");
-      s.textContent = FULL_PAGE_CSS;
-      doc.head.appendChild(s);
-    }
-    const Root = runtime.getDC(rootName);
-    const entry = runtime.registry.get(rootName);
-    function StandaloneRoot() {
-      const [, setTick] = React.useState(0);
-      React.useEffect(() => {
-        const sub = () => setTick((n) => n + 1);
-        entry.subs.add(sub);
-        return () => {
-          entry.subs.delete(sub);
-        };
-      }, []);
-      const defaults = React.useMemo(() => {
-        const d = {};
-        for (const k in entry.propsMeta || {}) {
-          const v = entry.propsMeta?.[k]?.default;
-          if (v !== void 0) d[k] = v;
-        }
-        return d;
-      }, [entry.propsMeta]);
-      return h(Root, { ...defaults, ...entry.propOverrides || {} });
-    }
-    const ReactDOM = getReactDOM();
-    if (ReactDOM.createRoot)
-      ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
-    else ReactDOM.render(h(StandaloneRoot), hostEl);
     return rootName;
   }
 
