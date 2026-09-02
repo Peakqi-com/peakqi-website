@@ -7,6 +7,27 @@
     <language>zh-Hant-TW</language>
     <atom:link href="https://www.peakqi.com/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>中小企業導入 AI 自動化要多少錢、多久上線?費用結構完整拆解</title>
+      <link>https://www.peakqi.com/blog/ai-automation-cost-and-timeline</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/ai-automation-cost-and-timeline</guid>
+      <description>不給一個假裝精確的總價,而是把導入費、月費、使用量費三塊拆開,說明每一塊由什麼決定、時程怎麼估,以及哪些情況會變貴。</description>
+      <pubDate>Wed, 02 Sep 2026 09:00:00 +0800</pubDate>
+    </item>
+    <item>
+      <title>台灣中小企業 AI 自動化公司怎麼選:六個問題先問清楚</title>
+      <link>https://www.peakqi.com/blog/how-to-choose-ai-automation-partner</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/how-to-choose-ai-automation-partner</guid>
+      <description>選 AI 自動化廠商,重點不是功能清單,而是流程、資料、人工審核與退場條件。這篇整理六個簽約前該問的問題與一張比較表。</description>
+      <pubDate>Wed, 02 Sep 2026 09:00:00 +0800</pubDate>
+    </item>
+    <item>
+      <title>LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程</title>
+      <link>https://www.peakqi.com/blog/line-ai-support-crm-integration</link>
+      <guid isPermaLink="true">https://www.peakqi.com/blog/line-ai-support-crm-integration</guid>
+      <description>LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。</description>
+      <pubDate>Wed, 02 Sep 2026 09:00:00 +0800</pubDate>
+    </item>
+    <item>
       <title>十年沒寫程式,我用 Claude Code 蓋了一個網站</title>
       <link>https://www.peakqi.com/blog/built-a-website-with-claude-code</link>
       <guid isPermaLink="true">https://www.peakqi.com/blog/built-a-website-with-claude-code</guid>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="奇鋒國際 PeakQi">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程｜奇鋒國際 PeakQi">
+<meta property="og:description" content="LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。">
+<meta property="og:url" content="https://www.peakqi.com/blog/line-ai-support-crm-integration">
+<link rel="canonical" href="https://www.peakqi.com/blog/line-ai-support-crm-integration">
+<meta property="og:image" content="https://www.peakqi.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="奇鋒國際 PeakQi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程｜奇鋒國際 PeakQi">
+<meta name="twitter:description" content="LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。">
+<meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<link rel="alternate" type="application/rss+xml" title="觀點" href="/feed.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程","description":"LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。","inLanguage":"zh-Hant-TW","datePublished":"2026-09-02","dateModified":"2026-09-02","image":"https://www.peakqi.com/og.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/blog/line-ai-support-crm-integration"},"author":{"@type":"Organization","name":"奇鋒國際 PeakQi","url":"https://www.peakqi.com/"},"publisher":{"@type":"Organization","name":"奇鋒國際 PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程｜奇鋒國際 PeakQi</title>
+<meta name="description" content="LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+h1,h2{text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#FF6B2C;color:#F2EFE8}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
+.pb-wrap{max-width:760px;margin:0 auto;padding:clamp(26px,4vw,44px) clamp(20px,5vw,48px) clamp(64px,9vw,110px)}
+/* 返回連結要獨佔一行:inline-flex 會和後面的標籤黏成同一行,讀起來像「回到觀點 AI 導入」 */
+.pb-back{display:flex;width:max-content;align-items:center;gap:7px;min-height:44px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);text-decoration:none}
+.pb-back:hover{color:#D14E12}
+.pb-kicker{display:block;margin-top:10px;font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#FF6B2C}
+.pb-title{margin:12px 0 0;font:900 clamp(1.72rem,4.2vw,2.85rem)/1.28 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pb-lede{margin:16px 0 0;font:400 clamp(1rem,1.55vw,1.14rem)/1.78 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-meta{margin:18px 0 0;font:500 13px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(9,11,14,.46)}
+.pb-cover{margin:clamp(26px,4vw,42px) 0 0}
+.pb-cover img{display:block;width:100%;height:auto;border-radius:3px}
+/* 沒有封面圖時的色帶。刻意做矮:16/7 在桌機是 330px 的空白色塊,看起來像圖沒載到 */
+.pb-swatch{margin:clamp(26px,4vw,42px) 0 0;aspect-ratio:16/5;border-radius:3px}
+@media(max-width:600px){.pb-swatch{aspect-ratio:16/6}}
+.pb-body{margin-top:clamp(26px,4vw,42px)}
+.pb-body>*:first-child{margin-top:0}
+.pb-body p{margin:20px 0 0;font:400 16.5px/2 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-body h2{margin:clamp(38px,5vw,58px) 0 0;font:800 clamp(1.22rem,2.1vw,1.55rem)/1.5 'Noto Sans TC',sans-serif}
+.pb-body h3{margin:30px 0 0;font:700 1.0625rem/1.6 'Noto Sans TC',sans-serif}
+.pb-body h4{margin:24px 0 0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-body a{color:#D14E12;text-decoration:underline;text-underline-offset:3px}
+.pb-body img{max-width:100%;height:auto}
+.pb-list{margin:16px 0 0;padding-left:22px}
+.pb-list li{margin-top:8px;font:400 16.5px/1.95 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-quote{margin:26px 0 0;padding:2px 0 2px 18px;border-left:3px solid #FF6B2C;font:500 16.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.76)}
+.pb-body code{background:rgba(9,11,14,.06);padding:2px 6px;border-radius:3px;font:400 .9em ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code{margin:22px 0 0;padding:16px 18px;background:#090B0E;color:#E8E4DA;border-radius:3px;overflow-x:auto;font:400 13.5px/1.72 ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code code{background:none;padding:0;white-space:pre}
+.pb-fig{margin:clamp(26px,4vw,40px) 0}
+.pb-fig img{display:block;width:100%;height:auto;border-radius:3px}
+.pb-fig figcaption{margin-top:10px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)}
+.pb-tablewrap{margin:24px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pb-table{border-collapse:collapse;min-width:100%;font:400 14.5px/1.7 'Noto Sans TC',sans-serif}
+.pb-table th,.pb-table td{padding:11px 14px;border-bottom:1px solid rgba(9,11,14,.12);text-align:left;white-space:nowrap}
+.pb-table th{font-weight:700;background:rgba(9,11,14,.04)}
+.pb-hr{margin:clamp(34px,5vw,50px) 0 0;border:0;border-top:1px solid rgba(9,11,14,.14)}
+.pb-cta{margin:clamp(42px,6vw,66px) 0 0;padding:clamp(22px,4vw,34px);background:#090B0E;color:#F2EFE8;border-radius:3px}
+.pb-cta h2{margin:0;font:800 clamp(1.06rem,1.9vw,1.32rem)/1.5 'Noto Sans TC',sans-serif;color:#F2EFE8}
+.pb-cta p{margin:10px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pb-cta a{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:13px 22px;min-height:44px;box-sizing:border-box;background:#FF6B2C;color:#090B0E;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;border-radius:2px}
+.pb-cta a:hover{background:#FF8149;color:#090B0E}
+.pb-rel{margin:clamp(42px,6vw,64px) 0 0}
+.pb-rel h2{margin:0 0 16px;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(9,11,14,.45)}
+.pb-relgrid{display:grid;gap:12px}
+.pb-relcard{display:block;padding:17px 19px;background:#fff;border:1px solid rgba(9,11,14,.1);border-radius:3px;text-decoration:none;transition:border-color .18s,transform .18s}
+.pb-relcard:hover{border-color:#FF6B2C;transform:translateY(-2px)}
+.pb-relcard .t{font:700 15px/1.55 'Noto Sans TC',sans-serif;color:#090B0E}
+.pb-relcard .d{margin-top:6px;font:500 12px 'Space Grotesk','Noto Sans TC',sans-serif;color:rgba(9,11,14,.46)}
+@media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</helmet>
+<a id="pq-skip" href="#pq-main">跳到主要內容</a>
+<dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
+
+<main id="pq-main" class="pb-wrap" data-screen-label="LINE AI 客服怎麼串接 CRM?從接住詢問">
+  <a class="pb-back" href="/blog">← 回到觀點</a>
+  <span class="pb-kicker">流程自動化</span>
+  <h1 class="pb-title">LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程</h1>
+  <p class="pb-lede">LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。</p>
+  <p class="pb-meta">2026 年 9 月 2 日 · 4 分鐘閱讀</p>
+  <div class="pb-swatch" style="background:linear-gradient(118deg,#A2AFB5,#BFAEB8)" aria-hidden="true"></div>
+  <article class="pb-body">
+<p><strong>直接答案:</strong>LINE AI 客服串接 CRM 的完整流程是四個環節:AI 在 LINE 官方帳號先接住詢問並辨識需求 → 把對話中的關鍵欄位(需求類型、預算、時段)自動擷取出來 → 在 CRM 建立客戶卡、指派負責人 → 依客戶狀態排跟進提醒。技術上靠 LINE Messaging API 與 CRM 的 API 對接;實務上的成敗關鍵不在串接本身,而在欄位設計與「AI 判斷不了時轉真人」的機制。</p>
+<h2>為什麼只有 AI 回覆不夠</h2>
+<p>很多店家的現況是:LINE 官方帳號設了自動回覆(或接了 AI),客人的問題有人答了——然後呢?</p>
+<ul class="pb-list"><li>對話結束,<strong>資訊留在 LINE 裡</strong>,沒有變成客戶資料</li><li>業務要跟進,得回頭翻對話紀錄</li><li>客人隔週再問,AI 不記得上次聊到哪</li><li>誰該跟進、跟進到哪一步,還是靠人腦記</li></ul>
+<p>回覆只是第一環。<strong>沒有接進 CRM 的 AI 客服,等於請了一個不寫工作紀錄的接待員。</strong></p>
+<h2>完整串接的四個環節</h2>
+<h3>環節一:接住(LINE → AI)</h3>
+<p>AI 透過 LINE Messaging API 接收訊息,先做三件事:理解這是哪一類需求(詢價/預約/售後)、用核准過的知識回答常見問題、判斷不了就轉真人。重點是<strong>回答範圍要有邊界</strong>——AI 只答知識庫裡確認過的內容,價格與特殊狀況留給人。</p>
+<h3>環節二:擷取(對話 → 欄位)</h3>
+<p>這是多數自動回覆工具做不到、也是價值最高的一環:從對話中把結構化欄位抓出來——需求類型、預算區間、希望時段、來源。缺的欄位,AI 可以擬好追問訊息補齊。</p>
+<h3>環節三:建檔(欄位 → CRM)</h3>
+<p>擷取到的欄位寫進 CRM:建立(或合併)客戶卡、記錄互動歷史、指派負責人、標記目前階段。<strong>合併很重要</strong>——同一個客人第二次來問,要接在原本的紀錄上,而不是再開一張新卡。</p>
+<h3>環節四:跟進(CRM → 提醒與草稿)</h3>
+<p>客戶卡有了階段與負責人之後,系統照節奏提醒:該跟進的名單、AI 先擬好的跟進訊息草稿,由負責人確認後送出。這一環把「AI 客服」變成「業務流程」。</p>
+<h2>常見斷點自查表</h2>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th>斷點</th><th>症狀</th><th>缺的環節</th></tr></thead><tbody><tr><td>只回不記</td><td>對話答完就結束,資料留在 LINE</td><td>環節二、三</td></tr><tr><td>記了不合</td><td>同一客人多張卡、資料重複</td><td>環節三的合併邏輯</td></tr><tr><td>建檔沒人管</td><td>CRM 有名單,但沒人知道該跟誰</td><td>環節三的負責人指派</td></tr><tr><td>有名單沒節奏</td><td>想到才跟進,冷掉的客人沒人撿</td><td>環節四</td></tr></tbody></table></div>
+<h2>導入步驟(實務順序)</h2>
+<ol class="pb-list"><li><strong>盤點知識</strong>:把常見問題與標準答案整理成 AI 可以引用的知識庫——這一步由你們做,別人代替不了。</li><li><strong>定義欄位</strong>:決定 CRM 要抓哪些欄位。欄位太多 AI 追問會煩,太少業務接手沒脈絡;先從「業務開口前必須知道的三到五項」開始。</li><li><strong>設定轉真人規則</strong>:什麼情況轉(議價、客訴、AI 信心不足)、轉給誰、對話摘要怎麼跟著過去。</li><li><strong>接 API</strong>:LINE Messaging API 與 CRM 對接。用既有 CRM 的話,確認它的 API 能不能寫入與查重;沒有 CRM 的話,從一個輕量的開始比買大平台實際。</li><li><strong>內部測試與校準</strong>:用真實情境模擬對話,修話術、修欄位、修轉接條件,再上線。</li></ol>
+<h2>適合與不適合</h2>
+<p><strong>適合</strong>:詢問主要從 LINE 進來、量穩定,團隊花大量時間重複回答與人工轉貼資料的服務業(婚慶、室內設計、房仲、美業都是典型情境)。</p>
+<p><strong>不適合</strong>:詢問量很小(人工回得完)、或流程還沒定型(AI 沒有規則可學)。另外,<strong>期待「全自動成交」的請調整期待</strong>——成熟的做法是 AI 顧前線、人做判斷,重要對話一定轉真人。</p>
+<h2>常見問題</h2>
+<p><strong>Q:一定要換掉現有的 CRM 嗎?</strong> 不一定。既有 CRM 有 API 就評估直接串;實際範圍依工具、API 與權限而定,Demo 階段確認。</p>
+<p><strong>Q:客人會知道在跟 AI 講話嗎?</strong> 建議誠實標示。體驗的關鍵不是「像不像人」,而是回得快、答得準、該轉人的時候轉得順。</p>
+<p><strong>Q:資料安全怎麼處理?</strong> 至少要求:資料獨立存放、加密、不拿去訓練其他客戶的模型、合約結束可匯出。</p>
+<p><strong>Q:做過實際案例嗎?</strong> 有——房仲情境:LINE 官方帳號詢問由 AI 自動回物件、排帶看、客況寫進名單(<a href="/cases/real-estate-line-ai-assistant">完整案例</a>);婚慶情境:詢問接住後整理成客戶卡再轉真人(<a href="/cases/wedding-industry-ai-suite">完整案例</a>)。</p>
+<hr class="pb-hr">
+<p><em>作者:PeakQi 奇鋒國際團隊。本文流程整理自 PeakQi 在 LINE 官方帳號串接的實際導入專案(房仲 AI 助手、婚禮產業 AI 大禮包、團購通等);LINE Messaging API 的技術細節以 <a href="https://developers.line.biz/" target="_blank" rel="noopener noreferrer">LINE 官方文件</a>為準。發布:2026-09-02。</em></p>
+  </article>
+  <hr class="pb-hr">
+  <aside class="pb-cta">
+    <h2>想知道這些流程在你的公司長什麼樣?</h2>
+    <p>預約一次場景 Demo,我們用你實際的流程走一遍,再一起評估哪一段值得先自動化。</p>
+    <a href="/demo">預約場景 Demo →</a>
+  </aside>
+  <nav class="pb-rel" aria-label="延伸閱讀">
+    <h2>延伸閱讀</h2>
+    <div class="pb-relgrid">
+      <a class="pb-relcard" href="/blog/how-to-choose-ai-automation-partner"><span class="t">台灣中小企業 AI 自動化公司怎麼選:六個問題先問清楚</span><span class="d">2026 年 9 月 2 日 · 4 分鐘閱讀</span></a>
+      <a class="pb-relcard" href="/blog/ai-automation-cost-and-timeline"><span class="t">中小企業導入 AI 自動化要多少錢、多久上線?費用結構完整拆解</span><span class="d">2026 年 9 月 2 日 · 4 分鐘閱讀</span></a>
+      <a class="pb-relcard" href="/blog/built-a-website-with-claude-code"><span class="t">十年沒寫程式,我用 Claude Code 蓋了一個網站</span><span class="d">2026 年 8 月 8 日 · 11 分鐘閱讀</span></a>
+    </div>
+  </nav>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
