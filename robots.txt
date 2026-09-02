@@ -1,7 +1,26 @@
-# robots.txt — 奇鋒國際 PeakQi(部署時將網域換成正式網址)
+# robots.txt — 奇鋒國際 PeakQi
+# 一般爬蟲:全站開放,只擋內部來源檔與建置產物。
+# GPTBot(模型訓練用)未另設規則 = 沿用 * 的規則;是否要擋訓練爬蟲由網站擁有者決定。
 User-agent: *
 Allow: /
 # 文章原稿(Markdown)是產生網頁用的來源檔,內容與 /blog/ 相同 —— 別讓它被當成重複內容收錄
 Disallow: /content/
+# DC 模板原始檔(含未渲染的 {{ }} 佔位)與預渲染產物:執行期內部使用,不該進索引
+Disallow: /tpl/
+Disallow: /built/
+
+# ChatGPT 搜尋(引用網站內容、帶來源連結)── 明確允許
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /content/
+Disallow: /tpl/
+Disallow: /built/
+
+# ChatGPT 使用者代抓(使用者要求讀取網頁時)── 明確允許
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /content/
+Disallow: /tpl/
+Disallow: /built/
 
 Sitemap: https://www.peakqi.com/sitemap.xml

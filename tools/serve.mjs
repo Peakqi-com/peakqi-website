@@ -9,7 +9,9 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.argv[2] || 8000);
-const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+// --no-rules:純靜態模式(不套 redirects/rewrites)── tools/prerender.mjs 用它直接載模板原始檔
+const NO_RULES = process.argv.includes('--no-rules');
+const cfg = NO_RULES ? { redirects: [], rewrites: [] } : JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -35,10 +37,13 @@ const compile = (list) => (list || []).map((r) => ({ ...r, ...toRe(r.source) }))
 const REDIRECTS = compile(cfg.redirects);
 const REWRITES = compile(cfg.rewrites);
 
-function apply(rules, pathname) {
+function apply(rules, pathname, searchParams) {
   for (const r of rules) {
     const m = r.re.exec(pathname);
     if (!m) continue;
+    // vercel 的 has 條件(僅支援 query 型,夠本站用):全部符合才算命中
+    if (r.has && !r.has.every((h) => h.type === 'query' && searchParams &&
+      (h.value == null ? searchParams.has(h.key) : searchParams.get(h.key) === h.value))) continue;
     let dest = r.destination;
     r.names.forEach((n, i) => { dest = dest.split(':' + n).join(m[i + 1]); });
     return dest;
@@ -53,7 +58,7 @@ http.createServer((req, res) => {
   const pathname = decodeURIComponent(u.pathname);
 
   // 1) redirects
-  const red = apply(REDIRECTS, pathname);
+  const red = apply(REDIRECTS, pathname, u.searchParams);
   if (red) { res.writeHead(308, { Location: red + (u.search || '') }); return res.end(); }
 
   // 2) 檔案系統(Vercel 的順序:redirects → 靜態檔 → rewrites)

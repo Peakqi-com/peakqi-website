@@ -1,0 +1,25 @@
+{
+  "name": "peakqi-website",
+  "version": "1.0.0",
+  "description": "六路由 SPA-feel 多頁站:`Home` / `Solutions` / `Cases` / `Pricing` / `About` / `Demo`(+`404.dc.html`)。\r 內容唯一來源:`content.js`(依「AI 方案 Sales Kit」整理,所有價格、案例數字、保證條款都在這一個檔)。",
+  "main": "about-hero.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peakqi-com/peakqi-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Peakqi-com/peakqi-website/issues"
+  },
+  "homepage": "https://github.com/Peakqi-com/peakqi-website#readme",
+  "private": "true",
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}

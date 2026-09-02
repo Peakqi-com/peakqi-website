@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PeakQi">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="How We Deliver | From Process Mapping to Post-Launch Tuning | PeakQi">
+<meta property="og:description" content="PeakQi's AI delivery method: map your process and data, define Phase-1 outcomes, build a verifiable flow, then launch, hand over and keep improving. Every stage has clear deliverables and checkpoints.">
+<meta property="og:url" content="https://www.peakqi.com/en/method">
+<link rel="canonical" href="https://www.peakqi.com/en/method">
+<meta property="og:image" content="https://www.peakqi.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PeakQi — AI that catches every customer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How We Deliver | From Process Mapping to Post-Launch Tuning | PeakQi">
+<meta name="twitter:description" content="PeakQi's AI delivery method: map your process and data, define Phase-1 outcomes, build a verifiable flow, then launch, hand over and keep improving. Every stage has clear deliverables and checkpoints.">
+<meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<script>window.__dcComponentDir='/.';</script>
+<script>/* 有 JS 才預留 hero 釘選跑道:沒有 JS 時 hero-kit 不會撐高,預留了會變成一大片空白 */try{document.documentElement.classList.add("pq-js");}catch(e){}</script>
+<script src="/support.js"></script>
+
+<title>How We Deliver | From Process Mapping to Post-Launch Tuning | PeakQi</title>
+<meta name="description" content="PeakQi's AI delivery method: map your process and data, define Phase-1 outcomes, build a verifiable flow, then launch, hand over and keep improving. Every stage has clear deliverables and checkpoints.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* 標題排版鐵律:一行說一句話。text-wrap:balance 讓瀏覽器把行長平均分配,
+   不會把最後一兩個字擠成孤字行(手機與電腦同樣適用);分句 span 各自成行。 */
+h1,h2{text-wrap:balance}
+
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#FF6B2C}a:hover{color:#D14E12}
+/* 品牌橘當文字色在淺底只有 2.47:1:淺色區塊內一律改深橘,深底區塊維持原橘 */
+::selection{background:#FF6B2C;color:#F2EFE8}
+a:focus-visible,button:focus-visible{outline:2px solid #FF6B2C;outline-offset:2px}
+@media (max-width:899px){section :not(p):not(span) > a[href]{min-height:44px;display:inline-flex;align-items:center}}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}}
+/* 捲動展開:六階段卡逐張浮現、時程節點逐點亮(零 JS;不支援或 reduced 時直接顯示) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    #m-grid > div{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 4% entry 38%}
+    #m-grid > div:nth-child(2),#m-grid > div:nth-child(5){animation-range:entry 10% entry 46%}
+    #m-grid > div:nth-child(3),#m-grid > div:nth-child(6){animation-range:entry 16% entry 54%}
+    #m-tl > div{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 6% entry 40%}
+    #m-risk [data-mv]{animation:pqRiseIn both cubic-bezier(0.16,1,0.3,1);animation-timeline:view();animation-range:entry 5% entry 42%}
+  }
+}
+@keyframes pqRiseIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@media (max-width:1099px){#m-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:659px){#m-grid{grid-template-columns:1fr!important}}
+@media (max-width:719px){#m-grid{grid-template-columns:minmax(0,1fr)!important}}
+nav[aria-label="breadcrumb"]{align-items:center}
+/* 捲動提示膠囊:箭頭輕彈,捲 320px 內淡出(不支援 scroll-timeline 則常駐) */
+@media (prefers-reduced-motion: no-preference){
+[data-scrollhint] [data-sh-arrow]{animation:pqShBob 1.6s ease-in-out infinite;display:inline-block}
+@supports (animation-timeline: scroll()){[data-scrollhint]{animation:pqShFade linear both;animation-timeline:scroll(root);animation-range:0px 320px}}
+}
+@keyframes pqShBob{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+@keyframes pqShFade{to{opacity:0;visibility:hidden}}
+@media (max-width:899px){[data-scrollhint]{display:none!important}}
+/* 手機 hero 空間預算:舞台內距縮小+場景列緊湊,配合捲動收合讓視覺帶放大 */
+@media (max-width:899px){
+[data-hero-stage]{padding-top:20px!important;padding-bottom:20px!important}
+/* 使用者定案:收合後整塊上移到近螢幕置中(預設收合置中被卡片高度拖低) */
+section[data-hero="method"] [data-hero-stage].pq-hero-compact{align-items:flex-start!important;padding-top:10svh!important}
+[data-hero-copy]>div{gap:9px!important}
+[data-hero-copy] [data-hero-scenestage]{min-height:96px!important}
+[data-hero-cta] a{padding:12px 18px!important;font-size:.84375rem!important}
+[data-hero-media]{min-height:25svh!important}
+}
+/* 大螢幕 hero:1360px 容器在 1900px 上兩欄各只剩 648px —— 標題被迫斷三行、動畫框也偏小。
+   ≥1100px 放寬容器並讓文案欄多一點,標題回到兩行,右側視覺框同步放大(手機完全不受影響)。 */
+@media (min-width:1100px){
+#m-hero [data-hero-grid]{max-width:1560px!important;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)!important}
+#m-hero [data-hero-media]{min-height:clamp(380px,60vh,600px)!important}
+}
+/* ── 釘選跑道高度先留好,避免載入後整頁被撐高 ────────────────────────
+   hero-kit 會在 JS 載入後把 [data-hero-wrap] 設成 hero-config 的 totalVh。
+   沒有先留就等於首屏之後整段被推下去 —— 實測 cases 手機 CLS 0.58。
+   數值必須與 hero-config.js 的 totalVh 一致(desktop / tablet / mobile),改一邊要改另一邊。
+   斷點沿用 motion-config 的 BP:mobile 900、wide 1200。*/
+html.pq-js [data-hero="method"] [data-hero-wrap]{min-height:300vh}
+@media (max-width:1199px){html.pq-js [data-hero="method"] [data-hero-wrap]{min-height:235vh}}
+@media (max-width:899px){html.pq-js [data-hero="method"] [data-hero-wrap]{min-height:250vh}}
+
+</style>
+<!-- 進站一律從最上面開始:關掉瀏覽器的捲動位置還原,重新整理不會落在中段(捲動驅動的動畫從中段進場會看到不同狀態) -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+<script>window.addEventListener('unhandledrejection',function(e){var r=String((e&&e.reason&&(e.reason.message||e.reason))||'');if(r.indexOf('Transition was skipped')>=0||(r.indexOf('ransition')>=0&&r.indexOf('skipped')>=0)||r.indexOf('AbortError')>=0)e.preventDefault();});</script>
+
+<link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/method">
+<link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/method">
+<link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/method">
+<script type="application/ld+json" id="pq-ld-core">[{"@context":"https://schema.org","@type":"Organization","@id":"https://www.peakqi.com/#organization","name":"奇鋒國際有限公司","alternateName":["PeakQi","PeakQi International"],"url":"https://www.peakqi.com/","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/apple-touch-icon.png","width":180,"height":180},"image":"https://www.peakqi.com/og.png","description":"PeakQi is a Taiwan-based AI operations automation and systems integration team for SMBs. We connect LINE and website inquiries, CRM follow-up, quoting, marketing and project management into one workflow that keeps human review in the loop — standard modules go live in as little as 10 working days.","email":"jacky@peakqi.com","telephone":"+886-2-6609-3699","areaServed":{"@type":"Country","name":"Taiwan"},"knowsLanguage":["zh-Hant","en"],"sameAs":["https://github.com/Peakqi-com","https://lin.ee/saa67pr"],"contactPoint":[{"@type":"ContactPoint","contactType":"sales","email":"jacky@peakqi.com","telephone":"+886-2-6609-3699","availableLanguage":["zh-Hant","en"],"areaServed":"TW"}]},{"@context":"https://schema.org","@type":"WebSite","@id":"https://www.peakqi.com/#website","name":"PeakQi 奇鋒國際","url":"https://www.peakqi.com/","inLanguage":"en","publisher":{"@id":"https://www.peakqi.com/#organization"}},{"@context":"https://schema.org","@type":"Service","@id":"https://www.peakqi.com/#service","name":"AI operations automation & systems integration","serviceType":"AI customer intake, LINE AI support, CRM follow-up, quoting, marketing content and project management integration","provider":{"@id":"https://www.peakqi.com/#organization"},"areaServed":{"@type":"Country","name":"Taiwan"},"audience":{"@type":"BusinessAudience","name":"Taiwan SMBs and service businesses"},"description":"PeakQi is a Taiwan-based AI operations automation and systems integration team for SMBs. We connect LINE and website inquiries, CRM follow-up, quoting, marketing and project management into one workflow that keeps human review in the loop — standard modules go live in as little as 10 working days."},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.peakqi.com/en"},{"@type":"ListItem","position":2,"name":"How We Deliver","item":"https://www.peakqi.com/en/method"}]}]</script>
+</head>
+<body>
+<x-dc data-tpl="/tpl/en/Method.dc.html">
+<div class="sc-host" data-sc-name="Method"><a data-dc-tpl="10" id="pq-skip" href="#m-steps">Skip to main content</a><div class="sc-host" data-sc-name="Nav" data-dc-tpl="11"><header data-dc-tpl="2" style="position: fixed; top: 0px; left: 0px; right: 0px; height: 68px; box-sizing: border-box; z-index: 100; background: rgba(242, 239, 232, 0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(9, 11, 14, 0.12);">
+  <div data-dc-tpl="3" style="max-width: 1400px; margin: 0px auto; padding: 0px clamp(16px, 4vw, 48px); height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+    <a data-dc-tpl="4" href="/en" aria-label="PeakQi home" style="display: flex; align-items: center; gap: 10px; color: rgb(9, 11, 14); text-decoration: none;">
+      <img data-dc-tpl="5" src="/assets/logo.png" alt="PeakQi" width="32" height="32" style="display: block;">
+      <span data-dc-tpl="6" style="display: flex; flex-direction: column; gap: 2px; line-height: 1;">
+        <span data-dc-tpl="7" style="font: 800 1rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.01em;">PeakQi</span>
+        <span data-dc-tpl="8" style="font: 600 0.5625rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.24em; color: rgba(9, 11, 14, 0.5);"><span class="sc-interp">PEAKQI INTERNATIONAL</span></span>
+      </span>
+    </a>
+    <style data-dc-tpl="9">.pq-dd{position:relative}.pq-dd-panel{opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .16s,transform .16s,visibility .16s}.pq-dd:hover .pq-dd-panel,.pq-dd:focus-within .pq-dd-panel{opacity:1;visibility:visible;transform:translateY(0)}.pq-dd-panel a:hover{background:rgba(242,239,232,.07)}</style>
+    <nav data-dc-tpl="10" id="pq-links" style="display: flex; align-items: center; gap: clamp(12px, 2.2vw, 30px);">
+      
+        
+          <a data-dc-tpl="13" href="/en" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">Home</span></a>
+        
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/solutions" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">Solutions</span></a>
+        
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/method" class="scp0" style="font: 700 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgb(9, 11, 14); border-bottom: 2px solid rgb(255, 107, 44);"><span class="sc-interp">How we deliver</span></a>
+        
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/cases" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">Cases</span></a>
+        
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/studio" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">Studio</span></a>
+        
+        
+      
+        
+        
+          <div data-dc-tpl="15" class="pq-dd">
+            <button data-dc-tpl="16" type="button" aria-haspopup="true" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; display: inline-flex; align-items: center; gap: 5px; background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; cursor: pointer; color: rgba(9, 11, 14, 0.6);"><span class="sc-interp">Products</span> <span data-dc-tpl="17" style="font-size: 0.5625rem; opacity: 0.7;">▼</span></button>
+            <div data-dc-tpl="18" class="pq-dd-panel" style="position: absolute; left: 0px; top: calc(100% + 10px); min-width: 234px; background: rgb(9, 11, 14); border: 1px solid rgba(242, 239, 232, 0.14); border-radius: 12px; padding: 8px; box-shadow: rgba(9, 11, 14, 0.32) 0px 22px 48px; z-index: 120;">
+              
+                <a data-dc-tpl="20" href="/en/peakops" target="_self" rel="" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Peak Ops</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">AI business toolkit</span></span>
+                </a>
+              
+                <a data-dc-tpl="20" href="https://www.aiweddingpro360.com/" target="_blank" rel="noopener noreferrer" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">AI Wedding Pro</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">Wedding AI</span></span>
+                </a>
+              
+                <a data-dc-tpl="20" href="https://www.aiinteriorpro360.com/" target="_blank" rel="noopener noreferrer" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">AI Interior Pro</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">Interior design AI</span></span>
+                </a>
+              
+                <a data-dc-tpl="20" href="https://bubble.tw" target="_blank" rel="noopener noreferrer" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Bubble</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">Real-estate AI</span></span>
+                </a>
+              
+                <a data-dc-tpl="20" href="https://memora-ai-coral.vercel.app/" target="_blank" rel="noopener noreferrer" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Memora AI</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">Memorial video AI · site in Chinese</span></span>
+                </a>
+              
+                <a data-dc-tpl="20" href="/en/pricing" target="_self" rel="" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none; padding: 10px 14px; min-height: 44px; justify-content: center; border-radius: 7px; color: rgb(242, 239, 232);">
+                  <span data-dc-tpl="21" style="font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Pricing</span></span>
+                  <span data-dc-tpl="22" style="font: 400 0.6875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);"><span class="sc-interp">Three Peak Ops plans &amp; scope</span></span>
+                </a>
+              
+            </div>
+          </div>
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/about" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">About</span></a>
+        
+        
+      
+        
+          <a data-dc-tpl="13" href="/en/blog" class="scp0" style="font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.04em; text-decoration: none; padding: 4px 2px; transition: color 0.15s; color: rgba(9, 11, 14, 0.6); border-bottom: 2px solid transparent;"><span class="sc-interp">Insights</span></a>
+        
+        
+      
+      <a data-dc-tpl="23" href="/en/demo" aria-label="Build your Phase-1 draft" class="scp3" style="display: inline-flex; align-items: center; gap: 8px; background: rgb(255, 107, 44); color: rgb(9, 11, 14); padding: 10px 18px; border-radius: 2px; font: 700 0.84375rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.05em; text-decoration: none;"><span class="sc-interp">Build your Phase-1 draft</span></a>
+      
+        <a data-dc-tpl="25" href="/method" aria-label="Switch language" class="scp1" style="font: 700 0.78125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.12em; color: rgb(9, 11, 14); text-decoration: none; border: 1px solid rgba(9, 11, 14, 0.3); border-radius: 999px; padding: 8px 14px;"><span class="sc-interp">中文</span></a>
+      
+    </nav>
+    <button data-dc-tpl="26" id="pq-burger" aria-label="Open menu" aria-expanded="false" style="flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; background: none; border: 1px solid rgba(9, 11, 14, 0.2); border-radius: 2px; cursor: pointer; padding: 0px 10px;">
+      <span data-dc-tpl="27" style="display: block; height: 2px; background: rgb(9, 11, 14);"></span>
+      <span data-dc-tpl="28" style="display: block; height: 2px; background: rgb(9, 11, 14);"></span>
+      <span data-dc-tpl="29" style="display: block; height: 2px; width: 60%; background: rgb(255, 107, 44);"></span>
+    </button>
+  </div></header><div data-dc-tpl="30" aria-hidden="true" style="height: 68px;"></div></div><section data-dc-tpl="12" id="m-hero" data-hero="method" data-screen-label="導入方法開場" style="background: rgb(9, 11, 14); color: rgb(242, 239, 232); position: relative;">
+  <div data-dc-tpl="13" data-hero-wrap="" style="position: relative;">
+    <div data-dc-tpl="14" data-hero-stage="" style="position: relative; overflow: hidden; box-sizing: border-box; display: flex; align-items: center; min-height: 76vh; padding: clamp(48px, 7vh, 88px) clamp(20px, 5vw, 48px) clamp(60px, 9vh, 88px);">
+      <canvas data-dc-tpl="15" data-hero-canvas="" aria-hidden="true" style="position: absolute; inset: 0px; z-index: 1; opacity: 0; transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;"></canvas>
+      <div data-dc-tpl="16" data-hero-grid="" style="position: relative; z-index: 2; max-width: 1360px; margin: 0px auto; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: clamp(24px, 4vw, 64px); align-items: center;">
+        <div data-dc-tpl="17" data-hero-copy="" style="display: flex; flex-direction: column; gap: 15px; position: relative; z-index: 3;">
+          <nav data-dc-tpl="18" aria-label="breadcrumb" style="display: flex; align-items: center; gap: 10px; font: 500 0.875rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.5);">
+            <a data-dc-tpl="19" href="/en" class="scp0" style="color: rgba(242, 239, 232, 0.5); text-decoration: none;">Home</a>
+            <span data-dc-tpl="20">/</span>
+            <span data-dc-tpl="21" style="color: rgb(242, 239, 232); font-weight: 700;">How we deliver</span>
+          </nav>
+          <span data-dc-tpl="22" style="font: 600 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(255, 107, 44);">HOW WE DELIVER</span>
+          <h1 data-dc-tpl="23" style="margin: 0px; font: 900 clamp(1.7rem, 3.5vw, 3.7rem) / 1.18 &quot;Noto Sans TC&quot;, sans-serif;">Start with the <span data-dc-tpl="24" style="color: rgb(255, 107, 44);">workflow</span>,<br data-dc-tpl="25">not the tools.</h1>
+          <p data-dc-tpl="26" style="margin: 0px; max-width: 620px; font: 400 clamp(1rem, 1.3vw, 1.09375rem) / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.75); text-wrap: pretty;">Map first, define next — one team owns it end to end.</p>
+          <div data-dc-tpl="27" data-hero-scenestage="" style="position: relative; min-height: 96px;">
+            <div data-dc-tpl="28" data-hero-scene="map" style="position: relative; display: flex; flex-direction: column; gap: 6px;">
+              <span data-dc-tpl="29" style="font: 700 0.8125rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);">Stage 1 / 4 · Map the present</span>
+              <p data-dc-tpl="30" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.68); max-width: 540px; text-wrap: pretty;">Find where inquiries enter and deals stall; produce the problem list.</p>
+            </div>
+            <div data-dc-tpl="31" data-hero-scene="goal" style="position: absolute; left: 0px; top: 0px; right: 0px; opacity: 0; pointer-events: none; display: flex; flex-direction: column; gap: 6px;">
+              <span data-dc-tpl="32" style="font: 700 0.8125rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);">Stage 2 / 4 · Define Phase 1</span>
+              <p data-dc-tpl="33" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.68); max-width: 540px; text-wrap: pretty;">Frame the goal, the scope and the human-approval line; build the highest-value slice first.</p>
+            </div>
+            <div data-dc-tpl="34" data-hero-scene="pilot" style="position: absolute; left: 0px; top: 0px; right: 0px; opacity: 0; pointer-events: none; display: flex; flex-direction: column; gap: 6px;">
+              <span data-dc-tpl="35" style="font: 700 0.8125rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(62, 155, 255);">Stage 3 / 4 · Build the pilot</span>
+              <p data-dc-tpl="36" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.68); max-width: 540px; text-wrap: pretty;">Let real users test it — the approval gates live inside the flow.</p>
+            </div>
+            <div data-dc-tpl="37" data-hero-scene="live" style="position: absolute; left: 0px; top: 0px; right: 0px; opacity: 0; pointer-events: none; display: flex; flex-direction: column; gap: 6px;">
+              <span data-dc-tpl="38" style="font: 700 0.8125rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(101, 224, 188);">Stage 4 / 4 · Launch &amp; improve</span>
+              <p data-dc-tpl="39" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.68); max-width: 540px; text-wrap: pretty;">Standard modules go live in as little as 10 working days, then keep tuning from real usage.</p>
+            </div>
+          </div>
+          <div data-dc-tpl="40" data-hero-cta="" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 4px;">
+            <a data-dc-tpl="41" data-hero-primary="" data-track="hero_demo_click" href="/en/demo" style="background: rgb(255, 107, 44); color: rgb(9, 11, 14); text-decoration: none; font: 800 0.96875rem &quot;Noto Sans TC&quot;, sans-serif; padding: 15px 28px; border-radius: 2px; min-height: 44px; display: inline-flex; align-items: center;">Build your Phase-1 draft</a>
+            <a data-dc-tpl="42" data-track="hero_case_click" href="/en/cases" class="scp1" style="color: rgb(242, 239, 232); text-decoration: none; font: 700 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; padding: 14px 24px; border: 1px solid rgba(242, 239, 232, 0.32); border-radius: 2px; min-height: 44px; display: inline-flex; align-items: center;">See real cases</a>
+
+            <div data-dc-tpl="43" data-scrollhint="" aria-hidden="true" style="flex-basis: 100%; margin-top: 8px;"><span data-dc-tpl="44" style="display: inline-flex; align-items: center; gap: 9px; border: 1px solid rgba(242, 239, 232, 0.26); border-radius: 999px; padding: 9px 16px; font: 600 0.84375rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.8);"><span data-dc-tpl="45" data-sh-arrow="" style="color: rgb(255, 107, 44); font: 800 0.9375rem &quot;Space Grotesk&quot;, sans-serif;">↓</span>Scroll to see the four delivery stages</span></div>
+          </div>
+        </div>
+        <div data-dc-tpl="46" data-hero-media="" aria-hidden="true" style="position: relative; z-index: 2; min-height: clamp(320px, 52vh, 480px);"></div>
+      </div>
+      <div data-dc-tpl="47" data-hero-progress="" aria-hidden="true" style="position: absolute; left: clamp(20px, 5vw, 48px); right: clamp(20px, 5vw, 48px); bottom: 18px; z-index: 4; display: none; flex-wrap: wrap;"></div>
+    </div>
+  </div></section><section data-dc-tpl="48" id="pq-quick-answer" data-screen-label="快速了解" style="background: rgb(9, 11, 14); color: rgb(242, 239, 232); padding: clamp(30px, 4vw, 48px) clamp(20px, 5vw, 48px); border-top: 1px solid rgba(242, 239, 232, 0.08);">
+  <div data-dc-tpl="49" style="max-width: 1360px; margin: 0px auto; display: flex; flex-direction: column; gap: 14px;">
+    <h2 data-dc-tpl="50" style="margin: 0px; font: 600 0.71875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(255, 107, 44);">QUICK ANSWER — Delivery in 30 seconds</h2>
+    <p data-dc-tpl="51" style="margin: 0px; max-width: 920px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.95 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.8);">PeakQi delivers in six stages: understand the current flow, define outcomes, organize data, build a validation version, launch and hand over, then keep improving. Phase 1 on standard modules goes live in as little as 10 working days — sign Day 0, build Days 1–4, test Days 5–7, calibrate and launch by Day 10 — and runs three months, adjustable monthly afterwards. Custom integrations, data migration and cross-team platforms are scoped separately; full vertical platforms start around six weeks.</p>
+    <dl data-dc-tpl="52" style="margin: 6px 0px 0px; display: flex; flex-wrap: wrap; gap: 18px 36px;">
+      <div data-dc-tpl="53" style="display: flex; flex-direction: column; gap: 4px; min-width: 150px;"><dt data-dc-tpl="54" style="font: 600 0.65625rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.18em; color: rgba(242, 239, 232, 0.45);">Best for</dt><dd data-dc-tpl="55" style="margin: 0px; font: 500 0.84375rem / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.78);">Taiwan SMBs &amp; service businesses</dd></div>
+      <div data-dc-tpl="56" style="display: flex; flex-direction: column; gap: 4px; min-width: 150px;"><dt data-dc-tpl="57" style="font: 600 0.65625rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.18em; color: rgba(242, 239, 232, 0.45);">Rollout</dt><dd data-dc-tpl="58" style="margin: 0px; font: 500 0.84375rem / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.78);">Modular · human review kept</dd></div>
+      <div data-dc-tpl="59" style="display: flex; flex-direction: column; gap: 4px; min-width: 150px;"><dt data-dc-tpl="60" style="font: 600 0.65625rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.18em; color: rgba(242, 239, 232, 0.45);">Go-live</dt><dd data-dc-tpl="61" style="margin: 0px; font: 500 0.84375rem / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.78);">From 10 working days (standard modules)</dd></div>
+      <div data-dc-tpl="62" style="display: flex; flex-direction: column; gap: 4px; min-width: 150px;"><dt data-dc-tpl="63" style="font: 600 0.65625rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.18em; color: rgba(242, 239, 232, 0.45);">Pricing</dt><dd data-dc-tpl="64" style="margin: 0px; font: 500 0.84375rem / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.78);">Custom quote (setup + monthly + usage)</dd></div>
+    </dl>
+  </div></section><section data-dc-tpl="65" id="m-steps" data-screen-label="六階段" style="padding: clamp(72px, 9vw, 124px) clamp(20px, 5vw, 48px);">
+  <div data-dc-tpl="66" style="max-width: 1360px; margin: 0px auto;">
+    <span data-dc-tpl="67" style="font: 600 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgba(9, 11, 14, 0.5);">SIX STAGES</span>
+    <h2 data-dc-tpl="68" style="margin: 14px 0px 0px; max-width: 820px; font: 900 clamp(1.65rem, 4vw, 3.4rem) / 1.2 &quot;Noto Sans TC&quot;, sans-serif; text-wrap: pretty;">Six stages, each with a deliverable</h2>
+    <div data-dc-tpl="69" id="m-grid" style="margin-top: clamp(28px, 3.6vw, 44px); display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); gap: clamp(14px, 1.8vw, 20px);">
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 01</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Understand today</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Learn where customers come from, how the team works, and where things truly stall.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">Current flow and problem list</span></span>
+        </div>
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 02</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Define the outcome</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Confirm the Phase-1 metric, the users and the rollout boundary.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">Rollout goal and scope</span></span>
+        </div>
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 03</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Organize the data</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Inventory knowledge, fields, rules, permissions and existing tools.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">Data and integration needs</span></span>
+        </div>
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 04</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Build the pilot</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Ship a working flow or demo first; real users help confirm it.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">A testable first flow</span></span>
+        </div>
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 05</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Launch and hand over</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Finish testing, permissions, exception handling and the user guide.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">Live release and operating docs</span></span>
+        </div>
+      
+        <div data-dc-tpl="71" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; background: rgba(9, 11, 14, 0.02); padding: clamp(20px, 2.2vw, 26px); display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="72" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.2em; color: rgb(166, 58, 8);"><span class="sc-interp">STAGE 06</span></span>
+          <span data-dc-tpl="73" style="font: 900 clamp(1.25rem, 1.7vw, 1.5rem) / 1.35 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Keep improving</span></span>
+          <span data-dc-tpl="74" style="font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.75 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Tune the system from real usage, errors and flow data.</span></span>
+          <span data-dc-tpl="75" style="margin-top: 2px; padding-top: 10px; border-top: 1px solid rgba(9, 11, 14, 0.12); font: 600 clamp(0.875rem, 1.05vw, 0.9375rem) / 1.65 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.58);"><span data-dc-tpl="76" style="color: rgb(166, 58, 8); font-weight: 700;">Ships</span> <span class="sc-interp">Tuning log and next-phase advice</span></span>
+        </div>
+      
+    </div>
+  </div></section><section data-dc-tpl="77" id="m-timeline" data-screen-label="上線時程" style="background: rgb(9, 11, 14); color: rgb(242, 239, 232); padding: clamp(72px, 9vw, 124px) clamp(20px, 5vw, 48px);">
+  <div data-dc-tpl="78" style="max-width: 1360px; margin: 0px auto;">
+    <span data-dc-tpl="79" style="font: 600 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(255, 107, 44);">GO-LIVE TIMELINE</span>
+    <h2 data-dc-tpl="80" style="margin: 14px 0px 0px; max-width: 860px; font: 900 clamp(1.65rem, 4vw, 3.4rem) / 1.2 &quot;Noto Sans TC&quot;, sans-serif; text-wrap: balance;">Phase 1 live in as fast as <span data-dc-tpl="81" style="color: rgb(255, 107, 44); font-family: &quot;Space Grotesk&quot;, sans-serif;">10</span> working days</h2>
+    <p data-dc-tpl="82" style="margin: 16px 0px 0px; max-width: 640px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.66); text-wrap: pretty;"><span class="sc-interp">This timeline applies to a Phase-1 launch on standard modules. Custom integrations, data migration, cross-team platforms and special permissions are scoped to your systems; full vertical platforms or large custom builds start around six weeks.</span></p>
+    <div data-dc-tpl="83" id="m-tl" style="margin-top: clamp(28px, 3.6vw, 44px); display: flex; flex-direction: column; gap: 0px; border-left: 2px solid rgba(242, 239, 232, 0.18); padding-left: 24px;">
+      
+        <div data-dc-tpl="85" style="position: relative; padding: 0px 0px clamp(18px, 2vw, 26px);">
+          <span data-dc-tpl="86" aria-hidden="true" style="position: absolute; left: -31px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 107, 44);"></span>
+          <span data-dc-tpl="87" style="display: block; font: 700 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);"><span class="sc-interp">DAY 0</span></span>
+          <span data-dc-tpl="88" style="display: block; margin-top: 4px; font: 600 clamp(1rem, 1.3vw, 1.125rem) / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.85);"><span class="sc-interp">Sign and hand over data</span></span>
+        </div>
+      
+        <div data-dc-tpl="85" style="position: relative; padding: 0px 0px clamp(18px, 2vw, 26px);">
+          <span data-dc-tpl="86" aria-hidden="true" style="position: absolute; left: -31px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 107, 44);"></span>
+          <span data-dc-tpl="87" style="display: block; font: 700 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);"><span class="sc-interp">DAY 1–4</span></span>
+          <span data-dc-tpl="88" style="display: block; margin-top: 4px; font: 600 clamp(1rem, 1.3vw, 1.125rem) / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.85);"><span class="sc-interp">Knowledge base, AI scripts, module setup</span></span>
+        </div>
+      
+        <div data-dc-tpl="85" style="position: relative; padding: 0px 0px clamp(18px, 2vw, 26px);">
+          <span data-dc-tpl="86" aria-hidden="true" style="position: absolute; left: -31px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 107, 44);"></span>
+          <span data-dc-tpl="87" style="display: block; font: 700 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);"><span class="sc-interp">DAY 5–7</span></span>
+          <span data-dc-tpl="88" style="display: block; margin-top: 4px; font: 600 clamp(1rem, 1.3vw, 1.125rem) / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.85);"><span class="sc-interp">Internal testing and simulated chats</span></span>
+        </div>
+      
+        <div data-dc-tpl="85" style="position: relative; padding: 0px 0px clamp(18px, 2vw, 26px);">
+          <span data-dc-tpl="86" aria-hidden="true" style="position: absolute; left: -31px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 107, 44);"></span>
+          <span data-dc-tpl="87" style="display: block; font: 700 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);"><span class="sc-interp">DAY 7–10</span></span>
+          <span data-dc-tpl="88" style="display: block; margin-top: 4px; font: 600 clamp(1rem, 1.3vw, 1.125rem) / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.85);"><span class="sc-interp">Calibration session</span></span>
+        </div>
+      
+        <div data-dc-tpl="85" style="position: relative; padding: 0px 0px clamp(18px, 2vw, 26px);">
+          <span data-dc-tpl="86" aria-hidden="true" style="position: absolute; left: -31px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 107, 44);"></span>
+          <span data-dc-tpl="87" style="display: block; font: 700 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.16em; color: rgb(255, 107, 44);"><span class="sc-interp">DAY 10</span></span>
+          <span data-dc-tpl="88" style="display: block; margin-top: 4px; font: 600 clamp(1rem, 1.3vw, 1.125rem) / 1.6 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.85);"><span class="sc-interp">Go live</span></span>
+        </div>
+      
+    </div>
+  </div></section><section data-dc-tpl="89" id="m-risk" data-screen-label="風險控制" style="padding: clamp(72px, 9vw, 124px) clamp(20px, 5vw, 48px);">
+  <div data-dc-tpl="90" style="max-width: 1360px; margin: 0px auto;">
+    <span data-dc-tpl="91" style="font: 600 0.875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgba(9, 11, 14, 0.5);">LOWER THE RISK</span>
+    <h2 data-dc-tpl="92" style="margin: 14px 0px 0px; max-width: 760px; font: 900 clamp(1.65rem, 4vw, 3.4rem) / 1.2 &quot;Noto Sans TC&quot;, sans-serif; text-wrap: balance;">Three mechanisms to lower rollout risk</h2>
+    <div data-dc-tpl="93" style="margin-top: clamp(28px, 3.6vw, 44px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(14px, 1.8vw, 20px);">
+      
+        <div data-dc-tpl="95" data-mv="" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; padding: clamp(24px, 2.6vw, 30px); display: flex; flex-direction: column; gap: 12px; background: rgba(9, 11, 14, 0.02); box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="96" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(166, 58, 8);"><span class="sc-interp">01</span></span>
+          <h3 data-dc-tpl="97" style="margin: 0px; font: 900 clamp(1.25rem, 1.7vw, 1.4375rem) / 1.4 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">See a scenario demo first</span></h3>
+          <p data-dc-tpl="98" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Run it on your own workflow — confirm the flow, data and usage before deciding to roll out.</span></p>
+        </div>
+      
+        <div data-dc-tpl="95" data-mv="" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; padding: clamp(24px, 2.6vw, 30px); display: flex; flex-direction: column; gap: 12px; background: rgba(9, 11, 14, 0.02); box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="96" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(166, 58, 8);"><span class="sc-interp">02</span></span>
+          <h3 data-dc-tpl="97" style="margin: 0px; font: 900 clamp(1.25rem, 1.7vw, 1.4375rem) / 1.4 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Phase 1 is three months</span></h3>
+          <p data-dc-tpl="98" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">Phase 1 runs three months; after that, adjust or stop month by month based on real usage.</span></p>
+        </div>
+      
+        <div data-dc-tpl="95" data-mv="" style="border: 1px solid rgba(9, 11, 14, 0.14); border-radius: 6px; padding: clamp(24px, 2.6vw, 30px); display: flex; flex-direction: column; gap: 12px; background: rgba(9, 11, 14, 0.02); box-sizing: border-box; min-width: 0px;">
+          <span data-dc-tpl="96" style="font: 700 0.8125rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgb(166, 58, 8);"><span class="sc-interp">03</span></span>
+          <h3 data-dc-tpl="97" style="margin: 0px; font: 900 clamp(1.25rem, 1.7vw, 1.4375rem) / 1.4 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Tuning after launch</span></h3>
+          <p data-dc-tpl="98" style="margin: 0px; font: 400 clamp(0.9375rem, 1.15vw, 1.03125rem) / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(9, 11, 14, 0.7); text-wrap: pretty;"><span class="sc-interp">After launch we tune settings, scripts and flow from real feedback. Refund and termination terms follow the contract, explained line by line before signing.</span></p>
+        </div>
+      
+    </div>
+  </div></section><section data-dc-tpl="99" data-screen-label="CTA" style="background: rgb(9, 11, 14); color: rgb(242, 239, 232); padding: clamp(72px, 9vw, 110px) clamp(20px, 5vw, 48px);">
+  <div data-dc-tpl="100" style="max-width: 1360px; margin: 0px auto; display: flex; flex-wrap: wrap; gap: clamp(24px, 2.6vw, 36px); align-items: center; justify-content: space-between;">
+    <div data-dc-tpl="101" style="min-width: 0px;">
+      <h2 data-dc-tpl="102" style="margin: 0px; max-width: 640px; font: 900 clamp(1.6rem, 3.8vw, 3.2rem) / 1.22 &quot;Noto Sans TC&quot;, sans-serif; text-wrap: balance;">Start with the flow that hurts most</h2>
+    </div>
+    <div data-dc-tpl="103" style="display: flex; flex-wrap: wrap; gap: 14px;">
+      <a data-dc-tpl="104" href="/en/demo" class="scp2" style="display: inline-flex; align-items: center; gap: 10px; background: rgb(255, 107, 44); color: rgb(9, 11, 14); padding: 16px 28px; border-radius: 2px; font: 700 1rem &quot;Noto Sans TC&quot;, sans-serif; text-decoration: none; min-height: 44px; box-sizing: border-box;">Build your Phase-1 draft →</a>
+      <a data-dc-tpl="105" href="/en/cases" class="scp1" style="display: inline-flex; align-items: center; border: 1px solid rgba(242, 239, 232, 0.32); color: rgb(242, 239, 232); padding: 15px 24px; border-radius: 2px; font: 500 0.96875rem &quot;Noto Sans TC&quot;, sans-serif; text-decoration: none; min-height: 44px; box-sizing: border-box;">See real cases</a>
+    </div>
+  </div></section><div class="sc-host" data-sc-name="Footer" data-dc-tpl="106"><footer data-dc-tpl="0" style="background: rgb(9, 11, 14); color: rgb(242, 239, 232);">
+  <div data-dc-tpl="1" style="max-width: 1400px; margin: 0px auto; padding: clamp(56px, 7vw, 96px) clamp(20px, 5vw, 48px) clamp(24px, 3vw, 32px); display: flex; flex-direction: column; gap: clamp(36px, 5vw, 56px);">
+    <div data-dc-tpl="2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: clamp(28px, 3.5vw, 40px); align-items: start;">
+      <div data-dc-tpl="3" style="display: flex; flex-direction: column; gap: 16px; max-width: 340px;">
+        <div data-dc-tpl="4" style="display: flex; align-items: center; gap: 10px;">
+          <img data-dc-tpl="5" src="/assets/logo.png" alt="PeakQi" width="36" height="36" style="display: block;">
+          <span data-dc-tpl="6" style="display: flex; flex-direction: column; gap: 2px; line-height: 1;">
+            <span data-dc-tpl="7" style="font: 800 1.0625rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.01em; color: rgb(242, 239, 232);">PeakQi</span>
+            <span data-dc-tpl="8" style="font: 600 0.59375rem &quot;Noto Sans TC&quot;, sans-serif; letter-spacing: 0.24em; color: rgba(242, 239, 232, 0.55);"><span class="sc-interp">PEAKQI INTERNATIONAL</span></span>
+          </span>
+        </div>
+        <p data-dc-tpl="9" style="margin: 0px; font: 400 0.875rem / 1.8 &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.62);"><span class="sc-interp">A rollout team that plugs AI into how your business actually runs. We map the flow, prove one high-value scenario, then wire in your tools, data and people — with permissions and human review intact.</span></p>
+        <span data-dc-tpl="10" style="font: 600 0.6875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.3em; color: rgba(242, 239, 232, 0.35);">FROM CHAOS TO CONTROL</span>
+      </div>
+      <nav data-dc-tpl="11" style="display: flex; flex-direction: column; gap: 12px;">
+        <span data-dc-tpl="12" style="font: 600 0.6875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.28em; color: rgba(242, 239, 232, 0.4);">SITEMAP</span>
+        
+          <a data-dc-tpl="14" href="/en" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Home</span></a>
+        
+          <a data-dc-tpl="14" href="/en/solutions" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Solutions</span></a>
+        
+          <a data-dc-tpl="14" href="/en/method" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">How we deliver</span></a>
+        
+          <a data-dc-tpl="14" href="/en/cases" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Cases &amp; work</span></a>
+        
+          <a data-dc-tpl="14" href="/en/studio" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Studio &amp; rates</span></a>
+        
+          <a data-dc-tpl="14" href="/en/peakops" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Peak Ops</span></a>
+        
+          <a data-dc-tpl="14" href="/en/pricing" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Pricing</span></a>
+        
+          <a data-dc-tpl="14" href="/en/about" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">About PeakQi</span></a>
+        
+          <a data-dc-tpl="14" href="/en/blog" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Insights</span></a>
+        
+          <a data-dc-tpl="14" href="/en/demo" class="scp0" style="color: rgba(242, 239, 232, 0.78); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif; min-height: 44px; display: inline-flex; align-items: center;"><span class="sc-interp">Build your Phase-1 draft</span></a>
+        
+      </nav>
+      <div data-dc-tpl="15" style="display: flex; flex-direction: column; gap: 12px;">
+        <span data-dc-tpl="16" style="font: 600 0.6875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.28em; color: rgba(242, 239, 232, 0.4);">SERVICES</span>
+        
+          <span data-dc-tpl="18" style="color: rgba(242, 239, 232, 0.62); font: 400 0.875rem / 1.7 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">AI intake · LINE AI support</span></span>
+        
+          <span data-dc-tpl="18" style="color: rgba(242, 239, 232, 0.62); font: 400 0.875rem / 1.7 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">CRM · customer tracking</span></span>
+        
+          <span data-dc-tpl="18" style="color: rgba(242, 239, 232, 0.62); font: 400 0.875rem / 1.7 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Marketing content · quotes · proposals</span></span>
+        
+          <span data-dc-tpl="18" style="color: rgba(242, 239, 232, 0.62); font: 400 0.875rem / 1.7 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Projects · analytics · AI monthly report</span></span>
+        
+          <span data-dc-tpl="18" style="color: rgba(242, 239, 232, 0.62); font: 400 0.875rem / 1.7 &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Custom systems · brand sites</span></span>
+        
+      </div>
+      <div data-dc-tpl="19" style="display: flex; flex-direction: column; gap: 12px;">
+        <span data-dc-tpl="20" style="font: 600 0.6875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.28em; color: rgba(242, 239, 232, 0.4);">CONTACT</span>
+        <a data-dc-tpl="21" href="mailto:jacky@peakqi.com" class="scp0" style="min-height: 44px; display: inline-flex; align-items: center; color: rgb(242, 239, 232); text-decoration: none; font: 500 0.9375rem &quot;Space Grotesk&quot;, sans-serif;">jacky@peakqi.com</a>
+        <a data-dc-tpl="22" href="tel:0266093699" class="scp0" style="min-height: 44px; display: inline-flex; align-items: center; color: rgb(242, 239, 232); text-decoration: none; font: 500 0.9375rem &quot;Space Grotesk&quot;, sans-serif;">(02) 6609-3699</a>
+        <a data-dc-tpl="23" href="https://lin.ee/saa67pr" target="_blank" rel="noopener" class="scp6" style="min-height: 44px; display: inline-flex; align-items: center; gap: 8px; color: rgb(242, 239, 232); text-decoration: none; font: 500 0.9375rem &quot;Noto Sans TC&quot;, sans-serif;"><span data-dc-tpl="24" style="width: 8px; height: 8px; border-radius: 50%; background: rgb(6, 199, 85);"></span><span class="sc-interp">LINE official account</span></a>
+        <a data-dc-tpl="25" href="https://peakqi.com" target="_blank" rel="noopener" class="scp0" style="min-height: 44px; display: inline-flex; align-items: center; color: rgb(242, 239, 232); text-decoration: none; font: 500 0.9375rem &quot;Space Grotesk&quot;, sans-serif;">peakqi.com</a>
+        <a data-dc-tpl="26" href="/en/demo" aria-label="Build your Phase-1 draft" class="scp7" style="margin-top: 8px; min-height: 44px; display: inline-flex; align-items: center; gap: 8px; color: rgb(255, 107, 44); text-decoration: none; font: 700 0.875rem &quot;Noto Sans TC&quot;, sans-serif;"><span class="sc-interp">Build your Phase-1 draft</span> →</a>
+      </div>
+    </div>
+    <div data-dc-tpl="27" style="border-top: 1px solid rgba(242, 239, 232, 0.14); padding-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center;">
+      <span data-dc-tpl="28" style="font: 400 0.78125rem &quot;Noto Sans TC&quot;, sans-serif; color: rgba(242, 239, 232, 0.45);">© 2026 <span class="sc-interp">PeakQi International Ltd.</span> PEAKQI Co., Ltd.<a data-dc-tpl="29" href="/en/privacy" class="scp0" style="margin-left: 14px; color: rgba(242, 239, 232, 0.55); text-decoration: underline; text-underline-offset: 3px;"><span class="sc-interp">Privacy policy</span></a></span>
+      <span data-dc-tpl="30" style="font: 500 0.6875rem &quot;Space Grotesk&quot;, sans-serif; letter-spacing: 0.24em; color: rgba(242, 239, 232, 0.35);">AI OPERATING SYSTEM FOR TAIWAN SMB</span>
+    </div>
+  </div></footer></div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { d: null };
+  componentDidMount() {
+    import('/content.js').then(m => this.setState({ d: m }));
+    import('/seo.js').then(m => m.applySEO('method')).catch(() => {});
+    // 章節導覽 rail 的 label 是頁面層資料:EN 頁在這裡覆寫(共用 motion 設定檔不動)
+    Promise.all([import('/motion-kit.js'), import('/motion/method.motion.js')])
+      .then(([kit, cfg]) => {
+        if (!this._dead && !this._motion) this._motion = kit.initPageMotion({ ...cfg.default, chapters: [
+          { id: 'm-hero', label: 'Intro' },
+          { id: 'm-steps', label: 'Six stages' },
+          { id: 'm-timeline', label: 'Timeline' },
+          { id: 'm-risk', label: 'Lower risk' }
+        ] });
+      })
+      .catch(() => {});
+    import('/hero-kit.js').then(m => { if (!this._dead && !this._hero) this._hero = m.mountInnerPageHero('method'); }).catch(() => {});
+  }
+  componentWillUnmount() {
+    this._dead = true;
+    if (this._hero) this._hero.destroy();
+    if (this._motion) this._motion.destroy();
+  }
+  renderVals() {
+    const d = this.state.d;
+    // 六階段與 About 頁「如何合作」同一套定義(角度是責任與交付物,不是功能);EN 文案直接寫死
+    const steps = [
+      { n: 'STAGE 01', t: 'Understand today', d: 'Learn where customers come from, how the team works, and where things truly stall.', out: 'Current flow and problem list' },
+      { n: 'STAGE 02', t: 'Define the outcome', d: 'Confirm the Phase-1 metric, the users and the rollout boundary.', out: 'Rollout goal and scope' },
+      { n: 'STAGE 03', t: 'Organize the data', d: 'Inventory knowledge, fields, rules, permissions and existing tools.', out: 'Data and integration needs' },
+      { n: 'STAGE 04', t: 'Build the pilot', d: 'Ship a working flow or demo first; real users help confirm it.', out: 'A testable first flow' },
+      { n: 'STAGE 05', t: 'Launch and hand over', d: 'Finish testing, permissions, exception handling and the user guide.', out: 'Live release and operating docs' },
+      { n: 'STAGE 06', t: 'Keep improving', d: 'Tune the system from real usage, errors and flow data.', out: 'Tuning log and next-phase advice' }
+    ];
+    return {
+      steps,
+      tl: d?.timeline ?? [],
+      timelineNote: d?.timelineNote ?? '',
+      risks: d?.risk ?? []
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1249,7 +1249,7 @@ class Component extends DCLogic {
     const T = this._t || ((z, e) => (this._lang === 'en' && e != null ? e : z));
     // EN 頁:站內連結自動加 /en 前綴(外部連結與錨點不動)
     const EP = (h) => (this._lang === 'en' && typeof h === 'string' && h.charAt(0) === '/' && h.indexOf('/en/') !== 0)
-      ? (h === '/' ? '/en/' : '/en' + h) : h;
+      ? (h === '/' ? '/en' : '/en' + h) : h;
     const base = {
       font: "500 .875rem 'Noto Sans TC',sans-serif", letterSpacing: '.04em', textDecoration: 'none',
       padding: '4px 2px', transition: 'color .15s'
@@ -1401,7 +1401,7 @@ class Component extends DCLogic {
     const headEn = !!document.head.querySelector('link[rel="alternate"][hreflang="en"]');
     const p0 = location.pathname.replace(/\.dc\.html$/i, '').replace(/\/home$/i, '/') || '/';
     const syncLang = (this._lang === 'en' || !isArticle || headEn) ? {
-      href: this._lang === 'en' ? (p0.replace(/^\/en/i, '') || '/') : (p0 === '/' ? '/en/' : '/en' + p0),
+      href: this._lang === 'en' ? (p0.replace(/^\/en/i, '') || '/') : (p0 === '/' ? '/en' : '/en' + p0),
       label: this._lang === 'en' ? '中文' : 'EN'
     } : null;
     // i18n.js 回來之前用同步答案,回來之後以它為準(state.i18n 才分得出「還沒載入」與「載入後說沒有」)

@@ -156,9 +156,20 @@
     runtime.setRootName(rootName);
     runtime.adoptParsed(rootName, parsed);
     if (!window.__resources) {
-      fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+      // PQ PATCH(prerender):預渲染頁的 <x-dc> 裝的是建置好的靜態內容(給不跑 JS 的
+      // 爬蟲讀),真正的模板由 data-tpl 指向 /tpl/ 下的原始檔;沒有 data-tpl 的頁面
+      // 維持原行為(重抓自身網址)。詳見 tools/prerender.mjs。
+      const dcForTpl = doc.querySelector("x-dc");
+      const tplAttr = dcForTpl && dcForTpl.getAttribute("data-tpl") || "";
+      const applyTpl = (t) => {
         const raw = t ? parseDcText(t) : null;
         if (raw?.template) runtime.updateHtml(rootName, raw.template);
+      };
+      fetch(tplAttr || location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+        // 預渲染頁:靜態內容已在畫面上,模板晚 400ms 套用,讓資料層 import 先完成,
+        // 換上模板時直接是完整渲染(不會閃一下佔位骨架)。
+        if (tplAttr) setTimeout(() => applyTpl(t), 400);
+        else applyTpl(t);
       }).catch(() => {
       });
     }

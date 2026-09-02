@@ -61,7 +61,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const T = this._t || ((z) => z);
-    const EP = (h) => (this._lang === 'en' && h.charAt(0) === '/' ? (h === '/' ? '/en/' : '/en' + h) : h);
+    const EP = (h) => (this._lang === 'en' && h.charAt(0) === '/' ? (h === '/' ? '/en' : '/en' + h) : h);
     return {
       brandSub: T('奇鋒國際', 'PEAKQI INTERNATIONAL'),
       blurb: T('協助企業把 AI 接進真實營運流程的導入團隊。先盤點流程、選一個高價值場景驗證,再串接既有工具、資料與人員,並保留權限與人工審核。', 'A rollout team that plugs AI into how your business actually runs. We map the flow, prove one high-value scenario, then wire in your tools, data and people — with permissions and human review intact.'),

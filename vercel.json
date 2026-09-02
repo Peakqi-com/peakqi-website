@@ -3,6 +3,88 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "wedding"
+        }
+      ],
+      "destination": "/cases/wedding-industry-ai-suite",
+      "permanent": true
+    },
+    {
+      "source": "/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "interior"
+        }
+      ],
+      "destination": "/cases/interior-design-ai-platform",
+      "permanent": true
+    },
+    {
+      "source": "/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "realestate"
+        }
+      ],
+      "destination": "/cases/real-estate-line-ai-assistant",
+      "permanent": true
+    },
+    {
+      "source": "/en/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "wedding"
+        }
+      ],
+      "destination": "/en/cases/wedding-industry-ai-suite",
+      "permanent": true
+    },
+    {
+      "source": "/en/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "interior"
+        }
+      ],
+      "destination": "/en/cases/interior-design-ai-platform",
+      "permanent": true
+    },
+    {
+      "source": "/en/case",
+      "has": [
+        {
+          "type": "query",
+          "key": "slug",
+          "value": "realestate"
+        }
+      ],
+      "destination": "/en/cases/real-estate-line-ai-assistant",
+      "permanent": true
+    },
+    {
+      "source": "/case",
+      "destination": "/cases",
+      "permanent": true
+    },
+    {
+      "source": "/en/case",
+      "destination": "/en/cases",
+      "permanent": true
+    },
+    {
       "source": "/services",
       "destination": "/solutions",
       "permanent": true
@@ -49,7 +131,7 @@
     },
     {
       "source": "/Case.dc.html",
-      "destination": "/case",
+      "destination": "/cases",
       "permanent": true
     },
     {
@@ -99,7 +181,7 @@
     },
     {
       "source": "/en/Case.dc.html",
-      "destination": "/en/case",
+      "destination": "/en/cases",
       "permanent": true
     },
     {
@@ -221,53 +303,81 @@
   "headers": [
     {
       "source": "/feed.xml",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     },
     {
       "source": "/en/feed.xml",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/tpl/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/built/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
       "source": "/",
-      "destination": "/Home.dc.html"
+      "destination": "/built/Home.html"
     },
     {
       "source": "/solutions",
-      "destination": "/Solutions.dc.html"
+      "destination": "/built/Solutions.html"
     },
     {
       "source": "/method",
-      "destination": "/Method.dc.html"
+      "destination": "/built/Method.html"
     },
     {
       "source": "/cases",
-      "destination": "/Cases.dc.html"
+      "destination": "/built/Cases.html"
     },
     {
-      "source": "/case",
-      "destination": "/Case.dc.html"
+      "source": "/cases/:slug",
+      "destination": "/cases/:slug.html"
     },
     {
       "source": "/pricing",
-      "destination": "/Pricing.dc.html"
+      "destination": "/built/Pricing.html"
     },
     {
       "source": "/about",
-      "destination": "/About.dc.html"
+      "destination": "/built/About.html"
     },
     {
       "source": "/demo",
-      "destination": "/Demo.dc.html"
+      "destination": "/built/Demo.html"
     },
     {
       "source": "/peakops",
-      "destination": "/PeakOps.dc.html"
+      "destination": "/built/PeakOps.html"
     },
     {
       "source": "/privacy",
-      "destination": "/Privacy.dc.html"
+      "destination": "/built/Privacy.html"
     },
     {
       "source": "/favicon.ico",
@@ -275,75 +385,75 @@
     },
     {
       "source": "/en",
-      "destination": "/en/Home.dc.html"
+      "destination": "/built/en/Home.html"
     },
     {
       "source": "/en/solutions",
-      "destination": "/en/Solutions.dc.html"
+      "destination": "/built/en/Solutions.html"
     },
     {
       "source": "/en/method",
-      "destination": "/en/Method.dc.html"
+      "destination": "/built/en/Method.html"
     },
     {
       "source": "/en/cases",
-      "destination": "/en/Cases.dc.html"
+      "destination": "/built/en/Cases.html"
     },
     {
-      "source": "/en/case",
-      "destination": "/en/Case.dc.html"
+      "source": "/en/cases/:slug",
+      "destination": "/en/cases/:slug.html"
     },
     {
       "source": "/en/pricing",
-      "destination": "/en/Pricing.dc.html"
+      "destination": "/built/en/Pricing.html"
     },
     {
       "source": "/en/about",
-      "destination": "/en/About.dc.html"
+      "destination": "/built/en/About.html"
     },
     {
       "source": "/en/demo",
-      "destination": "/en/Demo.dc.html"
+      "destination": "/built/en/Demo.html"
     },
     {
       "source": "/en/peakops",
-      "destination": "/en/PeakOps.dc.html"
+      "destination": "/built/en/PeakOps.html"
     },
     {
       "source": "/en/privacy",
-      "destination": "/en/Privacy.dc.html"
+      "destination": "/built/en/Privacy.html"
     },
     {
       "source": "/products",
-      "destination": "/Products.dc.html"
+      "destination": "/built/Products.html"
     },
     {
       "source": "/en/products",
-      "destination": "/en/Products.dc.html"
+      "destination": "/built/en/Products.html"
     },
     {
       "source": "/bubble",
-      "destination": "/Bubble.dc.html"
+      "destination": "/built/Bubble.html"
     },
     {
       "source": "/en/bubble",
-      "destination": "/en/Bubble.dc.html"
+      "destination": "/built/en/Bubble.html"
     },
     {
       "source": "/ai-wedding-pro",
-      "destination": "/AIWeddingPro.dc.html"
+      "destination": "/built/AIWeddingPro.html"
     },
     {
       "source": "/en/ai-wedding-pro",
-      "destination": "/en/AIWeddingPro.dc.html"
+      "destination": "/built/en/AIWeddingPro.html"
     },
     {
       "source": "/ai-interior-pro",
-      "destination": "/AIInteriorPro.dc.html"
+      "destination": "/built/AIInteriorPro.html"
     },
     {
       "source": "/en/ai-interior-pro",
-      "destination": "/en/AIInteriorPro.dc.html"
+      "destination": "/built/en/AIInteriorPro.html"
     },
     {
       "source": "/en/404",
@@ -359,19 +469,19 @@
     },
     {
       "source": "/studio",
-      "destination": "/Studio.dc.html"
+      "destination": "/built/Studio.html"
     },
     {
       "source": "/en/studio",
-      "destination": "/en/Studio.dc.html"
+      "destination": "/built/en/Studio.html"
     },
     {
       "source": "/blog",
-      "destination": "/Blog.dc.html"
+      "destination": "/built/Blog.html"
     },
     {
       "source": "/en/blog",
-      "destination": "/en/Blog.dc.html"
+      "destination": "/built/en/Blog.html"
     },
     {
       "source": "/blog/:slug",
