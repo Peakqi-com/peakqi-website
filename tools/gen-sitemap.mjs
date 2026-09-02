@@ -13,6 +13,14 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // 只在 git 查不到時當保底(未追蹤的檔、或在 repo 外執行)
 const FALLBACK_LASTMOD = '2026-08-06';
 
+// 案例永久頁(tools/gen-cases.mjs 產出;中英成對,lastmod 從產出檔的 git 紀錄取)
+const CASE_PAGES = [
+  '/cases/wedding-industry-ai-suite',
+  '/cases/interior-design-ai-platform',
+  '/cases/real-estate-line-ai-assistant',
+  '/cases/beauty-ai-experience'
+];
+
 // [中文 clean path, changefreq, 中文 priority, 頁面原始檔] ── 英文版一律 priority - 0.1
 // 第四欄用來查 lastmod,英文版取 en/<同檔名>。
 const STATIC_PAGES = [
@@ -55,7 +63,11 @@ const DIRTY = new Set(
 );
 function lastmodOf(file) {
   if (DIRTY.has(file)) return TODAY;
-  return git(['log', '-1', '--format=%cs', '--', file]) || FALLBACK_LASTMOD;
+  const fromGit = git(['log', '-1', '--format=%cs', '--', file]);
+  if (fromGit) return fromGit;
+  // 剛產生、還沒進 git 的檔(porcelain 對未追蹤目錄只列目錄名,查不到單檔)→ 算今天
+  try { if (fs.statSync(path.join(ROOT, file)).isFile()) return TODAY; } catch {}
+  return FALLBACK_LASTMOD;
 }
 
 const X = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
@@ -98,6 +110,14 @@ export function writeSitemapAndFeed(posts) {
     const alt = { zh: SITE + p, en: SITE + enPath(p) };
     entries.push(urlEntry({ loc: SITE + p, lastmod: lastmodOf(file), changefreq: freq, priority: pri, alt }));
     entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: lastmodOf('en/' + file), changefreq: freq, priority: Math.max(0.1, pri - 0.1), alt }));
+  }
+
+  // 1b) 案例永久頁(中文 + 英文,成對輸出 hreflang)
+  for (const p of CASE_PAGES) {
+    const file = p.slice(1) + '.html'; // cases/<slug>.html
+    const alt = { zh: SITE + p, en: SITE + enPath(p) };
+    entries.push(urlEntry({ loc: SITE + p, lastmod: lastmodOf(file), changefreq: 'monthly', priority: 0.7, alt }));
+    entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: lastmodOf('en/' + file), changefreq: 'monthly', priority: 0.6, alt }));
   }
 
   // 2) 觀點列表頁 ── 有文章才輸出,空欄目進 sitemap 只是給 Google 一個空殼
