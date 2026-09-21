@@ -2,8 +2,39 @@
 #
 # 判斷標準:站上沒有任何頁面引用它,而且它不是給訪客看的。
 # 改這個檔之後務必實測一次線上是否真的 404 —— 漏掉就是把內部文件公開在正式站上。
+#
+# ⚠ 不要把 tpl/ 與 built/ 加進來:support.js 執行期會 fetch /tpl/,
+#   vercel.json 的 rewrites 直接指向 /built/,兩者都是線上必要檔案。
 
-# 開發過程的工作檔:PDF 逐頁截圖、稽核 JSON、Sales Kit 文字稿、
-# 以及只用來預覽 saleskit.pdf 的暫存頁 pdfview.html。
-# 全目錄 17 個檔案經逐一確認,無任何頁面或建置工具引用。
+# ── 開發過程的工作檔 ──────────────────────────────
+# PDF 逐頁截圖、稽核 JSON、Sales Kit 文字稿,以及只用來預覽 saleskit.pdf
+# 的暫存頁 pdfview.html。全目錄 17 個檔案確認無任何頁面或建置工具引用。
 data/
+
+# 稽核與改版計畫文件。phase1-inventory.md 有 174KB,是內部工程盤點報告;
+# DO-NOT-TOUCH.md 裡還留著開發機的本機路徑。都不該對外。
+.peakops-audit/
+.gstack/
+.thumbnail
+
+# ── 內部文件 ────────────────────────────────────
+# GEO 外部權威計畫(客戶共同發布、公會、媒體清單)與表單收件設定說明。
+# robots.txt 擋不住直接存取,要從部署層拿掉。
+GEO_AUTHORITY_PLAN.md
+FORM-SETUP.md
+README.md
+**/README.md
+
+# ── 文章原稿 ────────────────────────────────────
+# content/blog/*.md 只有 tools/build-blog.mjs 等建置腳本在本機讀,
+# 執行期沒有任何 fetch;線上要的是產物 posts.js 與預渲染好的 /blog 頁。
+content/
+
+# ── 內部 PDF ────────────────────────────────────
+# 品牌策略規劃書與整體規劃藍圖,Steampunk 故事頁沒有任何連結指向它們。
+Steampunk/docs/
+Steampunk/uploads/
+
+# 與 uploads/saleskit.pdf 位元完全相同的重複檔,檔名卻帶著特定對象。
+# saleskit.pdf 本身保留 —— 檔名像是會被直接貼給客戶的連結,拿掉會斷。
+uploads/奇鋒國際 PeakQi - AI 方案 Sales Kit  For 查爾斯 (1)_compressed.pdf
