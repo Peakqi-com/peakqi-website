@@ -11,7 +11,7 @@
 const MAX = { name: 80, company: 120, industry: 40, phone: 40, email: 120, line: 80,
   scenes: 400, tools: 300, mods: 300, human: 300, need: 3000, time: 40, source: 60 };
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   if (req.method !== 'POST') { res.status(405).json({ ok: false, error: 'method' }); return; }
   const env = process.env;
   const sinks = {
