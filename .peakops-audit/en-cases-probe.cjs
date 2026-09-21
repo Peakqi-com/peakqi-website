@@ -1,6 +1,6 @@
 // en-cases-probe.js — case-media.js t(zh,en) 化驗收探針
 // 檢查:①zh/en 兩投影結構一致 ②en 投影可見欄位零 CJK ③名稱英譯與 content.js 既有 t() 英譯逐字一致
-// 用法:node .peakops-audit/en-cases-probe.js(在 repo 根目錄)
+// 用法:node .peakops-audit/en-cases-probe.cjs(在 repo 根目錄)
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
