@@ -1789,3 +1789,11 @@
     throw err;
   });
 })();
+
+/* 量測接線 ── 與上面的 DC runtime 無關,獨立成一段。
+   support.js 是全站每頁唯一都會載入的腳本,所以量測掛在這裡最省事:
+   不必改 20 份 *.dc.html,也就不必重跑 tools/prerender.mjs。
+   ga4.js 匯入即自初始化;沒填量測 ID 時它什麼都不做。失敗一律吞掉,不影響頁面。 */
+(function () {
+  try { import("/ga4.js").catch(function () {}); } catch (e) {}
+})();

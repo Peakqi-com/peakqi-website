@@ -193,6 +193,8 @@ function buildPage(key) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<!-- 量測:案例頁是純靜態 HTML,沒載 support.js,所以自己掛 ga4.js(匯入即自初始化) -->
+<script type="module" src="/ga4.js"></script>
 <style>
 h1,h2{text-wrap:balance}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:${font};-webkit-font-smoothing:antialiased}
