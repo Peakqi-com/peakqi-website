@@ -30,6 +30,26 @@ const L = (zh, enTxt) => (en ? enTxt : zh);
 const SITE = S.SITE;
 const pfx = en ? '/en' : '';
 const TODAY = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+
+// dateModified 要回答的是「這頁的內容上次真的變了是什麼時候」,不是「產生器上次跑過」。
+// 原本 JSON-LD 與頁尾兩處都直接塞 TODAY:只是換個版型、加一個 script 標籤重跑,
+// 也會把 8 頁的日期一起推到今天 —— 對 Google 謊報更新,而 Google 明說
+// lastmod/dateModified 不實就整份忽略,等於把我們真正改版時的重爬訊號也一起賠掉。
+// (同一個毛病 sitemap 的 lastmod 先前已經改成逐頁從 git 取。)
+//
+// 作法:先用 DATE_SLOT 佔位,寫檔前把舊檔的日期填回去跟舊檔逐字比對 ——
+// 內容一字不差就沿用舊日期,檔案因此完全沒有 diff,也不會生出假的 commit;
+// 真的有差異才蓋今天。新頁或舊檔讀不到日期 → 今天。
+// 已知的小誤差:頁尾的 © 年份跨年後會造成差異,於是新年第一次重跑會把日期推到當天。
+const DATE_SLOT = '__PQ_DATE_SLOT__';
+
+function settleDate(outPath, html) {
+  let prev;
+  try { prev = fs.readFileSync(outPath, 'utf8'); } catch { return TODAY; }
+  const m = prev.match(/"dateModified":"(\d{4}-\d{2}-\d{2})"/);
+  if (!m) return TODAY;
+  return html.split(DATE_SLOT).join(m[1]) === prev ? m[1] : TODAY;
+}
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 // ── 每案補充敘事(僅整理自 content.js / case-media.js 既有文案,無新增宣稱)────────
@@ -125,7 +145,7 @@ function buildPage(key) {
     S.orgJsonLd(LANG),
     S.webSiteJsonLd(LANG),
     { ...S.webPageJsonLd(LANG, { url, name: pageTitle, description: desc }),
-      primaryImage: ogImg, datePublished: '2026-08-06', dateModified: TODAY,
+      primaryImage: ogImg, datePublished: '2026-08-06', dateModified: DATE_SLOT,
       author: { '@id': S.ORG_ID } },
     S.breadcrumbJsonLd(crumbs)
     // 成效數據刻意不寫進 JSON-LD:計算期間與導入前基準尚未整理成可驗證欄位
@@ -371,7 +391,7 @@ ${galleryHtml}
 
 <footer style="background:#090B0E;color:rgba(242,239,232,.6);padding:clamp(32px,4vw,48px) clamp(20px,5vw,48px)">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:10px;font:400 .8125rem/1.8 ${font}">
-    <p style="margin:0">${L('內容整理與審核:PeakQi 奇鋒國際團隊|資料來源:實際交付專案與產品畫面|最後更新:', 'Compiled and reviewed by the PeakQi team | Source: delivered projects and real product screens | Last updated: ')}${TODAY}</p>
+    <p style="margin:0">${L('內容整理與審核:PeakQi 奇鋒國際團隊|資料來源:實際交付專案與產品畫面|最後更新:', 'Compiled and reviewed by the PeakQi team | Source: delivered projects and real product screens | Last updated: ')}${DATE_SLOT}</p>
     <p style="margin:0">${esc(en ? S.BRAND_DESC.en : S.BRAND_DESC.zh)}</p>
     <p style="margin:0">© ${new Date().getFullYear()} ${L('奇鋒國際有限公司 PeakQi', 'PeakQi International Ltd.')}・<a href="${pfx}/privacy" style="color:rgba(242,239,232,.6)">${L('隱私權政策', 'Privacy')}</a>・<a href="mailto:jacky@peakqi.com" style="color:rgba(242,239,232,.6)">jacky@peakqi.com</a>・<a href="tel:+886266093699" style="color:rgba(242,239,232,.6)">(02) 6609-3699</a></p>
   </div>
@@ -387,7 +407,8 @@ fs.mkdirSync(outDir, { recursive: true });
 let n = 0;
 for (const key of Object.keys(EXTRA)) {
   const { slug, html } = buildPage(key);
-  fs.writeFileSync(path.join(outDir, slug + '.html'), html, 'utf8');
+  const outPath = path.join(outDir, slug + '.html');
+  fs.writeFileSync(outPath, html.split(DATE_SLOT).join(settleDate(outPath, html)), 'utf8');
   n++;
 }
 console.log(`[gen-cases] ${LANG}: ${n} 頁 → ${en ? 'en/cases/' : 'cases/'}`);

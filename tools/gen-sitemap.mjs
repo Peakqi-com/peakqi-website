@@ -61,6 +61,19 @@ const DIRTY = new Set(
     .map((l) => l.replace(/^\s*\S{1,2}\s+/, '').split(' -> ').pop().trim())
     .filter(Boolean)
 );
+// 案例永久頁不走 git:gen-cases.mjs 已經在頁面裡寫了 dateModified,而它的定義是
+// 「內容上次真的變了是哪天」——git log 取的則是「檔案上次被提交是哪天」,
+// 換個版型重跑就會前進。兩者一旦分岔,sitemap 的 lastmod 會跟頁面 JSON-LD
+// 的 dateModified 互相打架,對 Google 是矛盾訊號。以頁面為單一來源。
+function caseLastmod(file) {
+  try {
+    const m = fs.readFileSync(path.join(ROOT, file), 'utf8')
+      .match(/"dateModified":"(\d{4}-\d{2}-\d{2})"/);
+    if (m) return m[1];
+  } catch {}
+  return lastmodOf(file); // 頁面還沒產生過 → 退回原本的 git 取法
+}
+
 function lastmodOf(file) {
   if (DIRTY.has(file)) return TODAY;
   const fromGit = git(['log', '-1', '--format=%cs', '--', file]);
@@ -116,8 +129,8 @@ export function writeSitemapAndFeed(posts) {
   for (const p of CASE_PAGES) {
     const file = p.slice(1) + '.html'; // cases/<slug>.html
     const alt = { zh: SITE + p, en: SITE + enPath(p) };
-    entries.push(urlEntry({ loc: SITE + p, lastmod: lastmodOf(file), changefreq: 'monthly', priority: 0.7, alt }));
-    entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: lastmodOf('en/' + file), changefreq: 'monthly', priority: 0.6, alt }));
+    entries.push(urlEntry({ loc: SITE + p, lastmod: caseLastmod(file), changefreq: 'monthly', priority: 0.7, alt }));
+    entries.push(urlEntry({ loc: SITE + enPath(p), lastmod: caseLastmod('en/' + file), changefreq: 'monthly', priority: 0.6, alt }));
   }
 
   // 2) 觀點列表頁 ── 有文章才輸出,空欄目進 sitemap 只是給 Google 一個空殼
