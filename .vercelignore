@@ -43,11 +43,3 @@ uploads/奇鋒國際 PeakQi - AI 方案 Sales Kit  For 查爾斯 (1)_compressed.
 # 兩個機器人 SVG 合計 9MB,全站 html/js/json/css/xml 搜尋引用數皆為 0。
 assets/svg/robot_turnaround_8_views_exact.svg
 assets/svg/robot_removed_web_background.svg
-
-# vinext-starter(Cloudflare 的 Next.js 起手式範本)的兩個版本,各 4.1MB。
-# 是獨立專案,不是官網的一部分:裡面有自己的 app/、drizzle/、next.config.ts、
-# package.json。全部 8 處引用都在這兩個目錄內部(自己的 package.json 與字型 CSS),
-# 站上沒有任何頁面連過去。順帶把它們各自夾帶的 peakqi-camera-web.glb 副本
-# 一起排除(官網實際用的是根目錄與 assets/models/ 那兩份)。
-peakqi-vision-architecture/
-peakqi-vision-architecture_V2/
