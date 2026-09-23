@@ -34,6 +34,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 必須抓完整歷史。gen-sitemap.mjs 的 lastmod 是逐頁跑
+          # `git log -1 --format=%cs -- <檔案>` 取的,淺層 clone(預設 fetch-depth: 1)
+          # 會讓每個檔案都查不到日期而退回「今天」—— 等於每跑一次就對 Google
+          # 謊報全站 28 個網址都剛更新過。Google 明說 lastmod 不實就整份忽略。
+          fetch-depth: 0
 
       # 產生器只用 Node 內建模組,不需要 npm install
       # (playwright-core 是 prerender 用的,這條線用不到)
