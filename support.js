@@ -1796,4 +1796,17 @@
    ga4.js 匯入即自初始化;沒填量測 ID 時它什麼都不做。失敗一律吞掉,不影響頁面。 */
 (function () {
   try { import("/ga4.js").catch(function () {}); } catch (e) {}
+
+  /* Vercel Speed Insights ── 量 Core Web Vitals(LCP/CLS/INP/TTFB)。
+     這個功能在 Vercel 專案上早就開著(/_vercel/speed-insights/script.js 回 200),
+     但站上從來沒有頁面載入它,所以一筆資料都沒有。GA4 不量這些,兩者不重疊。
+     腳本由 Vercel 在邊緣直接供應,不需安裝套件;非 Vercel 環境(本機預覽)會 404,
+     defer + 失敗即忽略,不影響頁面。 */
+  try {
+    var si = document.createElement("script");
+    si.defer = true;
+    si.src = "/_vercel/speed-insights/script.js";
+    si.onerror = function () {};
+    document.head.appendChild(si);
+  } catch (e) {}
 })();

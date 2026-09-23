@@ -215,6 +215,7 @@ function buildPage(key) {
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 <!-- 量測:案例頁是純靜態 HTML,沒載 support.js,所以自己掛 ga4.js(匯入即自初始化) -->
 <script type="module" src="/ga4.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 <style>
 h1,h2{text-wrap:balance}
 body{margin:0;background:#F2EFE8;color:#090B0E;font-family:${font};-webkit-font-smoothing:antialiased}
