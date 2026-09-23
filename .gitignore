@@ -1,1 +1,7 @@
 node_modules/
+
+# 本機開發工具的暫存輸出 ── 不該進版控。
+# .gstack 是瀏覽工具的 session 記錄(含 token 與開發機路徑),
+# 被 commit 過 74 次、在 git 歷史裡累積了 6.9MB 的 browse-network.log 版本。
+.gstack/
+.thumbnail
