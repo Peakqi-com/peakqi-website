@@ -33,6 +33,7 @@ const today = dateFlag || new Date().toISOString().slice(0, 10);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) { console.log('--date 格式需為 YYYY-MM-DD'); process.exit(1); }
 
 const skeleton = (lang) => `---
+slug: ${slug}
 title: ${lang === 'zh' ? title : 'TODO: English title'}
 summary: ${lang === 'zh' ? 'TODO:一句話說完這篇在講什麼(也會當成分享預覽的描述,60 字內)' : 'TODO: one sentence — also used as the share preview description, under 155 characters.'}
 date: ${today}

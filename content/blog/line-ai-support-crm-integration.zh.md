@@ -1,4 +1,5 @@
 ---
+slug: line-ai-support-crm-integration
 title: LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程
 summary: LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。
 date: 2026-09-02
