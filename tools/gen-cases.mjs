@@ -16,6 +16,8 @@ if (!LANG) {
   for (const l of ['zh', 'en']) {
     execFileSync(process.execPath, [fileURLToPath(import.meta.url), l], { stdio: 'inherit' });
   }
+  // 案例頁的 inline script 若有變動,CSP 的 sha256 要跟著重算(理由同 prerender.mjs)
+  execFileSync(process.execPath, [path.join(ROOT, 'tools/gen-csp.mjs')], { stdio: 'inherit' });
   process.exit(0);
 }
 

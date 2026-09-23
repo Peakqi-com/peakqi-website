@@ -1,4 +1,4 @@
-// 本機預覽伺服器 ── 會實際套用 vercel.json 的 redirects / rewrites,
+// 本機預覽伺服器 ── 會實際套用 vercel.json 的 redirects / rewrites / headers,
 // 所以 /blog/<slug> 這種乾淨網址在本機就跟正式站一樣走得通(直接開檔案是驗不出路由問題的)。
 //   node tools/serve.mjs [port]
 // 只在本機開發用,不影響部署(線上仍是純靜態 + Vercel 路由)。
@@ -11,7 +11,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.argv[2] || 8000);
 // --no-rules:純靜態模式(不套 redirects/rewrites)── tools/prerender.mjs 用它直接載模板原始檔
 const NO_RULES = process.argv.includes('--no-rules');
-const cfg = NO_RULES ? { redirects: [], rewrites: [] } : JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+const cfg = NO_RULES ? { redirects: [], rewrites: [], headers: [] } : JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -36,6 +36,18 @@ function toRe(src) {
 const compile = (list) => (list || []).map((r) => ({ ...r, ...toRe(r.source) }));
 const REDIRECTS = compile(cfg.redirects);
 const REWRITES = compile(cfg.rewrites);
+// headers 也要套 ── 少了這段,CSP 這種只存在於標頭的設定在本機根本驗不到,
+// 只能推上正式站才發現擋錯東西,而 CSP 擋錯時畫面不會報錯,只有 console 有違規訊息。
+//
+// 不能共用上面的 compile():那支是為 redirects/rewrites 的 :param 語法寫的,
+// 會把字元類別裡的 ( ) . * 全部轉義 —— headers 的 source 卻是正則式
+// (本站用到 '/(.*)'、'/tpl/(.*)'、'/built/(.*)'),整串會被當成字面值而永遠不命中。
+const HEADERS = (cfg.headers || []).map((r) => ({
+  ...r,
+  re: new RegExp('^' + r.source.split('(.*)')
+    .map((seg) => seg.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+    .join('(.*)') + '$'),
+}));
 
 function apply(rules, pathname, searchParams) {
   for (const r of rules) {
@@ -78,9 +90,16 @@ http.createServer((req, res) => {
   // 目錄穿越保護:解析後必須仍在專案目錄內
   if (!path.resolve(file).startsWith(ROOT)) { res.writeHead(403); return res.end('403'); }
 
+  // vercel.json 的 headers:所有 source 命中的規則都套(Vercel 的行為是累加,不是取第一個)
+  const extra = {};
+  for (const r of HEADERS) {
+    if (!r.re.test(pathname)) continue;
+    for (const h of r.headers || []) extra[h.key] = h.value;
+  }
   res.writeHead(200, {
     'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream',
-    'Cache-Control': 'no-store'
+    'Cache-Control': 'no-store',
+    ...extra
   });
   fs.createReadStream(file).pipe(res);
 }).listen(PORT, () => console.log(`本機預覽:http://localhost:${PORT}/blog  (Ctrl+C 結束)`));

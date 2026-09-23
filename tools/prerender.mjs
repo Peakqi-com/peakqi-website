@@ -167,3 +167,8 @@ try {
   srv.kill();
 }
 console.log('[prerender] 完成 ' + results.length + ' 頁\n  ' + results.join('\n  '));
+
+// built/ 一變,頁面裡的 inline script 就可能跟著變 → CSP 的 sha256 必須重算。
+// 直接串起來而不是只寫在註解裡:忘記重跑的代價是那幾頁的腳本被 CSP 靜默擋掉 ——
+// 畫面不會報錯,只有 console 有違規訊息,非常難發現。
+execFileSync(process.execPath, [path.join(ROOT, 'tools/gen-csp.mjs')], { stdio: 'inherit' });
