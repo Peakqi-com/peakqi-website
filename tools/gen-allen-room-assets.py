@@ -3,7 +3,7 @@
     python tools/gen-allen-room-assets.py
 
 輸入
-  assets/svg/test.svg      美術手工拆好的 40 個圖層(1500×1500)
+  assets/svg/allen-room-layers.svg      美術手工拆好的 40 個圖層(1500×1500)
       每一層的結構是轉檔工具的標準輸出:
           <g clip-path><g mask="#m"><g transform="matrix"><image 彩色/></g></g></g>
       而 #m 裡面是同尺寸的灰階遮罩。彩色 × 遮罩 = 這一層真正的樣子。
@@ -74,7 +74,7 @@ except ImportError:                                    # pragma: no cover
     sys.exit('需要 numpy 與 Pillow:pip install numpy pillow')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SVG = os.path.join(ROOT, 'assets/svg/test.svg')
+SVG = os.path.join(ROOT, 'assets/svg/allen-room-layers.svg')
 # 原稿。拆解難免會掉東西(窗口的天空層沒接到窗框、海報上的 BUILD 整個不見),
 # 所以最後有一道「拿原稿補回來」——來源是美術自己的畫,補不出新東西。
 SRC_REF = os.path.join(ROOT, 'assets/svg/robot_workshop_strict_source_package',
@@ -259,7 +259,7 @@ def _tr(t):
 
 
 def load_layers():
-    """把 test.svg 解成 40 張 RGBA + 它們在 1254 畫布上的位置。"""
+    """把 allen-room-layers.svg 解成 40 張 RGBA + 它們在 1254 畫布上的位置。"""
     root = ET.fromstring(io.open(SVG, encoding='utf-8', errors='replace').read())
     NSM = '{http://www.w3.org/2000/svg}'
 
@@ -288,12 +288,12 @@ def load_layers():
         if ch.tag != NSM + 'defs':
             walk(ch, (1, 0, 0, 1, 0, 0), None)
     if len(body) != N_LAYERS:
-        sys.exit('test.svg 有 %d 層,不是 %d 層 —— 上面的圖層編號表要重對' % (len(body), N_LAYERS))
+        sys.exit('allen-room-layers.svg 有 %d 層,不是 %d 層 —— 上面的圖層編號表要重對' % (len(body), N_LAYERS))
     out = []
     for h, w, ht, T, mid in body:
         col = Image.open(io.BytesIO(base64.b64decode(h.split(',', 1)[1]))).convert('RGB')
         if mid not in masks:
-            sys.exit('有一層沒有遮罩 —— test.svg 的結構和預期不同')
+            sys.exit('有一層沒有遮罩 —— allen-room-layers.svg 的結構和預期不同')
         m = Image.open(io.BytesIO(base64.b64decode(masks[mid].split(',', 1)[1]))).convert('L')
         if m.size != col.size:
             m = m.resize(col.size, Image.LANCZOS)
@@ -668,7 +668,7 @@ def main():
 
     # ---- 產生 JS 的貼圖框表 ----
     lines = ['// 產生檔,不要手改:python tools/gen-allen-room-assets.py',
-             '// 素材來自 assets/svg/test.svg —— 美術手工拆好的 40 個圖層。',
+             '// 素材來自 assets/svg/allen-room-layers.svg —— 美術手工拆好的 40 個圖層。',
              '// 每個元件的貼圖框 [x, y, w, h](1254×1254 座標)。雲的 x 可能是負的:',
              '// 補全出來的部分落在畫布外,雲飄進來才看得到。',
              'export const PART_BOX = {']

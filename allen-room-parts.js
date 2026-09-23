@@ -1,5 +1,5 @@
 // 產生檔,不要手改:python tools/gen-allen-room-assets.py
-// 素材來自 assets/svg/test.svg —— 美術手工拆好的 40 個圖層。
+// 素材來自 assets/svg/allen-room-layers.svg —— 美術手工拆好的 40 個圖層。
 // 每個元件的貼圖框 [x, y, w, h](1254×1254 座標)。雲的 x 可能是負的:
 // 補全出來的部分落在畫布外,雲飄進來才看得到。
 export const PART_BOX = {

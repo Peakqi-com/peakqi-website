@@ -40,6 +40,9 @@ Steampunk/uploads/
 uploads/奇鋒國際 PeakQi - AI 方案 Sales Kit  For 查爾斯 (1)_compressed.pdf
 
 # ── 沒有任何頁面引用的大型資產 ────────────────────
-# 兩個機器人 SVG 合計 9MB,全站 html/js/json/css/xml 搜尋引用數皆為 0。
-assets/svg/robot_turnaround_8_views_exact.svg
-assets/svg/robot_removed_web_background.svg
+# assets/svg/ 整個目錄都是美術原稿,只有 tools/ 的產生器在本機讀它們
+# (gen-allen-art.mjs 讀 robot_action_pose_sheet_exact.svg、
+#  gen-allen-room-assets.py 讀 allen-room-layers.svg 與 robot_workshop_strict_source_package/)。
+# 站上執行期載入的是產物:allen-art.js、allen-room-parts.js 與切好的點陣圖。
+# 全站 html/js/json/css/xml 對 assets/svg 的引用只剩註解行,無任何實際載入。約 14MB。
+assets/svg/
