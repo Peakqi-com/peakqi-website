@@ -1,0 +1,61 @@
+# 文章原稿改動後自動重建並 commit 產物
+#
+# 為什麼需要這支:Vercel 這個專案沒有 buildCommand,它只供應已經 commit 的靜態檔。
+# 所以光把 content/blog/*.md 推上來,網站不會有任何變化 —— 產物(blog/*.dc.html、
+# posts.js、Blog.dc.html、sitemap.xml、feed.xml)必須跟著進版控。
+# 這支就是把原本人工在本機跑的那一步搬到 CI。
+#
+# 迴圈防護:trigger 只看 content/blog/** 與產生器本身,而這支 commit 回去的是
+# 產物(blog/、posts.js、sitemap.xml、feed.xml、vercel.json),路徑不重疊,不會自我觸發。
+
+name: 重建文章
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/blog/**'
+      - 'tools/build-blog.mjs'
+      - 'tools/md.mjs'
+      - 'tools/gen-sitemap.mjs'
+      - 'tools/gen-csp.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# 連續推送時只跑最後一次,避免兩個 job 同時 commit 打架
+concurrency:
+  group: build-blog
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 產生器只用 Node 內建模組,不需要 npm install
+      # (playwright-core 是 prerender 用的,這條線用不到)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 重建文章與索引
+        run: node tools/build-blog.mjs
+
+      - name: 有變動才 commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then
+            echo "產物沒有變化,不需要 commit"
+            exit 0
+          fi
+          git add -A
+          git commit -m "自動重建文章產物
+
+          由 .github/workflows/build-blog.yml 觸發,來源 commit ${GITHUB_SHA::7}。
+          產物(blog/、posts.js、Blog.dc.html、sitemap.xml、feed.xml、vercel.json)
+          必須進版控,線上才看得到 —— 這個專案的 Vercel 沒有 buildCommand。"
+          git push
