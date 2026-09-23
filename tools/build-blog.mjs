@@ -14,6 +14,7 @@
 // 靠 seo.js 注入的話分享出去會是一片空白。
 
 import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseFrontMatter, mdToHtml, readMins, autoSummary, esc } from './md.mjs';
@@ -609,3 +610,8 @@ if (warn.length) {
   warn.forEach((w) => console.log('  ! ' + w));
 }
 console.log('');
+
+// 文章頁也有 inline script → CSP 的 sha256 要跟著重算(同 prerender.mjs / gen-cases.mjs)。
+// 目前所有文章頁共用同一組樣板腳本,所以純粹新增文章不會產生新 hash;
+// 但只要有人改了文章頁的樣板,沒重跑這支就會讓每一篇文章的腳本被 CSP 靜默擋掉。
+execFileSync(process.execPath, [path.join(ROOT, 'tools/gen-csp.mjs')], { stdio: 'inherit' });
