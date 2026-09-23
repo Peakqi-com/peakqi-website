@@ -27,6 +27,28 @@ node tools/serve.mjs        # → http://localhost:8000/blog(會套用 vercel.js
 
 本機跑過也沒關係 —— 產物一樣,Action 會發現沒有變動就不重複 commit。
 
+### ⚠ 新增或刪除文章時,列表頁要另外重跑 prerender
+
+`/blog` 與 `/en/blog` 這兩個**列表頁**供應的不是 `Blog.dc.html`,
+而是 `built/Blog.html` / `built/en/Blog.html`(見 vercel.json 的 rewrites)。
+那兩個檔案由 `tools/prerender.mjs` 產生,**`build-blog.mjs` 不會動到它們**,
+GitHub Action 也跑不了(prerender 需要真實瀏覽器)。
+
+所以文章**數量**有變動時,列表頁不會自己更新:
+
+```bash
+PQ_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  node tools/prerender.mjs
+```
+
+(先 `npm install`,它需要 playwright-core。Windows 不必設 PQ_CHROME,預設值就是 Windows 路徑。)
+
+只改既有文章的**內容**不受影響 —— 文章頁 `/blog/<slug>` 直接供應
+`blog/<slug>.dc.html`,那個 build-blog 會重建,Action 也會自動 commit。
+
+另外 prerender 每次重跑都會讓十幾個不相關的頁面出現 scoped class 換號
+(`scp4` ↔ `scp6`)的雜訊差異,內容其實沒變 —— commit 前只留真正該進去的檔案。
+
 ## front matter 欄位
 
 | 欄位 | 必填 | 說明 |
