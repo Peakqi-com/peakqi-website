@@ -16,7 +16,7 @@
 //   案例永久頁 ── tools/gen-cases.mjs 產生的 <script type="module" src="/ga4.js">
 // 兩邊都靠本檔匯入即自動初始化,重複載入有旗標擋住。
 
-export const GA4_ID = ''; // 例:'G-XXXXXXXXXX'
+export const GA4_ID = 'G-2451WB6CTH'; // 例:'G-XXXXXXXXXX'
 
 let started = false;
 
