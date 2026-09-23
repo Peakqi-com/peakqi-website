@@ -12,14 +12,20 @@ node tools/new-post.mjs line-inquiry-handoff "LINE 詢問接不住的三個斷�
 
 # 2. 編輯 content/blog/line-inquiry-handoff.zh.md,寫完後把 front matter 的 draft: true 刪掉
 
-# 3. 重建(每次都是全站重建,冪等,跑幾次結果都一樣)
-node tools/build-blog.mjs
-
-# 4. 本機看一眼(會實際套用 vercel.json 的路由,和正式站一致)
-node tools/serve.mjs        # → http://localhost:8000/blog
-
-# 5. commit → push → 部署
+# 3. commit 這個 .md 並 push 到 main ── 這樣就好
 ```
+
+推上去之後 `.github/workflows/build-blog.yml` 會自動重建產物並 commit 回來,
+Vercel 接著部署。**不需要在本機跑 `build-blog.mjs`,也不需要自己 commit 產出的 HTML。**
+
+想先在本機看一眼再推的話:
+
+```bash
+node tools/build-blog.mjs   # 全站重建,冪等,跑幾次結果都一樣
+node tools/serve.mjs        # → http://localhost:8000/blog(會套用 vercel.json 的路由與標頭)
+```
+
+本機跑過也沒關係 —— 產物一樣,Action 會發現沒有變動就不重複 commit。
 
 ## front matter 欄位
 
