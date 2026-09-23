@@ -30,6 +30,7 @@ collections:
   - name: blog
     label: 觀點文章
     label_singular: 文章
+    description: 寫完記得把「草稿」關掉,否則不會產出網頁。存檔會直接 commit 進 main,接著由 GitHub Action 重建網站。
     folder: content/blog
     extension: md
     format: frontmatter
@@ -37,27 +38,31 @@ collections:
     # slug 上線後不能改(改了等於換網址,排名歸零)—— 所以用手填而不是從標題自動產生
     slug: '{{fields.slug}}'
     summary: '{{title}}'
+    thumbnail: cover
+    sortable_fields: [date, title]
     i18n: true
+    editor:
+      # 關掉右側預覽欄。Sveltia 的預設預覽只是把表單欄位再列一次,
+      # 跟左邊完全重複,卻吃掉一半螢幕寬 —— 編輯器因此被擠得很窄。
+      # 真的想看成品長怎樣,本機 node tools/serve.mjs 看實際頁面更準。
+      preview: false
     fields:
+      - label: 標題
+        name: title
+        widget: string
+        i18n: true
+        hint: 同時是 <title> 與分享預覽的標題
+      - label: 摘要
+        name: summary
+        widget: text
+        i18n: true
+        hint: 一句話。同時當列表摘要與 og:description,中文 60 字 / 英文 155 字內
       - label: 網址代號 (slug)
         name: slug
         widget: string
         i18n: duplicate
         hint: 只能用小寫英數與連字號,會直接變成 /blog/<slug>。上線後不要再改。
         pattern: ['^[a-z0-9-]+$', '只能用小寫英數與連字號']
-
-      - label: 標題
-        name: title
-        widget: string
-        i18n: true
-        hint: 同時是 <title> 與分享預覽的標題
-
-      - label: 摘要
-        name: summary
-        widget: text
-        i18n: true
-        hint: 一句話。同時當列表摘要與 og:description,中文 60 字 / 英文 155 字內
-
       - label: 發佈日期
         name: date
         widget: datetime
@@ -66,7 +71,6 @@ collections:
         time_format: false
         picker_utc: false
         i18n: duplicate
-
       - label: 標籤
         name: tags
         widget: select
@@ -80,20 +84,29 @@ collections:
           - { label: '客戶經營 (customer-ops)', value: customer-ops }
           - { label: '產業觀察 (industry)', value: industry }
           - { label: '製作筆記 (build-notes)', value: build-notes }
-
+      - label: 草稿
+        name: draft
+        widget: boolean
+        default: true
+        required: false
+        i18n: duplicate
+        hint: 打開就完全不產出網頁。要發佈時關掉它。
+      - label: 內文
+        name: body
+        widget: markdown
+        i18n: true
+        hint: 大標由「標題」提供,內文請從 ## 開始。圖片一律用絕對路徑 /assets/blog/...
       - label: 封面圖
         name: cover
         widget: image
         required: false
         i18n: duplicate
         hint: 留空會自動配一塊莫蘭迪色帶
-
       - label: 封面圖替代文字
         name: coverAlt
         widget: string
         required: false
         i18n: true
-
       - label: 更新日期
         name: updated
         widget: datetime
@@ -103,17 +116,3 @@ collections:
         required: false
         i18n: duplicate
         hint: 只有大幅改寫時才填。會顯示「更新於」並更新 sitemap 的 lastmod
-
-      - label: 草稿
-        name: draft
-        widget: boolean
-        default: true
-        required: false
-        i18n: duplicate
-        hint: 打開就完全不產出網頁。要發佈時關掉它。
-
-      - label: 內文
-        name: body
-        widget: markdown
-        i18n: true
-        hint: 大標由「標題」提供,內文請從 ## 開始。圖片一律用絕對路徑 /assets/blog/...
