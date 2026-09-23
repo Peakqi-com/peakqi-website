@@ -37,7 +37,8 @@ slug: ${slug}
 title: ${lang === 'zh' ? title : 'TODO: English title'}
 summary: ${lang === 'zh' ? 'TODO:一句話說完這篇在講什麼(也會當成分享預覽的描述,60 字內)' : 'TODO: one sentence — also used as the share preview description, under 155 characters.'}
 date: ${today}
-tags: ai-adoption
+tags:
+  - ai-adoption
 cover:
 coverAlt:
 updated:

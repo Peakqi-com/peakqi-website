@@ -3,7 +3,9 @@ slug: how-to-choose-ai-automation-partner
 title: 台灣中小企業 AI 自動化公司怎麼選:六個問題先問清楚
 summary: 選 AI 自動化廠商,重點不是功能清單,而是流程、資料、人工審核與退場條件。這篇整理六個簽約前該問的問題與一張比較表。
 date: 2026-09-02
-tags: ai-adoption, automation
+tags:
+  - ai-adoption
+  - automation
 updated:
 draft: false
 ---

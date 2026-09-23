@@ -3,7 +3,9 @@ slug: ai-automation-cost-and-timeline
 title: 中小企業導入 AI 自動化要多少錢、多久上線?費用結構完整拆解
 summary: 不給一個假裝精確的總價,而是把導入費、月費、使用量費三塊拆開,說明每一塊由什麼決定、時程怎麼估,以及哪些情況會變貴。
 date: 2026-09-02
-tags: ai-adoption, automation
+tags:
+  - ai-adoption
+  - automation
 updated:
 draft: false
 ---

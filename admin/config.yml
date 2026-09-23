@@ -51,7 +51,7 @@ collections:
         name: title
         widget: string
         i18n: true
-        hint: 同時是 <title> 與分享預覽的標題
+        hint: 同時是瀏覽器分頁標題與分享預覽的標題
       - label: 摘要
         name: summary
         widget: text

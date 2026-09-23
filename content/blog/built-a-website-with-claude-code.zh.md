@@ -3,7 +3,9 @@ slug: built-a-website-with-claude-code
 title: 十年沒寫程式,我用 Claude Code 蓋了一個網站
 summary: 我會寫程式,但十年沒動過;我做動畫,但不會製作素材。16 個工作天、414 個提交,一個人從零做出中英雙語 32 頁的公司官網。這是完整的工作記錄——包含卡住的那一天、丟掉的東西,以及一個我沒想到的解法。
 date: 2026-08-08
-tags: build-notes, ai-adoption
+tags:
+  - build-notes
+  - ai-adoption
 cover: /assets/blog/tower.webp
 coverAlt: 品牌屋 3D 塔樓——六個房間對應六門生意,隨頁面捲動一層一層走上去
 updated:

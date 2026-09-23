@@ -3,7 +3,9 @@ slug: built-a-website-with-claude-code
 title: I hadn't written code in ten years. I built a website with Claude Code.
 summary: I can write code, but I hadn't in ten years. I work in animation, but I can't produce assets. 414 commits across 16 working days, one person, a 32-page bilingual company site. This is the working record — including the day I got stuck, what I threw away, and one solution I didn't see coming.
 date: 2026-08-08
-tags: build-notes, ai-adoption
+tags:
+  - build-notes
+  - ai-adoption
 cover: /assets/blog/tower-en.webp
 coverAlt: The Brand House 3D tower — six rooms for six businesses, walked through floor by floor as you scroll
 updated:
