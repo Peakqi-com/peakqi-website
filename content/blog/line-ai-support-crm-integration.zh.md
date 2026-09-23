@@ -5,6 +5,7 @@ summary: LINE 官方帳號接上 AI 只解決一半問題——回完的對話�
 date: 2026-09-02
 tags: automation, customer-ops
 updated:
+draft: false
 ---
 
 **直接答案:**LINE AI 客服串接 CRM 的完整流程是四個環節:AI 在 LINE 官方帳號先接住詢問並辨識需求 → 把對話中的關鍵欄位(需求類型、預算、時段)自動擷取出來 → 在 CRM 建立客戶卡、指派負責人 → 依客戶狀態排跟進提醒。技術上靠 LINE Messaging API 與 CRM 的 API 對接;實務上的成敗關鍵不在串接本身,而在欄位設計與「AI 判斷不了時轉真人」的機制。

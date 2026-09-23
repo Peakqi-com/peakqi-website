@@ -7,6 +7,7 @@ tags: build-notes, ai-adoption
 cover: /assets/blog/tower.webp
 coverAlt: 品牌屋 3D 塔樓——六個房間對應六門生意,隨頁面捲動一層一層走上去
 updated:
+draft: false
 ---
 
 我是 Allen,奇鋒國際的成員。

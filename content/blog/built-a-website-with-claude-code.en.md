@@ -7,6 +7,7 @@ tags: build-notes, ai-adoption
 cover: /assets/blog/tower-en.webp
 coverAlt: The Brand House 3D tower — six rooms for six businesses, walked through floor by floor as you scroll
 updated:
+draft: false
 ---
 
 I'm Allen, part of the team at PEAKQI Co., Ltd. in Taiwan.
