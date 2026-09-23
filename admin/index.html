@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>文章後台｜PeakQi</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+<!--
+  文章後台 ── Sveltia CMS(Git-based,沒有資料庫也沒有伺服器)。
+
+  它做的事:讀寫 GitHub 上的 content/blog/*.md,直接 commit 進 main。
+  推上去之後 .github/workflows/build-blog.yml 會重建產物,Vercel 再部署。
+  所以這個後台不碰網站本身,只碰原稿 —— 站仍然是純靜態的。
+
+  登入方式:Personal Access Token(畫面上的「Sign In with Token」)。
+  到 GitHub → Settings → Developer settings → Personal access tokens
+  產一組對 Peakqi-com/peakqi-website 有 Contents: Read and write 的 token。
+  之所以不用 OAuth:那需要另外部署一台 OAuth proxy;目前只有一個人登入,不值得。
+  日後要給不熟 GitHub 的同事用,在 config.yml 的 backend 加一行 base_url 即可切換。
+
+  CSP:這一頁在 vercel.json 有自己的 headers 規則(全站規則用
+  /((?!admin).*) 把它排除),因為它需要連 api.github.com,而全站的
+  connect-src 沒有、也不該有這個來源。
+-->
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+</body>
+</html>

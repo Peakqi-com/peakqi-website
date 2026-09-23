@@ -11,18 +11,35 @@ export const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => 
 const SAFE = /^(https?:\/\/|\/|#|mailto:|tel:)/i;
 const safeHref = (h) => (SAFE.test(h) ? h : '');
 
+const unquote = (v) =>
+  ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) ? v.slice(1, -1) : v;
+
 export function parseFrontMatter(src) {
   const m = /^﻿?---\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n?/.exec(src);
   if (!m) return { meta: {}, body: src };
   const meta = {};
+  let lastKey = null;
   m[1].split(/\r?\n/).forEach((line) => {
     if (!line.trim() || /^\s*#/.test(line)) return;
+
+    // YAML 區塊清單。手寫的稿子是 `tags: a, b`,但 Git-based CMS(/admin)寫回來的是
+    //   tags:
+    //     - a
+    //     - b
+    // 這種行沒有冒號,原本會被整行跳過 —— 文章默默失去所有標籤,而且不會報錯。
+    // 併回逗號分隔字串,下游的 String(m.tags).split(',') 完全不用改。
+    const item = /^\s*-\s+(.*)$/.exec(line);
+    if (item && lastKey) {
+      const v = unquote(item[1].trim());
+      if (v) meta[lastKey] = meta[lastKey] ? meta[lastKey] + ', ' + v : v;
+      return;
+    }
+
     const i = line.indexOf(':');
     if (i < 0) return;
     const k = line.slice(0, i).trim();
-    let v = line.slice(i + 1).trim();
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-    meta[k] = v;
+    meta[k] = unquote(line.slice(i + 1).trim());
+    lastKey = k;
   });
   return { meta, body: src.slice(m[0].length) };
 }

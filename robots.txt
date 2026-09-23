@@ -8,6 +8,8 @@ Disallow: /content/
 # DC 模板原始檔(含未渲染的 {{ }} 佔位)與預渲染產物:執行期內部使用,不該進索引
 Disallow: /tpl/
 Disallow: /built/
+# 文章後台。頁面本身沒有機密(資料全在 GitHub,要 token 才動得了),但沒有理由進索引
+Disallow: /admin
 
 # ChatGPT 搜尋(引用網站內容、帶來源連結)── 明確允許
 User-agent: OAI-SearchBot

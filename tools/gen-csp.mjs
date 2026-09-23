@@ -92,8 +92,13 @@ const CSP = [
 
 const vjPath = path.join(ROOT, 'vercel.json');
 const vj = JSON.parse(fs.readFileSync(vjPath, 'utf8'));
-const rule = vj.headers.find((h) => h.source === '/(.*)');
-if (!rule) throw new Error("vercel.json 裡找不到 source 為 '/(.*)' 的全站 headers 規則");
+// 全站規則的 source 是 /((?!admin).*) —— 刻意把 /admin 排除在外:
+// 後台需要連 api.github.com,而兩條 headers 規則同時命中時 CSP 會取交集,
+// 全站這條就會把它擋掉。/admin 的 CSP 直接寫在 vercel.json,不由本工具產生
+// (那一頁沒有自己的 inline script,不需要 hash)。
+const GLOBAL_SOURCE = '/((?!admin).*)';
+const rule = vj.headers.find((h) => h.source === GLOBAL_SOURCE);
+if (!rule) throw new Error(`vercel.json 裡找不到 source 為 ${GLOBAL_SOURCE} 的全站 headers 規則`);
 
 const i = rule.headers.findIndex((h) => h.key === 'Content-Security-Policy');
 const entry = { key: 'Content-Security-Policy', value: CSP };

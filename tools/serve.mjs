@@ -42,11 +42,13 @@ const REWRITES = compile(cfg.rewrites);
 // 不能共用上面的 compile():那支是為 redirects/rewrites 的 :param 語法寫的,
 // 會把字元類別裡的 ( ) . * 全部轉義 —— headers 的 source 卻是正則式
 // (本站用到 '/(.*)'、'/tpl/(.*)'、'/built/(.*)'),整串會被當成字面值而永遠不命中。
+// source 含括號就當正則直接用(本站有 '/(.*)'、'/((?!admin).*)'、'/admin/?(.*)'、
+// '/tpl/(.*)');不含括號的是字面路徑(如 '/feed.xml'),逐字轉義。
 const HEADERS = (cfg.headers || []).map((r) => ({
   ...r,
-  re: new RegExp('^' + r.source.split('(.*)')
-    .map((seg) => seg.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
-    .join('(.*)') + '$'),
+  re: new RegExp('^' + (r.source.includes('(')
+    ? r.source
+    : r.source.replace(/[.+?^${}()|[\]\\]/g, '\\$&')) + '$'),
 }));
 
 function apply(rules, pathname, searchParams) {
