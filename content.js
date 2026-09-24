@@ -118,6 +118,26 @@ export const caseStudies = [
     did: t('AI 自動回覆物件資訊、排預約帶看,串接 LINE 官方帳號。', 'AI answers listing questions and books viewings, integrated with the LINE official account.'),
     human: t('物件資訊與帶看時段由 AI 自動回覆與預約;議價、屋況說明與成交交由業務處理。', 'AI replies and books automatically; negotiation, property details and closing stay with the agent.'),
     metrics: [{ v: t('30 秒內', '< 30 sec'), l: t('回覆時間,原本數小時(該案例)', 'reply time, down from hours (this case)') }, { v: t('約 8hr/週', '~8 hrs/wk'), l: t('節省的排程時間', 'scheduling time saved') }, { v: t('↑約 20%', '↑ ~20%'), l: t('名單轉化', 'lead conversion') }]
+  },
+  {
+    slug: 'AI Marketing Pro 行銷內容工作流',
+    industry: t('行銷・內容', 'Marketing & content'), title: t('AI Marketing Pro:從關鍵字到一鍵發布的內容產線', 'AI Marketing Pro: a content line from keywords to one-click publishing'),
+    img: '/assets/cases/aimarketing.webp',
+    alt: t('AI Marketing Pro 畫面:SEO MAP 架構、批次文章生成與即時 SEO 健檢', 'AI Marketing Pro: SEO MAP structure, batch article generation and live SEO checks'),
+    stuck: t('一篇 SEO 文章要先研究關鍵字、定架構、寫稿、配圖、上稿,每篇從零開始;文章之間沒有站點架構,一個月產不了幾篇,排名也沒人追。', 'Every SEO article meant keyword research, outlining, drafting, images and uploading — from scratch each time. Articles had no site structure between them, output was a few a month, and nobody tracked rankings.'),
+    did: t('把資深 SEO 顧問的方法論做成 8 步驟工作流:關鍵字分群、SEO MAP、批次生成、圖文、健檢、一鍵發布到 WordPress、GSC 追蹤。', "A senior SEO consultant's method turned into an 8-step workflow: keyword clustering, SEO MAP, batch generation, images, checks, one-click WordPress publishing, GSC tracking."),
+    human: t('AI 產出架構、草稿與健檢分數;要做哪些關鍵字、稿件是否上線,由行銷人員在編輯器內確認後才發布。', 'AI produces the structure, drafts and check scores; which keywords to pursue and whether a piece goes live is confirmed by the marketer in the editor before publishing.'),
+    metrics: [{ v: t('8 步驟', '8 steps'), l: t('關鍵字研究到發布,一條線走完', 'from keyword research to publishing, in one line') }, { v: t('8 篇', '8 articles'), l: t('一次批次生成(2+5+1)', 'per batch run (2+5+1)') }, { v: '10', l: t('項即時 SEO 健檢規則', 'live SEO check rules') }]
+  },
+  {
+    slug: '掌櫃 AI 餐飲店務總管',
+    industry: t('餐飲業', 'Restaurants'), title: t('掌櫃 AI:餐飲店的 AI 店務總管', 'Zhanggui AI: the AI back-office manager for restaurants'),
+    img: '/assets/cases/zhanggui.webp',
+    alt: t('掌櫃 AI 畫面:一句話交辦,產出貼文、評論回覆與公告草稿', 'Zhanggui AI: one-sentence requests turned into post, review-reply and notice drafts'),
+    stuck: t('貼文、評論回覆、公休公告與宴席報價都要等打烊後才有空處理,每次從零開始寫;忙起來就先擱著,評論隔好幾天沒人回。', 'Posts, review replies, closure notices and banquet quotes waited until after closing and were written from scratch each time. When things got busy they were set aside — reviews went unanswered for days.'),
+    did: t('一位 AI 總管調度 23 位專職助手:一句話交辦,產出可直接用的貼文、評論回覆、公告與報價,放進待審區。', 'One AI manager dispatching 23 specialist assistants: one sentence in, ready-to-use posts, review replies, notices and quotes out — into a review queue.'),
+    human: t('AI 只產草稿,缺價格、日期這類硬事實時先問;每一篇都由店家核可後才對外發布。', 'AI only drafts, and asks first when hard facts like prices or dates are missing; every piece is approved by the restaurant before it goes out.'),
+    metrics: [{ v: '23', l: t('位專職 AI 助手,一位總管調度', 'specialist AI assistants under one manager') }, { v: t('1 句話', '1 sentence'), l: t('交辦即產出,不用記指令', 'to delegate — no commands to learn') }, { v: t('先審後發', 'Review first'), l: t('每篇產出經店家核可才發布', 'every piece approved by the owner before publishing') }]
   }
 ];
 export const caseNote = t('實際成果依企業流程、資料品質與導入範圍而異。', 'Actual results vary with your process, data quality and rollout scope.');
@@ -129,7 +149,9 @@ export const casePermalinks = {
   wedding: '/cases/wedding-industry-ai-suite',
   interior: '/cases/interior-design-ai-platform',
   realestate: '/cases/real-estate-line-ai-assistant',
-  beauty: '/cases/beauty-ai-experience'
+  beauty: '/cases/beauty-ai-experience',
+  aimarketing: '/cases/ai-marketing-pro-content-workflow',
+  zhanggui: '/cases/zhanggui-ai-restaurant-assistant'
 };
 // 依目前語言回傳正確前綴(en 頁自動 /en/...);未知 slug 退回案例列表
 export const casePermalink = (slug) => t('', '/en') + (casePermalinks[slug] || '/cases');

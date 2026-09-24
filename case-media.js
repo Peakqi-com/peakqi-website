@@ -22,7 +22,25 @@ export const FEATURED_MEDIA = [
      { src: '/assets/cases/interior-g2.webp', fallback: '/assets/works/work-interior.png', w: 820, h: 747, alt: t('室內設計 AI 整合平台——設計提案生成介面', 'Interior Design AI Platform — proposal generation UI') },
      { src: '/assets/cases/interior-g3.webp', fallback: '/assets/works/work-interior.png', w: 820, h: 869, alt: t('室內設計 AI 整合平台——簡報輸出與專案畫面', 'Interior Design AI Platform — deck export and project view') }
  ] },
- { slug: 'realestate', name: t('房仲 AI 助手', 'Real-Estate AI Assistant'), industry: t('房仲不動產', 'Real estate'), type: t('AI 系統', 'AI system'), sourcePage: 'p27', mediaType: 'screenshot', focalPoint: 'top',
+ { slug: 'aimarketing', name: 'AI Marketing Pro', industry: t('行銷・內容', 'Marketing & content'), type: t('AI 系統', 'AI system'), sourcePage: 'web', mediaType: 'screenshot', focalPoint: 'top',
+   cover: { src: '/assets/cases/aimarketing.webp', w: 1100, h: 490, alt: t('AI Marketing Pro 首頁:把資深 SEO 顧問的方法論做成自動化工作流', 'AI Marketing Pro home: a senior SEO consultant\'s method turned into an automated workflow') },
+   thumbnail: { src: '/assets/cases/aimarketing.webp', w: 1100, h: 490 },
+   gallery: [
+     { src: '/assets/cases/aimarketing.webp', w: 1100, h: 490, alt: t('AI Marketing Pro 首頁:把資深 SEO 顧問的方法論做成自動化工作流', 'AI Marketing Pro home: a senior SEO consultant\'s method turned into an automated workflow') },
+     { src: '/assets/cases/aimarketing-g1.webp', w: 820, h: 869, alt: t('AI Marketing Pro——功能總覽:SEO MAP 自動架構、批次文章生成、WYSIWYG 編輯器與健檢', 'AI Marketing Pro — feature overview: SEO MAP auto-structure, batch article generation, WYSIWYG editor and checks') },
+     { src: '/assets/cases/aimarketing-g2.webp', w: 820, h: 747, alt: t('AI Marketing Pro——8 步驟工作流:從建立專案、關鍵字蒐集到 SEO MAP 設計', 'AI Marketing Pro — the 8-step workflow: project setup, keyword collection, SEO MAP design') },
+     { src: '/assets/cases/aimarketing-g3.webp', w: 820, h: 869, alt: t('AI Marketing Pro——批次生成、圖文、健檢到一鍵發布與排名追蹤', 'AI Marketing Pro — batch generation, images, checks, one-click publishing and rank tracking') }
+ ] },
+ { slug: 'zhanggui', name: t('掌櫃 AI', 'Zhanggui AI'), industry: t('餐飲業', 'Restaurants'), type: t('AI 系統', 'AI system'), sourcePage: 'web', mediaType: 'screenshot', focalPoint: 'top',
+   cover: { src: '/assets/cases/zhanggui.webp', w: 1100, h: 490, alt: t('掌櫃 AI 首頁:一句話交辦,店務自己完成', 'Zhanggui AI home: one sentence to delegate, back-office work done') },
+   thumbnail: { src: '/assets/cases/zhanggui.webp', w: 1100, h: 490 },
+   gallery: [
+     { src: '/assets/cases/zhanggui.webp', w: 1100, h: 490, alt: t('掌櫃 AI 首頁:一句話交辦,店務自己完成', 'Zhanggui AI home: one sentence to delegate, back-office work done') },
+     { src: '/assets/cases/zhanggui-g1.webp', w: 820, h: 869, alt: t('掌櫃 AI——用聊的交辦示範,以及外場招呼、社群小編、評論公關三個場景', 'Zhanggui AI — chat-style delegation demo, plus front-of-house, social editor and review PR scenes') },
+     { src: '/assets/cases/zhanggui-g2.webp', w: 820, h: 747, alt: t('掌櫃 AI——23 位專職助手一位總管調度,缺資訊先問、給成品不給半成品', 'Zhanggui AI — 23 specialist assistants under one manager; asks when info is missing, delivers finished pieces') },
+     { src: '/assets/cases/zhanggui-g3.webp', w: 820, h: 869, alt: t('掌櫃 AI——排程自動化、每家店資料隔離、發布前經店家核可', 'Zhanggui AI — scheduled automations, per-restaurant data isolation, owner approval before publishing') }
+ ] },
+ { slug: 'realestate', listed: false, name: t('房仲 AI 助手', 'Real-Estate AI Assistant'), industry: t('房仲不動產', 'Real estate'), type: t('AI 系統', 'AI system'), sourcePage: 'p27', mediaType: 'screenshot', focalPoint: 'top',
    cover: { src: '/assets/cases/realestate.webp', fallback: '/assets/works/work-realestate.png', w: 1100, h: 490, alt: t('房仲 AI 助手畫面:串接 LINE 官方帳號自動回物件、排預約帶看', 'Real-Estate AI Assistant: LINE OA integration, auto listing replies and viewing bookings') },
    thumbnail: { src: '/assets/cases/realestate.webp', w: 1100, h: 490 },
    gallery: [

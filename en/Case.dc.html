@@ -200,7 +200,7 @@ class Component extends DCLogic {
     const F = mm?.FEATURED_MEDIA ?? [];
     const f = F.find(x => x.slug === slug) || F[0] || { gallery: [], cover: {}, name: '', industry: '', type: '', sourcePage: '' };
     // narrMap 的值是 caseStudies 識別鍵(中文),不翻;顯示文字全部來自字典的 t() 英譯
-    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手' };
+    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手', aimarketing: 'AI Marketing Pro 行銷內容工作流', zhanggui: '掌櫃 AI 餐飲店務總管' };
     const narr = (d?.caseStudies ?? []).find(c => c.slug === narrMap[f.slug]) || {};
     const wfMap = {
       wedding: ['LINE inquiry caught by AI within 30 seconds', 'Dress try-on and makeup previews — see the look first', 'Needs organized into a customer card; a person takes the details', 'After closing: follow-ups and social content are scheduled'],

@@ -88,6 +88,7 @@ const EXTRA = {
     ]
   },
   realestate: {
+    unlisted: true, // 2026-09-24 業主要求 /cases 列表改列 AI Marketing Pro 與掌櫃 AI;本頁保留(文章與 About 仍連過來)
     // 建置與交付期間(依專案 repo 紀錄,月為單位)—— 不是客戶端的導入起訖日,那個仍待內部紀錄
     period: { zh: '2026 年 6 月至 9 月', en: 'between June and September 2026' },
     slug: 'real-estate-line-ai-assistant',
@@ -100,6 +101,38 @@ const EXTRA = {
       [L('回覆速度', 'Reply speed'), L('業務一則則回,常隔數小時', 'Agents replied one by one — often hours later'), L('30 秒內回覆(該案例)', 'Replies within 30 seconds (this case)')],
       [L('帶看安排', 'Viewing bookings'), L('人工來回喬時間', 'Scheduled back and forth by hand'), L('AI 自動保留時段、寄提醒', 'AI holds slots and sends reminders')],
       [L('名單管理', 'Lead management'), L('客況散在對話裡', 'Lead status buried in chats'), L('自動建檔、依狀態提醒跟進', 'Auto records with status-based follow-up nudges')]
+    ]
+  },
+  aimarketing: {
+    // 建置與交付期間(依專案 repo 紀錄,月為單位)
+    period: { zh: '2026 年 5 月至 9 月', en: 'between May and September 2026' },
+    published: '2026-09-24',
+    slug: 'ai-marketing-pro-content-workflow',
+    summary: L('每篇 SEO 文章都從零開始、文章之間沒有站點架構的行銷團隊,把資深顧問的方法論做成 8 步驟工作流後,從關鍵字分群到一鍵發布一條線走完;要做哪些字、稿件是否上線仍由行銷人員決定。',
+      "A marketing team where every SEO article started from scratch with no site structure between pieces. With a senior consultant's method turned into an 8-step workflow, keyword clustering to one-click publishing runs as one line — which keywords to pursue and what goes live stays with the marketer."),
+    modules: [L('關鍵字蒐集與 AI 分群', 'Keyword collection & AI clustering'), L('SEO MAP 自動架構(支柱+內容+商業頁)', 'SEO MAP auto-structure (pillar, content, commercial pages)'), L('批次文章生成(含 FAQ Schema)', 'Batch article generation (with FAQ schema)'), L('圖片與短影音腳本生成', 'Image & short-video script generation'), L('WYSIWYG 編輯器 + 即時 SEO 健檢', 'WYSIWYG editor + live SEO checks'), L('WordPress 一鍵發布與 GSC 排名追蹤', 'One-click WordPress publishing & GSC rank tracking')],
+    systems: [L('WordPress(REST API 發布)', 'WordPress (REST API publishing)'), L('Google Search Console(排名與曝光同步)', 'Google Search Console (rank & impression sync)')],
+    workflow: [L('輸入關鍵字群,AI 分群並產出 SEO MAP', 'Enter a keyword group; AI clusters it and builds the SEO MAP'), L('依 MAP 批次生成 8 篇,自動配圖', 'Generate 8 articles per the MAP, images auto-placed'), L('編輯器內即時打分,行銷人員修到過關', 'Live scoring in the editor; the marketer edits until it passes'), L('一鍵發布到 WordPress,每日同步 GSC 排名', 'One-click publish to WordPress; GSC rankings sync daily')],
+    beforeAfter: [
+      [L('內容架構', 'Content structure'), L('一篇一篇寫,文章之間沒有關聯', 'Written one at a time, no relation between pieces'), L('一組關鍵字對應一組頁面架構,先定 MAP 再動筆', 'One keyword group maps to one page structure — MAP first, then write')],
+      [L('產出節奏', 'Output pace'), L('研究、寫稿、配圖、上稿各自為政', 'Research, drafting, images and uploading each done separately'), L('8 步驟一條線,同一個工作台走完', 'Eight steps in one line, on one workbench')],
+      [L('品質把關', 'Quality control'), L('憑經驗判斷,發布後才知道缺什麼', 'Judged by feel; gaps found after publishing'), L('10 項規則即時打分,行銷人員確認後才發布', '10 rules scored live; published only after the marketer signs off')]
+    ]
+  },
+  zhanggui: {
+    // 建置與交付期間(依專案 repo 紀錄,月為單位)
+    period: { zh: '2026 年 8 月至 9 月', en: 'between August and September 2026' },
+    published: '2026-09-24',
+    slug: 'zhanggui-ai-restaurant-assistant',
+    summary: L('貼文、評論回覆、公告與宴席報價都得等打烊後才處理、忙起來就擱著的餐飲店,交給一位 AI 總管調度 23 位專職助手:一句話交辦就有可直接用的草稿,每篇仍由店家核可後才發布。',
+      'A restaurant where posts, review replies, notices and banquet quotes waited until after closing and were shelved when busy. Now one AI manager dispatches 23 specialist assistants: one sentence yields a ready-to-use draft, and every piece is still approved by the owner before it goes out.'),
+    modules: [L('AI 總管(聽懂需求、派給對的助手)', 'AI manager (reads the request, routes it to the right assistant)'), L('社群小編與駐店攝影(貼文與配圖)', 'Social editor & in-house photographer (posts and images)'), L('評論公關(評論回覆草稿)', 'Review PR (review-reply drafts)'), L('外場招呼(依店規回答常見問題)', 'Front-of-house (answers FAQs per house rules)'), L('菜單翻譯與宴席報價', 'Menu translation & banquet quotes'), L('排程自動化與待審區', 'Scheduled automations & review queue')],
+    systems: [L('店家上傳的菜單與店規(回答依據)', "The restaurant's uploaded menu and house rules (source of answers)"), L('Google 評論(回覆草稿)', 'Google reviews (reply drafts)')],
+    workflow: [L('老闆一句話交辦,或設成每週排程', 'The owner delegates in one sentence, or sets a weekly schedule'), L('缺價格、日期等硬事實時 AI 先問', 'AI asks first when hard facts like prices or dates are missing'), L('產出貼文、回覆或報價,進待審區', 'Post, reply or quote is produced and lands in the review queue'), L('店家看過按核可,才對外發布', 'The owner reviews and approves before anything goes out')],
+    beforeAfter: [
+      [L('處理時間', 'When it gets done'), L('打烊後才有空,常常拖到不做', 'Only after closing — often never'), L('一句話交辦,時間到排程自己做', 'One sentence to delegate; schedules run on their own')],
+      [L('內容依據', 'What content is based on'), L('每次憑印象重寫,價格容易寫錯', 'Rewritten from memory each time; prices easy to get wrong'), L('引用上傳的菜單與店規,缺資訊先問', 'Cites the uploaded menu and rules; asks when info is missing')],
+      [L('對外發布', 'Publishing'), L('寫完直接發,沒有第二雙眼睛', 'Posted as written, no second pair of eyes'), L('全部先進待審區,核可才發布', 'Everything queues for review; approved before publishing')]
     ]
   },
   beauty: {
@@ -118,7 +151,7 @@ const EXTRA = {
 };
 
 // content.js caseStudies 的中文 slug ↔ media slug 對照(與 Cases.dc.html narrMap 一致)
-const NARR = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手', beauty: '美業 AI 體驗系統' };
+const NARR = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手', beauty: '美業 AI 體驗系統', aimarketing: 'AI Marketing Pro 行銷內容工作流', zhanggui: '掌櫃 AI 餐飲店務總管' };
 
 const font = "'Noto Sans TC',sans-serif";
 const mono = "'Space Grotesk',sans-serif";
@@ -153,7 +186,7 @@ function buildPage(key) {
     S.orgJsonLd(LANG),
     S.webSiteJsonLd(LANG),
     { ...S.webPageJsonLd(LANG, { url, name: pageTitle, description: desc }),
-      primaryImage: ogImg, datePublished: '2026-08-06', dateModified: DATE_SLOT,
+      primaryImage: ogImg, datePublished: x.published || '2026-08-06', dateModified: DATE_SLOT,
       author: { '@id': S.ORG_ID } },
     S.breadcrumbJsonLd(crumbs)
     // 成效數據刻意不寫進 JSON-LD:計算期間與導入前基準尚未整理成可驗證欄位
@@ -184,7 +217,7 @@ function buildPage(key) {
   </div>
 </section>` : '';
 
-  const related = Object.keys(EXTRA).filter((k) => k !== key).map((k) => {
+  const related = Object.keys(EXTRA).filter((k) => k !== key && !EXTRA[k].unlisted).map((k) => {
     const rn = (d.caseStudies || []).find((c) => c.slug === NARR[k]);
     return `<a href="${pfx}/cases/${EXTRA[k].slug}" style="display:flex;flex-direction:column;gap:8px;background:#090B0E;color:#F2EFE8;border-radius:6px;padding:18px;text-decoration:none;border:1px solid rgba(9,11,14,.2)">
         <span style="font:600 .6875rem ${mono};letter-spacing:.18em;color:#FF6B2C">${esc((media.FEATURED_MEDIA.find((f) => f.slug === k) || { industry: rn.industry }).industry)}</span>

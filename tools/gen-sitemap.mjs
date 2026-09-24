@@ -18,7 +18,9 @@ const CASE_PAGES = [
   '/cases/wedding-industry-ai-suite',
   '/cases/interior-design-ai-platform',
   '/cases/real-estate-line-ai-assistant',
-  '/cases/beauty-ai-experience'
+  '/cases/beauty-ai-experience',
+  '/cases/ai-marketing-pro-content-workflow',
+  '/cases/zhanggui-ai-restaurant-assistant'
 ];
 
 // [中文 clean path, changefreq, 中文 priority, 頁面原始檔] ── 英文版一律 priority - 0.1

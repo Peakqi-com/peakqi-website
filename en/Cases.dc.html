@@ -10,7 +10,7 @@
 <meta property="og:site_name" content="PeakQi International">
 <meta property="og:locale" content="en_US">
 <meta property="og:title" content="Case Studies &amp; Work | 30+ Live Systems &amp; Sites | PeakQi">
-<meta property="og:description" content="Real product screenshots from weddings, interior design and real estate — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
+<meta property="og:description" content="Real product screenshots from weddings, interior design, marketing and restaurants — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
 <meta property="og:url" content="https://www.peakqi.com/en/cases">
 <link rel="canonical" href="https://www.peakqi.com/en/cases">
 <meta property="og:image" content="https://www.peakqi.com/og.png">
@@ -19,7 +19,7 @@
 <meta property="og:image:alt" content="PeakQi — AI catches every inquiry">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Case Studies &amp; Work | 30+ Live Systems &amp; Sites | PeakQi">
-<meta name="twitter:description" content="Real product screenshots from weddings, interior design and real estate — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
+<meta name="twitter:description" content="Real product screenshots from weddings, interior design, marketing and restaurants — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
 <meta name="twitter:image" content="https://www.peakqi.com/og.png">
 <script>window.__dcComponentDir='/';</script>
 <script>/* 有 JS 才預留 hero 釘選跑道:沒有 JS 時 hero-kit 不會撐高,預留了會變成一大片空白 */try{document.documentElement.classList.add("pq-js");}catch(e){}</script>
@@ -29,7 +29,7 @@
 <x-dc>
 <helmet>
 <title>Case Studies &amp; Work | 30+ Live Systems &amp; Sites | PeakQi</title>
-<meta name="description" content="Real product screenshots from weddings, interior design and real estate — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
+<meta name="description" content="Real product screenshots from weddings, interior design, marketing and restaurants — plus 25+ shipped AI systems, custom platforms, ops tools and brand sites.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,9 +214,9 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
               <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">Style, size and budget arrive organized — designers pick up with full context.</p>
             </div>
             <div data-hero-scene="rea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
-              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">FIELD 03 / 05 &middot; REAL ESTATE</span>
-              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">Listings and viewings match up</p>
-              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">"Is this one still available?" maps to the listing and books a viewing — nothing slips.</p>
+              <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#3E9BFF">FIELD 03 / 05 &middot; RESTAURANTS</span>
+              <p style="margin:0;font:800 1.125rem 'Noto Sans TC',sans-serif">After-hours admin, drafted first</p>
+              <p style="margin:0;font:400 .84375rem/1.7 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.62)">Posts, review replies and notices from one sentence — AI drafts, you approve before it goes out.</p>
             </div>
             <div data-hero-scene="bea" style="position:absolute;left:0;top:0;right:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;gap:5px">
               <span style="font:700 .8125rem 'Noto Sans TC',sans-serif;letter-spacing:.14em;color:#65E0BC">FIELD 04 / 05 &middot; BEAUTY BOOKINGS</span>
@@ -293,7 +293,7 @@ window.addEventListener('load',function(){if(!location.hash)requestAnimationFram
       <span style="width:36px;height:1px;background:#FF6B2C"></span>
       <span style="font:600 .75rem 'Space Grotesk',sans-serif;letter-spacing:.3em;color:rgba(9,11,14,.5)">FEATURED STORIES</span>
     </div>
-    <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">Three industries, three ways AI plugs in</h2>
+    <h2 style="margin:16px 0 0;font:900 clamp(1.6rem,4vw,3.4rem)/1.2 'Noto Sans TC',sans-serif">Four industries, four ways AI plugs in</h2>
     <p style="margin:14px 0 0;font:400 clamp(1rem,1.3vw,1.125rem)/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.64);max-width:720px">Where things were stuck, what we deployed, and how AI and people split the work.</p>
   </div>
   <sc-for list="{{ stories }}" as="st" hint-placeholder-count="4">
@@ -607,13 +607,13 @@ class Component extends DCLogic {
   }
   renderVals() {
     const d = this.state.d, mm = this.state.media;
-    const F = mm?.FEATURED_MEDIA ?? [];
+    const F = (mm?.FEATURED_MEDIA ?? []).filter(f => f.listed !== false); // listed:false = 保留獨立頁但不在本頁列出
     const W = mm?.WORKS_MEDIA ?? [];
     const err = (fb) => (e) => { if (fb && e.target.src.indexOf(fb) < 0) e.target.src = fb; };
     // Featured Stories:媒體 join 內容敘事(narrMap 的值是 caseStudies 識別鍵,不翻)
     const storyByslug = {};
     (d?.caseStudies ?? []).forEach(c => { storyByslug[c.slug] = c; });
-    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手' };
+    const narrMap = { wedding: '婚禮產業 AI 大禮包', interior: '室內設計 AI 整合平台', realestate: '房仲 AI 助手', aimarketing: 'AI Marketing Pro 行銷內容工作流', zhanggui: '掌櫃 AI 餐飲店務總管' };
     const pickW = ['groupbuy', 'sparkspace', 'palace', 'rental', 'rouzhi', 'ouros', 'doiiin', 'expo', 'xintu', 'tables', 'qiancheng', 'linesummary'];
     const wallList = [...F, ...pickW.map(s2 => W.find(w => w.slug === s2)).filter(Boolean)];
     const IDXPOS = (i) => { const col = i % 4, row = (i - col) / 4; return { x: 42 + col * 14.4, y: 5 + row * 23.5, w: 13 }; };
