@@ -383,7 +383,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -392,7 +392,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -401,7 +401,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/ai-crm-vs-traditional-crm"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -410,7 +410,25 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/ai-crm-vs-traditional-crm"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform"/>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -2,7 +2,7 @@
 slug: ai-crm-vs-traditional-crm
 title: AI CRM 跟傳統 CRM 差在哪?一張表看懂,再決定要不要換
 summary: 傳統 CRM 等你填;AI CRM 把對話變成客戶卡、把下一步排出來。一張比較表,加上什麼情況傳統 CRM 其實就夠。
-date: 2026-09-25
+date: 2026-09-24
 tags:
   - ai-adoption
   - customer-ops
@@ -100,4 +100,4 @@ draft: false
 
 ---
 
-*作者:PeakQi 奇鋒國際團隊。本文的「三層」分法與比較表整理自 PeakQi 的 CRM 模組設計([解決方案](/solutions))與實際導入經驗;不同廠商的 AI CRM 做法可能不同,評估時以本文的四個問題為準,不以名稱為準。發布:2026-09-25。*
+*作者:PeakQi 奇鋒國際團隊。本文的「三層」分法與比較表整理自 PeakQi 的 CRM 模組設計([解決方案](/solutions))與實際導入經驗;不同廠商的 AI CRM 做法可能不同,評估時以本文的四個問題為準,不以名稱為準。發布:2026-09-24。*

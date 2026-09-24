@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="PeakQi">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="n8n, packaged SaaS or a custom AI platform? Ask first: who fixes it when it breaks | PeakQi">
+<meta property="og:description" content="All three can wire AI into a process; the difference is who keeps it running. Compared on operations, data, cost of change and human handoff.">
+<meta property="og:url" content="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="canonical" href="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<meta property="og:image" content="https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PeakQi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="n8n, packaged SaaS or a custom AI platform? Ask first: who fixes it when it breaks | PeakQi">
+<meta name="twitter:description" content="All three can wire AI into a process; the difference is who keeps it running. Compared on operations, data, cost of change and human handoff.">
+<meta name="twitter:image" content="https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp">
+<link rel="alternate" type="application/rss+xml" title="Insights" href="/en/feed.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"n8n, packaged SaaS or a custom AI platform? Ask first: who fixes it when it breaks","description":"All three can wire AI into a process; the difference is who keeps it running. Compared on operations, data, cost of change and human handoff.","inLanguage":"en","datePublished":"2026-09-24","dateModified":"2026-09-24","image":"https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform"},"author":{"@type":"Organization","name":"PeakQi","url":"https://www.peakqi.com/en/"},"publisher":{"@type":"Organization","name":"PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>n8n, packaged SaaS or a custom AI platform? Ask first: who fixes it when it breaks | PeakQi</title>
+<meta name="description" content="All three can wire AI into a process; the difference is who keeps it running. Compared on operations, data, cost of change and human handoff.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+h1,h2{text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#FF6B2C;color:#F2EFE8}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
+html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{text-wrap:balance}
+html[lang="en"] p,html[lang="en"] li{hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty}
+.pb-wrap{max-width:760px;margin:0 auto;padding:clamp(26px,4vw,44px) clamp(20px,5vw,48px) clamp(64px,9vw,110px)}
+/* 返回連結要獨佔一行:inline-flex 會和後面的標籤黏成同一行,讀起來像「回到觀點 AI 導入」 */
+.pb-back{display:flex;width:max-content;align-items:center;gap:7px;min-height:44px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);text-decoration:none}
+.pb-back:hover{color:#D14E12}
+.pb-kicker{display:block;margin-top:10px;font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#FF6B2C}
+.pb-title{margin:12px 0 0;font:900 clamp(1.72rem,4.2vw,2.85rem)/1.28 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pb-lede{margin:16px 0 0;font:400 clamp(1rem,1.55vw,1.14rem)/1.78 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-meta{margin:18px 0 0;font:500 13px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(9,11,14,.46)}
+.pb-cover{margin:clamp(26px,4vw,42px) 0 0}
+.pb-cover img{display:block;width:100%;height:auto;border-radius:3px}
+/* 沒有封面圖時的色帶。刻意做矮:16/7 在桌機是 330px 的空白色塊,看起來像圖沒載到 */
+.pb-swatch{margin:clamp(26px,4vw,42px) 0 0;aspect-ratio:16/5;border-radius:3px}
+@media(max-width:600px){.pb-swatch{aspect-ratio:16/6}}
+.pb-body{margin-top:clamp(26px,4vw,42px)}
+.pb-body>*:first-child{margin-top:0}
+.pb-body p{margin:20px 0 0;font:400 16.5px/2 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-body h2{margin:clamp(38px,5vw,58px) 0 0;font:800 clamp(1.22rem,2.1vw,1.55rem)/1.5 'Noto Sans TC',sans-serif}
+.pb-body h3{margin:30px 0 0;font:700 1.0625rem/1.6 'Noto Sans TC',sans-serif}
+.pb-body h4{margin:24px 0 0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-body a{color:#D14E12;text-decoration:underline;text-underline-offset:3px}
+.pb-body img{max-width:100%;height:auto}
+.pb-list{margin:16px 0 0;padding-left:22px}
+.pb-list li{margin-top:8px;font:400 16.5px/1.95 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-quote{margin:26px 0 0;padding:2px 0 2px 18px;border-left:3px solid #FF6B2C;font:500 16.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.76)}
+.pb-body code{background:rgba(9,11,14,.06);padding:2px 6px;border-radius:3px;font:400 .9em ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code{margin:22px 0 0;padding:16px 18px;background:#090B0E;color:#E8E4DA;border-radius:3px;overflow-x:auto;font:400 13.5px/1.72 ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code code{background:none;padding:0;white-space:pre}
+.pb-fig{margin:clamp(26px,4vw,40px) 0}
+.pb-fig img{display:block;width:100%;height:auto;border-radius:3px}
+.pb-fig figcaption{margin-top:10px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)}
+.pb-tablewrap{margin:24px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pb-table{border-collapse:collapse;min-width:100%;font:400 14.5px/1.7 'Noto Sans TC',sans-serif}
+.pb-table th,.pb-table td{padding:11px 14px;border-bottom:1px solid rgba(9,11,14,.12);text-align:left;white-space:nowrap}
+.pb-table th{font-weight:700;background:rgba(9,11,14,.04)}
+.pb-hr{margin:clamp(34px,5vw,50px) 0 0;border:0;border-top:1px solid rgba(9,11,14,.14)}
+.pb-cta{margin:clamp(42px,6vw,66px) 0 0;padding:clamp(22px,4vw,34px);background:#090B0E;color:#F2EFE8;border-radius:3px}
+.pb-cta h2{margin:0;font:800 clamp(1.06rem,1.9vw,1.32rem)/1.5 'Noto Sans TC',sans-serif;color:#F2EFE8}
+.pb-cta p{margin:10px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pb-cta a{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:13px 22px;min-height:44px;box-sizing:border-box;background:#FF6B2C;color:#090B0E;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;border-radius:2px}
+.pb-cta a:hover{background:#FF8149;color:#090B0E}
+.pb-rel{margin:clamp(42px,6vw,64px) 0 0}
+.pb-rel h2{margin:0 0 16px;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(9,11,14,.45)}
+.pb-relgrid{display:grid;gap:12px}
+.pb-relcard{display:block;padding:17px 19px;background:#fff;border:1px solid rgba(9,11,14,.1);border-radius:3px;text-decoration:none;transition:border-color .18s,transform .18s}
+.pb-relcard:hover{border-color:#FF6B2C;transform:translateY(-2px)}
+.pb-relcard .t{font:700 15px/1.55 'Noto Sans TC',sans-serif;color:#090B0E}
+.pb-relcard .d{margin-top:6px;font:500 12px 'Space Grotesk','Noto Sans TC',sans-serif;color:rgba(9,11,14,.46)}
+@media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</helmet>
+<a id="pq-skip" href="#pq-main">Skip to main content</a>
+<dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
+
+<main id="pq-main" class="pb-wrap" data-screen-label="n8n, packaged SaaS or a ">
+  <a class="pb-back" href="/en/blog">← Back to Insights</a>
+  <span class="pb-kicker">AI adoption</span>
+  <h1 class="pb-title">n8n, packaged SaaS or a custom AI platform? Ask first: who fixes it when it breaks</h1>
+  <p class="pb-lede">All three can wire AI into a process; the difference is who keeps it running. Compared on operations, data, cost of change and human handoff.</p>
+  <p class="pb-meta">Sep 24, 2026 · 8 min read</p>
+  <figure class="pb-cover"><img src="/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp" alt="Cover: three routes side by side — an n8n node graph on the left, a single packaged-SaaS block in the middle, stacked custom-platform modules on the right" width="1200" height="630" fetchpriority="high" decoding="async"></figure>
+  <article class="pb-body">
+<p><strong>Short answer:</strong> there are three routes to putting AI into an operational process — (1) <strong>a workflow tool like n8n</strong>: you wire LINE, forms, AI and spreadsheets together yourself with nodes; flexible and cheap to start, but when the flow breaks, you fix it; (2) <strong>packaged SaaS</strong>: buy a ready-made tool for one clearly defined task; fastest to start, but data between tools still moves by hand, and you can only change what the vendor exposes; (3) <strong>a custom AI platform</strong>: a vendor builds, integrates and operates it around your process, including human handoff and post-launch tuning; highest upfront commitment, but &quot;who fixes it&quot; and &quot;who changes it&quot; have a clear owner. All three are legitimate. The deciding factor isn&#39;t the feature list — it&#39;s whether <strong>you have someone to maintain it long-term</strong> and whether <strong>the process is still changing</strong>.</p>
+<h2>First, what each route actually is</h2>
+<p>The three get compared as if they were the same kind of thing. They answer different questions:</p>
+<ul class="pb-list"><li><strong>n8n</strong> (and Zapier, Make and their kind): a <strong>workflow automation tool</strong>. You drag nodes on a canvas: &quot;LINE receives a message → send it to an AI model → write the result to a spreadsheet → notify sales.&quot; n8n can be self-hosted or cloud, it&#39;s open source, has many nodes and a large community. What it gives you is <strong>building blocks</strong>. How the flow is assembled and what happens when it fails is up to you.</li><li><strong>Packaged SaaS</strong>: a <strong>finished product</strong> — a particular AI support tool, a particular scheduling tool. Subscribe, configure, go live, usually within a day. What it gives you is <strong>a furnished room</strong>: the layout is fixed, you can move the furniture.</li><li><strong>A custom AI platform</strong>: a <strong>system built and operated around your process</strong>. In PeakQi&#39;s case, modules on one back office (intake, CRM, quoting, content) combined for the stage you&#39;re stuck on, integrated with your existing LINE, forms and CRM, with human handoff and post-launch calibration included. What it gives you is <strong>one process with an owner</strong>.</li></ul>
+<p>So the real question isn&#39;t &quot;which has more features.&quot; It&#39;s: <strong>once this process is live, who is responsible for keeping it working?</strong></p>
+<h2>One table: compared from an operations point of view</h2>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th></th><th>n8n (self-assembled)</th><th>Packaged SaaS</th><th>Custom AI platform</th></tr></thead><tbody><tr><td>Who assembles the flow</td><td>You (someone who thinks in logic)</td><td>Vendor built it, you configure</td><td>Vendor builds it around your process</td></tr><tr><td>Who fixes it when it breaks</td><td>You — including the 3 a.m. API change</td><td>Vendor fixes the product; your integrations are yours</td><td>Vendor, as part of operations</td></tr><tr><td>Where the data lives</td><td>Self-hosted: with you; cloud: with n8n</td><td>Vendor&#39;s servers; export depends on the plan</td><td>Per contract — confirm separate storage and export before signing</td></tr><tr><td>Who changes the process</td><td>You, immediately</td><td>Only within settings the vendor exposes</td><td>Request to vendor, scheduled by scope</td></tr><tr><td>When the AI can&#39;t decide</td><td>You design the handoff node yourself — often skipped</td><td>Depends on the product</td><td>Explicit handoff rules with the conversation summary attached — a deliverable</td></tr><tr><td>Connecting existing LINE / CRM</td><td>Many nodes, most things connect; details are yours</td><td>Often only its own ecosystem or popular tools</td><td>In scope; existing tools stay</td></tr><tr><td>Shape of the cost</td><td>Software cheap or free; <strong>people are the main cost</strong></td><td>Monthly subscription, predictable</td><td>Setup + monthly + usage</td></tr><tr><td>Team it suits</td><td>At least one person who can maintain automation</td><td>One clearly defined task</td><td>Steady enquiry volume, process spans tools, no internal maintainer</td></tr></tbody></table></div>
+<p>The row most often underestimated is the second one. n8n&#39;s software cost really is low, but <strong>maintaining a live flow is an ongoing people cost</strong>: an upstream API changes, the AI model&#39;s response format shifts, a node times out — none of that appears on a quote, all of it appears in someone&#39;s overtime.</p>
+<h2>Decision flow: four questions, in order</h2>
+<ol class="pb-list"><li><strong>Do you have someone who can maintain automation long-term?</strong> Not &quot;can they drag nodes&quot; — &quot;if they leave, does someone take over?&quot; Yes → n8n is a strong choice. No → skip it, or in three months you&#39;ll have a broken flow nobody dares touch.</li><li><strong>Are you solving one task, or one process?</strong> One task (say, &quot;auto-answer common questions&quot;) → packaged SaaS is usually the best value. One process (catch the enquiry → organise it into a record → schedule follow-up → hand off to a human) → a single tool won&#39;t cover it; choose between n8n and a custom platform.</li><li><strong>Has the process settled?</strong> Still changing weekly → n8n lets you adjust it yourself, fast. Stable, just no one to do it → a custom platform takes it over.</li><li><strong>When the AI can&#39;t decide, who catches it?</strong> This needs an answer on all three routes. On n8n you draw the handoff node yourself; on SaaS it depends on the product; on a custom platform it&#39;s a deliverable. <strong>A plan with no answer to this shouldn&#39;t go live.</strong></li></ol>
+<p>Ask all four and the answer usually falls out — and it&#39;s often not &quot;pick one of three.&quot; See the next section.</p>
+<h2>Who each suits, and the common combination</h2>
+<ul class="pb-list"><li><strong>n8n suits</strong>: teams with an engineer or a logic-minded ops person, processes still iterating, wanting to validate an idea cheaply. <strong>Doesn&#39;t suit</strong>: no maintainer, or customer-facing conversations with no handoff designed.</li><li><strong>Packaged SaaS suits</strong>: a single clear task, a budget that must be predictable, no appetite for anything technical. <strong>Doesn&#39;t suit</strong>: data that has to travel between several tools — that unowned gap is exactly where customers leak.</li><li><strong>A custom AI platform suits</strong>: enquiries concentrated in LINE / forms, steady volume, a process spanning several tools, no internal maintainer, and a need for human review points. <strong>Doesn&#39;t suit</strong>: very low enquiry volume, or a process that hasn&#39;t settled (use n8n or SaaS to learn it first).</li></ul>
+<p><strong>The combination we see most</strong>: the core process (intake → CRM → follow-up) on a custom platform, because when that breaks it hits revenue directly and someone has to own it; peripheral internal automations (reports, notifications, data sync) on n8n, because a failure there is low-impact and quick to fix. The two don&#39;t conflict.</p>
+<h2>Risks and limits</h2>
+<ul class="pb-list"><li><strong>n8n&#39;s hidden cost is people.</strong> Self-hosting means looking after a server and updates; cloud means watching the usage plan. More importantly, when &quot;the one person who changes it&quot; leaves, the flow becomes a black box nobody dares touch. Before launch, make sure a second person can read it.</li><li><strong>SaaS&#39;s risk is the boundary.</strong> You can only change what the vendor exposes; ask about export formats and deadlines before signing.</li><li><strong>A custom platform&#39;s risk is dependency.</strong> If the vendor folds or the relationship ends, what happens to the system — confirm separate data storage, exportability and exit terms in the contract. The full checklist is in <a href="/en/blog/how-to-choose-ai-automation-partner">how to choose an AI automation partner</a>.</li><li><strong>None of the three &quot;works once installed.&quot;</strong> The knowledge base is yours to organise, the stages are yours to define, and the first weeks after launch need calibration against real conversations. The tool changes; that work doesn&#39;t disappear.</li></ul>
+<h2>Common questions</h2>
+<p><strong>Q: We already have some flows on n8n. Do we still need a custom platform?</strong> Not necessarily. If those flows have a maintainer, customer conversations have a handoff, and the CRM data is complete, keep going. Teams usually reconsider in three situations: the maintainer is leaving, a flow starts touching customer conversations without a review step, or the CRM keeps ending up empty (see <a href="/en/blog/ai-crm-vs-traditional-crm">AI CRM vs traditional CRM</a>).</p>
+<p><strong>Q: Is a custom platform the same as &quot;building from scratch&quot;?</strong> Not the way PeakQi does it. Existing modules are combined around your process and connected to your existing tools; a full bespoke build is a different scale of project. The difference and the cost structure are in <a href="/en/blog/ai-automation-cost-and-timeline">the full cost breakdown</a>.</p>
+<p><strong>Q: Can we validate with SaaS or n8n first and switch later?</strong> Yes, and we recommend it. Use the cheap route to confirm &quot;automating this stage is actually worth it,&quot; then decide whether to invest in a fuller build. The thing to watch is <strong>data portability</strong>: put customer data somewhere exportable from day one, so switching doesn&#39;t mean starting over.</p>
+<p><strong>Q: n8n can call AI models too — why have someone else build it?</strong> Connecting and running reliably are two different things. Calling an AI is step one; extracting fields, handing off when it can&#39;t decide, carrying the conversation summary across, scheduling follow-up by stage — on n8n, each of those is yours to design and test. Doable, but it needs a person to do it and a person to maintain it. <a href="/en/blog/line-ai-support-crm-integration">Connecting LINE AI support to your CRM</a> breaks down what each of those four links involves.</p>
+<p><strong>Q: A real example?</strong> Real estate: LINE enquiries caught by AI, viewings scheduled, customer status written to the list, with human handoff (<a href="/en/cases/real-estate-line-ai-assistant">full case study</a>). How we deliver — six stages, three risk-reduction mechanisms — is on <a href="/en/method">how we deliver</a>.</p>
+<hr class="pb-hr">
+<p><em>Written by the PeakQi team. The comparison dimensions come from the questions we actually get asked during evaluation. For n8n and individual SaaS products, their own documentation is the authority; this article quotes no prices. PeakQi offers the custom-platform route — when evaluating, go by the four questions here, not by the name. Published 2026-09-24.</em></p>
+  </article>
+  <hr class="pb-hr">
+  <aside class="pb-cta">
+    <h2>Want to see what this looks like inside your company?</h2>
+    <p>Book a scenario demo. We walk through your actual workflow, then work out together which part is worth automating first.</p>
+    <a href="/en/demo">Book a scenario demo →</a>
+  </aside>
+  <nav class="pb-rel" aria-label="Read next">
+    <h2>Read next</h2>
+    <div class="pb-relgrid">
+      <a class="pb-relcard" href="/en/blog/how-to-choose-ai-automation-partner"><span class="t">How to choose an AI automation partner in Taiwan: six questions to ask first</span><span class="d">Sep 2, 2026 · 5 min read</span></a>
+      <a class="pb-relcard" href="/en/blog/ai-automation-cost-and-timeline"><span class="t">What AI automation costs a small business, and how long it takes to launch</span><span class="d">Sep 2, 2026 · 4 min read</span></a>
+      <a class="pb-relcard" href="/en/blog/ai-crm-vs-traditional-crm"><span class="t">AI CRM vs traditional CRM: the real difference, in one table</span><span class="d">Sep 24, 2026 · 7 min read</span></a>
+    </div>
+  </nav>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

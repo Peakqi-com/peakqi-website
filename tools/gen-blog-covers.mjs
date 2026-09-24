@@ -86,6 +86,28 @@ const MOTIFS = {
     s += txt(60, 300, 'catch → extract → record → follow up', 16, 'rgba(242,239,232,.55)', 'letter-spacing="1.5"');
     return s;
   },
+  // 三條路並排:n8n 節點圖 / SaaS 單一方塊 / 客製平台模組堆疊(含一個人形 = 轉真人)
+  'n8n-vs-saas-vs-custom-ai-platform': (a) => {
+    let s = '';
+    const lane = (x, l) => txt(x, 30, l, 17, 'rgba(242,239,232,.6)', 'letter-spacing="3"');
+    s += lane(20, 'n8n') + lane(240, 'SAAS') + lane(450, 'PLATFORM');
+    // n8n:四個小節點用線連成一條不太整齊的鏈
+    const pts = [[40, 120], [120, 200], [60, 290], [150, 360]];
+    pts.forEach(([x, y], i) => {
+      if (i) s += `<line x1="${pts[i-1][0]}" y1="${pts[i-1][1]}" x2="${x}" y2="${y}" stroke="rgba(242,239,232,.35)" stroke-width="3"/>`;
+    });
+    pts.forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="16" fill="${INK}" stroke="rgba(242,239,232,.6)" stroke-width="3"/>`; });
+    // SaaS:一個封閉的方塊,裡面一個小鎖
+    s += `<rect x="240" y="120" width="160" height="240" rx="16" fill="none" stroke="rgba(242,239,232,.45)" stroke-width="3"/>`;
+    s += `<rect x="300" y="235" width="40" height="32" rx="6" fill="rgba(242,239,232,.45)"/>`;
+    s += `<path d="M308 235 v-12 a12 12 0 0 1 24 0 v12" stroke="rgba(242,239,232,.45)" stroke-width="5" fill="none"/>`;
+    // 平台:三塊模組堆起來(強調色),旁邊一個人形 = 轉真人
+    [0, 1, 2].forEach((k) => {
+      s += `<rect x="450" y="${300 - k * 70}" width="130" height="56" rx="10" fill="${a}" fill-opacity="${1 - k * .28}"/>`;
+    });
+    s += `<circle cx="615" cy="232" r="13" fill="${PAPER}"/><path d="M596 292 a19 19 0 0 1 38 0 z" fill="${PAPER}"/>`;
+    return s;
+  },
   // 傳統 CRM vs AI CRM:左邊空白表單行,右邊已填滿並打勾
   'ai-crm-vs-traditional-crm': (a) => {
     let s = '';
@@ -108,6 +130,7 @@ const COVERS = {
   'how-to-choose-ai-automation-partner': { eyebrow: 'AI ADOPTION', title: '6 QUESTIONS', sub: 'before you sign', accent: ORANGE },
   'ai-automation-cost-and-timeline':     { eyebrow: 'COST × TIMELINE', title: '3 PARTS', sub: 'setup · monthly · usage — not one number', accent: MINT },
   'line-ai-support-crm-integration':     { eyebrow: 'LINE → CRM', title: '4 LINKS', sub: 'from first message to a record', accent: BLUE },
+  'n8n-vs-saas-vs-custom-ai-platform':   { eyebrow: 'BUILD OR BUY', title: '3 ROUTES', sub: 'n8n · SaaS · custom platform — who runs it?', accent: '#6A5CFF' },
   'ai-crm-vs-traditional-crm':           { eyebrow: 'AI CRM vs CRM', title: 'WHO FILLS IT IN?', sub: 'the real difference', accent: PINK },
 };
 

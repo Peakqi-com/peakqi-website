@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="奇鋒國際 PeakQi">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="n8n、套裝 SaaS、客製 AI 平台怎麼選?先問「壞掉的時候誰修」｜奇鋒國際 PeakQi">
+<meta property="og:description" content="三條路都能把 AI 接進流程,差別在誰負責讓它持續運作。從維運、資料、改動成本與轉真人機制比較,並說明各自適合誰。">
+<meta property="og:url" content="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="canonical" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/n8n-vs-saas-vs-custom-ai-platform">
+<link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform">
+<meta property="og:image" content="https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="奇鋒國際 PeakQi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="n8n、套裝 SaaS、客製 AI 平台怎麼選?先問「壞掉的時候誰修」｜奇鋒國際 PeakQi">
+<meta name="twitter:description" content="三條路都能把 AI 接進流程,差別在誰負責讓它持續運作。從維運、資料、改動成本與轉真人機制比較,並說明各自適合誰。">
+<meta name="twitter:image" content="https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp">
+<link rel="alternate" type="application/rss+xml" title="觀點" href="/feed.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"n8n、套裝 SaaS、客製 AI 平台怎麼選?先問「壞掉的時候誰修」","description":"三條路都能把 AI 接進流程,差別在誰負責讓它持續運作。從維運、資料、改動成本與轉真人機制比較,並說明各自適合誰。","inLanguage":"zh-Hant-TW","datePublished":"2026-09-24","dateModified":"2026-09-24","image":"https://www.peakqi.com/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/blog/n8n-vs-saas-vs-custom-ai-platform"},"author":{"@type":"Organization","name":"奇鋒國際 PeakQi","url":"https://www.peakqi.com/"},"publisher":{"@type":"Organization","name":"奇鋒國際 PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
+<script>window.__dcComponentDir='/';</script>
+<script src="/support.js"></script>
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('beforeunload',function(){try{window.scrollTo(0,0);}catch(e){}});
+window.addEventListener('load',function(){if(!location.hash)requestAnimationFrame(function(){window.scrollTo(0,0);});});</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>n8n、套裝 SaaS、客製 AI 平台怎麼選?先問「壞掉的時候誰修」｜奇鋒國際 PeakQi</title>
+<meta name="description" content="三條路都能把 AI 接進流程,差別在誰負責讓它持續運作。從維運、資料、改動成本與轉真人機制比較,並說明各自適合誰。">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+h1,h2{text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE8;color:#090B0E;font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:#FF6B2C;color:#F2EFE8}
+#pq-skip{position:fixed;left:12px;top:-60px;z-index:600;background:#090B0E;color:#F2EFE8;padding:12px 18px;border-radius:2px;font:700 .875rem 'Noto Sans TC',sans-serif;text-decoration:none;transition:top .16s}
+#pq-skip:focus{top:12px;outline:2px solid #FF6B2C;outline-offset:2px}
+@keyframes pqPageIn{from{opacity:0}to{opacity:1}}
+body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
+@media (prefers-reduced-motion:reduce){body{animation:none}*{transition:none!important}}
+.pb-wrap{max-width:760px;margin:0 auto;padding:clamp(26px,4vw,44px) clamp(20px,5vw,48px) clamp(64px,9vw,110px)}
+/* 返回連結要獨佔一行:inline-flex 會和後面的標籤黏成同一行,讀起來像「回到觀點 AI 導入」 */
+.pb-back{display:flex;width:max-content;align-items:center;gap:7px;min-height:44px;font:600 13px 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.55);text-decoration:none}
+.pb-back:hover{color:#D14E12}
+.pb-kicker{display:block;margin-top:10px;font:600 11.5px 'Space Grotesk',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#FF6B2C}
+.pb-title{margin:12px 0 0;font:900 clamp(1.72rem,4.2vw,2.85rem)/1.28 'Noto Sans TC',sans-serif;letter-spacing:-.01em}
+.pb-lede{margin:16px 0 0;font:400 clamp(1rem,1.55vw,1.14rem)/1.78 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-meta{margin:18px 0 0;font:500 13px 'Space Grotesk','Noto Sans TC',sans-serif;letter-spacing:.02em;color:rgba(9,11,14,.46)}
+.pb-cover{margin:clamp(26px,4vw,42px) 0 0}
+.pb-cover img{display:block;width:100%;height:auto;border-radius:3px}
+/* 沒有封面圖時的色帶。刻意做矮:16/7 在桌機是 330px 的空白色塊,看起來像圖沒載到 */
+.pb-swatch{margin:clamp(26px,4vw,42px) 0 0;aspect-ratio:16/5;border-radius:3px}
+@media(max-width:600px){.pb-swatch{aspect-ratio:16/6}}
+.pb-body{margin-top:clamp(26px,4vw,42px)}
+.pb-body>*:first-child{margin-top:0}
+.pb-body p{margin:20px 0 0;font:400 16.5px/2 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-body h2{margin:clamp(38px,5vw,58px) 0 0;font:800 clamp(1.22rem,2.1vw,1.55rem)/1.5 'Noto Sans TC',sans-serif}
+.pb-body h3{margin:30px 0 0;font:700 1.0625rem/1.6 'Noto Sans TC',sans-serif}
+.pb-body h4{margin:24px 0 0;font:700 .9375rem/1.6 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.7)}
+.pb-body a{color:#D14E12;text-decoration:underline;text-underline-offset:3px}
+.pb-body img{max-width:100%;height:auto}
+.pb-list{margin:16px 0 0;padding-left:22px}
+.pb-list li{margin-top:8px;font:400 16.5px/1.95 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.84);overflow-wrap:anywhere}
+.pb-quote{margin:26px 0 0;padding:2px 0 2px 18px;border-left:3px solid #FF6B2C;font:500 16.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.76)}
+.pb-body code{background:rgba(9,11,14,.06);padding:2px 6px;border-radius:3px;font:400 .9em ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code{margin:22px 0 0;padding:16px 18px;background:#090B0E;color:#E8E4DA;border-radius:3px;overflow-x:auto;font:400 13.5px/1.72 ui-monospace,SFMono-Regular,Menlo,monospace}
+.pb-code code{background:none;padding:0;white-space:pre}
+.pb-fig{margin:clamp(26px,4vw,40px) 0}
+.pb-fig img{display:block;width:100%;height:auto;border-radius:3px}
+.pb-fig figcaption{margin-top:10px;font:400 13px/1.7 'Noto Sans TC',sans-serif;color:rgba(9,11,14,.5)}
+.pb-tablewrap{margin:24px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pb-table{border-collapse:collapse;min-width:100%;font:400 14.5px/1.7 'Noto Sans TC',sans-serif}
+.pb-table th,.pb-table td{padding:11px 14px;border-bottom:1px solid rgba(9,11,14,.12);text-align:left;white-space:nowrap}
+.pb-table th{font-weight:700;background:rgba(9,11,14,.04)}
+.pb-hr{margin:clamp(34px,5vw,50px) 0 0;border:0;border-top:1px solid rgba(9,11,14,.14)}
+.pb-cta{margin:clamp(42px,6vw,66px) 0 0;padding:clamp(22px,4vw,34px);background:#090B0E;color:#F2EFE8;border-radius:3px}
+.pb-cta h2{margin:0;font:800 clamp(1.06rem,1.9vw,1.32rem)/1.5 'Noto Sans TC',sans-serif;color:#F2EFE8}
+.pb-cta p{margin:10px 0 0;font:400 14.5px/1.85 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.72)}
+.pb-cta a{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:13px 22px;min-height:44px;box-sizing:border-box;background:#FF6B2C;color:#090B0E;font:700 14px 'Noto Sans TC',sans-serif;text-decoration:none;border-radius:2px}
+.pb-cta a:hover{background:#FF8149;color:#090B0E}
+.pb-rel{margin:clamp(42px,6vw,64px) 0 0}
+.pb-rel h2{margin:0 0 16px;font:700 11.5px 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(9,11,14,.45)}
+.pb-relgrid{display:grid;gap:12px}
+.pb-relcard{display:block;padding:17px 19px;background:#fff;border:1px solid rgba(9,11,14,.1);border-radius:3px;text-decoration:none;transition:border-color .18s,transform .18s}
+.pb-relcard:hover{border-color:#FF6B2C;transform:translateY(-2px)}
+.pb-relcard .t{font:700 15px/1.55 'Noto Sans TC',sans-serif;color:#090B0E}
+.pb-relcard .d{margin-top:6px;font:500 12px 'Space Grotesk','Noto Sans TC',sans-serif;color:rgba(9,11,14,.46)}
+@media(min-width:760px){.pb-relgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</helmet>
+<a id="pq-skip" href="#pq-main">跳到主要內容</a>
+<dc-import name="Nav" active="blog" cta-threshold="0.4" hint-size="100%,68px"></dc-import>
+
+<main id="pq-main" class="pb-wrap" data-screen-label="n8n、套裝 SaaS、客製 AI 平台怎麼選?">
+  <a class="pb-back" href="/blog">← 回到觀點</a>
+  <span class="pb-kicker">AI 導入</span>
+  <h1 class="pb-title">n8n、套裝 SaaS、客製 AI 平台怎麼選?先問「壞掉的時候誰修」</h1>
+  <p class="pb-lede">三條路都能把 AI 接進流程,差別在誰負責讓它持續運作。從維運、資料、改動成本與轉真人機制比較,並說明各自適合誰。</p>
+  <p class="pb-meta">2026 年 9 月 24 日 · 7 分鐘閱讀</p>
+  <figure class="pb-cover"><img src="/assets/blog/n8n-vs-saas-vs-custom-ai-platform.webp" alt="封面:三條路線並排——左邊 n8n 的節點圖、中間套裝 SaaS 的單一方塊、右邊客製平台的模組堆疊" width="1200" height="630" fetchpriority="high" decoding="async"></figure>
+  <article class="pb-body">
+<p><strong>直接答案:</strong>把 AI 接進營運流程有三條路——(1)<strong>n8n 這類工作流程工具</strong>:自己拉節點把 LINE、表單、AI、試算表串起來,彈性高、起步便宜,但流程壞掉時是你們自己修;(2)<strong>套裝 SaaS</strong>:買一個現成工具解決一個明確任務,最快上手,但工具之間的資料仍要人搬,且能改的只有廠商開放的設定;(3)<strong>客製 AI 平台</strong>:由廠商依你的流程建置、串接、維運,含轉真人機制與後續調整,起步投入最高,但「壞掉誰修、改流程誰動手」有明確歸屬。三條都是合理選擇——關鍵不在功能表,而在你們<strong>有沒有人能長期維護</strong>、以及<strong>流程是不是還在變</strong>。</p>
+<h2>先講清楚三條路各是什麼</h2>
+<p>三個名詞常被混在一起比較,但它們回答的是不同問題:</p>
+<ul class="pb-list"><li><strong>n8n</strong>(以及 Zapier、Make 這一類):<strong>工作流程自動化工具</strong>。你在畫面上拉節點:「LINE 收到訊息 → 丟給 AI 模型 → 把結果寫進試算表 → 通知業務」。n8n 可以自架也有雲端版,開源、節點多、社群大。它給你的是<strong>積木</strong>,流程怎麼組、出錯怎麼補,由你們決定。</li><li><strong>套裝 SaaS</strong>:<strong>現成的產品</strong>,例如某個 AI 客服工具、某個排程工具。訂閱、設定、上線,通常一天內。它給你的是<strong>一個做好的房間</strong>,格局固定,能動的是家具。</li><li><strong>客製 AI 平台</strong>:<strong>依你的流程建置並維運的系統</strong>。以 PeakQi 為例,是同一個後台上的模組(接客、CRM、報價、內容),依你卡住的那一段組合,串接既有的 LINE、表單與 CRM,含轉真人與上線後校準。它給你的是<strong>有人負責的一條流程</strong>。</li></ul>
+<p>所以真正的問題不是「哪個功能多」,而是:<strong>這條流程上線之後,誰負責它繼續正常運作?</strong></p>
+<h2>一張表:從維運的角度比較</h2>
+<div class="pb-tablewrap"><table class="pb-table"><thead><tr><th></th><th>n8n(自組工作流)</th><th>套裝 SaaS</th><th>客製 AI 平台</th></tr></thead><tbody><tr><td>誰把流程組起來</td><td>你們自己(需要懂邏輯的人)</td><td>廠商做好,你們設定</td><td>廠商依你流程建置</td></tr><tr><td>壞掉時誰修</td><td>你們;凌晨三點 API 改版也是你們</td><td>廠商修產品,但你們的串接自己顧</td><td>廠商,含在維運範圍內</td></tr><tr><td>資料放在哪</td><td>自架就在你們手上;雲端版在 n8n</td><td>廠商的伺服器,匯出看方案</td><td>依合約,簽約前要確認獨立存放與可匯出</td></tr><tr><td>改流程要誰動手</td><td>你們,馬上能改</td><td>只能在廠商開放的設定內改</td><td>提需求給廠商,依範圍排程</td></tr><tr><td>AI 判斷不了時</td><td>要自己設計轉真人節點,常被略過</td><td>看產品有沒有做</td><td>明確的轉真人規則與對話摘要跟隨,是交付項目</td></tr><tr><td>串接既有 LINE / CRM</td><td>節點多、多數串得上,細節自己處理</td><td>常只串自家生態或熱門工具</td><td>含在導入範圍,既有工具可保留</td></tr><tr><td>費用形狀</td><td>軟體便宜或免費,<strong>人力是主要成本</strong></td><td>按月訂閱,可預期</td><td>導入費 + 月費 + 用量費</td></tr><tr><td>適合的團隊</td><td>有至少一位能維護自動化的人</td><td>只有一個明確任務要解決</td><td>詢問量穩定、流程跨多個工具、內部沒有維護人力</td></tr></tbody></table></div>
+<p>表格裡最容易被低估的是第二列。n8n 的軟體成本確實低,但<strong>流程上線後的維護是持續的人力成本</strong>:上游 API 改版、AI 模型回覆格式變了、某個節點逾時——這些不會出現在報價單上,卻會出現在某位同事的加班裡。</p>
+<h2>決策流程:四個問題,照順序問</h2>
+<ol class="pb-list"><li><strong>你們有沒有人能長期維護自動化?</strong> 不是「會不會拉節點」,是「離職後有沒有人接」。有 → n8n 是很好的選擇;沒有 → 跳過它,不然三個月後流程壞了沒人敢碰。</li><li><strong>要解決的是一個任務,還是一條流程?</strong> 一個任務(例如「自動回常見問題」)→ 套裝 SaaS 通常最划算。一條流程(接住詢問 → 整理成客戶卡 → 排跟進 → 轉真人)→ 單一工具接不完,得在 n8n 與客製平台之間選。</li><li><strong>流程定型了嗎?</strong> 還在每週改 → n8n 讓你自己快速調;已經穩定、只是沒人力做 → 客製平台把它接走。</li><li><strong>AI 判斷不了時,誰接?</strong> 這題在三條路都要有答案。n8n 要自己畫轉真人節點;SaaS 看產品;客製平台是交付項目。<strong>答不出來的方案,先不要上線。</strong></li></ol>
+<p>四題問完,答案通常就出來了——而且常常不是「三選一」,見下一節。</p>
+<h2>適合與不適合,以及常見的組合</h2>
+<ul class="pb-list"><li><strong>n8n 適合</strong>:內部有工程師或懂邏輯的營運人員、流程還在迭代、想先低成本驗證想法。<strong>不適合</strong>:沒人維護、流程涉及客戶對話而沒設計轉真人。</li><li><strong>套裝 SaaS 適合</strong>:任務單一明確、預算要可預期、不想碰任何技術。<strong>不適合</strong>:需要多個工具之間傳資料——那段「沒有人接的縫」正是漏客人的地方。</li><li><strong>客製 AI 平台適合</strong>:詢問集中在 LINE / 表單、量穩定、流程跨多個工具、內部沒有維護人力、需要人工審核關卡。<strong>不適合</strong>:詢問量很小、或流程還沒定型(先用 n8n 或 SaaS 摸清楚再說)。</li></ul>
+<p><strong>實務上常見的組合</strong>:核心流程(接客 → CRM → 跟進)交給客製平台,因為那段壞了直接影響營收、要有人負責;周邊的內部小自動化(報表、通知、資料同步)用 n8n 自己拉,壞了影響小、改起來快。兩者不衝突。</p>
+<h2>風險與限制</h2>
+<ul class="pb-list"><li><strong>n8n 的隱性成本是人</strong>。自架要顧主機與更新;雲端版要看用量方案。更重要的是「唯一會改的那個人」離開時,流程就成了沒人敢動的黑盒子。上線前至少要有第二個人看得懂。</li><li><strong>SaaS 的風險是邊界</strong>。你能改的只有廠商開放的部分;資料匯出格式與期限,簽約前要問清楚。</li><li><strong>客製平台的風險是依賴</strong>。廠商倒了或不合作,系統怎麼辦——確認資料獨立存放、可匯出、合約有退場條件。這三題在<a href="/blog/how-to-choose-ai-automation-partner">怎麼選廠商</a>那篇有完整清單。</li><li><strong>三條路都不會「裝了就有效」</strong>。知識庫要你們整理、階段要你們定義、上線後前幾週要依真實對話校準。工具不同,這些工作不會消失。</li></ul>
+<h2>常見問題</h2>
+<p><strong>Q:我們已經用 n8n 串了一些流程,還需要客製平台嗎?</strong> 不一定。如果那些流程有人維護、客戶對話有轉真人機制、CRM 資料是完整的,就繼續用。會考慮換的通常是三種情況:維護的人要走了、流程開始碰客戶對話而沒有審核機制、或 CRM 老是空的(見<a href="/blog/ai-crm-vs-traditional-crm">AI CRM 跟傳統 CRM 差在哪</a>)。</p>
+<p><strong>Q:客製平台是不是就是「從零寫一套」?</strong> 以 PeakQi 的做法不是。是既有模組依流程組合、再串你們既有的工具;完整客製開發是另一種規模的專案。兩者差異與費用結構見<a href="/blog/ai-automation-cost-and-timeline">費用完整拆解</a>。</p>
+<p><strong>Q:可以先用 SaaS 或 n8n 驗證,之後再換嗎?</strong> 可以,而且建議。先用便宜的方式確認「這段流程自動化真的有價值」,再決定要不要投入更完整的建置。要注意的是<strong>資料的可攜性</strong>:一開始就把客戶資料放在能匯出的地方,換方案時才不必重來。</p>
+<p><strong>Q:n8n 也能接 AI 模型,為什麼還需要別人做?</strong> 接得上和運作得穩是兩回事。接上 AI 只是第一步,擷取欄位、判斷不了時轉真人、對話摘要跟著過去、依階段排跟進——這些在 n8n 裡每一項都要自己設計與測試。做得到,但要有人做、有人維護;<a href="/blog/line-ai-support-crm-integration">LINE AI 客服怎麼串接 CRM</a>拆解了這四個環節各要做什麼。</p>
+<p><strong>Q:實際案例?</strong> 房仲情境:LINE 詢問由 AI 接住、排帶看、客況寫進名單,含轉真人(<a href="/cases/real-estate-line-ai-assistant">完整案例</a>);交付方式(六個階段、三道降低風險的機制)見<a href="/method">導入方法</a>。</p>
+<hr class="pb-hr">
+<p><em>作者:PeakQi 奇鋒國際團隊。本文的比較維度整理自我們在評估階段實際被問到的問題;n8n 與各套裝 SaaS 的功能以各自官方文件為準,本文不引用任何價格數字。PeakQi 提供的是客製 AI 平台這一條路,評估時請以文中的四個問題為準,不以名稱為準。發布:2026-09-24。</em></p>
+  </article>
+  <hr class="pb-hr">
+  <aside class="pb-cta">
+    <h2>想知道這些流程在你的公司長什麼樣?</h2>
+    <p>預約一次場景 Demo,我們用你實際的流程走一遍,再一起評估哪一段值得先自動化。</p>
+    <a href="/demo">預約場景 Demo →</a>
+  </aside>
+  <nav class="pb-rel" aria-label="延伸閱讀">
+    <h2>延伸閱讀</h2>
+    <div class="pb-relgrid">
+      <a class="pb-relcard" href="/blog/how-to-choose-ai-automation-partner"><span class="t">台灣中小企業 AI 自動化公司怎麼選:六個問題先問清楚</span><span class="d">2026 年 9 月 2 日 · 4 分鐘閱讀</span></a>
+      <a class="pb-relcard" href="/blog/ai-automation-cost-and-timeline"><span class="t">中小企業導入 AI 自動化要多少錢、多久上線?費用結構完整拆解</span><span class="d">2026 年 9 月 2 日 · 4 分鐘閱讀</span></a>
+      <a class="pb-relcard" href="/blog/ai-crm-vs-traditional-crm"><span class="t">AI CRM 跟傳統 CRM 差在哪?一張表看懂,再決定要不要換</span><span class="d">2026 年 9 月 24 日 · 7 分鐘閱讀</span></a>
+    </div>
+  </nav>
+</main>
+<dc-import name="Footer" hint-size="100%,460px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

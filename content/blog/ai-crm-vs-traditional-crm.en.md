@@ -2,7 +2,7 @@
 slug: ai-crm-vs-traditional-crm
 title: AI CRM vs traditional CRM: the real difference, in one table
 summary: A traditional CRM stores what you type; an AI CRM turns conversations into records and schedules the next step. One table, plus when the old CRM is enough.
-date: 2026-09-25
+date: 2026-09-24
 tags:
   - ai-adoption
   - customer-ops
@@ -100,4 +100,4 @@ Weddings: LINE enquiries are caught, organised into a customer record and schedu
 
 ---
 
-*Written by the PeakQi team. The three-layer framing and the comparison table come from the design of PeakQi's own CRM module ([solutions](/en/solutions)) and our adoption work. Other vendors' AI CRMs may work differently — when evaluating, go by the four questions in this article, not by the name. Published 2026-09-25.*
+*Written by the PeakQi team. The three-layer framing and the comparison table come from the design of PeakQi's own CRM module ([solutions](/en/solutions)) and our adoption work. Other vendors' AI CRMs may work differently — when evaluating, go by the four questions in this article, not by the name. Published 2026-09-24.*
