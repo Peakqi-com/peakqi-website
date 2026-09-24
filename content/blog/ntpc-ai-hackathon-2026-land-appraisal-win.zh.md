@@ -91,7 +91,7 @@ draft: false
 - LINE TODAY：[新北 AI 智慧城市黑客松報導](https://today.line.me/tw/v3/article/j7Rz6Da)
 - 生活新聞網 life.tw：[5 團隊各抱 10 萬元獎金](https://life.tw/article/%E6%96%B0%E5%8C%97%E9%A6%96%E8%BE%A6ai%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%E9%BB%91%E5%AE%A2%E6%9D%BE-5%E5%9C%98%E9%9A%8A%E5%90%84%E6%8A%B110%E8%90%AC%E5%85%83%E7%8D%8E%E9%87%91-3148073)
 - 獨家報導：[新北首辦 AI 智慧城市黑客松](https://www.scooptw.com/taiwanpost/527104/%E6%96%B0%E5%8C%97%E9%A6%96%E8%BE%A6ai%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%E9%BB%91%E5%AE%A2%E6%9D%BE%E3%80%805%E5%9C%98%E9%9A%8A%E5%90%84%E6%8A%B110%E8%90%AC%E5%85%83%E7%8D%8E%E9%87%91/)
-- 內容平台：[新北首屆黑客松,245 位 AI 高手同場競技](https://www.contentplatform.info/articles/512209/%E6%96%B0%E5%8C%97%E9%A6%96%E5%B1%86%E3%80%8C2026%E6%96%B0%E5%8C%97%E5%B8%82ai%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%E9%BB%91%E5%AE%A2%E6%9D%BE%E7%AB%B6%E8%B3%BD%E3%80%8D-245%E4%BD%8Dai%E9%AB%98/)
+- 內容平台：[新北首屆黑客松，245 位 AI 高手同場競技](https://www.contentplatform.info/articles/512209/%E6%96%B0%E5%8C%97%E9%A6%96%E5%B1%86%E3%80%8C2026%E6%96%B0%E5%8C%97%E5%B8%82ai%E6%99%BA%E6%85%A7%E5%9F%8E%E5%B8%82%E9%BB%91%E5%AE%A2%E6%9D%BE%E7%AB%B6%E8%B3%BD%E3%80%8D-245%E4%BD%8Dai%E9%AB%98/)
 
 ## 常見問題
 
