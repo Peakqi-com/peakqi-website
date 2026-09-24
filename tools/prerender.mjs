@@ -130,7 +130,15 @@ await ctx.route('**/*', (route) => {
 
 const results = [];
 try {
-  for (const [name, cleanPath] of PAGES) {
+  // --only=Blog,Cases:只渲染指定頁面。文章數量變動時只需重做兩個列表頁,
+  // 不必把 26 頁全部重跑 —— 全跑一次會讓十幾個不相關頁面出現 scoped class
+  // 換號(scp4 ↔ scp6)的雜訊差異,而且 CI 上跑全站要好幾分鐘。
+  const onlyArg = process.argv.find((a) => a.startsWith('--only='));
+  const ONLY = onlyArg ? new Set(onlyArg.slice(7).split(',').map((s) => s.trim()).filter(Boolean)) : null;
+  const targets = ONLY ? PAGES.filter(([name]) => ONLY.has(name)) : PAGES;
+  if (ONLY && !targets.length) throw new Error(`--only 指定的頁面都不存在:${[...ONLY].join(',')}`);
+
+  for (const [name, cleanPath] of targets) {
     for (const lang of ['zh', 'en']) {
       const en = lang === 'en';
       const srcFile = path.join(ROOT, en ? 'en' : '.', name + '.dc.html');
