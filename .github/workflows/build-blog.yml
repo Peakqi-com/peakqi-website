@@ -65,6 +65,17 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # prerender 輸出的 scoped class 編號(scp1、scp2…)是 DC runtime 依掛載順序配的,
+          # CI 與本機的時序不同就會換號,內容其實一字未改。這種差異不能 commit:
+          # 每次推送都會多一個雜訊 commit,還會讓本機下一次推送被拒(non-fast-forward)。
+          # 逐檔檢查:diff 裡扣掉 class="scpN" 的行之後若空無一物,就把該檔還原。
+          for f in $(git diff --name-only); do
+            real=$(git diff -- "$f" | grep -E '^[+-][^+-]' | grep -vE 'class="scp[0-9]+"' || true)
+            if [ -z "$real" ]; then
+              git checkout -- "$f"
+              echo "捨棄純 class 換號的變動:$f"
+            fi
+          done
           if git diff --quiet; then
             echo "產物沒有變化,不需要 commit"
             exit 0
