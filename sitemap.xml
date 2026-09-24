@@ -383,7 +383,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -392,9 +392,27 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/blog/ai-crm-vs-traditional-crm</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/ai-crm-vs-traditional-crm"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/blog/ai-crm-vs-traditional-crm</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/ai-crm-vs-traditional-crm"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/ai-crm-vs-traditional-crm"/>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.peakqi.com/blog/ai-automation-cost-and-timeline</loc>
