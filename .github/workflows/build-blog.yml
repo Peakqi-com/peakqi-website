@@ -50,6 +50,17 @@ jobs:
       - name: 重建文章與索引
         run: node tools/build-blog.mjs
 
+      # /blog 與 /en/blog 這兩個列表頁供應的是 built/Blog.html 與 built/en/Blog.html,
+      # 只有 prerender 會產生 —— build-blog 重建的 Blog.dc.html 只是模板,線上不直接用。
+      # 少了這步,新增或刪除文章後列表頁不會更新(文章頁本身不受影響)。
+      # 只渲染 Blog 這一頁:全站 26 頁會讓十幾個不相關頁面出現 scoped class 換號的雜訊。
+      # ubuntu-latest 內建 Google Chrome,playwright-core 只是驅動它,不必另外下載瀏覽器。
+      - name: 重做文章列表頁(需要真實瀏覽器)
+        run: |
+          npm ci --no-audit --no-fund
+          PQ_CHROME="$(command -v google-chrome || command -v chromium-browser)" \
+            node tools/prerender.mjs --only=Blog
+
       - name: 有變動才 commit
         run: |
           git config user.name 'github-actions[bot]'
@@ -62,6 +73,6 @@ jobs:
           git commit -m "自動重建文章產物
 
           由 .github/workflows/build-blog.yml 觸發,來源 commit ${GITHUB_SHA::7}。
-          產物(blog/、posts.js、Blog.dc.html、sitemap.xml、feed.xml、vercel.json)
+          產物(blog/、posts.js、Blog.dc.html、built/Blog.html、tpl/、sitemap.xml、feed.xml、vercel.json)
           必須進版控,線上才看得到 —— 這個專案的 Vercel 沒有 buildCommand。"
           git push
