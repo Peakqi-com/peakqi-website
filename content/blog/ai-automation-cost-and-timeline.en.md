@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - ai-adoption
   - automation
+cover: /assets/blog/ai-automation-cost-and-timeline.webp
+coverAlt: Cover: three bars of different heights for setup, monthly and usage fees, with a Day 0 to Day 10 timeline underneath
 updated:
 draft: false
 ---

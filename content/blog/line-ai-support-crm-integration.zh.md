@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - automation
   - customer-ops
+cover: /assets/blog/line-ai-support-crm-integration.webp
+coverAlt: 封面:LINE、AI、欄位、CRM 四個節點用箭頭串成一條鏈,末端排出跟進節奏
 updated:
 draft: false
 ---

@@ -16,16 +16,16 @@
 <link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/blog/line-ai-support-crm-integration">
 <link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/blog/line-ai-support-crm-integration">
 <link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/blog/line-ai-support-crm-integration">
-<meta property="og:image" content="https://www.peakqi.com/og.png">
+<meta property="og:image" content="https://www.peakqi.com/assets/blog/line-ai-support-crm-integration.webp">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="奇鋒國際 PeakQi">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程｜奇鋒國際 PeakQi">
 <meta name="twitter:description" content="LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。">
-<meta name="twitter:image" content="https://www.peakqi.com/og.png">
+<meta name="twitter:image" content="https://www.peakqi.com/assets/blog/line-ai-support-crm-integration.webp">
 <link rel="alternate" type="application/rss+xml" title="觀點" href="/feed.xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程","description":"LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。","inLanguage":"zh-Hant-TW","datePublished":"2026-09-02","dateModified":"2026-09-02","image":"https://www.peakqi.com/og.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/blog/line-ai-support-crm-integration"},"author":{"@type":"Organization","name":"奇鋒國際 PeakQi","url":"https://www.peakqi.com/"},"publisher":{"@type":"Organization","name":"奇鋒國際 PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程","description":"LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。","inLanguage":"zh-Hant-TW","datePublished":"2026-09-02","dateModified":"2026-09-02","image":"https://www.peakqi.com/assets/blog/line-ai-support-crm-integration.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.peakqi.com/blog/line-ai-support-crm-integration"},"author":{"@type":"Organization","name":"奇鋒國際 PeakQi","url":"https://www.peakqi.com/"},"publisher":{"@type":"Organization","name":"奇鋒國際 PeakQi","logo":{"@type":"ImageObject","url":"https://www.peakqi.com/assets/logo.png"}}}</script>
 <script>window.__dcComponentDir='/';</script>
 <script src="/support.js"></script>
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}
@@ -110,7 +110,7 @@ body{animation:pqPageIn 260ms cubic-bezier(0.16,1,0.3,1)}
   <h1 class="pb-title">LINE AI 客服怎麼串接 CRM?從接住詢問到自動建檔的完整流程</h1>
   <p class="pb-lede">LINE 官方帳號接上 AI 只解決一半問題——回完的對話沒有進 CRM,追客還是靠人腦。這篇拆解串接的四個環節、常見斷點與導入步驟。</p>
   <p class="pb-meta">2026 年 9 月 2 日 · 4 分鐘閱讀</p>
-  <div class="pb-swatch" style="background:linear-gradient(118deg,#A2AFB5,#BFAEB8)" aria-hidden="true"></div>
+  <figure class="pb-cover"><img src="/assets/blog/line-ai-support-crm-integration.webp" alt="封面:LINE、AI、欄位、CRM 四個節點用箭頭串成一條鏈,末端排出跟進節奏" width="1200" height="630" fetchpriority="high" decoding="async"></figure>
   <article class="pb-body">
 <p><strong>直接答案:</strong>LINE AI 客服串接 CRM 的完整流程是四個環節:AI 在 LINE 官方帳號先接住詢問並辨識需求 → 把對話中的關鍵欄位(需求類型、預算、時段)自動擷取出來 → 在 CRM 建立客戶卡、指派負責人 → 依客戶狀態排跟進提醒。技術上靠 LINE Messaging API 與 CRM 的 API 對接;實務上的成敗關鍵不在串接本身,而在欄位設計與「AI 判斷不了時轉真人」的機制。</p>
 <h2>為什麼只有 AI 回覆不夠</h2>

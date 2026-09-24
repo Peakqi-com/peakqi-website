@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - ai-adoption
   - automation
+cover: /assets/blog/ai-automation-cost-and-timeline.webp
+coverAlt: 封面:導入費、月費、使用量費三根高低不同的柱狀圖,下方是 DAY 0 到 DAY 10 的時程刻度
 updated:
 draft: false
 ---

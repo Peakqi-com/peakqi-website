@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - automation
   - customer-ops
+cover: /assets/blog/line-ai-support-crm-integration.webp
+coverAlt: Cover: four nodes — LINE, AI, fields, CRM — linked by arrows into one chain, with follow-up cadence at the end
 updated:
 draft: false
 ---

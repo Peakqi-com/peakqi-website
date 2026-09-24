@@ -6,6 +6,8 @@ date: 2026-09-25
 tags:
   - ai-adoption
   - customer-ops
+cover: /assets/blog/ai-crm-vs-traditional-crm.webp
+coverAlt: Cover: empty traditional CRM form rows on the left, auto-filled and ticked AI CRM rows on the right
 updated:
 draft: false
 ---

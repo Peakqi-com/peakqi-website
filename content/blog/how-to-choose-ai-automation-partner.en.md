@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - ai-adoption
   - automation
+cover: /assets/blog/how-to-choose-ai-automation-partner.webp
+coverAlt: Cover: six questions to ask before signing, laid out as six checklist cards with the first two ticked
 updated:
 draft: false
 ---

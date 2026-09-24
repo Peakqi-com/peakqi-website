@@ -6,6 +6,8 @@ date: 2026-09-25
 tags:
   - ai-adoption
   - customer-ops
+cover: /assets/blog/ai-crm-vs-traditional-crm.webp
+coverAlt: 封面:左側是空白的傳統 CRM 表單列,右側是已自動填入並打勾的 AI CRM 列
 updated:
 draft: false
 ---

@@ -6,6 +6,8 @@ date: 2026-09-02
 tags:
   - ai-adoption
   - automation
+cover: /assets/blog/how-to-choose-ai-automation-partner.webp
+coverAlt: 封面:六個簽約前該問的問題,排成六格勾選卡,前兩格已勾選
 updated:
 draft: false
 ---
