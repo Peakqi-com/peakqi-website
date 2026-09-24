@@ -58,6 +58,8 @@ const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</
 // workflow 步驟沿用原 Case.dc.html 的 wfMap(該檔已退役,文字搬到這裡成為唯一來源)
 const EXTRA = {
   wedding: {
+    // 建置與交付期間(依專案 repo 紀錄,月為單位)—— 不是客戶端的導入起訖日,那個仍待內部紀錄
+    period: { zh: '2026 年 3 月至 6 月', en: 'between March and June 2026' },
     slug: 'wedding-industry-ai-suite',
     summary: L('婚紗款式、檔期、試妝與方案詢問集中在 LINE、由客服重複回覆的婚慶業者,導入 AI 接客與試穿試妝模擬後,常見問題由 AI 先接住,價格與檔期由專人確認。',
       'A wedding business whose dress, date, makeup-trial and package questions all piled into LINE. After rolling out AI intake with dress try-on and makeup previews, AI catches the routine questions first — pricing and dates stay with the team.'),
@@ -71,6 +73,8 @@ const EXTRA = {
     ]
   },
   interior: {
+    // 建置與交付期間(依專案 repo 紀錄,月為單位)—— 不是客戶端的導入起訖日,那個仍待內部紀錄
+    period: { zh: '2026 年 3 月至 6 月', en: 'between March and June 2026' },
     slug: 'interior-design-ai-platform',
     summary: L('客戶每改一次風格就要重畫、重渲染、重做簡報的室內設計公司,導入空間渲染、風格模擬與自動提案簡報後,設計師把時間放回設計本身。',
       'An interior design firm where every style change meant redrawing, re-rendering and rebuilding the deck. With space renders, style previews and auto proposal decks, designers put their time back into design.'),
@@ -84,6 +88,8 @@ const EXTRA = {
     ]
   },
   realestate: {
+    // 建置與交付期間(依專案 repo 紀錄,月為單位)—— 不是客戶端的導入起訖日,那個仍待內部紀錄
+    period: { zh: '2026 年 6 月至 9 月', en: 'between June and September 2026' },
     slug: 'real-estate-line-ai-assistant',
     summary: L('物件、格局、價格與帶看詢問散在 LINE、回覆常隔數小時的房仲團隊,串接 LINE 官方帳號後由 AI 自動回物件、排帶看;議價與成交仍由業務處理。',
       'A real-estate team whose listing, layout, price and viewing questions scattered across LINE, with replies taking hours. Integrated with the LINE official account, AI now answers listings and books viewings — negotiation and closing stay with the agents.'),
@@ -296,9 +302,10 @@ th{font-weight:700;font-size:.8125rem;letter-spacing:.06em;color:rgba(9,11,14,.5
     <div>
       ${sectionLabel('04', L('TIMELINE — 導入時間', 'TIMELINE — Rollout time'))}
       <p style="margin:0;max-width:760px;font:400 1rem/1.9 ${font};color:rgba(9,11,14,.78)">
-        ${L('此案實際導入期間整理中,尚未公開。作為參考:PeakQi 標準模組的第一階段最快 10 個工作天上線(DAY 0 簽約 → DAY 1–4 建置 → DAY 5–7 測試 → DAY 7–10 校準上線);像此案這類完整垂直平台,參考時程約六週起。',
-        'The exact rollout duration for this case is being compiled and not yet published. For reference: Phase 1 on PeakQi standard modules goes live in as little as 10 working days (sign Day 0 → build Days 1–4 → test Days 5–7 → calibrate and launch Days 7–10); a full vertical platform like this one starts around six weeks.')}
-        <!-- TODO_REQUIRES_APPROVAL: 此案實際導入起訖日期,由 PeakQi 內部紀錄補上 -->
+        ${x.period
+          ? L(`此案的建置與交付期間為 ${x.period.zh}(依專案紀錄)。`, `Built and delivered ${x.period.en} (per project records).`)
+          : L('此案實際導入期間整理中,尚未公開。', 'The exact rollout duration for this case is being compiled and not yet published.')}${L('作為參考:PeakQi 標準模組的第一階段最快 10 個工作天上線(DAY 0 簽約 → DAY 1–4 建置 → DAY 5–7 測試 → DAY 7–10 校準上線);像此案這類完整垂直平台,參考時程約六週起。', ' For reference: Phase 1 on PeakQi standard modules goes live in as little as 10 working days (sign Day 0 → build Days 1–4 → test Days 5–7 → calibrate and launch Days 7–10); a full vertical platform like this one starts around six weeks.')}
+        ${x.period ? '' : '<!-- TODO_REQUIRES_APPROVAL: 此案實際導入起訖日期,由 PeakQi 內部紀錄補上 -->'}
       </p>
     </div>
 

@@ -230,6 +230,36 @@
       "permanent": true
     },
     {
+      "source": "/AIMarketingPro.dc.html",
+      "destination": "/ai-marketing-pro",
+      "permanent": true
+    },
+    {
+      "source": "/en/AIMarketingPro.dc.html",
+      "destination": "/en/ai-marketing-pro",
+      "permanent": true
+    },
+    {
+      "source": "/ZhangguiAI.dc.html",
+      "destination": "/zhanggui-ai",
+      "permanent": true
+    },
+    {
+      "source": "/en/ZhangguiAI.dc.html",
+      "destination": "/en/zhanggui-ai",
+      "permanent": true
+    },
+    {
+      "source": "/AllInStudio.dc.html",
+      "destination": "/all-in-studio",
+      "permanent": true
+    },
+    {
+      "source": "/en/AllInStudio.dc.html",
+      "destination": "/en/all-in-studio",
+      "permanent": true
+    },
+    {
       "source": "/AIWeddingPro.dc.html",
       "destination": "/ai-wedding-pro",
       "permanent": true
@@ -492,6 +522,30 @@
     {
       "source": "/en/bubble",
       "destination": "/built/en/Bubble.html"
+    },
+    {
+      "source": "/ai-marketing-pro",
+      "destination": "/built/AIMarketingPro.html"
+    },
+    {
+      "source": "/en/ai-marketing-pro",
+      "destination": "/built/en/AIMarketingPro.html"
+    },
+    {
+      "source": "/zhanggui-ai",
+      "destination": "/built/ZhangguiAI.html"
+    },
+    {
+      "source": "/en/zhanggui-ai",
+      "destination": "/built/en/ZhangguiAI.html"
+    },
+    {
+      "source": "/all-in-studio",
+      "destination": "/built/AllInStudio.html"
+    },
+    {
+      "source": "/en/all-in-studio",
+      "destination": "/built/en/AllInStudio.html"
     },
     {
       "source": "/ai-wedding-pro",

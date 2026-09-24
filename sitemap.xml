@@ -167,7 +167,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/products"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/products"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/products"/>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -176,7 +176,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/products"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/products"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/products"/>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -195,6 +195,60 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/bubble"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/bubble"/>
     <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/ai-marketing-pro</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-marketing-pro"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-marketing-pro"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-marketing-pro"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/ai-marketing-pro</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/ai-marketing-pro"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/ai-marketing-pro"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/ai-marketing-pro"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/zhanggui-ai</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/zhanggui-ai"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/zhanggui-ai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/zhanggui-ai"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/zhanggui-ai</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/zhanggui-ai"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/zhanggui-ai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/zhanggui-ai"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/all-in-studio</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/all-in-studio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/all-in-studio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/all-in-studio"/>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.peakqi.com/en/all-in-studio</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/all-in-studio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/all-in-studio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/all-in-studio"/>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -257,7 +311,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/wedding-industry-ai-suite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/wedding-industry-ai-suite"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/wedding-industry-ai-suite"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -266,7 +320,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/wedding-industry-ai-suite"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/wedding-industry-ai-suite"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/wedding-industry-ai-suite"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -275,7 +329,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/interior-design-ai-platform"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/interior-design-ai-platform"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/interior-design-ai-platform"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -284,7 +338,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/interior-design-ai-platform"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/interior-design-ai-platform"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/interior-design-ai-platform"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -293,7 +347,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/real-estate-line-ai-assistant"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/real-estate-line-ai-assistant"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/real-estate-line-ai-assistant"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -302,7 +356,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://www.peakqi.com/cases/real-estate-line-ai-assistant"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.peakqi.com/en/cases/real-estate-line-ai-assistant"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.peakqi.com/cases/real-estate-line-ai-assistant"/>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

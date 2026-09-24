@@ -35,6 +35,9 @@ const STATIC_PAGES = [
   ['/about', 'monthly', 0.7, 'About.dc.html'],
   ['/products', 'monthly', 0.7, 'Products.dc.html'],
   ['/bubble', 'monthly', 0.6, 'Bubble.dc.html'],
+  ['/ai-marketing-pro', 'monthly', 0.6, 'AIMarketingPro.dc.html'],
+  ['/zhanggui-ai', 'monthly', 0.6, 'ZhangguiAI.dc.html'],
+  ['/all-in-studio', 'monthly', 0.6, 'AllInStudio.dc.html'],
   ['/ai-wedding-pro', 'monthly', 0.6, 'AIWeddingPro.dc.html'],
   ['/ai-interior-pro', 'monthly', 0.6, 'AIInteriorPro.dc.html'],
   ['/privacy', 'yearly', 0.3, 'Privacy.dc.html']
