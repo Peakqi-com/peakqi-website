@@ -80,7 +80,9 @@ const CSP = [
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com",
   "media-src 'self'",
-  "connect-src 'self' https://unpkg.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
+  // blob: 與 data: 是給首頁相機的 GLTFLoader:three r160 用 ImageBitmapLoader(fetch)讀 GLB 內嵌貼圖,
+  // 貼圖會先變成 blob: URL 再 fetch —— 少了這兩個來源,相機會整台變白(2026-09-24 業主回報,CSP 上線時漏掉)。
+  "connect-src 'self' blob: data: https://unpkg.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
   "worker-src 'self' blob:",
   "frame-src 'self'",
   "frame-ancestors 'self'",
