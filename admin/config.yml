@@ -77,13 +77,21 @@ collections:
         multiple: true
         required: false
         i18n: duplicate
-        # 這五個要跟 tools/build-blog.mjs 的 TAGS 一致,填別的重建時會警告並被丟掉
+        # 這六個要跟 tools/build-blog.mjs 的 TAGS 一致,填別的重建時會警告並被丟掉
         options:
           - { label: 'AI 導入 (ai-adoption)', value: ai-adoption }
           - { label: '流程自動化 (automation)', value: automation }
           - { label: '客戶經營 (customer-ops)', value: customer-ops }
           - { label: '產業觀察 (industry)', value: industry }
           - { label: '製作筆記 (build-notes)', value: build-notes }
+          - { label: '公司動態 (news)', value: news }
+      - label: 同日排序權重
+        name: order
+        widget: number
+        value_type: int
+        required: false
+        i18n: duplicate
+        hint: 同一天有多篇時,數字大的排前面;平常留空。
       - label: 草稿
         name: draft
         widget: boolean

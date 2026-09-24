@@ -29,7 +29,8 @@ export const TAGS = {
   'automation': { zh: '流程自動化', en: 'Automation' },
   'customer-ops': { zh: '客戶經營', en: 'Customer ops' },
   'industry': { zh: '產業觀察', en: 'Industry' },
-  'build-notes': { zh: '製作筆記', en: 'Build notes' }
+  'build-notes': { zh: '製作筆記', en: 'Build notes' },
+  'news': { zh: '公司動態', en: 'News' }
 };
 
 const UI = {
@@ -142,6 +143,7 @@ function toIndex(entries) {
       slug: e.slug,
       date: m.date,
       updated: (m.updated || '').trim(),
+      order: Number(m.order) || 0, // 同日文章的排序權重,大者在前;不寫=0
       tags: tags.filter((t) => TAGS[t]),
       cover,
       coverEn,
@@ -153,8 +155,8 @@ function toIndex(entries) {
       _src: e
     });
   }
-  // 新→舊;同日期用 slug 穩定排序,避免重建時順序抖動
-  posts.sort((a, b) => (a.date === b.date ? a.slug.localeCompare(b.slug) : (a.date < b.date ? 1 : -1)));
+  // 新→舊;同日期先看 order(大者在前),再用 slug 穩定排序,避免重建時順序抖動
+  posts.sort((a, b) => (a.date === b.date ? ((b.order - a.order) || a.slug.localeCompare(b.slug)) : (a.date < b.date ? 1 : -1)));
   return posts;
 }
 
