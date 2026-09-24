@@ -77,6 +77,7 @@ draft: false
 
 ## 媒體報導
 
+- 新北市政府市政新聞（青年局，2026-09-13）：[「2026新北市AI智慧城市黑客松競賽」245位AI高手集結為市政提創新解方](https://www.ntpc.gov.tw/ch/home.jsp?id=e8ca970cde5c00e1&dataserno=23ae1c1f06c2c9a16d54f5b709f4a717)
 - 聯合新聞網：[新北首辦 AI 智慧城市黑客松，5 團隊各抱 10 萬元獎金](https://udn.com/news/story/7323/9752019)
 - 聯合新聞網：[決賽與頒獎報導](https://udn.com/news/story/7323/9752448)
 - DIGITIMES：[新北市 AI 智慧城市黑客松登場](https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?cnlid=13&cat=100&id=0000768340_4K24HAGD3UD0Q11G5HN75)

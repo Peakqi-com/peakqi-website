@@ -77,6 +77,7 @@ The city said winning solutions will be evaluated by the relevant departments fo
 
 ## Press coverage (in Chinese)
 
+- New Taipei City Government press release (Youth Affairs Department, 13 Sep 2026): [245 AI builders gather at the 2026 New Taipei AI Smart City Hackathon to propose solutions for city services](https://www.ntpc.gov.tw/ch/home.jsp?id=e8ca970cde5c00e1&dataserno=23ae1c1f06c2c9a16d54f5b709f4a717)
 - United Daily News: [New Taipei's first AI Smart City Hackathon — five teams take NT$100,000 each](https://udn.com/news/story/7323/9752019)
 - United Daily News: [Final and award ceremony](https://udn.com/news/story/7323/9752448)
 - DIGITIMES: [The New Taipei AI Smart City Hackathon opens](https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?cnlid=13&cat=100&id=0000768340_4K24HAGD3UD0Q11G5HN75)
