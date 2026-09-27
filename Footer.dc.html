@@ -46,7 +46,10 @@
       </div>
     </div>
     <div style="border-top:1px solid rgba(242,239,232,.14);padding-top:20px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center">
-      <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">© 2026 {{ legal }} PEAKQI Co., Ltd.<a href="{{ privacyHref }}" style="margin-left:14px;color:rgba(242,239,232,.55);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">{{ privacyLabel }}</a></span>
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+        <span style="font:400 .78125rem 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.45)">© 2026 {{ legal }} PEAKQI Co., Ltd.<a href="{{ privacyHref }}" style="margin-left:14px;color:rgba(242,239,232,.55);text-decoration:underline;text-underline-offset:3px" style-hover="color:#FF6B2C">{{ privacyLabel }}</a></span>
+        <span style="font:400 .75rem/1.6 'Noto Sans TC',sans-serif;color:rgba(242,239,232,.4)">{{ reg }}</span>
+      </div>
       <span style="font:500 .6875rem 'Space Grotesk',sans-serif;letter-spacing:.24em;color:rgba(242,239,232,.35)">AI OPERATING SYSTEM FOR TAIWAN SMB</span>
     </div>
   </div>
@@ -87,6 +90,8 @@ class Component extends DCLogic {
       lineLabel: T('LINE 官方帳號', 'LINE official account'),
       demoLabel: T('預約 AI 導入評估', 'Build your Phase-1 draft'),
       legal: T('奇鋒國際有限公司', 'PeakQi International Ltd.'),
+      // 與 seo-schema.js 的 COMPANY 同一份登記資料
+      reg: T('統一編號 97516904|臺北市內湖區石潭路27號3樓之5', 'Tax ID 97516904 · 3F.-5, No. 27, Shitan Rd., Neihu Dist., Taipei City 114, Taiwan'),
       privacyLabel: T('隱私權政策', 'Privacy policy'),
       demoHref: EP('/demo'),
       privacyHref: EP('/privacy')

@@ -10,6 +10,18 @@ export const SITE = 'https://www.peakqi.com';
 export const ORG_ID = SITE + '/#organization';
 export const WEBSITE_ID = SITE + '/#website';
 
+// 公司登記資料(經濟部商工登記公示資料:奇鋒國際有限公司,核准設立 113/06/11)
+// 頁尾(Footer.dc.html)、隱私權政策、案例永久頁頁尾各自有一份文字,改這裡要一起改。
+export const COMPANY = {
+  legalName: '奇鋒國際有限公司',
+  legalNameEn: 'PeakQi International Ltd.',
+  taxId: '97516904',
+  address: {
+    zh: '臺北市內湖區石潭路27號3樓之5',
+    en: '3F.-5, No. 27, Shitan Rd., Neihu Dist., Taipei City 114, Taiwan'
+  }
+};
+
 // 核心品牌描述(全站統一版本,改這裡=全站一起改)
 export const BRAND_DESC = {
   zh: 'PeakQi 是台灣中小企業 AI 營運自動化與系統整合團隊,協助服務業把 LINE/官網詢問、CRM 跟進、報價、行銷與專案管理串成保留人工審核的工作流程;標準模組最快 10 個工作天上線。',
@@ -26,8 +38,25 @@ export function orgJsonLd(lang) {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': ORG_ID,
-    name: '奇鋒國際有限公司',
+    name: COMPANY.legalName,
+    legalName: COMPANY.legalName,
     alternateName: ['PeakQi', 'PeakQi International'],
+    taxID: COMPANY.taxId,
+    address: en ? {
+      '@type': 'PostalAddress',
+      streetAddress: '3F.-5, No. 27, Shitan Rd.',
+      addressLocality: 'Neihu Dist.',
+      addressRegion: 'Taipei City',
+      postalCode: '114',
+      addressCountry: 'TW'
+    } : {
+      '@type': 'PostalAddress',
+      streetAddress: '石潭路27號3樓之5',
+      addressLocality: '內湖區',
+      addressRegion: '臺北市',
+      postalCode: '114',
+      addressCountry: 'TW'
+    },
     url: SITE + '/',
     logo: { '@type': 'ImageObject', url: SITE + '/apple-touch-icon.png', width: 180, height: 180 },
     image: SITE + '/og.png',
@@ -36,7 +65,7 @@ export function orgJsonLd(lang) {
     telephone: '+886-2-6609-3699',
     areaServed: { '@type': 'Country', name: 'Taiwan' },
     knowsLanguage: ['zh-Hant', 'en'],
-    // TODO_REQUIRES_APPROVAL: 公司登記地址(address)、台北市電腦公會會員頁、
+    // TODO_REQUIRES_APPROVAL: 台北市電腦公會會員頁、
     // LinkedIn 公司頁等外部檔案連結,待 PeakQi 提供可驗證網址後加入 sameAs。
     sameAs: [
       'https://github.com/Peakqi-com',

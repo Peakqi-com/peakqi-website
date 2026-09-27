@@ -437,6 +437,7 @@ ${galleryHtml}
     <p style="margin:0">${L('內容整理與審核:PeakQi 奇鋒國際團隊|資料來源:實際交付專案與產品畫面|最後更新:', 'Compiled and reviewed by the PeakQi team | Source: delivered projects and real product screens | Last updated: ')}${DATE_SLOT}</p>
     <p style="margin:0">${esc(en ? S.BRAND_DESC.en : S.BRAND_DESC.zh)}</p>
     <p style="margin:0">© ${new Date().getFullYear()} ${L('奇鋒國際有限公司 PeakQi', 'PeakQi International Ltd.')}・<a href="${pfx}/privacy" style="color:rgba(242,239,232,.6)">${L('隱私權政策', 'Privacy')}</a>・<a href="mailto:jacky@peakqi.com" style="color:rgba(242,239,232,.6)">jacky@peakqi.com</a>・<a href="tel:+886266093699" style="color:rgba(242,239,232,.6)">(02) 6609-3699</a></p>
+    <p style="margin:0">${L('統一編號 ', 'Tax ID ')}${S.COMPANY.taxId}・${esc(en ? S.COMPANY.address.en : S.COMPANY.address.zh)}</p>
   </div>
 </footer>
 </body>

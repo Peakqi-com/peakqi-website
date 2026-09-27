@@ -52,7 +52,9 @@ function pages() {
 // 只取「會執行」的 inline script:沒有 src、且 type 不是 json 類。
 const SCRIPT = /<script([^>]*)>([\s\S]*?)<\/script>/g;
 function hashesOf(file) {
-  const src = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  // 雜湊要對「部署出去的內容」算:repo 裡存的是 LF,但 Windows 的 core.autocrlf=true
+  // 會讓工作目錄變成 CRLF,直接算會得到一整組線上對不上的雜湊(inline script 全被擋)。
+  const src = fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/\r\n/g, '\n');
   const found = [];
   for (const [, attrs, body] of src.matchAll(SCRIPT)) {
     if (/\bsrc\s*=/.test(attrs)) continue;
